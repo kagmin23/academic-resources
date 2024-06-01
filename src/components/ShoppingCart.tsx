@@ -1,9 +1,12 @@
+//REPONSIVE
+
 import React from 'react'
 import { Card } from 'antd';
 import sp from '../assets/sp.jpg';
 import { TinyColor } from '@ctrl/tinycolor';
 import { Button, ConfigProvider, Space } from 'antd';
-
+import { DeleteFilled } from '@ant-design/icons'; 
+//Color Button
 const colors1 = ['#6253E1', '#04BEFE'];
 const getHoverColors = (colors: string[]) =>
     colors.map((color) => new TinyColor(color).lighten(5).toString());
@@ -23,16 +26,18 @@ const courses = [
       image: sp
     },
     {
-      name: 'Advanced React',
+      name: 'My Love Mix Up',
       price: '200.000',
-      author: 'Jane Smith',
+      author: 'Fourth Nattawat',
       image: sp
     }
   ];
+  //style Card
 const gridStyle: React.CSSProperties = {
   width: '100%',
   
 };
+// style Card Total
 const cardTitleStyle: React.CSSProperties = {
     fontSize: '24px', 
     fontWeight: 'bold', 
@@ -45,22 +50,27 @@ export default function ShoppingCart() {
   const finalPrice: number = (totalPrice * (1 - discount));
   return (
     <div className="  mx-auto w-full min-h-screen  bg-stone-200">
-        <div className='md:text-2xl sm:text-lg p-3 font-bold mb-4 bg-stone-50 px-32'> Shopping Cart</div>
+        <div className='md:text-2xl sm:text-lg p-3 font-bold mb-4 bg-stone-50 md:px-32 '> Shopping Cart</div>
         
-        <div className="flex flex-col md:flex-row flex-grow pt-5 w-5/6 mx-auto pb-20">
+        <div className="flex flex-col lg:flex-row flex-grow pt-5 w-5/6 mx-auto pb-20">
             
-            <div className="item p-4 w-full mr-3 md:w-2/3">
+            <div className="item p-4 w-full mr-3 lg:w-2/3">
               
                     
             <Card title={<div style={cardTitleStyle}>Your Courses</div>}>
             {courses.map((course, index) => (
-                <Card.Grid key={index} style={gridStyle} className='flex '>
-                <img src={course.image} alt="Product" className='w-1/3 h-36' /> 
+                <Card.Grid key={index} style={gridStyle} className='md:flex '>
+                <img src={course.image} alt="Product" className='md:w-1/3 md:h-36 h-24 w-4/5 mx-auto' /> 
+                <div className='md:flex md:w-2/3 w-full'>
                 <div className='ml-4 flex-grow'>
-                  <p className='font-bold text-lg'>{course.name}</p>
-                  <p className='font-medium text-base text-slate-500'>By: {course.author}</p>
+                  <div className='font-bold md:text-lg sm:text-sm text-center md:text-left w-full'>{course.name}</div>
+                  <div className='font-medium md:text-base sm:text-xs text-slate-500 text-center md:text-left w-full'>By: {course.author}</div>
                 </div>
-                <div className='w-1/6 text-lg text-center font-semibold'><p>{course.price} VNĐ</p></div>
+                <div className='md:w-1/5'>
+               
+                <div className='md:text-lg sm:text-sm text-center font-semibold'><p>{course.price} VNĐ</p></div>
+                <Button danger className='text-center font-bold w-full md:mt-16 mt-5'> Delete</Button>
+                </div></div>
             
                 </Card.Grid>))}
                 
@@ -68,7 +78,7 @@ export default function ShoppingCart() {
             </Card>
                 
             </div>
-            <div className="item p-4 w-full md:w-1/3 ">
+            <div className="item p-4 w-full lg:w-1/3 ">
                 
                 
             <Card >
