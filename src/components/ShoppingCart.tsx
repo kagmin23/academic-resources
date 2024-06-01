@@ -21,6 +21,12 @@ const courses = [
       price: '200.000',
       author: 'Jane Smith',
       image: sp
+    },
+    {
+      name: 'Advanced React',
+      price: '200.000',
+      author: 'Jane Smith',
+      image: sp
     }
   ];
 const gridStyle: React.CSSProperties = {
@@ -33,12 +39,15 @@ const cardTitleStyle: React.CSSProperties = {
   };
 
 export default function ShoppingCart() {
-    const totalPrice = courses.reduce((total, course) => total + parseFloat(course.price.replace('.', '')), 0).toLocaleString('vi-VN');
+  const totalPrice: number = courses.reduce((total: number, course) => total + parseFloat(course.price.replace('.', '')), 0);
+  // Mua trên 2 khóa được giảm 10%
+  const discount: number = courses.length >= 2 ? 0.1 : 0;
+  const finalPrice: number = (totalPrice * (1 - discount));
   return (
     <div className="  mx-auto w-full min-h-screen  bg-stone-200">
         <div className='md:text-2xl sm:text-lg p-3 font-bold mb-4 bg-stone-50 px-32'> Shopping Cart</div>
         
-        <div className="flex flex-col md:flex-row flex-grow pt-5 w-5/6 mx-auto">
+        <div className="flex flex-col md:flex-row flex-grow pt-5 w-5/6 mx-auto pb-20">
             
             <div className="item p-4 w-full mr-3 md:w-2/3">
               
@@ -49,9 +58,9 @@ export default function ShoppingCart() {
                 <img src={course.image} alt="Product" className='w-1/3 h-36' /> 
                 <div className='ml-4 flex-grow'>
                   <p className='font-bold text-lg'>{course.name}</p>
-                  <p>By: {course.author}</p>
+                  <p className='font-medium text-base text-slate-500'>By: {course.author}</p>
                 </div>
-                <div className='w-1/6 text-center font-semibold'><p>{course.price} VNĐ</p></div>
+                <div className='w-1/6 text-lg text-center font-semibold'><p>{course.price} VNĐ</p></div>
             
                 </Card.Grid>))}
                 
@@ -66,16 +75,17 @@ export default function ShoppingCart() {
               <div className='text-2xl font-medium text-center pb-3 border-b border-gray-500'>Total:</div>
               <div className='flex justify-between my-4 text-base font-medium'>
                     <div>Orignal Price</div>
-                    <div>{totalPrice}</div>
+                    <div>{(totalPrice).toLocaleString('vi-VN')}</div>
               </div>
               <div className='flex justify-between my-4 text-base font-medium'>
                     <div>Discount Price</div>
-                    <div>0</div>
-              </div>
+                    <div>{(totalPrice * discount).toLocaleString('vi-VN')}</div>
+                    </div>
+              
               
               <div className='flex justify-between py-5 text-xl font-bold border-t border-gray-500'>
                     <div>Total:</div>
-                    <div>{totalPrice} VNĐ</div>
+                    <div>{(finalPrice).toLocaleString('vi-VN')} VNĐ</div>
               </div>
               <ConfigProvider
       theme={{
