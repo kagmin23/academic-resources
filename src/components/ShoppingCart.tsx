@@ -35,7 +35,7 @@ const cardTitleStyle: React.CSSProperties = {
 export default function ShoppingCart() {
     const totalPrice = courses.reduce((total, course) => total + parseFloat(course.price.replace('.', '')), 0).toLocaleString('vi-VN');
   return (
-    <div className="  container mx-auto w-full min-h-screen  bg-stone-200">
+    <div className="  mx-auto w-full min-h-screen  bg-stone-200">
         <div className='md:text-2xl sm:text-lg p-3 font-bold mb-4 bg-stone-50 px-32'> Shopping Cart</div>
         
         <div className="flex flex-col md:flex-row flex-grow pt-5 w-5/6 mx-auto">
