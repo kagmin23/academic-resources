@@ -26,7 +26,7 @@ const courses = [
       image: sp
     },
     {
-      name: 'My Love Mix Up',
+      name: 'My Love Mix Up My Love Mix Up My Love Mix Up ',
       price: '200.000',
       author: 'Fourth Nattawat',
       image: sp
@@ -62,7 +62,7 @@ export default function ShoppingCart() {
                 <Card.Grid key={index} style={gridStyle} className='md:flex '>
                 <img src={course.image} alt="Product" className='md:w-1/3 md:h-36 h-24 w-4/5 mx-auto' /> 
                 <div className='md:flex md:w-2/3 w-full'>
-                <div className='ml-4 flex-grow'>
+                <div className='mx-4 flex-grow'>
                   <div className='font-bold md:text-lg sm:text-sm text-center md:text-left w-full'>{course.name}</div>
                   <div className='font-medium md:text-base sm:text-xs text-slate-500 text-center md:text-left w-full'>By: {course.author}</div>
                 </div>
