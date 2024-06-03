@@ -120,21 +120,21 @@ const CoursePage = () => {
                             <div className="flex items-center mb-4 flex-col">
                                 <div className="text-8xl font-semibold mr-4 mb-7">0</div>
                                 <div className="review-stars-rated flex relative " title="0 out of 5 stars">
-                                            {Array(5).fill(0).map((_, index) => (
-                                                <div key={index} className="review-star relative ml-1.5">
-                                                    <em className="far lp-review-svg-star ">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-star">
-                                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                                        </svg>
-                                                    </em>
-                                                    <em className="fas lp-review-svg-star absolute top-0 left-0 w-0 text-yellow-400">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-star">
-                                                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
-                                                        </svg>
-                                                    </em>
-                                                </div>
-                                            ))}
+                                    {Array(5).fill(0).map((_, index) => (
+                                        <div key={index} className="review-star relative ml-1.5">
+                                            <em className="far lp-review-svg-star ">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-star">
+                                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                                </svg>
+                                            </em>
+                                            <em className="fas lp-review-svg-star absolute top-0 left-0 w-0 text-yellow-400">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-star">
+                                                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
+                                                </svg>
+                                            </em>
                                         </div>
+                                    ))}
+                                </div>
                                 <span className="ml-2 text-xl">0 ratings</span>
                             </div>
                         </div>
@@ -210,13 +210,25 @@ const CoursePage = () => {
                                     </li>
                                 </ul>
                             </div>
-                            <div className="social_share mt-6">Share:
-                                <a href="https://www.facebook.com/profile.php?id=100088863845747" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transform hover:scale-110 transition-transform duration-300 p-2 border border-white rounded-full">
+                            <div className="social_share mt-6 flex justify-center">
+                                <a href="https://www.facebook.com/sharer.php?u=https%3A%2F%2Feduma.thimpress.com%2Fdemo-udemy%2Fcourses%2Fintroduction-to-marketing%2F" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="transform hover:scale-110 transition-transform duration-300 p-2 border border-white rounded-full">
                                     <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" className="text-4xl text-[#4B5563] hover:text-blue-700" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
                                         <path d="M504 256C504 119 393 8 256 8S8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path>
                                     </svg>
                                 </a>
+                                <a href="https://twitter.com/share?url=https%3A%2F%2Feduma.thimpress.com%2Fdemo-udemy%2Fcourses%2Fintroduction-to-marketing%2F&amp;text=Introduction%20to%20Marketing" target="_blank" rel="noopener noreferrer" aria-label="Twitter" className="transform hover:scale-110 transition-transform duration-300 p-2 border border-white rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-twitter-x" viewBox="0 0 16 16">
+                                        <path d="M12.6.75h2.454l-5.36 6.142L16 15.25h-4.937l-3.867-5.07-4.425 5.07H.316l5.733-6.57L0 .75h5.063l3.495 4.633L12.601.75Zm-.86 13.028h1.36L4.323 2.145H2.865z" />
+                                    </svg>
+                                </a>
+                                <a href="https://www.pinterest.com/pin/create/button/?url=https%3A%2F%2Feduma.thimpress.com%2Fdemo-udemy%2Fcourses%2Fintroduction-to-marketing%2F&amp;description=This%20tutorial%20will%20introduce%20you%20to%20PHP%2C%20a%20server-side%20scripting%20language%20you%20can%20use%20to%20make%20dynamic%20websites%20and%20web%20applications.&amp;media=https%3A%2F%2Feduma.thimpress.com%2Fdemo-udemy%2Fwp-content%2Fuploads%2Fsites%2F93%2F2022%2F04%2Fcourses-2.jpg" aria-label="Pinterest" className="transform hover:scale-110 transition-transform duration-300 p-2 border border-white rounded-full">
+                                    <svg stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" className="text-4xl text-[#4B5563] hover:text-blue-700" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M256 8C119 8 8 119 8 256c0 123.78 90.69 226.38 209.25 245V327.69h-63V256h63v-54.64c0-62.15 37-96.48 93.67-96.48 27.14 0 55.52 4.84 55.52 4.84v61h-31.28c-30.8 0-40.41 19.12-40.41 38.73V256h68.78l-11 71.69h-57.78V501C413.31 482.38 504 379.78 504 256z"></path>
+                                    </svg>
+                                </a>
                             </div>
+
+
                         </div>
                     </div>
                 </div>
