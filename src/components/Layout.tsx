@@ -1,4 +1,4 @@
-import { MenuOutlined } from '@ant-design/icons';
+import { BookOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Input, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css';
@@ -21,7 +21,7 @@ const MainLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return (
     <Layout className="min-h-screen">
       <Header className="flex items-center justify-between p-4 bg-gray-800">
-        <h1 className="text-lg text-white">Academic - Resources</h1>
+        <h1 className="text-lg text-white"><BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources</h1>
         <div className="flex items-center">
           <Search
             placeholder="Search courses"
