@@ -1,3 +1,4 @@
+import { BookOutlined, FieldTimeOutlined, HomeOutlined, IssuesCloseOutlined, MailOutlined, PhoneOutlined } from '@ant-design/icons';
 import { Layout } from 'antd';
 import React from 'react';
 
@@ -7,14 +8,14 @@ const Footer: React.FC = () => {
       <div className="container px-4 py-8 mx-auto">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <h2 className="text-2xl font-bold">ACADEMIC_RESOURCES</h2>
+            <h2 className="text-2xl font-bold"><BookOutlined />&nbsp;&nbsp;&nbsp;ACADEMIC_RESOURCES</h2>
             <ul className="mt-4">
-              <li className="mb-2">(+84) 342-555-702</li>
-              <li className="mb-2">One Hub Building Thu Duc, VietNam</li>
-              <li className="mb-2">phankangmin@gmail.com</li>
-              <li className="mb-2">Date/Time: 08:00 AM - 5:00 PM</li>
-              <li>Monday to Friday</li>
-              <li>Close: Saturday and Sunday</li>
+              <li className="mb-2"><PhoneOutlined />&nbsp;&nbsp;&nbsp;(+84) 342-555-702</li>
+              <li className="mb-2"><HomeOutlined />&nbsp;&nbsp;&nbsp;One Hub Building Thu Duc, VietNam</li>
+              <li className="mb-2"><MailOutlined />&nbsp;&nbsp;&nbsp;phankangmin@gmail.com</li>
+              <li className="mb-2"><FieldTimeOutlined />&nbsp;&nbsp;&nbsp;Date/Time: 08:00 AM - 5:00 PM</li>
+              <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Monday to Friday</li>
+              <li><IssuesCloseOutlined />&nbsp;&nbsp;&nbsp;Close: Saturday and Sunday</li>
             </ul>
           </div>
           <div className="flex flex-wrap">
