@@ -1,9 +1,9 @@
 import './App.css';
-import './components/ShoppingCart'
-import './components/BuyNow'
+
+
 import { Route, Routes } from "react-router-dom";
-import ShoppingCart from './components/ShoppingCart';
-import BuyNow from './components/BuyNow';
+import ShoppingCart from './pages/ShoppingCart';
+import BuyNow from './pages/BuyNow';
 import { Link } from 'react-router-dom'
 function App() {
   return (
