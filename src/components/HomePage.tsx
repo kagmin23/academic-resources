@@ -87,11 +87,12 @@ const HomePage: React.FC = () => {
         <div className="box image-box">
             <img src="academicdemo.jpg" alt="Image" className="body-image"/>
         </div>
-        <div className="box text-box">
-            <p className="pt-4">Limitless Learning, More</p>
-            <p>Possibilities</p>
-            <p className="text-lg">Answer A Few Questions For Your Top Picks</p>
+        <div className="text-sm box text-box">
+            <p className="pt-10 mb-10">Limitless Learning, More</p>
+            <p className="mb-10">Possibilities</p>
+            <ul className="mb-10 text-lg">Answer A Few Questions For Your Top Picks</ul>
         </div>
+
         </div>
         <div className="box body-button">
                 <button className="text-white">Join for free <ArrowRightOutlined /></button>
