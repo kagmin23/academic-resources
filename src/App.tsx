@@ -1,11 +1,15 @@
+import React from 'react';
 import './App.css';
+import HomePage from './components/HomePage';
+import MainLayout from './components/Layout';
+import './index.css';
 
-function App() {
+const App: React.FC = () => {
   return (
-    <div className="App">
-
-    </div>
+    <MainLayout>
+      <HomePage />
+    </MainLayout>
   );
-}
+};
 
 export default App;
