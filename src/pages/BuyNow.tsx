@@ -21,7 +21,7 @@ export default function BuyNow() {
     const totalPrice = parseFloat(course.price.replace('.', ''));
 
     return (
-        <div className="mx-auto w-full min-h-screen bg-stone-200">
+        <div className="mx-auto w-full min-h-screen bg-gray-200">
             <div className="md:text-2xl sm:text-lg p-3 font-bold mb-4 bg-stone-50 md:px-32">Checkout</div>
 
             <div className="flex flex-col lg:flex-row flex-grow pt-5 w-5/6 mx-auto pb-20">
