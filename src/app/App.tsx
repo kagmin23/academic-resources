@@ -4,6 +4,10 @@ import MainLayout from '../components/Layout';
 import CategoryPage from '../pages/CategoryPage';
 import HomePage from '../pages/HomePage';
 import SearchPage from '../pages/SearchPage';
+import ReportPage from '../pages/ReportPage';
+import CoursePage from '../pages/CoursePage';
+
+
 
 
 const App: React.FC = () => (
@@ -13,6 +17,8 @@ const App: React.FC = () => (
         <Route path="/" element={<HomePage/>} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/category" element={<CategoryPage />} />
+        <Route path="/course" element={<CoursePage/>} />
+        <Route path="/report" element={<ReportPage />} />
       </Routes>
     </MainLayout>
   </Router>
