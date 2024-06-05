@@ -63,7 +63,7 @@ export default function Report() {
         className="max-w-lg mx-auto"
       >
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="w-full text-xl p-7 bg-red-700 ">
+          <Button type="primary" htmlType="submit" className="w-full text-xl p-7 bg-blue-500 ">
             Submit Report
           </Button>
         </Form.Item>
