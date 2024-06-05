@@ -1,6 +1,7 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainLayout from './components/Layout';
+import CategoryPage from './pages/CategoryPage';
 import HomePage from './pages/HomePage';
 import SearchPage from './pages/SearchPage';
 
@@ -11,7 +12,7 @@ const App: React.FC = () => (
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/search" element={<SearchPage />} />
-        {/* Add more routes as needed */}
+        <Route path="/category" element={<CategoryPage />} />
       </Routes>
     </MainLayout>
   </Router>

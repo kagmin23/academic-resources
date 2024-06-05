@@ -1,6 +1,7 @@
 import { ArrowRightOutlined } from '@ant-design/icons';
 import { Button, Card, Col, Input, Row } from 'antd';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const HomePage: React.FC = () => {
   return (
@@ -105,9 +106,10 @@ const HomePage: React.FC = () => {
         ))}
       </Row>
 
-      <div className="flex items-center justify-center h-24 mt-8 text-2xl font-bold">
+      <Link to="/category"><div className="flex items-center justify-center h-24 mt-8 text-2xl font-bold">
         Top Categories
-      </div>
+        </div>
+      </Link>
 
       <Row gutter={[16, 16]}>
         {[
@@ -142,6 +144,7 @@ const HomePage: React.FC = () => {
           </Col>
         ))}
       </Row>
+      <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
 
       <div className="p-8 bg-gray-100 contact-home">
         <h1 className="text-2xl font-bold">Subscriber</h1>

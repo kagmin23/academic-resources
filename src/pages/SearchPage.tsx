@@ -96,6 +96,7 @@ const SearchPage: React.FC = () => {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
+        <h1 className="mt-4 text-2xl font-bold md:text-4xl lg:text-3xl md:mt-6 lg:mt-8">Search Results</h1>
         <div className="mt-4">
           {results.map(result => (
             <Card key={result.id} className="mb-4">
