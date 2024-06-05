@@ -1,5 +1,6 @@
-import { CameraOutlined, FileOutlined, LaptopOutlined, PieChartOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
-import { Layout, Menu, Table } from 'antd';
+import { CameraOutlined, EyeOutlined, FileOutlined, LaptopOutlined, PieChartOutlined, SaveOutlined, UserOutlined, UsergroupAddOutlined } from '@ant-design/icons';
+import { Button, Layout, Menu, Table } from 'antd';
+import { AlignType } from 'rc-table/lib/interface'; // Import AlignType
 import React, { useState } from 'react';
 
 const { Header, Content, Footer, Sider } = Layout;
@@ -45,15 +46,26 @@ const dataSource: DataType[] = [
 
 const columns = [
   {
-    title: 'Image',
+    title: 'Category',
     dataIndex: 'image',
     key: 'image',
     render: (text: string) => <img src={text} alt="item" className="w-12 h-12" />,
   },
   {
-    title: 'Title',
+    title: 'Description',
     dataIndex: 'title',
     key: 'title',
+  },
+  {
+    title: 'Actions',
+    key: 'actions',
+    align: 'center' as AlignType,
+    render: (text: string, record: DataType) => (
+      <div style={{ textAlign: 'center' }}>
+        <Button icon={<SaveOutlined />} className="mr-2" onClick={() => {}}></Button>
+        <Button icon={<EyeOutlined />} onClick={() => {}}></Button>
+      </div>
+    ),
   },
 ];
 
@@ -62,6 +74,14 @@ const CategoryPage: React.FC = () => {
 
   const toggleCollapsed = () => {
     setCollapsed(!collapsed);
+  };
+
+  const handleSave = (record: DataType) => {
+    // Add your save logic here
+  };
+
+  const handleViewMore = (record: DataType) => {
+    // Add your view more logic here
   };
 
   return (
