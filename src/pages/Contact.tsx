@@ -14,26 +14,26 @@ export default function Contact() {
   return (
     <div className="mx-auto w-full min-h-screen bg-gray-200">
             <div className="md:text-2xl sm:text-lg p-3 font-bold mb-4 bg-stone-50 md:px-32">Contact</div>
-            <div className='mx-auto w-4/5 mt-14'>
+            <div className='mx-auto md:w-4/5 sm:w-full mt-14'>
                 <div className=' flex justify-between mx-auto'>
-                    <div className='w-1/5 bg-slate-50 py-8  px-10 flex flex-col items-center justify-center shadow-lg cursor-pointer hover:scale-110'>
-                    <Avatar className='bg-blue-700 ' size={65} icon={<QuestionCircleOutlined />} />
-                    <p className='font-semibold text-xl mt-3'>Help Center</p>
+                    <div className='w-1/5 bg-slate-50 py-8  px-5 flex flex-col items-center justify-center shadow-lg cursor-pointer hover:scale-110'>
+                    <Avatar className='bg-blue-700 ' size={{ xs: 50, sm: 50, md: 65, lg: 65, xl: 65, xxl: 65 }} icon={<QuestionCircleOutlined />} />
+                    <p className='font-semibold md:text-xl mt-3 sm:text-lg text-center h-10'>Help Center</p>
 
                     </div>
                     <div className='w-1/5 bg-slate-50 py-8 px-5 flex flex-col items-center justify-center shadow-lg cursor-pointer hover:scale-110'>
-                    <Avatar className='bg-blue-700' size={65} icon={<MessageOutlined />} />
-                    <p className='font-semibold text-xl mt-3'>Blog</p>
+                    <Avatar className='bg-blue-700' size={{ xs: 50, sm: 50, md: 65, lg: 65, xl: 65, xxl: 65 }} icon={<MessageOutlined />} />
+                    <p className='font-semibold md:text-xl mt-3 sm:text-lg text-center h-10'>Blog</p>
 
                     </div>
                     <div className='w-1/5 bg-slate-50 py-8 px-5 flex flex-col items-center justify-center shadow-lg cursor-pointer hover:scale-110'>
-                    <Avatar className='bg-blue-700' size={65} icon={<FundProjectionScreenOutlined />} />
-                    <p className='font-semibold text-xl mt-3'>Careers</p>
+                    <Avatar className='bg-blue-700' size={{ xs: 50, sm: 50, md: 65, lg: 65, xl: 65, xxl: 65 }} icon={<FundProjectionScreenOutlined />} />
+                    <p className='font-semibold md:text-xl mt-3 sm:text-lg text-center  h-10'>Careers</p>
 
                     </div>
                     <div className='w-1/5 bg-slate-50 py-8 px-5 flex flex-col items-center justify-center shadow-lg cursor-pointer hover:scale-110'>
-                    <Avatar className='bg-blue-700' size={65} icon={<SettingOutlined />} />
-                    <p className='font-semibold text-xl mt-3'>Developer Area</p>
+                    <Avatar className='bg-blue-700' size={{ xs: 50, sm: 50, md: 65, lg: 65, xl: 65, xxl: 65 }} icon={<SettingOutlined />} />
+                    <p className='font-semibold md:text-xl mt-3 sm:text-lg text-center  h-10'>Developer Area</p>
 
                     </div>
 
@@ -52,7 +52,7 @@ export default function Contact() {
                  referrerPolicy="no-referrer-when-downgrade"
                  ></iframe></div>   
                  <div className='lg:w-1/3 sm:w-full lg:ml-5'>
-                     <p className='text-xl font-bold mb-5 '>Contact Information</p>
+                     <p className='text-xl font-bold mb-5 md:mt-0 sm:mt-8'>Contact Information</p>
                      <div className='w-16 h-0.5 bg-blue-700 mb-10'></div> 
                      <div className='flex mb-4'>
                          <div className='w-40 text-sm font-semibold flex '>
