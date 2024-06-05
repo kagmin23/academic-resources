@@ -1,16 +1,16 @@
 import React from 'react';
-import { BrowserRouter as Router } from 'react-router-dom';
-// import MainLayout from '../components/Layout';
-// import CategoryPage from '../pages/CategoryPage';
-// import CoursePage from '../pages/CoursePage';
-// import HomePage from '../pages/HomePage';
-// import Report from '../pages/ReportPage';
-// import SearchPage from '../pages/SearchPage';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import MainLayout from '../components/Layout';
+import CategoryPage from '../pages/CategoryPage';
+import CoursePage from '../pages/CoursePage';
+import HomePage from '../pages/HomePage';
+import Report from '../pages/ReportPage';
+import SearchPage from '../pages/SearchPage';
 
 
 const App: React.FC = () => (
   <Router>
-    {/* <MainLayout>
+    <MainLayout>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/search" element={<SearchPage />} />
@@ -19,7 +19,7 @@ const App: React.FC = () => (
         <Route path="/course" element={<CoursePage />} />
 
       </Routes>
-    </MainLayout> */}
+    </MainLayout>
   </Router>
 );
 
