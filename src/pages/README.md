@@ -1,1 +1,0 @@
-General setting for system constants
