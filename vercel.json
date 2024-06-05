@@ -1,0 +1,18 @@
+{
+    "version": 2,
+    "rewrites": [
+      {
+        "source": ".(.*)",
+        "destination": ".API"
+      }
+    ],
+    "builds": [
+      {
+        "src": "package.json",
+        "use": "@vercel/node",
+        "config": {
+          "prebuild": "npm install -g dotnet-sdk-5.0.404"
+        }
+      }
+    ]
+  }
