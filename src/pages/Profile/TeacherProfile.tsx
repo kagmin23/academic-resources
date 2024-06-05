@@ -12,7 +12,6 @@ import {
   CaretRightOutlined,
 } from '@ant-design/icons';
 
-
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
@@ -21,7 +20,7 @@ const coursesData = [
   {
     key: '1',
     image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
-    name: 'How To Teach Online Course Efectively',
+    name: 'How To Teach Online Course Effectively',
     instructor: 'F8',
     lessons: '9 Lessons',
     price: 'Free',
@@ -110,10 +109,25 @@ const coursesData = [
   },
 ];
 
+const aboutData = {
+  name: 'David Heb',
+  email: 'mrdavid@gmail.com',
+  dob: 'January 1, 2000',
+  gender: 'Male',
+  courseCreatedDate: 'January 15, 2023',
+  avatarSrc: 'https://vnn-imgs-f.vgcloud.vn/2020/04/28/23/ldw3-2.jpg',
+};
+
 const TeacherProfile: React.FC = () => {
   const [filteredCourses, setFilteredCourses] = useState(coursesData);
+  const [showAbout, setShowAbout] = useState(true);
+
+  const displayAboutInfo = () => {
+    setShowAbout(true);
+  };
 
   const filterCoursesByStatus = (status: string) => {
+    setShowAbout(false);
     if (status === 'all') {
       setFilteredCourses(coursesData);
     } else {
@@ -124,42 +138,60 @@ const TeacherProfile: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
+      <Sider width={250} className="site-layout-background" style={{ backgroundColor: 'white' }}>
+        <div className="flex items-center justify-center my-6">
+          <Avatar size={100} src="https://cdn1.iconfinder.com/data/icons/flat-education-icons-1/512/37-512.png" icon={<UserOutlined />} />
+        </div>
+        <Title level={4} className="text-center">David Heb</Title>
+        <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}>
+          <Menu.Item key="1" icon={<FileTextOutlined />} onClick={displayAboutInfo}>
+            About
+          </Menu.Item>
+          <Menu.Item key="2" icon={<FileTextOutlined />} onClick={() => filterCoursesByStatus('all')}>
+            My Courses
+          </Menu.Item>
+          <Menu.Item key="3" icon={<FileDoneOutlined />} onClick={() => filterCoursesByStatus('1')}>
+            Students
+          </Menu.Item>
+          <Menu.Item key="4" icon={<FileDoneOutlined />} onClick={() => filterCoursesByStatus('1')}>
+            Certificates
+          </Menu.Item>
+          <Menu.Item key="5" icon={<QuestionCircleOutlined />} onClick={() => filterCoursesByStatus('0')}>
+            Quizzes
+          </Menu.Item>
+          <Menu.Item key="6" icon={<HeartOutlined />}>
+            Wishlist
+          </Menu.Item>
+          <Menu.Item key="7" icon={<ShoppingCartOutlined />}>
+            Orders
+          </Menu.Item>
+          <Menu.Item key="8" icon={<FileDoneOutlined />}>
+            Assignments
+          </Menu.Item>
+          <Menu.Item key="9" icon={<SettingOutlined />}>
+            Settings
+          </Menu.Item>
+          <Menu.Item key="10" icon={<LogoutOutlined />}>
+            Logout
+          </Menu.Item>
+        </Menu>
+      </Sider>
       <Layout>
-        <Sider width={250} className="site-layout-background" style={{ backgroundColor: 'white' }}>
-          <div className="flex items-center justify-center my-6">
-            <Avatar size={100} src="https://cdn1.iconfinder.com/data/icons/flat-education-icons-1/512/37-512.png" icon={<UserOutlined />} />
-          </div>
-          <Title level={4} className="text-center">Instructor</Title>
-          <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}>
-            <Menu.Item key="1" icon={<FileTextOutlined />} onClick={() => filterCoursesByStatus('all')}>
-              My Courses
-            </Menu.Item>
-            <Menu.Item key="2" icon={<FileDoneOutlined />} onClick={() => filterCoursesByStatus('1')}>
-              Certificates
-            </Menu.Item>
-            <Menu.Item key="3" icon={<QuestionCircleOutlined />} onClick={() => filterCoursesByStatus('0')}>
-              Quizzes
-            </Menu.Item>
-            <Menu.Item key="4" icon={<HeartOutlined />}>
-              Wishlist
-            </Menu.Item>
-            <Menu.Item key="5" icon={<ShoppingCartOutlined />}>
-              Orders
-            </Menu.Item>
-            <Menu.Item key="6" icon={<FileDoneOutlined />}>
-              Assignments
-            </Menu.Item>
-            <Menu.Item key="7" icon={<SettingOutlined />}>
-              Settings
-            </Menu.Item>
-            <Menu.Item key="8" icon={<LogoutOutlined />}>
-              Logout
-            </Menu.Item>
-          </Menu>
-        </Sider>
-        <Layout>
-          <Content>
-            <div style={{ padding: 10, height: 80 }}>
+        <Content style={{ padding: '20px' }}>
+          {showAbout ? (
+            <div style={{ padding: 10 }}>
+              <Avatar size={100} src={aboutData.avatarSrc} />
+              <Title level={4}>{aboutData.name}</Title>
+              <Text>Email: {aboutData.email}</Text>
+              <br />
+              <Text>Date Of Birth: {aboutData.dob}</Text>
+              <br />
+              <Text>Gender: {aboutData.gender}</Text>
+              <br />
+              <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
+            </div>
+          ) : (
+            <div style={{ padding: 10 }}>
               <Row gutter={[5, 5]} className="mb-4" justify="space-between">
                 {[
                   { text: 'Total Course', value: 80 },
@@ -179,15 +211,15 @@ const TeacherProfile: React.FC = () => {
               </Row>
               <Tabs defaultActiveKey="all" onChange={filterCoursesByStatus}>
                 <TabPane tab="All" key="all">
-                  <Row gutter={[16, 16]}>
+                <Row gutter={[16, 16]}>
                     {filteredCourses.map(course => (
-                     <Col span={8} key={course.key}>
-                     <Card
-                       cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
-                       actions={[
-                         <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>Start Learning</Button>
-                       ]}
-                     >
+                      <Col span={8} key={course.key}>
+                        <Card
+                          cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
+                          actions={[
+                            <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>Start Learning</Button>
+                          ]}
+                        >
                           <Card.Meta
                             title={course.name}
                             description={`Instructor: ${course.instructor}`}
@@ -200,13 +232,13 @@ const TeacherProfile: React.FC = () => {
                     ))}
                   </Row>
                 </TabPane>
-                <TabPane tab="Publish" key="1">
+                <TabPane tab="Published" key="1">
                   <Row gutter={[16, 16]}>
                     {filteredCourses.map(course => (
                       course.status === '1' &&
                       <Col span={8} key={course.key}>
                         <Card
-                          cover={<Image src={course.image} />}
+                          cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
                           actions={[
                             <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>Start Learning</Button>
                           ]}
@@ -229,7 +261,7 @@ const TeacherProfile: React.FC = () => {
                       course.status === '0' &&
                       <Col span={8} key={course.key}>
                         <Card
-                          cover={<Image src={course.image} />}
+                          cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
                           actions={[
                             <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>Start Learning</Button>
                           ]}
@@ -247,14 +279,14 @@ const TeacherProfile: React.FC = () => {
                   </Row>
                 </TabPane>
               </Tabs>
-
             </div>
-          </Content>
-        </Layout>
+          )}
+        </Content>
       </Layout>
     </Layout>
   );
 };
 
 export default TeacherProfile;
-
+ 
+                 

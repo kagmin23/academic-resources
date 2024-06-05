@@ -88,6 +88,29 @@ const columns = [
   },
 ];
 
+const about = (
+  <div style={{ padding: 24 }}>
+    <Card>
+      <Row gutter={[16, 16]}>
+        <Col span={8}>
+          <Avatar size={100} src="https://accountlp.thimpress.com/wp-content/uploads/learn-press-profile/2/e2bc048fc9256225f644d7ff40cb755f.jpeg" />
+        </Col>
+        <Col span={16}>
+          <Title level={4}>Student Name</Title>
+          <Text>Email: student@example.com</Text>
+          <br />
+          <Text>Date of Birth: January 1, 2000</Text>
+          <br />
+          <Text>Gender: Male</Text>
+          <br />
+          <Text>Course Created Date: January 15, 2023</Text>
+        </Col>
+      </Row>
+    </Card>
+  </div>
+);
+
+
 const Profile: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -100,6 +123,9 @@ const Profile: React.FC = () => {
           <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}>
             <Menu.Item key="1" icon={<FileTextOutlined />}>
               My Courses
+            </Menu.Item>
+            <Menu.Item key="about" icon={<FileTextOutlined />}>
+             About
             </Menu.Item>
             <Menu.Item key="2" icon={<FileDoneOutlined />}>
               Certificates
