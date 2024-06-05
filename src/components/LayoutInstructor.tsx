@@ -1,5 +1,5 @@
 import { BookOutlined, MenuOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Menu } from 'antd';
+import { Input, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
@@ -41,7 +41,6 @@ const MainLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             <Menu.Item key="2">Courses</Menu.Item>
             <Menu.Item key="3">About</Menu.Item>
           </Menu>
-          <Button onClick={() => ({})} className="ml-2">Log in</Button>
           <MenuOutlined className="ml-2 text-white md:hidden" />
         </div>
       </Header>
