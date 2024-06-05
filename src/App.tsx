@@ -1,17 +1,22 @@
-// src/App.tsx
 import React from 'react';
-
-import 'antd/dist/reset.css';
-import './App.css';
-import TeacherProfile from './pages/TeacherProfile';
-// import Profile from './pages/Profile';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Login from './pages/Login/Login';
+import SignUp from './pages/SignUp/SignUp';
+import Profile from './pages/Profile/Profile';
+import TeacherProfile from './pages/Profile/TeacherProfile';
 
 const App: React.FC = () => {
   return (
-    <div className="App">
-      {/* <Profile/> */}
-      <TeacherProfile/>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/profile" element={<Profile />} />
+        <Route path="/teacherProfile" element={<TeacherProfile />} />
+        
+      </Routes>
+    </Router>
   );
 };
 
