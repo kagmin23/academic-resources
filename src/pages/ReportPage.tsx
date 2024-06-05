@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import FlagIcon from '@mui/icons-material/Flag';
-import '../styles/ReportPage.css';
 import { Form, Input, Button, Checkbox } from 'antd';
 const { TextArea } = Input;
 
