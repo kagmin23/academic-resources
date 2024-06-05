@@ -1,6 +1,7 @@
 import { BookOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Input, Layout, Menu } from 'antd';
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import Footer from './Footer';
 
@@ -9,19 +10,20 @@ const { Search } = Input;
 
 const MainLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
+  const navigate = useNavigate();
 
   const handleMenuClick = (e: any) => {
     setSelectedKeys([e.key]);
   };
 
   const onSearch = (value: string) => {
-    console.log(value);
+    navigate(`/search?query=${value}`);
   };
 
   return (
     <Layout className="min-h-screen">
       <Header className="flex items-center justify-between p-4 bg-gray-800">
-        <h1 className="text-lg text-white"><BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources</h1>
+        <Link to="/"><h1 className="text-lg text-white"><BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources</h1></Link>
         <div className="flex items-center">
           <Search
             placeholder="Search courses"
