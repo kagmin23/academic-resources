@@ -1,9 +1,9 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import MainLayout from './components/Layout';
-import CategoryPage from './pages/CategoryPage';
-import HomePage from './pages/HomePage';
-import SearchPage from './pages/SearchPage';
+import MainLayout from '../components/Layout';
+import CategoryPage from '../pages/CategoryPage';
+import HomePage from '../pages/HomePage';
+import SearchPage from '../pages/SearchPage';
 
 
 const App: React.FC = () => (
