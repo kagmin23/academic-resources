@@ -1,17 +1,21 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import CoursePage from '../pages/CoursePage';
-import ReportPage from '../pages/ReportPage';
+import React from 'react';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import MainLayout from '../components/Layout';
+import CategoryPage from '../pages/CategoryPage';
+import HomePage from '../pages/HomePage';
+import SearchPage from '../pages/SearchPage';
 
 
-function App() {
-  return (
-    <Router>
+const App: React.FC = () => (
+  <Router>
+    <MainLayout>
       <Routes>
-        <Route path="/" element={<CoursePage />} />
-        <Route path="/report" element={<ReportPage />} />
+        <Route path="/" element={<HomePage/>} />
+        <Route path="/search" element={<SearchPage />} />
+        <Route path="/category" element={<CategoryPage />} />
       </Routes>
-    </Router>
-  );
-}
+    </MainLayout>
+  </Router>
+);
 
 export default App;
