@@ -1,9 +1,10 @@
 import { BookOutlined, MenuOutlined } from '@ant-design/icons';
 import { Button, Input, Layout, Menu } from 'antd';
+import Footer from 'components/Footer';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
-import Footer from './Footer';
+
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -24,11 +25,11 @@ const MainLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     <Layout className="min-h-screen">
       <Header className="flex items-center justify-between p-4 bg-gray-800">
         <Link to="/"><h1 className="text-lg text-white"><BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources</h1></Link>
-        <div className="flex items-center">
+        <div className="flex items-center gap-3">
           <Search
             placeholder="Search courses"
             onSearch={onSearch}
-            className="hidden w-48 md:block"
+            className="hidden w-96 md:block"
           />
           <Menu
             theme="dark"
@@ -41,7 +42,7 @@ const MainLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             <Menu.Item key="2">Courses</Menu.Item>
             <Menu.Item key="3">About</Menu.Item>
           </Menu>
-          <Button onClick={() => ({})} className="ml-2">Log in</Button>
+          <Link to="/login"><Button onClick={() => ({})} className="ml-2">Log in</Button></Link>
           <MenuOutlined className="ml-2 text-white md:hidden" />
         </div>
       </Header>
