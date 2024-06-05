@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import MainLayout from '../components/Layout';
 import BuyNow from '../pages/BuyNow';
 import CategoryPage from '../pages/CategoryPage';
 import Contact from '../pages/Contact';
@@ -13,12 +12,13 @@ import Login from 'pages/Login';
 import SignUp from 'pages/SignUp';
 import Profile from 'pages/Profile';
 import TeacherProfile from 'pages/TeacherProfile';
+import MainLayou from '../components/layout/Layout'
 
 
 
 const App: React.FC = () => (
   <Router>
-    <MainLayout>
+    <MainLayou>
       <Routes>
         <Route path="/" element={<HomePage/>} />
         <Route path="/search" element={<SearchPage />} />
@@ -34,7 +34,7 @@ const App: React.FC = () => (
         <Route path="/teacherProfile" element={<TeacherProfile />} />
 
       </Routes>
-    </MainLayout>
+    </MainLayou>
   </Router>
 );
 
