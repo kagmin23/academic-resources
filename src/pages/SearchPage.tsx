@@ -33,12 +33,10 @@ const SearchPage: React.FC = () => {
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
-    // Implement your search logic here
   };
 
   const handleFilterChange = (checkedValues: any) => {
     setFilters(checkedValues);
-    // Implement your filter logic here
   };
 
   const results: Result[] = [
