@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import FlagIcon from '@mui/icons-material/Flag';
-import '../styles/ReportPage.css';
 import { Form, Input, Button, Checkbox } from 'antd';
 const { TextArea } = Input;
 
@@ -50,7 +49,7 @@ export default function Report() {
                 name="reason"
                 rules={[{ required: true, message: 'Please input the reason for reporting!' }]}
               >
-                <TextArea rows={5} />
+                <TextArea rows={5}/>
               </Form.Item>
             )}
           </li>
