@@ -1,21 +1,21 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Card, Avatar, Row, Col, Typography, Tabs, Image, Button } from 'antd';
 import {
-  UserOutlined,
-  FileTextOutlined,
-  QuestionCircleOutlined,
-  HeartOutlined,
-  ShoppingCartOutlined,
-  FileDoneOutlined,
-  SettingOutlined,
-  LogoutOutlined,
   CaretRightOutlined,
+  FileDoneOutlined,
+  FileTextOutlined,
+  HeartOutlined,
+  LogoutOutlined,
+  QuestionCircleOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
+import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography } from 'antd';
+import React, { useState } from 'react';
+import Setting from '../profile/Setting'
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
-
 const coursesData = [
   {
     key: '1',
@@ -110,24 +110,34 @@ const coursesData = [
 ];
 
 const aboutData = {
+  avatarSrc: 'https://scontent.fsgn2-11.fna.fbcdn.net/v/t1.6435-9/104658671_897847847393418_5352404516257749893_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGUgtsdH1x6vQbbqnErk1SxR7lr7k5dPtpHuWvuTl0-2r6Xr_X6XfF0uExI1CK6UE3BDbeLgnLryq8J5oHoBPMg&_nc_ohc=iEvrApXw3JAQ7kNvgFGQPeU&_nc_ht=scontent.fsgn2-11.fna&oh=00_AYCFbiTtCWBz3IK8e1vQqJ3a3clnb0JU3pcmJjTFAqt3Yw&oe=6688AB83',
   name: 'David Heb',
   email: 'mrdavid@gmail.com',
-  dob: 'January 1, 2000',
+  dob: '01/01/1990',
   gender: 'Male',
-  courseCreatedDate: 'January 15, 2023',
-  avatarSrc: 'https://vnn-imgs-f.vgcloud.vn/2020/04/28/23/ldw3-2.jpg',
+  courseCreatedDate: '01/01/2020',
+  facebook: 'https://www.facebook.com/vu.hanthien.545',
+  linkedin: 'https://linkedin.com/in/david',
 };
 
-const TeacherProfile: React.FC = () => {
+const ProfileInstructor: React.FC = () => {
   const [filteredCourses, setFilteredCourses] = useState(coursesData);
   const [showAbout, setShowAbout] = useState(true);
+  const [showSettings, setShowSettings] = useState(false);
 
   const displayAboutInfo = () => {
     setShowAbout(true);
+    setShowSettings(false);
+  };
+
+  const displaySettings = () => {
+    setShowAbout(false);
+    setShowSettings(true);
   };
 
   const filterCoursesByStatus = (status: string) => {
     setShowAbout(false);
+    setShowSettings(false);
     if (status === 'all') {
       setFilteredCourses(coursesData);
     } else {
@@ -140,10 +150,10 @@ const TeacherProfile: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Sider width={250} className="site-layout-background" style={{ backgroundColor: 'white' }}>
         <div className="flex items-center justify-center my-6">
-          <Avatar size={100} src="https://cdn1.iconfinder.com/data/icons/flat-education-icons-1/512/37-512.png" icon={<UserOutlined />} />
+          <Avatar size={100} src="https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.6435-9/186556739_1150264392151761_8313708048043301527_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHXsXaD_LXdCCQoT27K49QqsybeY3n4YzGzJt5jefhjMe-LvbYoDtWlBcSBNxVRmHZfIZuh7RHur-kdbSDnpZJQ&_nc_ohc=0BmXcTKsr64Q7kNvgH-rsgU&_nc_ht=scontent.fsgn2-3.fna&oh=00_AYD7JAjZaEOuZLxHAtxYW_9yIdDjrFT7baEYLIWwRHvJTA&oe=6688B321" icon={<UserOutlined />} />
         </div>
         <Title level={4} className="text-center">David Heb</Title>
-        <Menu mode="inline" defaultSelectedKeys={['1']} style={{ height: '100%', borderRight: 0 }}>
+        <Menu mode="inline" defaultSelectedKeys={['1']} style={{borderRight: 0 }}>
           <Menu.Item key="1" icon={<FileTextOutlined />} onClick={displayAboutInfo}>
             About
           </Menu.Item>
@@ -168,7 +178,7 @@ const TeacherProfile: React.FC = () => {
           <Menu.Item key="8" icon={<FileDoneOutlined />}>
             Assignments
           </Menu.Item>
-          <Menu.Item key="9" icon={<SettingOutlined />}>
+          <Menu.Item key="9" icon={<SettingOutlined />} onClick={displaySettings}>
             Settings
           </Menu.Item>
           <Menu.Item key="10" icon={<LogoutOutlined />}>
@@ -189,7 +199,13 @@ const TeacherProfile: React.FC = () => {
               <Text>Gender: {aboutData.gender}</Text>
               <br />
               <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
+              <br />
+              <Text>Facebook: <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">{aboutData.facebook}</a></Text>
+              <br />
+              <Text>LinkedIn: <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">{aboutData.linkedin}</a></Text>
             </div>
+          ) : showSettings ? (
+            <Setting /> // Render Settings component
           ) : (
             <div style={{ padding: 10 }}>
               <Row gutter={[5, 5]} className="mb-4" justify="space-between">
@@ -211,7 +227,7 @@ const TeacherProfile: React.FC = () => {
               </Row>
               <Tabs defaultActiveKey="all" onChange={filterCoursesByStatus}>
                 <TabPane tab="All" key="all">
-                <Row gutter={[16, 16]}>
+                  <Row gutter={[16, 16]}>
                     {filteredCourses.map(course => (
                       <Col span={8} key={course.key}>
                         <Card
@@ -234,8 +250,7 @@ const TeacherProfile: React.FC = () => {
                 </TabPane>
                 <TabPane tab="Published" key="1">
                   <Row gutter={[16, 16]}>
-                    {filteredCourses.map(course => (
-                      course.status === '1' &&
+                    {filteredCourses.filter(course => course.status === '1').map(course => (
                       <Col span={8} key={course.key}>
                         <Card
                           cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
@@ -257,8 +272,7 @@ const TeacherProfile: React.FC = () => {
                 </TabPane>
                 <TabPane tab="Pending" key="0">
                   <Row gutter={[16, 16]}>
-                    {filteredCourses.map(course => (
-                      course.status === '0' &&
+                    {filteredCourses.filter(course => course.status === '0').map(course => (
                       <Col span={8} key={course.key}>
                         <Card
                           cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
@@ -287,6 +301,4 @@ const TeacherProfile: React.FC = () => {
   );
 };
 
-export default TeacherProfile;
- 
-                 
+export default ProfileInstructor;
