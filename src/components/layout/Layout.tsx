@@ -70,7 +70,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
                 <Link to="/shopping-card"></Link>
               </Menu.Item>
             </Menu>
-            <Link to="/login">
+            <Link to="/log-in">
               <Button className="p-4 text-lg">Log in</Button>
             </Link>
             <Link to="/profile-student">

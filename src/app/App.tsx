@@ -11,7 +11,7 @@ import MainLayou from '../components/layout/Layout';
 import BuyNow from '../pages/BuyNow';
 import CategoryPage from '../pages/CategoryPage';
 import Contact from '../pages/Contact';
-import CoursePage from '../pages/CoursePage';
+import CoursePage from '../pages/CourseOrder';
 import HomePage from '../pages/HomePage';
 import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
