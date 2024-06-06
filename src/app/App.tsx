@@ -1,3 +1,6 @@
+import BlogPage from 'pages/BlogPage';
+import DetailBlogPage from 'pages/DetailBlogPage';
+import SavePage from 'pages/SavePage';
 import TeacherProfile from 'pages/TeacherProfile';
 import ProfileStudent from 'pages/profile/ProfileStudent';
 import Login from 'pages/register/Login';
@@ -11,9 +14,6 @@ import Contact from '../pages/Contact';
 import CoursePage from '../pages/CoursePage';
 import HomePage from '../pages/HomePage';
 import ReportPage from '../pages/ReportPage';
-import BlogPage from 'pages/BlogPage';
-import DetailBlogPage from 'pages/DetailBlogPage';
-import SavePage from 'pages/SavePage';
 import SearchPage from '../pages/SearchPage';
 import ShoppingCard from '../pages/ShoppingCart';
 
@@ -27,18 +27,18 @@ const App: React.FC = () => (
         <Route path="/" element={<HomePage/>} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/category" element={<CategoryPage />} />
-        <Route path="/course" element={<CoursePage/>} />
-        <Route path="/shoppingCard" element={<ShoppingCard />} />
-        <Route path="/buyNow" element={<BuyNow />} />
+        <Route path="/course-order" element={<CoursePage/>} />
+        <Route path="/shopping-card" element={<ShoppingCard />} />
+        <Route path="/buy-now" element={<BuyNow />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/report" element={<ReportPage />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/log-in" element={<Login/>} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile-student" element={<ProfileStudent />} />
-        <Route path="/teacherProfile" element={<TeacherProfile />} />
+        <Route path="/teacher-profile" element={<TeacherProfile />} />
         <Route path='/save' element={<SavePage />} />
         <Route path='/blog' element={<BlogPage/>} />
-        <Route path='/detailBlog' element={<DetailBlogPage/>} />
+        <Route path='/detail-blog' element={<DetailBlogPage/>} />
       </Routes>
     </MainLayou>
   </Router>

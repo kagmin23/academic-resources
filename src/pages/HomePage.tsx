@@ -62,6 +62,8 @@ const HomePage: React.FC = () => {
           </Col>
         ))}
       </Row>
+      <Link to="/course-list"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
+
 
       <div className="body-homebox">
         <div className="box image-box">

@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { Button, List, Card } from 'antd';
 import { MoreOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Button, Card, List } from 'antd';
+import React, { useState } from 'react';
 
 const savedCourses = [
     { 
@@ -71,11 +71,11 @@ const SavePage: React.FC = () => {
   const [showRemoveButton, setShowRemoveButton] = useState<boolean>(false);
 
   return (
-    <div className="mx-auto p-9 flex flex-row">
+    <div className="flex flex-row mx-auto p-9">
       <div className="w-1/4 p-4 bg-gray-100">
-        <h2 className="text-xl font-bold mb-4">Saved Courses</h2>
+        <h2 className="mb-4 text-xl font-bold">Saved Courses</h2>
         <p className="mb-2">4 Courses</p>
-        <Button type="primary" danger className="mb-4 w-full text-xl p-5">Remove All</Button>
+        <Button type="primary" danger className="w-full p-5 mb-4 text-xl">Remove All</Button>
       </div>
 
       <div className="w-3/4 p-4">
@@ -89,10 +89,10 @@ const SavePage: React.FC = () => {
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
-                <div className="flex relative text-xl font-semibold">
-                  <a href='#'><img src={item.img} alt={item.title} className="w-62 h-62 object-cover mr-4" /></a>
+                <div className="relative flex text-xl font-semibold">
+                <a href='#'><img src={item.img} alt={item.title} className="object-cover mr-4 w-62 h-62" /></a>
                   <CustomMeta ratingCount={item.ratingCount} published={item.published} title={item.title} description={item.category} />
-                  <div className="absolute top-0 right-0 m-2 flex flex-col items-center space-y-1 text-2xl">
+                  <div className="absolute top-0 right-0 flex flex-col items-center m-2 space-y-1 text-2xl">
                     <div
                       onMouseEnter={() => setShowRemoveButton(true)}
                       onMouseLeave={() => setShowRemoveButton(false)}
@@ -105,16 +105,17 @@ const SavePage: React.FC = () => {
                   </div>
                   {hoveredIndex === index && (
                     <div
-                      className="absolute top-20 right-0 m-2 flex flex-row items-center space-x-2 text-2xl font-semibold"
+                      className="absolute right-0 flex flex-row items-center m-2 space-x-2 text-2xl font-semibold top-20"
                       onMouseEnter={() => setCartHoveredIndex(index)}
                       onMouseLeave={() => setCartHoveredIndex(null)}
                     >
+                      <span className={cartHoveredIndex === index ? 'text-red-500 font-semibold' : ''}>{item.price}</span>
                       <a href="#" className={cartHoveredIndex === index ? 'text-red-500' : ''}>
                         <ShoppingCartOutlined className={cartHoveredIndex === index ? 'text-red-500' : ''} />
                       </a>
-                      <span className={cartHoveredIndex === index ? 'text-red-500 font-semibold' : ''}>{item.price}</span>
                     </div>
                   )}
+
                 </div>
               </Card>
             </List.Item>

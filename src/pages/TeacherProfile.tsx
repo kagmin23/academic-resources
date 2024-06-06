@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { Layout, Menu, Card, Avatar, Row, Col, Typography, Tabs, Image, Button } from 'antd';
 import {
-  UserOutlined,
-  FileTextOutlined,
-  QuestionCircleOutlined,
-  HeartOutlined,
-  ShoppingCartOutlined,
-  FileDoneOutlined,
-  SettingOutlined,
-  LogoutOutlined,
   CaretRightOutlined,
+  FileDoneOutlined,
+  FileTextOutlined,
+  HeartOutlined,
+  LogoutOutlined,
+  QuestionCircleOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
+import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography } from 'antd';
+import React, { useState } from 'react';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
