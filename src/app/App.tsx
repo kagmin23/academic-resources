@@ -13,7 +13,7 @@ import SignUp from 'pages/SignUp';
 import Profile from 'pages/Profile';
 import TeacherProfile from 'pages/TeacherProfile';
 import MainLayou from '../components/layout/Layout'
-
+import About from 'pages/About';
 
 
 const App: React.FC = () => (
@@ -32,6 +32,7 @@ const App: React.FC = () => (
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/teacherProfile" element={<TeacherProfile />} />
+        <Route path="/about" element={<About/>}/>
 
       </Routes>
     </MainLayou>
