@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button, Form, Input, Typography } from 'antd';
-import axios from 'axios';
+// import axios from 'axios';
 
 const { Title } = Typography;
 
@@ -13,26 +13,26 @@ interface FormValues {
 }
 
 const Setting: React.FC = () => {
-  const handleFormSubmit = async (values: FormValues) => {
-    try {
-      // Gửi dữ liệu đến backend
-      const response = await axios.post('/api/updateSettings', values);
-      console.log('Response:', response.data);
-      // Hiển thị thông báo cho người dùng
-      alert('Update successful!');
-    } catch (error) {
-      // Xử lý lỗi
-      console.error('Error updating settings:', error);
-      alert('An error occurred while updating settings. Please try again later.');
-    }
-  };
+//   const handleFormSubmit = async (values: FormValues) => {
+//     try {
+//       // Gửi dữ liệu đến backend
+//       const response = await axios.post('/api/updateSettings', values);
+//       console.log('Response:', response.data);
+//       // Hiển thị thông báo cho người dùng
+//       alert('Update successful!');
+//     } catch (error) {
+//       // Xử lý lỗi
+//       console.error('Error updating settings:', error);
+//       alert('An error occurred while updating settings. Please try again later.');
+//     }
+//   };
 
   return (
     <div style={{ padding: 10 }}>
       <Title level={4}>Settings</Title>
       <Form<FormValues>
         layout="vertical"
-        onFinish={handleFormSubmit}
+        // onFinish={handleFormSubmit}
         initialValues={{
           name: '',
           email: '',

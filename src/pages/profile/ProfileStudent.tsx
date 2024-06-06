@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   FileDoneOutlined,
@@ -11,7 +12,7 @@ import {
 } from '@ant-design/icons';
 import { Avatar, Card, Col, Image, Layout, Menu, Row, Table, Tabs, Typography } from 'antd';
 
-import Setting from './Setting';
+import Setting from '../Setting';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -162,22 +163,19 @@ const ProfileStudent: React.FC = () => {
           <Menu.Item key="4" icon={<FileDoneOutlined />}>
             Certificates
           </Menu.Item>
-          <Menu.Item key="5" icon={<QuestionCircleOutlined/>}>
-            Quizzes
-          </Menu.Item>
-          <Menu.Item key="6" icon={<HeartOutlined />}>
+          <Menu.Item key="5" icon={<HeartOutlined />}>
             Wishlist
           </Menu.Item>
-          <Menu.Item key="7" icon={<ShoppingCartOutlined />}>
+          <Menu.Item key="6" icon={<ShoppingCartOutlined />}>
             Orders
           </Menu.Item>
-          <Menu.Item key="8" icon={<FileDoneOutlined />}>
+          <Menu.Item key="7" icon={<FileDoneOutlined />}>
             Assignments
           </Menu.Item>
-          <Menu.Item key="9" icon={<SettingOutlined />} onClick={displaySettings}>
+          <Menu.Item key="8" icon={<SettingOutlined />} onClick={displaySettings}>
             Settings
           </Menu.Item>
-          <Menu.Item key="10" icon={<LogoutOutlined />}>
+          <Menu.Item key="9" icon={<LogoutOutlined />}>
             Logout
           </Menu.Item>
         </Menu>
@@ -261,5 +259,3 @@ const ProfileStudent: React.FC = () => {
 };
 
 export default ProfileStudent;
-
-

@@ -1,17 +1,17 @@
+import { FacebookOutlined, GoogleOutlined, TwitterOutlined } from '@ant-design/icons';
+import { Button, Input } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Input } from 'antd';
-import { FacebookOutlined, TwitterOutlined, GoogleOutlined } from '@ant-design/icons';
 
 const Login: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
         <div className="flex justify-center mb-4">
-          <img src="https://demo.createdbycocoon.com/moodle/edumy/splash/asset/footer_logo.png" alt="Edumy" className="h-12" />
+          <img src="https://demo.createdbycocoon.com/moodle/edumy/splash/asset/footer_logo.png" alt="Academic-Resources" className="h-12" />
         </div>
         <h2 className="text-2xl font-bold text-center">Welcome Back</h2>
-        <p className="text-center text-gray-600">Login To Your Edumy Account!</p>
+        <p className="text-center text-gray-600">Login To Your Academic Account!</p>
         <div className="flex flex-col space-y-2">
           <Button icon={<FacebookOutlined />} type="primary" className="flex items-center justify-center w-full h-12">
             Continue with Facebook
@@ -39,7 +39,7 @@ const Login: React.FC = () => {
           <p className="text-gray-600">Don't have an account? <Link to="/signup" className="text-blue-600">Sign Up</Link></p>
         </div>
         <footer className="text-center text-gray-600">
-          <p>© 2024 Edumy. All Rights Reserved.</p>
+          <p>© 2024 Academic. All Rights Reserved.</p>
         </footer>
       </div>
     </div>

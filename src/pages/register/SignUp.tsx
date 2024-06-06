@@ -1,6 +1,6 @@
+import { Button, Checkbox, Input } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Input, Checkbox } from 'antd';
 
 const SignUp: React.FC = () => {
   return (
