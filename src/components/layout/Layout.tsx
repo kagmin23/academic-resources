@@ -38,9 +38,10 @@ const MainLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             onClick={handleMenuClick}
             className="flex-grow md:flex md:justify-end"
           >
-            <Menu.Item key="1">Home</Menu.Item>
+            <Link to='/'> <Menu.Item key="1">Home</Menu.Item></Link>
             <Menu.Item key="2">Courses</Menu.Item>
-            <Link to='/shoppingCard'> <Menu.Item key="3" icon={<ShoppingCartOutlined />}>About</Menu.Item> </Link>
+            <Menu.Item key="3" >About</Menu.Item>
+            <Link to='/shopping-card'><ShoppingCartOutlined/></Link>
           </Menu>
           <Link to="/login"><Button onClick={() => ({})} className="p-4 text-lg">Log in</Button></Link>
           <MenuOutlined className="ml-2 text-white md:hidden" />
