@@ -1,4 +1,5 @@
 import BlogPage from 'pages/BlogPage';
+import CoursePage from 'pages/CoursePage';
 import DetailBlogPage from 'pages/DetailBlogPage';
 import SavePage from 'pages/SavePage';
 import TeacherProfile from 'pages/TeacherProfile';
@@ -11,7 +12,6 @@ import MainLayou from '../components/layout/Layout';
 import BuyNow from '../pages/BuyNow';
 import CategoryPage from '../pages/CategoryPage';
 import Contact from '../pages/Contact';
-import CoursePage from '../pages/CourseOrder';
 import HomePage from '../pages/HomePage';
 import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
@@ -28,7 +28,6 @@ const App: React.FC = () => (
         <Route path="/" element={<HomePage/>} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/category" element={<CategoryPage />} />
-        <Route path="/course-order" element={<CoursePage/>} />
         <Route path="/shopping-card" element={<ShoppingCard />} />
         <Route path="/buy-now" element={<BuyNow />} />
         <Route path="/contact" element={<Contact />} />
@@ -41,6 +40,7 @@ const App: React.FC = () => (
         <Route path='/blog' element={<BlogPage/>} />
         <Route path='/detail-blog' element={<DetailBlogPage/>} />
         <Route path='/setting' element={<Setting/>} />
+        <Route path='/course' element={<CoursePage/>} />
 
       </Routes>
     </MainLayou>

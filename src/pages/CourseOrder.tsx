@@ -3,7 +3,7 @@ import 'tailwindcss/tailwind.css';
 
 const { Panel } = Collapse;
 
-const CoursePage = () => {
+const CourseOrder = () => {
     const ratings = [
         { stars: 5, percentage: 0 },
         { stars: 4, percentage: 0 },
@@ -247,4 +247,4 @@ const CoursePage = () => {
     );
 };
 
-export default CoursePage;
+export default CourseOrder;
