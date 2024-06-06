@@ -63,7 +63,7 @@ code {
 
 .box-header {
   display: flex;
-  justify-content: space-around; /* Các phần tử con sẽ được căn giữa và chia đều khoảng cách ngang */
+  justify-content: space-around;
   align-items: center;
   width: 100%;
   max-width: 100%;
