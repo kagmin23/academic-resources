@@ -1,4 +1,5 @@
 import BlogPage from 'pages/BlogPage';
+import CourseOrder from 'pages/CourseOrder';
 import CoursePage from 'pages/CoursePage';
 import DetailBlogPage from 'pages/DetailBlogPage';
 import SavePage from 'pages/SavePage';
@@ -41,6 +42,7 @@ const App: React.FC = () => (
         <Route path='/detail-blog' element={<DetailBlogPage/>} />
         <Route path='/setting' element={<Setting/>} />
         <Route path='/course' element={<CoursePage/>} />
+        <Route path='/course-order' element={<CourseOrder/>} />
 
       </Routes>
     </MainLayou>
