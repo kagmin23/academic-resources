@@ -15,6 +15,7 @@ import CoursePage from '../pages/CourseOrder';
 import HomePage from '../pages/HomePage';
 import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
+import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
 
 
@@ -39,6 +40,8 @@ const App: React.FC = () => (
         <Route path='/save' element={<SavePage />} />
         <Route path='/blog' element={<BlogPage/>} />
         <Route path='/detail-blog' element={<DetailBlogPage/>} />
+        <Route path='/setting' element={<Setting/>} />
+
       </Routes>
     </MainLayou>
   </Router>
