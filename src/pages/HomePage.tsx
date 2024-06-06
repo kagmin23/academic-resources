@@ -3,6 +3,7 @@ import { Button, Card, Col, Input, Row } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
+
 const HomePage: React.FC = () => {
   return (
     <div className="homepage">
@@ -137,8 +138,8 @@ const HomePage: React.FC = () => {
           <Col xs={24} sm={12} md={6} key={index} className="flex justify-center">
             <Card
               bordered={false}
-              className="w-48 hover:shadow-md transition duration-300 ease-in-out "
-              cover={<img alt={category.title} src={category.img} className="h-32 object-contain" />}
+              className="w-48 transition duration-300 ease-in-out hover:shadow-md "
+              cover={<img alt={category.title} src={category.img} className="object-contain h-32" />}
             >
               <div className="text-center">{category.title}</div>
             </Card>

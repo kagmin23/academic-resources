@@ -44,7 +44,7 @@ const MainLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
           </Menu>
           <Link to="/login"><Button onClick={() => ({})} className="p-4 text-lg">Log in</Button></Link>
           <MenuOutlined className="ml-2 text-white md:hidden" />
-          <Link to="/profile-student"><UserOutlined className="text-3xl text-white" /></Link>
+          <Link to="/profile-instructor"><UserOutlined className="text-3xl text-white" /></Link>
         </div>
       </Header>
       <Content className="p-4">
