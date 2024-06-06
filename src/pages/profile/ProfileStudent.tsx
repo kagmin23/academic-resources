@@ -12,7 +12,7 @@ import {
 } from '@ant-design/icons';
 import { Avatar, Card, Col, Image, Layout, Menu, Row, Table, Tabs, Typography } from 'antd';
 
-import Setting from '../Setting';
+import Setting from 'pages/Setting';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -257,5 +257,4 @@ const ProfileStudent: React.FC = () => {
     </Layout>
   );
 };
-
 export default ProfileStudent;
