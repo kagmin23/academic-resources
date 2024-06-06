@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
 import FlagIcon from '@mui/icons-material/Flag';
-import '../styles/ReportPage.css';
-import { Form, Input, Button, Checkbox } from 'antd';
+import { Button, Checkbox, Form, Input } from 'antd';
+import { useState } from 'react';
+// import '../styles/ReportPage.css';
 const { TextArea } = Input;
 
 export default function Report() {
@@ -12,15 +12,15 @@ export default function Report() {
   };
   
   return (
-    <div className="bg-gray-100 p-4 md:p-8 lg:p-12">
-      <div className="text-2xl mb-4 flex items-center">
+    <div className="p-4 bg-gray-100 md:p-8 lg:p-12">
+      <div className="flex items-center mb-4 text-2xl">
         <FlagIcon className="mr-2" />
-        <span className=' font-semibold'>Report history</span>
+        <span className='font-semibold '>Report history</span>
       </div>
-      <h1 className="text-xl font-semibold mb-2">Thanks for reporting</h1>
-      <p className="mb-4 text-gray-600 text-xl">Any member of the Cursus community can flag content to us that they believe violates our Community Guidelines. When something is flagged, it’s not automatically taken down. Flagged content is reviewed in line with the following guidelines:</p>
-      <div className="mb-6 text-gray-600 text-xl">
-        <ul className="list-disc pl-5 mb-4">
+      <h1 className="mb-2 text-xl font-semibold">Thanks for reporting</h1>
+      <p className="mb-4 text-xl text-gray-600">Any member of the Cursus community can flag content to us that they believe violates our Community Guidelines. When something is flagged, it’s not automatically taken down. Flagged content is reviewed in line with the following guidelines:</p>
+      <div className="mb-6 text-xl text-gray-600">
+        <ul className="pl-5 mb-4 list-disc">
           <li>Content that violates our <a href='/' className='text-blue-700'>Community Guidelines</a> is removed from Edututs+.</li>
           <li>Content that may not be appropriate for all younger audiences may be age-restricted.</li>
         </ul>
@@ -63,7 +63,7 @@ export default function Report() {
         className="max-w-lg mx-auto"
       >
         <Form.Item>
-          <Button type="primary" htmlType="submit" className="w-full text-xl p-7 bg-blue-500 ">
+          <Button type="primary" htmlType="submit" className="w-full text-xl bg-blue-500 p-7 ">
             Submit Report
           </Button>
         </Form.Item>
