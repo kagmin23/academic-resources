@@ -49,14 +49,14 @@ const HomePage: React.FC = () => {
             img: "https://media.licdn.com/dms/image/D4E12AQEw_AaFDPr3TA/article-cover_image-shrink_720_1280/0/1702893319300?e=2147483647&v=beta&t=o4sdtfjIw2j4Oc9RjZRfMJjMC2IFJLFT8e_MoMMAkMQ",
           },
         ].map((course, index) => (
-          <Col xs={24} sm={12} md={8} key={index}>
+          <Col xs={24} sm={12} md={8} key={index} >
             <Card
               title={course.title}
               bordered={false}
               cover={<img alt={course.title} src={course.img} />}
-            >
+              className='text-xl'>
               Course description here
-              <Button type="primary">Buy Now</Button>
+              <Button type="primary" className='p-5 text-lg ml-9'>Buy Now</Button>
             </Card>
           </Col>
         ))}
@@ -111,7 +111,7 @@ const HomePage: React.FC = () => {
         </div>
       </Link>
 
-      <Row gutter={[16, 16]}>
+      <Row gutter={[16, 16]} className="justify-center">
         {[
           {
             title: "Tailwind",
@@ -134,12 +134,13 @@ const HomePage: React.FC = () => {
             img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbK58xrNN4qN90eMgx4KAkgz53IWUAqfNsGA&s",
           },
         ].map((category, index) => (
-          <Col xs={24} sm={12} md={6} key={index}>
+          <Col xs={24} sm={12} md={6} key={index} className="flex justify-center">
             <Card
               bordered={false}
-              cover={<img alt={category.title} src={category.img} />}
+              className="w-48 hover:shadow-md transition duration-300 ease-in-out "
+              cover={<img alt={category.title} src={category.img} className="h-32 object-contain" />}
             >
-              {category.title}
+              <div className="text-center">{category.title}</div>
             </Card>
           </Col>
         ))}
@@ -147,14 +148,15 @@ const HomePage: React.FC = () => {
       <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
 
       <div className="p-8 bg-gray-100 contact-home">
-        <h1 className="text-2xl font-bold">Subscriber</h1>
-        <p>Receive weekly newsletter with educational materials, new courses, interesting posts, popular books and much more!</p>
-        <div className="flex flex-col mt-4 md:flex-row">
-          <Input className="w-full mb-4 md:w-80 md:mr-4" placeholder="Enter your email" />
-          <Button className="w-full md:w-auto" type="primary">Subscribe</Button>
-        </div>
+  <h1 className="text-2xl font-bold">Subscriber</h1>
+  <p>Receive weekly newsletter with educational materials, new courses, interesting posts, popular books and much more!</p>
+  <div className="flex flex-col mt-4 md:flex-row md:items-center">
+    <Input className="w-full mb-4 md:mb-0 md:mr-4" placeholder="Enter your email" />
+    <Button className="w-full md:w-auto" type="primary">Subscribe</Button>
+  </div>
+</div>
+
       </div>
-    </div>
   );
 };
 
