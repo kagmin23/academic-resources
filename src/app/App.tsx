@@ -18,7 +18,7 @@ import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
 import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
-
+import Lesson from 'pages/Lesson';
 
 
 
@@ -43,7 +43,7 @@ const App: React.FC = () => (
         <Route path='/setting' element={<Setting/>} />
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
-
+        <Route path='/lesson' element={<Lesson/>} />
       </Routes>
     </MainLayou>
   </Router>
