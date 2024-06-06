@@ -91,8 +91,8 @@ const SavePage: React.FC = () => {
                 onMouseLeave={() => setHoveredIndex(null)}
               >
                 <div className="relative flex flex-col md:flex-row text-xl font-semibold">
-                  <a href='#'><img src={item.img} alt={item.title} className="object-cover mb-4 md:mb-0 md:mr-4 w-full md:w-48 h-48" /></a>
-                  <CustomMeta ratingCount={item.ratingCount} published={item.published} title={item.title} description={item.category} />
+                  <a href='/course-details'><img src={item.img} alt={item.title} className="object-cover mb-4 md:mb-0 md:mr-4 w-full md:w-48 h-48" /></a>
+                  <a href='/course-details'><CustomMeta ratingCount={item.ratingCount} published={item.published} title={item.title} description={item.category} /></a>
                   <div className="absolute top-0 right-0 flex flex-col items-center m-2 space-y-1 text-2xl">
                     <div
                       onMouseEnter={() => setShowRemoveButton(true)}
@@ -115,7 +115,7 @@ const SavePage: React.FC = () => {
                     </a>
                     <span className={shoppingCartHoveredIndex === index ? 'text-red-500 font-semibold' : ''}>{item.price}</span>
                     <a
-                      href="shopping-card"
+                      href="/shopping-card"
                       onMouseEnter={() => setShoppingCartHoveredIndex(index)}
                       onMouseLeave={() => setShoppingCartHoveredIndex(null)}
                       className={shoppingCartHoveredIndex === index ? 'text-red-500' : ''}

@@ -16,6 +16,7 @@ import DetailBlogPage from 'pages/DetailBlogPage';
 import SavePage from 'pages/SavePage';
 import SearchPage from '../pages/SearchPage';
 import ShoppingCard from '../pages/ShoppingCart';
+import CourseDetailsPage from 'pages/CourseDetailsPage';
 
 
 
@@ -39,6 +40,8 @@ const App: React.FC = () => (
         <Route path='/save' element={<SavePage />} />
         <Route path='/blog' element={<BlogPage/>} />
         <Route path='/detailBlog' element={<DetailBlogPage/>} />
+        <Route path='/course-details' element={<CourseDetailsPage/>} />
+
       </Routes>
     </MainLayou>
   </Router>
