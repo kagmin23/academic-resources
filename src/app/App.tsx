@@ -1,4 +1,4 @@
-import TeacherProfile from 'pages/TeacherProfile';
+
 import ProfileStudent from 'pages/profile/ProfileStudent';
 import Login from 'pages/register/Login';
 import SignUp from 'pages/register/SignUp';
@@ -16,6 +16,7 @@ import DetailBlogPage from 'pages/DetailBlogPage';
 import SavePage from 'pages/SavePage';
 import SearchPage from '../pages/SearchPage';
 import ShoppingCard from '../pages/ShoppingCart';
+import ProfileInstructor from 'pages/profile/ProfileInstructor';
 
 
 
@@ -35,7 +36,7 @@ const App: React.FC = () => (
         <Route path="/login" element={<Login/>} />
         <Route path="/signUp" element={<SignUp />} />
         <Route path="/profile-student" element={<ProfileStudent />} />
-        <Route path="/teacherProfile" element={<TeacherProfile />} />
+        <Route path="/profile-instructor" element={<ProfileInstructor />} />
         <Route path='/save' element={<SavePage />} />
         <Route path='/blog' element={<BlogPage/>} />
         <Route path='/detailBlog' element={<DetailBlogPage/>} />
