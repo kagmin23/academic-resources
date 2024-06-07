@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Modal, Tabs, Badge, Avatar, Tooltip } from 'antd';
+import { Button, Modal, Tabs, Badge, Avatar, Collapse, Progress, Radio } from 'antd';
 import {
     PlayCircleOutlined,
     HeartOutlined,
@@ -10,14 +10,15 @@ import {
     LikeOutlined,
     DislikeOutlined,
     ShareAltOutlined,
-    CheckCircleOutlined
 } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
+const { Panel } = Collapse;
+const { Group } = Radio;
 
 const CourseDetail: React.FC = () => {
-    const [isModalVisible, setIsModalVisible] = React.useState(false);
-    const [introOpen, setIntroOpen] = useState(false);
+    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [openSection, setOpenSection] = useState<string | string[]>([]);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -27,12 +28,24 @@ const CourseDetail: React.FC = () => {
         setIsModalVisible(false);
     };
 
-    const handleIntroClick = () => {
-        setIntroOpen(!introOpen);
+    const handleToggle = (key: string | string[]) => {
+        setOpenSection(key);
+    };
+
+    const renderStars = (starCount: number) => {
+        const stars = [];
+        for (let i = 0; i < 5; i++) {
+            if (i < starCount) {
+                stars.push(<span key={i} role="img" aria-label="star" className="text-yellow-500">⭐️</span>);
+            } else {
+                stars.push(<span key={i} role="img" aria-label="star" className="text-yellow-500 text-3xl">☆</span>);
+            }
+        }
+        return stars;
     };
 
     return (
-        <div className="wrapper bg-gray-100">
+        <div className="wrapper bg-gray-900 text-white">
             <div className="py-8">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col lg:flex-row items-center justify-center">
@@ -59,7 +72,7 @@ const CourseDetail: React.FC = () => {
                         </div>
                         <div className="w-full lg:w-2/3 lg:ml-8 mt-8 lg:mt-0">
                             <h2 className="text-2xl font-bold">The Web Developer Bootcamp</h2>
-                            <p className="text-gray-700">The only course you need to learn web development - HTML, CSS, JS, Node, and More!</p>
+                            <p className="">The only course you need to learn web development - HTML, CSS, JS, Node, and More!</p>
                             <div className="flex items-center mt-4">
                                 <StarOutlined className="text-yellow-500" />
                                 <span className="ml-2">5.3.2</span>
@@ -69,29 +82,6 @@ const CourseDetail: React.FC = () => {
                             <div className="flex items-center mt-4">
                                 <CommentOutlined className="text-gray-700" />
                                 <span className="ml-2">English</span>
-                                <div className="ml-4 flex items-center">
-                                    <CheckCircleOutlined className="text-gray-700" />
-                                    <Tooltip
-                                        title={
-                                            <>
-                                                <p>French</p>
-                                                <p>Hindi</p>
-                                                <p>German [Auto-generated]</p>
-                                                <p>Indonesian [Auto-generated]</p>
-                                                <p>Italian [Auto-generated]</p>
-                                                <p>Japanese [Auto-generated]</p>
-                                                <p>Korean</p>
-                                                <p>Polish</p>
-                                                <p>Portuguese [Auto-generated]</p>
-                                                <p>Spanish [Auto-generated]</p>
-                                                <p>Traditional Chinese</p>
-                                                <p>Turkish [Auto-generated]</p>
-                                            </>
-                                        }
-                                    >
-                                        <span className="ml-2">English, Dutch</span>
-                                    </Tooltip>
-                                </div>
                             </div>
                             <p className="mt-2">Last updated 1/2024</p>
                             <div className="flex mt-4">
@@ -108,9 +98,9 @@ const CourseDetail: React.FC = () => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <Avatar src="images/left-imgs/img-1.jpg" size="large" />
-                            <div className="ml-4">
-                                <a href="#" className="text-lg font-semibold">Johnson Smith</a>
-                                <Button type="default" className="ml-2">Subscribe</Button>
+                            <div className="ml-4 flex flex-col">
+                                <a href="#" className="text-lg font-semibold text-black mb-3">Johnson Smith</a>
+                                <Button type="default" className="ml-2 p-5 text-lg bg-red-600 text-white font-semibold">Subscribe</Button>
                             </div>
                         </div>
                         <div className="flex items-center">
@@ -129,7 +119,7 @@ const CourseDetail: React.FC = () => {
                         </div>
                     </div>
                     <Tabs defaultActiveKey="1" className="mt-4">
-                        <TabPane tab="About" key="1">
+                        <TabPane tab={<span className='text-xl font-semibold'>About</span>} key="1">
                             <div>
                                 <h3 className='text-2xl font-semibold mb-2'>Requirements</h3>
                                 <ul className="list-disc ml-6 text-xl text-gray-600">
@@ -186,41 +176,178 @@ const CourseDetail: React.FC = () => {
                                 <p>If you have any questions, please don't hesitate to contact me. I got into this industry because I love working with people and helping students learn. Sign up today and see how fun, exciting, and rewarding web development can be!</p>
                             </div>
                         </TabPane>
-                        <TabPane tab="Courses Content" key="2">
-                            <div className="crse_content flex flex-row">
-                                <h3 className="mb-4">Course content</h3>
-                                <div className="flex items-center mb-4">
-                                    <span className="mr-4 hover:text-red-700">Expand all</span>
-                                    <span className="mr-4">402 lectures</span>
-                                    <span className="mr-4">47:06:29</span>
+                        <TabPane tab={<span className='text-xl font-semibold'>Course Content</span>} key="2">
+                            <div className="p-4">
+                                <div className="flex items-center mb-4 font-semibold">
+                                    <h3 className="mr-auto text-2xl">Course content</h3>
+                                    <span className="hover:text-red-700 cursor-pointer text-xl">Expand all</span>
+                                    <span className="ml-4 text-xl">402 lectures</span>
+                                    <span className="ml-4 text-xl">47:06:29</span>
+                                </div>
+                                <Collapse activeKey={openSection} onChange={handleToggle}>
+                                    <Panel header={<span className="font-semibold text-xl">Introduction to this Course</span>} key="introCourse">
+                                        <div className="text-lg">
+                                            <ul className="list-none p-0">
+                                                <li className="flex justify-between mb-2">
+                                                    <span>A Note On Asking For Help</span>
+                                                    <span>00:12</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Introducing Our TA</span>
+                                                    <span>01:42</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Join the Online Community</span>
+                                                    <span>00:51</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Why This Course?</span>
+                                                    <span>07:48</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Syllabus Download</span>
+                                                    <span>01:42</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Lecture Slides</span>
+                                                    <span>00:11</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </Panel>
+                                    <Panel header={<span className="font-semibold text-xl">Introduction to Front End Development</span>} key="introFrontEnd">
+                                        <div className="text-lg">
+                                            <div className="flex justify-between mb-2">
+                                                <span>8 lectures</span>
+                                                <span>22:08</span>
+                                            </div>
+                                            <ul className="list-none p-0">
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Unit Objectives</span>
+                                                    <span>00:12</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Note about Setting Up Front-End Developer Environment</span>
+                                                    <span>01:42</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Setting Up Front-End Developer Environment</span>
+                                                    <span>00:51</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Note about Introduction to the Web</span>
+                                                    <span>07:48</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>Introduction to the Web</span>
+                                                    <span>01:42</span>
+                                                </li>
+                                                <li className="flex justify-between mb-2">
+                                                    <span>The Front End Holy Trinity</span>
+                                                    <span>00:11</span>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </Panel>
+                                </Collapse>
+                            </div>
+                        </TabPane>
+                        <TabPane tab={<span className='text-xl font-semibold '>Reviews</span>} key="3">
+                            <div className="flex ">
+                                <div className="w-1/2 p-4 ">
+                                    <h1 className="text-2xl font-semibold mb-2">Student Feedback</h1>
+                                    <div className="flex items-center mb-4 bg-gray-100 rounded-lg p-4">
+                                        <h2 className='text-xl font-semibold mr-2 ml-4'>4.6</h2>
+                                        <div className="mr-4 text-2xl">
+                                            {renderStars(4)}
+                                        </div>
+                                        <div>
+                                            <div className="mt-2 text-lg font-semibold">Course Rating</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="w-1/2 p-4">
+                                    <div className="space-y-8">
+                                        <div className="flex space-x-4">
+                                            <div className="flex-shrink-0">
+                                                <Avatar src="images/left-imgs/img-1.jpg" />
+                                            </div>
+                                            <div>
+                                                <div className="flex flex-col mb-2">
+                                                    <h4 className="font-semibold text-lg">John Doe</h4>
+                                                    <span className="text-sm">2 hours ago</span>
+                                                </div>
+                                                <div className="mr-4 text-2xl">
+                                                    {renderStars(4)}
+                                                </div>
+                                                <div className="flex items-center mb-2">
+                                                </div>
+                                                <p className="text-gray-600 text-lg mb-2">Nam gravida elit a velit rutrum, eget dapibus ex elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce lacinia, nunc sit amet tincidunt venenatis.</p>
+                                                <div className="flex items-center space-x-4 text-gray-600 text-lg">
+                                                    <h4>Was this review helpful?</h4>
+                                                    <Group>
+                                                        <Radio value={1}>Yes</Radio>
+                                                        <Radio value={2}>No</Radio>
+                                                    </Group>
+                                                    <a href="#" className="text-lg">Report</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div className="flex space-x-4">
+                                            <div className="flex-shrink-0">
+                                                <Avatar src="images/left-imgs/img-1.jpg" />
+                                            </div>
+                                            <div>
+                                                <div className="flex flex-col mb-2">
+                                                    <h4 className="font-semibold text-lg">John Doe</h4>
+                                                    <span className="text-sm">2 hours ago</span>
+                                                </div>
+                                                <div className="mr-4 text-2xl">
+                                                    {renderStars(4)}
+                                                </div>
+                                                <div className="flex items-center mb-2">
+                                                </div>
+                                                <p className="text-gray-600 text-lg mb-2">Nam gravida elit a velit rutrum, eget dapibus ex elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce lacinia, nunc sit amet tincidunt venenatis.</p>
+                                                <div className="flex items-center space-x-4 text-gray-600 text-lg">
+                                                    <h4>Was this review helpful?</h4>
+                                                    <Group>
+                                                        <Radio value={1}>Yes</Radio>
+                                                        <Radio value={2}>No</Radio>
+                                                    </Group>
+                                                    <a href="#" className="text-lg">Report</a>
+                                                </div>
+
+                                            </div>
+                                        </div><div className="flex space-x-4">
+                                            <div className="flex-shrink-0">
+                                                <Avatar src="images/left-imgs/img-1.jpg" />
+                                            </div>
+                                            <div>
+                                                <div className="flex flex-col mb-2">
+                                                    <h4 className="font-semibold text-lg">John Doe</h4>
+                                                    <span className="text-sm">2 hours ago</span>
+                                                </div>
+                                                <div className="mr-4 text-2xl">
+                                                    {renderStars(4)}
+                                                </div>
+                                                <div className="flex items-center mb-2">
+                                                </div>
+                                                <p className="text-gray-600 text-lg mb-2">Nam gravida elit a velit rutrum, eget dapibus ex elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce lacinia, nunc sit amet tincidunt venenatis.</p>
+                                                <div className="flex items-center space-x-4 text-gray-600 text-lg">
+                                                    <h4>Was this review helpful?</h4>
+                                                    <Group>
+                                                        <Radio value={1}>Yes</Radio>
+                                                        <Radio value={2}>No</Radio>
+                                                    </Group>
+                                                    <a href="#" className="">Report</a>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div className='text-xl'>
-                                <h2 className="mb-2 font-semibold" onClick={handleIntroClick}>Introduction to this Course</h2>
-                                {introOpen && (
-                                    <div className="intro-content mb-4 ">
-                                        <ul className="mb-4">
-                                            <li className="flex items-center">
-                                                A Note On Asking For Help
-                                                <span className="ml-auto">8 lectures</span>
-                                                <span>22:08</span>
-                                            </li>
-                                        </ul>
-                                        <ul className="mb-4">
-                                            <li className="flex items-center">
-                                                Introducing Our TA
-                                                <span className="ml-auto">8 lectures</span>
-                                                <span>00:12</span>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                )}
-                            </div>
-
-
-                        </TabPane>
-                        <TabPane tab="Reviews" key="3">
-                            <p>Reviews content goes here...</p>
                         </TabPane>
                     </Tabs>
                 </div>
