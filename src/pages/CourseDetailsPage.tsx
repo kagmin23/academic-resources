@@ -56,8 +56,8 @@ const CourseDetail: React.FC = () => {
         <div className="wrapper bg-gray-900 text-white">
             <div className="py-8">
                 <div className="container mx-auto px-4">
-                    <div className="flex flex-col lg:flex-row items-center justify-center">
-                        <div className="w-full lg:w-1/3 relative">
+                    <div className="flex flex-col lg:flex-row items-center justify-center lg:space-x-8">
+                        <div className="w-full lg:w-1/3 relative mb-4 lg:mb-0">
                             <div className="relative">
                                 <a onClick={showModal} className="block">
                                     <img src="https://img.youtube.com/vi/hqBjda_bf3I/maxresdefault.jpg" alt="" className="w-full p-2 bg-white" />
@@ -114,24 +114,33 @@ const CourseDetail: React.FC = () => {
                                 <Button type="default" className="ml-2 p-5 text-lg bg-red-600 text-white font-semibold">Subscribe</Button>
                             </div>
                         </div>
-                        <div className="flex items-center p-2">
-                            <Badge showZero className=" flex flex-col items-center rounded-lg border border-gray-300 p-4">
-                                <EyeOutlined className="text-2xl mr-1 mb-2" />
-                                <span>1452</span>
-                            </Badge>
-                            <Badge showZero className="ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
-                                <LikeOutlined className="text-2xl mr-1 mb-2" />
-                                <span>100</span>
-                            </Badge>
-                            <Badge showZero className="ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
-                                <DislikeOutlined className="text-2xl mr-1 mb-2" />
-                                <span>20</span>
-                            </Badge>
-                            <Badge showZero className="ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
-                                <ShareAltOutlined className="text-2xl mb-2" />
-                                <span>9</span>
-                            </Badge>
+                        <div className="flex flex-wrap items-center p-2">
+                            <div className="w-full sm:w-auto flex justify-center sm:justify-start">
+                                <Badge showZero className="flex flex-col items-center rounded-lg border border-gray-300 p-4">
+                                    <EyeOutlined className="text-2xl mr-1 mb-2" />
+                                    <span>1452</span>
+                                </Badge>
+                            </div>
+                            <div className="w-full sm:w-auto flex justify-center sm:justify-start mt-2 sm:mt-0">
+                                <Badge showZero className="ml-0 sm:ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
+                                    <LikeOutlined className="text-2xl mr-1 mb-2" />
+                                    <span>100</span>
+                                </Badge>
+                            </div>
+                            <div className="w-full sm:w-auto flex justify-center sm:justify-start mt-2 sm:mt-0">
+                                <Badge showZero className="ml-0 sm:ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
+                                    <DislikeOutlined className="text-2xl mr-1 mb-2" />
+                                    <span>20</span>
+                                </Badge>
+                            </div>
+                            <div className="w-full sm:w-auto flex justify-center sm:justify-start mt-2 sm:mt-0">
+                                <Badge showZero className="ml-0 sm:ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
+                                    <ShareAltOutlined className="text-2xl mb-2" />
+                                    <span>9</span>
+                                </Badge>
+                            </div>
                         </div>
+
                     </div>
                     <Tabs defaultActiveKey="1" className="mt-4">
                         <TabPane tab={<span className='text-xl font-semibold'>About</span>} key="1">
@@ -268,8 +277,8 @@ const CourseDetail: React.FC = () => {
                             </div>
                         </TabPane>
                         <TabPane tab={<span className='text-xl font-semibold '>Reviews</span>} key="3">
-                            <div className="flex ">
-                                <div className="w-1/2 p-4 ">
+                            <div className="flex flex-col md:flex-row">
+                                <div className="md:w-1/2 p-4">
                                     <h1 className="text-2xl font-semibold mb-2">Student Feedback</h1>
                                     <div className="flex items-center mb-4 bg-gray-100 rounded-lg p-4">
                                         <h2 className='text-xl font-semibold mr-2 ml-4'>4.6</h2>
@@ -280,23 +289,23 @@ const CourseDetail: React.FC = () => {
                                             <div className="mt-2 text-lg font-semibold">Course Rating</div>
                                         </div>
                                     </div>
-                                    <div className="w-full pl-4 md:w-1/2 md:pl-0 ">
-                                            <div className="space-y-2">
-                                                {ratings.map((rating) => (
-                                                    <div key={rating.stars} className="flex items-center">
-                                                        <div className="w-full h-4 mx-2 bg-gray-200 rounded-full">
-                                                            <div className="h-4 bg-red-500 rounded-full" style={{ width: `${rating.percentage}%` }}></div>
-                                                        </div>
-                                                        <div className="flex items-center ml-2">
-                                                            <div className="flex text-xl">
-                                                                {renderStars(rating.stars)}
-                                                            </div>
-                                                            <span className="ml-2">{rating.percentage}%</span>
-                                                        </div>
-
+                                    <div className="w-full pl-4 md:w-1/2 md:pl-0">
+                                        <div className="space-y-2">
+                                            {ratings.map((rating) => (
+                                                <div key={rating.stars} className="flex items-center">
+                                                    <div className="w-full h-4 mx-2 bg-gray-200 rounded-full">
+                                                        <div className="h-4 bg-red-500 rounded-full" style={{ width: `${rating.percentage}%` }}></div>
                                                     </div>
-                                                ))}
-                                            </div>
+                                                    <div className="flex items-center ml-2">
+                                                        <div className="flex text-xl">
+                                                            {renderStars(rating.stars)}
+                                                        </div>
+                                                        <span className="ml-2">{rating.percentage}%</span>
+                                                    </div>
+
+                                                </div>
+                                            ))}
+                                        </div>
                                     </div>
 
 
