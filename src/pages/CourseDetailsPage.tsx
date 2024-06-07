@@ -36,27 +36,35 @@ const CourseDetail: React.FC = () => {
         const stars = [];
         for (let i = 0; i < 5; i++) {
             if (i < starCount) {
-                stars.push(<span key={i} role="img" aria-label="star" className="text-yellow-500">⭐️</span>);
+                stars.push(<span key={i} role="img" aria-label="star" className="text-yellow-600">⭐️</span>);
             } else {
-                stars.push(<span key={i} role="img" aria-label="star" className="text-yellow-500 text-3xl">☆</span>);
+                stars.push(<span key={i} role="img" aria-label="star" className="text-yellow-600 text-3xl">☆</span>);
             }
         }
         return stars;
     };
+
+    const ratings = [
+        { stars: 5, percentage: 70 },
+        { stars: 4, percentage: 40 },
+        { stars: 3, percentage: 5 },
+        { stars: 2, percentage: 2 },
+        { stars: 1, percentage: 0 },
+    ];
 
     return (
         <div className="wrapper bg-gray-900 text-white">
             <div className="py-8">
                 <div className="container mx-auto px-4">
                     <div className="flex flex-col lg:flex-row items-center justify-center">
-                        <div className="w-full lg:w-1/3">
+                        <div className="w-full lg:w-1/3 relative">
                             <div className="relative">
                                 <a onClick={showModal} className="block">
-                                    <img src="images/courses/img-2.jpg" alt="" className="w-full" />
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                                        <div className="badge_seller">Bestseller</div>
+                                    <img src="https://img.youtube.com/vi/hqBjda_bf3I/maxresdefault.jpg" alt="" className="w-full p-2 bg-white" />
+                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50">
+                                        <div className="absolute top-0 right-0 m-2 bg-orange-500 text-white p-1 rounded mt-3 text-lg font-semibold">Bestseller</div>
                                         <PlayCircleOutlined className="text-white text-4xl" />
-                                        <span className="text-white">Preview this course</span>
+                                        <span className="text-white absolute bottom-0 text-center w-full bg-black bg-opacity-75 py-2 text-xl font-semibold">Preview this course</span>
                                     </div>
                                 </a>
                                 <Modal visible={isModalVisible} onCancel={handleCancel} footer={null}>
@@ -65,36 +73,39 @@ const CourseDetail: React.FC = () => {
                                     </video>
                                 </Modal>
                             </div>
-                            <div className="flex justify-between mt-4">
-                                <Button type="link" icon={<HeartOutlined />}>Save</Button>
-                                <Button type="link" icon={<ExclamationCircleOutlined />}>Report abuse</Button>
+                            <div className="mr-5 mt-4">
+                                <Button type="link" className="text-white text-lg" icon={<HeartOutlined />}>Save</Button>
+                                <Button type="link" className="text-white text-lg" icon={<ExclamationCircleOutlined />}>Report abuse</Button>
                             </div>
                         </div>
+
                         <div className="w-full lg:w-2/3 lg:ml-8 mt-8 lg:mt-0">
                             <h2 className="text-2xl font-bold">The Web Developer Bootcamp</h2>
-                            <p className="">The only course you need to learn web development - HTML, CSS, JS, Node, and More!</p>
-                            <div className="flex items-center mt-4">
-                                <StarOutlined className="text-yellow-500" />
-                                <span className="ml-2">5.3.2</span>
+                            <p className="text-lg mt-3">The only course you need to learn web development - HTML, CSS, JS, Node, and More!</p>
+                            <div className="flex items-center mt-4 text-lg ">
+                                <div className='bg-yellow-500 p-1 rounded-lg'>
+                                    <StarOutlined className="text-white font-semibold " />
+                                    <span className="ml-2 ">5.3.2</span>
+                                </div>
                                 <span className="ml-2">(81,665 ratings)</span>
                             </div>
-                            <p className="mt-2">114,521 students enrolled</p>
-                            <div className="flex items-center mt-4">
-                                <CommentOutlined className="text-gray-700" />
+                            <p className="mt-3 text-lg">114,521 students enrolled</p>
+                            <div className="flex items-center mt-4 text-lg mb-3">
+                                <CommentOutlined className="" />
                                 <span className="ml-2">English</span>
                             </div>
-                            <p className="mt-2">Last updated 1/2024</p>
-                            <div className="flex mt-4">
-                                <Button type="primary" className="mr-2">Add to Cart</Button>
-                                <Button type="default">Buy Now</Button>
+                            <p className="mt-2 text-lg">Last updated 1/2024</p>
+                            <div className=" mt-4">
+                                <Button type="primary" className="mr-2 bg-red-600 text-lg font-semibold p-5">Add to Cart</Button>
+                                <Button type="default" className='text-lg font-semibold bg-gray-800 text-white p-5'>Buy Now</Button>
                             </div>
-                            <p className="mt-2">30-Day Money-Back Guarantee</p>
+                            <p className="mt-2 text-lg">30-Day Money-Back Guarantee</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="bg-white py-4 shadow-md">
-                <div className="container mx-auto px-4">
+                <div className="container mx-auto px-3">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <Avatar src="images/left-imgs/img-1.jpg" size="large" />
@@ -103,18 +114,22 @@ const CourseDetail: React.FC = () => {
                                 <Button type="default" className="ml-2 p-5 text-lg bg-red-600 text-white font-semibold">Subscribe</Button>
                             </div>
                         </div>
-                        <div className="flex items-center">
-                            <Badge count={1452} showZero>
-                                <EyeOutlined className="text-xl" />
+                        <div className="flex items-center p-2">
+                            <Badge showZero className=" flex flex-col items-center rounded-lg border border-gray-300 p-4">
+                                <EyeOutlined className="text-2xl mr-1 mb-2" />
+                                <span>1452</span>
                             </Badge>
-                            <Badge count={100} showZero className="ml-4">
-                                <LikeOutlined className="text-xl" />
+                            <Badge showZero className="ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
+                                <LikeOutlined className="text-2xl mr-1 mb-2" />
+                                <span>100</span>
                             </Badge>
-                            <Badge count={20} showZero className="ml-4">
-                                <DislikeOutlined className="text-xl" />
+                            <Badge showZero className="ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
+                                <DislikeOutlined className="text-2xl mr-1 mb-2" />
+                                <span>20</span>
                             </Badge>
-                            <Badge count={9} showZero className="ml-4">
-                                <ShareAltOutlined className="text-xl" />
+                            <Badge showZero className="ml-2 flex flex-col items-center rounded-lg border border-gray-300 p-4">
+                                <ShareAltOutlined className="text-2xl mb-2" />
+                                <span>9</span>
                             </Badge>
                         </div>
                     </div>
@@ -265,6 +280,26 @@ const CourseDetail: React.FC = () => {
                                             <div className="mt-2 text-lg font-semibold">Course Rating</div>
                                         </div>
                                     </div>
+                                    <div className="w-full pl-4 md:w-1/2 md:pl-0 ">
+                                            <div className="space-y-2">
+                                                {ratings.map((rating) => (
+                                                    <div key={rating.stars} className="flex items-center">
+                                                        <div className="w-full h-4 mx-2 bg-gray-200 rounded-full">
+                                                            <div className="h-4 bg-red-500 rounded-full" style={{ width: `${rating.percentage}%` }}></div>
+                                                        </div>
+                                                        <div className="flex items-center ml-2">
+                                                            <div className="flex text-xl">
+                                                                {renderStars(rating.stars)}
+                                                            </div>
+                                                            <span className="ml-2">{rating.percentage}%</span>
+                                                        </div>
+
+                                                    </div>
+                                                ))}
+                                            </div>
+                                    </div>
+
+
                                 </div>
                                 <div className="w-1/2 p-4">
                                     <div className="space-y-8">
@@ -286,8 +321,8 @@ const CourseDetail: React.FC = () => {
                                                 <div className="flex items-center space-x-4 text-gray-600 text-lg">
                                                     <h4>Was this review helpful?</h4>
                                                     <Group>
-                                                        <Radio value={1}>Yes</Radio>
-                                                        <Radio value={2}>No</Radio>
+                                                        <Radio className='text-lg' value={1}>Yes</Radio>
+                                                        <Radio className='text-lg' value={2}>No</Radio>
                                                     </Group>
                                                     <a href="#" className="text-lg">Report</a>
                                                 </div>
@@ -304,7 +339,7 @@ const CourseDetail: React.FC = () => {
                                                     <span className="text-sm">2 hours ago</span>
                                                 </div>
                                                 <div className="mr-4 text-2xl">
-                                                    {renderStars(4)}
+                                                    {renderStars(3)}
                                                 </div>
                                                 <div className="flex items-center mb-2">
                                                 </div>
@@ -312,8 +347,8 @@ const CourseDetail: React.FC = () => {
                                                 <div className="flex items-center space-x-4 text-gray-600 text-lg">
                                                     <h4>Was this review helpful?</h4>
                                                     <Group>
-                                                        <Radio value={1}>Yes</Radio>
-                                                        <Radio value={2}>No</Radio>
+                                                        <Radio className='text-lg' value={1}>Yes</Radio>
+                                                        <Radio className='text-lg' value={2}>No</Radio>
                                                     </Group>
                                                     <a href="#" className="text-lg">Report</a>
                                                 </div>
@@ -337,8 +372,8 @@ const CourseDetail: React.FC = () => {
                                                 <div className="flex items-center space-x-4 text-gray-600 text-lg">
                                                     <h4>Was this review helpful?</h4>
                                                     <Group>
-                                                        <Radio value={1}>Yes</Radio>
-                                                        <Radio value={2}>No</Radio>
+                                                        <Radio className='text-lg' value={1}>Yes</Radio>
+                                                        <Radio className='text-lg' value={2}>No</Radio>
                                                     </Group>
                                                     <a href="#" className="">Report</a>
                                                 </div>
