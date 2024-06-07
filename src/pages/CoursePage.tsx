@@ -84,7 +84,7 @@ const CoursePage: React.FC = () => {
         <Col xs={0} sm={0} md={8} lg={8} xl={8}>
           {/* Sidebar content */}
           <div className="p-4 bg-gray-200">
-            <h2 className="mb-4 text-lg font-semibold">Filters</h2>
+            <h2 className="mb-4 text-lg font-semibold">Menu</h2>
             {/* Add filters here */}
           </div>
         </Col>
