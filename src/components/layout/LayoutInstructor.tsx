@@ -1,9 +1,10 @@
-import { BookOutlined, MenuOutlined } from '@ant-design/icons';
+import { BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input, Layout, Menu } from 'antd';
+import Footer from 'components/Footer';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
-import Footer from './Footer';
+
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -23,26 +24,27 @@ const MainLayout: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   return (
     <Layout className="min-h-screen">
       <Header className="flex items-center justify-between p-4 bg-gray-800">
-        <Link to="/"><h1 className="text-lg text-white"><BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources</h1></Link>
-        <div className="flex items-center">
+        <Link to="/"><h1 className="text-xl text-white"><BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources</h1></Link>
+        <div className="flex items-center gap-5">
           <Search
             placeholder="Search courses"
             onSearch={onSearch}
-            className="hidden w-48 md:block"
+            className="w-64 md:w-96"
           />
           <Menu
             theme="dark"
             mode="horizontal"
             selectedKeys={selectedKeys}
             onClick={handleMenuClick}
-            className="hidden md:flex"
+            className="flex-grow md:flex md:justify-end"
           >
             <Menu.Item key="1">Home</Menu.Item>
             <Menu.Item key="2">Courses</Menu.Item>
-            <Menu.Item key="3">About</Menu.Item>
+            <Link to='/shoppingCard'> <Menu.Item key="3" icon={<ShoppingCartOutlined />}>About</Menu.Item> </Link>
           </Menu>
-          <Button onClick={() => ({})} className="ml-2">Log in</Button>
+          <Link to="/login"><Button onClick={() => ({})} className="p-4 text-lg">Log in</Button></Link>
           <MenuOutlined className="ml-2 text-white md:hidden" />
+          <Link to="/profile-instructor"><UserOutlined className="text-3xl text-white" /></Link>
         </div>
       </Header>
       <Content className="p-4">
