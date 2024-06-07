@@ -1,3 +1,4 @@
+import About from 'pages/About';
 import BlogPage from 'pages/BlogPage';
 import CourseOrder from 'pages/CourseOrder';
 import CoursePage from 'pages/CoursePage';
@@ -43,6 +44,7 @@ const App: React.FC = () => (
         <Route path='/setting' element={<Setting/>} />
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
+        <Route path='/about' element={<About/>} />
 
       </Routes>
     </MainLayou>
