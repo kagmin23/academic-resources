@@ -1,3 +1,4 @@
+
 import { MoreOutlined, ShoppingCartOutlined, ShoppingOutlined } from '@ant-design/icons';
 import { Button, Card, List } from 'antd';
 import React, { useState } from 'react';
@@ -72,6 +73,7 @@ const SavePage: React.FC = () => {
   const [showRemoveButton, setShowRemoveButton] = useState<boolean>(false);
 
   return (
+
     <div className="flex flex-col lg:flex-row mx-auto p-4 lg:p-9">
       <div className="w-full lg:w-1/4 p-4 bg-gray-100 mb-4 lg:mb-0">
         <h2 className="mb-4 text-xl font-bold">Saved Courses</h2>
@@ -90,9 +92,11 @@ const SavePage: React.FC = () => {
                 onMouseEnter={() => setHoveredIndex(index)}
                 onMouseLeave={() => setHoveredIndex(null)}
               >
+
                 <div className="relative flex flex-col md:flex-row text-xl font-semibold">
                   <a href='/course-details'><img src={item.img} alt={item.title} className="object-cover mb-4 md:mb-0 md:mr-4 w-full md:w-48 h-48" /></a>
                   <a href='/course-details'><CustomMeta ratingCount={item.ratingCount} published={item.published} title={item.title} description={item.category} /></a>
+
                   <div className="absolute top-0 right-0 flex flex-col items-center m-2 space-y-1 text-2xl">
                     <div
                       onMouseEnter={() => setShowRemoveButton(true)}
@@ -104,6 +108,7 @@ const SavePage: React.FC = () => {
                       )}
                     </div>
                   </div>
+
                   <div className="absolute right-0 flex flex-row items-center m-2 space-x-2 text-2xl font-semibold top-20">
                     <a
                       href="#"
@@ -123,6 +128,7 @@ const SavePage: React.FC = () => {
                       <ShoppingCartOutlined className={shoppingCartHoveredIndex === index ? 'text-red-500' : ''} />
                     </a>
                   </div>
+
                 </div>
               </Card>
             </List.Item>
