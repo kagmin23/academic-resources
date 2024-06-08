@@ -1,5 +1,6 @@
 import About from 'pages/About';
 import BlogPage from 'pages/BlogPage';
+import CourseDetailsPage from 'pages/CourseDetailsPage';
 import CourseOrder from 'pages/CourseOrder';
 import CoursePage from 'pages/CoursePage';
 import DetailBlogPage from 'pages/DetailBlogPage';
@@ -19,7 +20,6 @@ import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
 import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
-import CourseDetailsPage from 'pages/CourseDetailsPage';
 
 
 
@@ -38,7 +38,7 @@ const App: React.FC = () => (
         <Route path="/log-in" element={<Login/>} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile-student" element={<ProfileStudent />} />
-        <Route path="/teacher-profile" element={<TeacherProfile />} />
+        <Route path="/profile-instructor" element={<TeacherProfile />} />
         <Route path='/save' element={<SavePage />} />
         <Route path='/blog' element={<BlogPage/>} />
         <Route path='/course-details' element={<CourseDetailsPage/>} />
