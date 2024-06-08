@@ -31,7 +31,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
 
   return (
     <Layout className="min-h-screen">
-      <Header className="flex items-center justify-between p-4 bg-gray-800">
+      <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
         <Link to="/">
           <h1 className="text-xl text-white">
             <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
@@ -43,43 +43,54 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          <div className="hidden md:flex md:items-center md:gap-5">
-            <Menu
-              theme="dark"
-              mode="horizontal"
-              selectedKeys={selectedKeys}
-              onClick={handleMenuClick}
-              className="flex-grow md:flex md:justify-end"
-            >
-              <Menu.Item key="1" className="mx-2">
-                <Link to="/">Home</Link>
-              </Menu.Item>
-              <Menu.Item key="2" className="mx-2">
-                <Link to="/course">Courses</Link>
-              </Menu.Item>
-              <Menu.Item key="3" className="mx-2">
-                <Link to="/blog">Blog</Link>
-              </Menu.Item>
-              <Menu.Item key="4" className="mx-2">
-                <Link to="/category">Category</Link>
-              </Menu.Item>
-              <Menu.Item key="5" className="mx-2">
-                <Link to="/about">About</Link>
-              </Menu.Item>
-              <Menu.Item key="6" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-                <Link to="/shopping-card"></Link>
-              </Menu.Item>
-            </Menu>
-            <Link to="/log-in">
-              <Button className="p-4 text-lg">Log in</Button>
-            </Link>
-            <Link to="/profile-student">
-              <UserOutlined className="text-3xl text-white" />
-            </Link>
-          </div>
+          <Link to="/login">
+            <Button className="w-full mt-4 text-lg">Log in</Button>
+          </Link>
+          <Link to="/profile-student">
+            <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
+          </Link>
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
         </div>
       </Header>
+      <div className="pt-16">
+        <div className="fixed left-0 right-0 z-50 hidden top-18 md:flex md:items-center md:gap-5">
+          <Menu
+            theme="dark"
+            mode="horizontal"
+            selectedKeys={selectedKeys}
+            onClick={handleMenuClick}
+            className="flex-grow gap-2 md:flex md:justify-end"
+          >
+            <Menu.Item key="1" className="mx-2">
+              <Link to="/">Home</Link>
+            </Menu.Item>
+            <Menu.Item key="2" className="mx-2">
+              <Link to="/course">Courses</Link>
+            </Menu.Item>
+            <Menu.Item key="3" className="mx-2">
+              <Link to="/blog">Blog</Link>
+            </Menu.Item>
+            <Menu.Item key="4" className="mx-2">
+              <Link to="/category">Category</Link>
+            </Menu.Item>
+            <Menu.Item key="5" className="mx-2">
+              <Link to="/top-instructor">Instructor</Link>
+            </Menu.Item>
+            <Menu.Item key="6" className="mx-2">
+              <Link to="/about">About</Link>
+            </Menu.Item>
+            <Menu.Item key="7" className="mx-2">
+              <Link to="/save">Save</Link>
+            </Menu.Item>
+            <Menu.Item key="8" className="mx-2">
+              <Link to="/contact">Contact</Link>
+            </Menu.Item>
+            <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
+              <Link to="/shopping-card"></Link>
+            </Menu.Item>
+          </Menu>
+        </div>
+      </div>
       <Drawer
         title="Menu"
         placement="right"
@@ -114,15 +125,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
           <Menu.Item key="6" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
             <Link to="/shopping-card"></Link>
           </Menu.Item>
-          <Link to="/login">
-            <Button className="w-full mt-4 text-lg">Log in</Button>
-          </Link>
-          <Link to="/profile-student">
-            <UserOutlined className="mt-5 text-3xl text-black" />
-          </Link>
         </Menu>
       </Drawer>
-      <Content className="p-4">
+      <Content className="p-4 pt-16">
         <div className="p-4 bg-white rounded shadow">
           {children}
         </div>

@@ -1,6 +1,8 @@
+import { ArrowLeftOutlined } from '@ant-design/icons';
 import FlagIcon from '@mui/icons-material/Flag';
 import { Button, Checkbox, Form, Input } from 'antd';
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 // import '../styles/ReportPage.css';
 const { TextArea } = Input;
 
@@ -13,6 +15,7 @@ export default function Report() {
   
   return (
     <div className="p-4 bg-gray-100 md:p-8 lg:p-12">
+      <Link to="/"><Button className="mb-6"><ArrowLeftOutlined />Back to Home</Button></Link>
       <div className="flex items-center mb-4 text-2xl">
         <FlagIcon className="mr-2" />
         <span className='font-semibold '>Report history</span>

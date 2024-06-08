@@ -48,9 +48,9 @@ const HomePage: React.FC = () => {
         </div>
       </header>
 
-      <Anchor affix={false}>
+      {/* <Anchor affix={false}>
         <AnchorLink href="#content" title="Scroll to content" />
-      </Anchor>
+      </Anchor> */}
 
       <div id="content">
         <ul className="mt-8 ml-4 text-2xl font-bold">Popular Courses</ul>
