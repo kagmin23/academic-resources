@@ -43,7 +43,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          <Link to="/login">
+          <Link to="/log-in">
             <Button className="w-full mt-4 text-lg">Log in</Button>
           </Link>
           <Link to="/profile-student">

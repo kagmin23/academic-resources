@@ -20,6 +20,9 @@ import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
 import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
+import AdminPage from '../pages/admin/AdminPage';
+
+
 
 
 
@@ -47,6 +50,7 @@ const App: React.FC = () => (
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
+        <Route path='/admin-page' element={<AdminPage/>} />
 
       </Routes>
     </MainLayou>

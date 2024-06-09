@@ -48,9 +48,9 @@ const HomePage: React.FC = () => {
         </div>
       </header>
 
-      <Anchor affix={false}>
+      {/* <Anchor affix={false}>
         <AnchorLink href="#content" title="Scroll to content" />
-      </Anchor>
+      </Anchor> */}
 
       <div id="content">
         <ul className="mt-8 ml-4 text-2xl font-bold">Popular Courses</ul>
@@ -93,7 +93,6 @@ const HomePage: React.FC = () => {
             </Col>
           ))}
         </Row>
-        <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
 
         <div className="body-homebox">
           <div className="box image-box">
@@ -179,6 +178,8 @@ const HomePage: React.FC = () => {
             </Col>
           ))}
         </Row>
+        <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
+
 
         <div className="p-8 bg-gray-100 contact-home">
           <h1 className="text-2xl font-bold">Subscriber</h1>
