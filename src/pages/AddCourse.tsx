@@ -12,7 +12,6 @@ const AddCourse: React.FC = () => {
 
         setFileLists((prev) => {
             const updatedFileLists = { ...prev };
-            // Do something with updatedFileLists
             return updatedFileLists;
         });
     };
@@ -40,6 +39,14 @@ const AddCourse: React.FC = () => {
                     </Form.Item>
 
                     <Form.Item
+                        name="description"
+                        label="Description"
+                        rules={[{ required: true, message: 'Please input the description!' }]}
+                    >
+                        <TextArea style={{ resize: 'none' }} />
+                    </Form.Item>
+
+                    <Form.Item
                         name="duration"
                         label="Duration"
                         rules={[{ required: true, message: 'Please input the course duration!' }]}
@@ -49,7 +56,7 @@ const AddCourse: React.FC = () => {
 
                     <Form.Item
                         name="price"
-                        label="Price" 
+                        label="Price"
                         rules={[{ required: true, message: 'Please input the course price!' }]}
                     >
                         <Input type="number" />
@@ -73,6 +80,12 @@ const AddCourse: React.FC = () => {
                                                     rules={[{ required: true, message: 'Please input the section name!' }]}
                                                 >
                                                     <Input placeholder="Section Name" />
+                                                </Form.Item>
+                                                <Form.Item
+                                                    name="description"
+                                                    rules={[{ required: true, message: 'Please input the description!' }]}
+                                                >
+                                                    <TextArea placeholder="Description" style={{ resize: 'none' }} />
                                                 </Form.Item>
                                             </div>
                                             <Form.Item
@@ -164,7 +177,7 @@ const AddCourse: React.FC = () => {
 
                 </div>
                 <div className="text-center">
-                    <Button type="primary" htmlType="submit" className="w-full max-w-md">
+                    <Button type="primary" htmlType="submit" className="w-full max-w-md p-4 text-lg">
                         Submit
                     </Button>
                 </div>
