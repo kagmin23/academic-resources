@@ -20,6 +20,7 @@ import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
 import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
+import InstructorPage from 'pages/topInstructorPage';
 
 
 
@@ -47,7 +48,7 @@ const App: React.FC = () => (
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
-
+        <Route path='/Instructor' element={<InstructorPage/>} />
       </Routes>
     </MainLayou>
   </Router>
