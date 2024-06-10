@@ -6,6 +6,7 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainLayou from '../components/layout/Layout';
 import ReportPage from '../pages/ReportPage';
 
+
 import {
   About,
   BlogPage,
@@ -22,6 +23,8 @@ import {
 // import { LessonStudent } from 'pages';
 import { SavePage, SearchPage, ShoppingCart } from 'pages';
 // import { AddCourse } from 'pages';
+
+import PaymentSuccess from 'pages/PaymentSuccess';
 
 
 
@@ -47,7 +50,11 @@ const App: React.FC = () => (
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
+
         <Route path='/lesson-guest' element={<LessonGuest/>} />
+
+        <Route path='/payment-successfully' element={<PaymentSuccess/>}/>
+
 
       </Routes>
     </MainLayou>
