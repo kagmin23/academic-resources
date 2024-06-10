@@ -1,29 +1,9 @@
 import { FacebookOutlined, GoogleOutlined, TwitterOutlined } from '@ant-design/icons';
 import { Button, Input } from 'antd';
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React from 'react';
+import { Link } from 'react-router-dom';
 
-interface LoginProps {
-  setRole: React.Dispatch<React.SetStateAction<string>>;
-}
-
-const Login: React.FC<LoginProps> = ({ setRole }) => {
-  // Your login component code here
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-
-  const handleLogin = () => {
-    // Authentication logic
-    if (!email || !password) {
-      alert('Email and password are required');
-      return;
-    }
-
-    // Navigate to the desired page after successful login
-    navigate('/');
-  };
-
+const Login: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
@@ -37,25 +17,15 @@ const Login: React.FC<LoginProps> = ({ setRole }) => {
             Continue with Facebook
           </Button>
           <Button icon={<TwitterOutlined />} type="primary" className="flex items-center justify-center w-full h-12">
-            Continue with Twitter
+          Continue with Twitter
           </Button>
           <Button icon={<GoogleOutlined />} type="primary" className="flex items-center justify-center w-full h-12">
-            Continue with Google
+          Continue with Google
           </Button>
         </div>
         <div className="space-y-4">
-          <Input
-            placeholder="Email Address"
-            size="large"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <Input.Password
-            placeholder="Password"
-            size="large"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <Input placeholder="Email Address" size="large" />
+          <Input.Password placeholder="Password" size="large" />
           <div className="flex items-center justify-between">
             <label className="flex items-center">
               <input type="checkbox" className="form-checkbox" />
@@ -63,9 +33,7 @@ const Login: React.FC<LoginProps> = ({ setRole }) => {
             </label>
             <a href="#" className="text-blue-600">Forgot Password?</a>
           </div>
-          <Button type="primary" className="w-full h-12 bg-red-500 hover:bg-red-600" onClick={handleLogin}>
-            Sign In
-          </Button>
+          <Button type="primary" className="w-full h-12 bg-red-500 hover:bg-red-600">Sign In</Button>
         </div>
         <div className="flex justify-between mt-4">
           <p className="text-gray-600">Don't have an account? <Link to="/sign-up" className="text-blue-600">Sign Up</Link></p>
