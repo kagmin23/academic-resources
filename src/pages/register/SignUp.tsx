@@ -24,7 +24,7 @@ const SignUp: React.FC = () => {
           <p>By signing up, you agress to our <a href="#" className="text-blue-600">Terms of Use</a> and <a href="#" className="text-blue-600">Privacy Policy</a>.</p>
         </div>
         <div className="text-center text-gray-600">
-          <p>Already have an account? <Link to="/login" className="text-blue-600">Login</Link></p>
+          <p>Already have an account? <Link to="/log-in" className="text-blue-600">Login</Link></p>
         </div>
         <footer className="text-center text-gray-600">
           <p>© 2024 Edumy. All Rights Reserved.</p>

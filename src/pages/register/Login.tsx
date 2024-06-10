@@ -36,7 +36,7 @@ const Login: React.FC = () => {
           <Button type="primary" className="w-full h-12 bg-red-500 hover:bg-red-600">Sign In</Button>
         </div>
         <div className="flex justify-between mt-4">
-          <p className="text-gray-600">Don't have an account? <Link to="/signup" className="text-blue-600">Sign Up</Link></p>
+          <p className="text-gray-600">Don't have an account? <Link to="/sign-up" className="text-blue-600">Sign Up</Link></p>
         </div>
         <footer className="text-center text-gray-600">
           <p>© 2024 Academic. All Rights Reserved.</p>

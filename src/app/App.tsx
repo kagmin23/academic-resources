@@ -1,4 +1,12 @@
 
+import About from 'pages/About';
+import BlogPage from 'pages/BlogPage';
+import CourseDetailsPage from 'pages/CourseDetailsPage';
+import CourseOrder from 'pages/CourseOrder';
+import CoursePage from 'pages/CoursePage';
+import DetailBlogPage from 'pages/DetailBlogPage';
+import SavePage from 'pages/SavePage';
+
 import ProfileStudent from 'pages/profile/ProfileStudent';
 import Login from 'pages/register/Login';
 import SignUp from 'pages/register/SignUp';
@@ -8,13 +16,10 @@ import MainLayou from '../components/layout/Layout';
 import BuyNow from '../pages/BuyNow';
 import CategoryPage from '../pages/CategoryPage';
 import Contact from '../pages/Contact';
-import CoursePage from '../pages/CoursePage';
 import HomePage from '../pages/HomePage';
 import ReportPage from '../pages/ReportPage';
-import BlogPage from 'pages/BlogPage';
-import DetailBlogPage from 'pages/DetailBlogPage';
-import SavePage from 'pages/SavePage';
 import SearchPage from '../pages/SearchPage';
+import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
 import ProfileInstructor from 'pages/profile/ProfileInstructor';
 
@@ -28,18 +33,25 @@ const App: React.FC = () => (
         <Route path="/" element={<HomePage/>} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/category" element={<CategoryPage />} />
-        <Route path="/course" element={<CoursePage/>} />
-        <Route path="/shoppingCard" element={<ShoppingCard />} />
-        <Route path="/buyNow" element={<BuyNow />} />
+        <Route path="/shopping-card" element={<ShoppingCard />} />
+        <Route path="/buy-now" element={<BuyNow />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/report" element={<ReportPage />} />
-        <Route path="/login" element={<Login/>} />
-        <Route path="/signUp" element={<SignUp />} />
+        <Route path="/log-in" element={<Login/>} />
+        <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile-student" element={<ProfileStudent />} />
+
         <Route path="/profile-instructor" element={<ProfileInstructor />} />
+
         <Route path='/save' element={<SavePage />} />
         <Route path='/blog' element={<BlogPage/>} />
-        <Route path='/detailBlog' element={<DetailBlogPage/>} />
+        <Route path='/course-details' element={<CourseDetailsPage/>} />
+        <Route path='/detail-blog' element={<DetailBlogPage/>} />
+        <Route path='/setting' element={<Setting/>} />
+        <Route path='/course' element={<CoursePage/>} />
+        <Route path='/course-order' element={<CourseOrder/>} />
+        <Route path='/about' element={<About/>} />
+
       </Routes>
     </MainLayou>
   </Router>
