@@ -104,8 +104,8 @@ const chapters: Chapter[] = [
 ];
 
 const assignments: Assignment[] = [
-  { key: 'assignment_1', title: 'Certificate On Theme Development 01', duration: '10 minutes' },
-  { key: 'assignment_2', title: 'Certificate On Theme Development 02', duration: '30 minutes' }
+  { key: 'assignment_1', title: 'Certificate On Theme Development 1', duration: '60 minutes' },
+  { key: 'assignment_2', title: 'Certificate On Theme Development 2', duration: '60 minutes' }
 ];
 
 const LessonStudent: React.FC = () => {
