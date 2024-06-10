@@ -1,3 +1,4 @@
+import MainLayoutStudent from 'components/layout/LayoutStudent';
 import About from 'pages/About';
 import BlogPage from 'pages/BlogPage';
 import CourseDetailsPage from 'pages/CourseDetailsPage';
@@ -12,7 +13,6 @@ import SignUp from 'pages/register/SignUp';
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainLayou from '../components/layout/Layout';
-import MainLayoutInstructor from '../components/layout/LayoutInstructor';
 import BuyNow from '../pages/BuyNow';
 import CategoryPage from '../pages/CategoryPage';
 import Contact from '../pages/Contact';
@@ -62,11 +62,17 @@ const App: React.FC = () => (
       </Routes>
     </MainLayou>
 
-    <MainLayoutInstructor>
+    {/* <MainLayoutInstructor>
       <Routes>
 
       </Routes>
-    </MainLayoutInstructor>
+    </MainLayoutInstructor> */}
+
+    <MainLayoutStudent>
+      <Routes>
+
+      </Routes>
+    </MainLayoutStudent>
     
     
   </Router>
