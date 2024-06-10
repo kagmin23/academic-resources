@@ -66,6 +66,13 @@ const App: React.FC = () => (
 
       </Routes>
     </MainLayoutInstructor> */}
+
+    {/* <MainLayoutStudent>
+        <Routes>
+
+      </Routes>
+    </MainLayoutStudent> */}
+
   </Router>
 );
 
