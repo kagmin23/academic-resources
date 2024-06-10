@@ -22,6 +22,8 @@ import SearchPage from '../pages/SearchPage';
 import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
 import ProfileInstructor from 'pages/profile/ProfileInstructor';
+import LessonGuest from 'pages/LessonGuest';
+import LessonStudent from 'pages/LessonStudent';
 
 
 
@@ -51,6 +53,9 @@ const App: React.FC = () => (
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
+        <Route path='/lesson-guest' element={<LessonGuest/>} />
+        <Route path='/lesson-student' element={<LessonStudent/>} />
+
 
       </Routes>
     </MainLayou>
