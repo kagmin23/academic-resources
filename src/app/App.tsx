@@ -7,11 +7,8 @@ import CoursePage from 'pages/CoursePage';
 import DetailBlogPage from 'pages/DetailBlogPage';
 import SavePage from 'pages/SavePage';
 
-import AddCourse from 'pages/AddCourse';
 import LessonGuest from 'pages/LessonGuest';
 import LessonStudent from 'pages/LessonStudent';
-import ProfileInstructor from 'pages/profile/ProfileInstructor';
-import ProfileStudent from 'pages/profile/ProfileStudent';
 import Login from 'pages/register/Login';
 import SignUp from 'pages/register/SignUp';
 import React from 'react';
@@ -23,7 +20,6 @@ import Contact from '../pages/Contact';
 import HomePage from '../pages/HomePage';
 import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
-import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
 
 
@@ -42,19 +38,14 @@ const App: React.FC = () => (
         <Route path="/report" element={<ReportPage />} />
         <Route path="/log-in" element={<Login/>} />
         <Route path="/sign-up" element={<SignUp />} />
-        <Route path="/profile-student" element={<ProfileStudent />} />
-
-        <Route path="/profile-instructor" element={<ProfileInstructor />} />
 
         <Route path='/save' element={<SavePage />} />
         <Route path='/blog' element={<BlogPage/>} />
         <Route path='/course-details' element={<CourseDetailsPage/>} />
         <Route path='/detail-blog' element={<DetailBlogPage/>} />
-        <Route path='/setting' element={<Setting/>} />
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
-        <Route path='/add' element={<AddCourse/>} />
         <Route path='/lesson-guest' element={<LessonGuest/>} />
         <Route path='/lesson-student' element={<LessonStudent/>} />
 
@@ -63,13 +54,16 @@ const App: React.FC = () => (
 
     {/* <MainLayoutInstructor>
       <Routes>
-
+        <Route path='/add' element={<AddCourse/>} />
+        <Route path="/profile-instructor" element={<ProfileInstructor />} />
+        <Route path='/setting' element={<Setting/>} />
       </Routes>
     </MainLayoutInstructor> */}
 
     {/* <MainLayoutStudent>
-        <Routes>
-
+      <Routes>
+          <Route path="/profile-student" element={<ProfileStudent />} />
+          <Route path='/setting' element={<Setting/>} />
       </Routes>
     </MainLayoutStudent> */}
 
