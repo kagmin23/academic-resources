@@ -4,13 +4,14 @@ import {
   FileTextOutlined,
   HeartOutlined,
   LogoutOutlined,
+  QuestionCircleOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
-  UserOutlined
+  UserOutlined,
 } from '@ant-design/icons';
 import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography } from 'antd';
-import Setting from 'pages/Setting';
 import React, { useState } from 'react';
+import Setting from '../Setting';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
