@@ -1,4 +1,5 @@
 import { Collapse } from 'antd';
+import { Link } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 const { Panel } = Collapse;
@@ -187,8 +188,9 @@ const CourseOrder = () => {
                                 <div className="mt-4 lp-course-buttons ">
                                     <form name="purchase-course" className="purchase-course" method="post" encType="multipart/form-data">
                                         <input type="hidden" name="purchase-course" />
-                                        <button className="bg-blue-600 text-white w-[100%] py-4 text-xl font-bold hover:bg-blue-800">BUY NOW</button>
+                                        <Link to="/buy-now"><button className="bg-blue-600 text-white w-[100%] py-4 text-xl font-bold hover:bg-blue-800">BUY NOW</button></Link>
                                     </form>
+                                    <Link to="/lesson"><nav>View Lesson</nav></Link>
                                 </div>
                             </div>
                             <div className="mt-6 ml-4">
