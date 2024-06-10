@@ -24,22 +24,22 @@ const Sidebar: React.FC = () => {
     {
       icon: UserSwitchOutlined,
       heading: "Users",
-      href: '/admin/user'
+      href: '/admin-page/user'
     },
     {
       icon: ContainerOutlined,
       heading: "Content",
-      href: "/admin/content"
+      href: "/admin-page/content"
     },
     {
       icon: FlagOutlined,
       heading: 'Report',
-      href: "/admin/report"
+      href: "/admin-page/report"
     },
     {
       icon: LineChartOutlined,
       heading: 'Analytics',
-      href: "/admin/analytics"
+      href: "/admin-page/analytics"
     },
   ];
 
