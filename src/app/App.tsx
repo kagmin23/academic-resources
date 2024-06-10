@@ -7,6 +7,10 @@ import CoursePage from 'pages/CoursePage';
 import DetailBlogPage from 'pages/DetailBlogPage';
 import SavePage from 'pages/SavePage';
 
+import AddCourse from 'pages/AddCourse';
+import LessonGuest from 'pages/LessonGuest';
+import LessonStudent from 'pages/LessonStudent';
+import ProfileInstructor from 'pages/profile/ProfileInstructor';
 import ProfileStudent from 'pages/profile/ProfileStudent';
 import Login from 'pages/register/Login';
 import SignUp from 'pages/register/SignUp';
@@ -21,10 +25,6 @@ import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
 import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
-import AddCourse from 'pages/AddCourse';
-import ProfileInstructor from 'pages/profile/ProfileInstructor';
-import LessonGuest from 'pages/LessonGuest';
-import LessonStudent from 'pages/LessonStudent';
 
 
 
@@ -60,6 +60,12 @@ const App: React.FC = () => (
 
       </Routes>
     </MainLayou>
+
+    {/* <MainLayoutInstructor>
+      <Routes>
+
+      </Routes>
+    </MainLayoutInstructor> */}
   </Router>
 );
 
