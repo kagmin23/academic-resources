@@ -1,6 +1,7 @@
+import { CheckOutlined, DoubleLeftOutlined, FileOutlined, LockOutlined } from '@ant-design/icons'; // Import biểu tượng
+import { Button, Menu } from 'antd';
 import React, { useState } from 'react';
-import { Menu } from 'antd';
-import { FileOutlined, LockOutlined, CheckOutlined } from '@ant-design/icons'; // Import biểu tượng
+import { Link } from 'react-router-dom';
 
 const { SubMenu } = Menu;
 
@@ -30,7 +31,7 @@ const LessonGuest: React.FC = () => {
   const renderContent = (title: string) => {
     if (title === 'Getting Started') {
       return (
-        <ul className="list-disc ml-5">
+        <ul className="ml-5 list-disc">
           <li className="flex items-start">
             <CheckOutlined className="mr-2 text-green-500" />
             Biết cách xây dựng giao diện web với HTML, CSS
@@ -88,7 +89,8 @@ const LessonGuest: React.FC = () => {
 
   return (
     <div className="flex flex-col lg:flex-row">
-      <div className="w-full lg:w-1/3 p-4 bg-gray-100">
+      <div className="w-full p-4 bg-gray-100 lg:w-1/3">
+
         <Menu
           mode="inline"
           defaultSelectedKeys={[lessons[0].key]}
@@ -97,7 +99,7 @@ const LessonGuest: React.FC = () => {
         >
           <SubMenu key="sub1" title="Lesson" icon={<FileOutlined />}>
             {lessons.map(lesson => (
-              <Menu.Item key={lesson.key} icon={lesson.preview ? <FileOutlined /> : <LockOutlined />} className="h-24 flex items-center">
+              <Menu.Item key={lesson.key} icon={lesson.preview ? <FileOutlined /> : <LockOutlined />} className="flex items-center h-24">
                 <div className="w-full">
                   <div className="text-base">{lesson.title}</div>
                   <div className="text-sm text-gray-500">{lesson.duration}</div>
@@ -105,9 +107,10 @@ const LessonGuest: React.FC = () => {
               </Menu.Item>
             ))}
           </SubMenu>
+
           <SubMenu key="sub2" title="Assignment" icon={<FileOutlined />}>
             {assignments.map(assignment => (
-              <Menu.Item key={assignment.key} icon={assignment.preview ? <FileOutlined /> : <LockOutlined />} className="h-24 flex items-center">
+              <Menu.Item key={assignment.key} icon={assignment.preview ? <FileOutlined /> : <LockOutlined />} className="flex items-center h-24">
                 <div className="w-full">
                   <div className="text-base">{assignment.title}</div>
                   <div className="text-sm text-gray-500">{assignment.duration}</div>
@@ -117,10 +120,11 @@ const LessonGuest: React.FC = () => {
           </SubMenu>
         </Menu>
       </div>
-      <div className="w-full lg:w-2/3 p-4">
-        <h1 className="text-2xl font-bold mb-4">{selectedLesson}</h1>
+      <div className="w-full p-4 lg:w-2/3">
+        <h1 className="mb-4 text-2xl font-bold">{selectedLesson}</h1>
         {renderContent(selectedLesson)}
       </div>
+      <Link to="/course-order"><div className="mb-2"><Button><DoubleLeftOutlined />Back</Button></div></Link>
     </div>
   );
 };

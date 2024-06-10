@@ -1,3 +1,4 @@
+import { ArrowRightOutlined } from '@ant-design/icons';
 import { Collapse } from 'antd';
 import { Link } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
@@ -190,7 +191,7 @@ const CourseOrder = () => {
                                         <input type="hidden" name="purchase-course" />
                                         <Link to="/buy-now"><button className="bg-blue-600 text-white w-[100%] py-4 text-xl font-bold hover:bg-blue-800">BUY NOW</button></Link>
                                     </form>
-                                    <Link to="/lesson"><nav>View Lesson</nav></Link>
+                                    <Link to="/lesson-guest"><nav className="mt-2 text-xl text-blue-500 underline">View more Lesson <ArrowRightOutlined /></nav></Link>
                                 </div>
                             </div>
                             <div className="mt-6 ml-4">

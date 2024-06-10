@@ -1,26 +1,27 @@
 
-import About from 'pages/About';
-import BlogPage from 'pages/BlogPage';
-import CourseDetailsPage from 'pages/CourseDetailsPage';
-import CourseOrder from 'pages/CourseOrder';
-import CoursePage from 'pages/CoursePage';
-import DetailBlogPage from 'pages/DetailBlogPage';
-import SavePage from 'pages/SavePage';
-
-import LessonGuest from 'pages/LessonGuest';
-import LessonStudent from 'pages/LessonStudent';
 import Login from 'pages/register/Login';
 import SignUp from 'pages/register/SignUp';
 import React from 'react';
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import MainLayou from '../components/layout/Layout';
-import BuyNow from '../pages/BuyNow';
-import CategoryPage from '../pages/CategoryPage';
-import Contact from '../pages/Contact';
-import HomePage from '../pages/HomePage';
 import ReportPage from '../pages/ReportPage';
-import SearchPage from '../pages/SearchPage';
-import ShoppingCard from '../pages/ShoppingCart';
+
+import {
+  About,
+  BlogPage,
+  BuyNow,
+  CategoryPage,
+  Contact,
+  CourseDetailsPage,
+  CourseOrder,
+  CoursePage,
+  DetailBlogPage,
+  HomePage,
+  LessonGuest
+} from 'pages';
+// import { LessonStudent } from 'pages';
+import { SavePage, SearchPage, ShoppingCart } from 'pages';
+// import { AddCourse } from 'pages';
 
 
 
@@ -32,7 +33,7 @@ const App: React.FC = () => (
         <Route path="/" element={<HomePage/>} />
         <Route path="/search" element={<SearchPage />} />
         <Route path="/category" element={<CategoryPage />} />
-        <Route path="/shopping-card" element={<ShoppingCard />} />
+        <Route path="/shopping-card" element={<ShoppingCart />} />
         <Route path="/buy-now" element={<BuyNow />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/report" element={<ReportPage />} />
@@ -47,7 +48,6 @@ const App: React.FC = () => (
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
         <Route path='/lesson-guest' element={<LessonGuest/>} />
-        <Route path='/lesson-student' element={<LessonStudent/>} />
 
       </Routes>
     </MainLayou>
@@ -64,6 +64,7 @@ const App: React.FC = () => (
       <Routes>
           <Route path="/profile-student" element={<ProfileStudent />} />
           <Route path='/setting' element={<Setting/>} />
+          <Route path='/lesson-student' element={<LessonStudent/>} />
       </Routes>
     </MainLayoutStudent> */}
 
