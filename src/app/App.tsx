@@ -6,6 +6,7 @@ import CoursePage from 'pages/CoursePage';
 import DetailBlogPage from 'pages/DetailBlogPage';
 import SavePage from 'pages/SavePage';
 import TeacherProfile from 'pages/TeacherProfile';
+import ReportAdmin from 'pages/admin/Report';
 import ProfileStudent from 'pages/profile/ProfileStudent';
 import Login from 'pages/register/Login';
 import SignUp from 'pages/register/SignUp';
@@ -21,6 +22,7 @@ import SearchPage from '../pages/SearchPage';
 import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
 import AdminPage from '../pages/admin/AdminPage';
+import Users from '../pages/admin/Users';
 
 
 
@@ -51,6 +53,14 @@ const App: React.FC = () => (
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
         <Route path='/admin-page' element={<AdminPage/>} />
+
+
+
+
+
+        <Route path='/admin/user' element={<Users/>} />
+        <Route path='/admin/report' element={<ReportAdmin/>} />
+
 
       </Routes>
     </MainLayou>
