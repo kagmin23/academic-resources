@@ -1,3 +1,4 @@
+
 import About from 'pages/About';
 import BlogPage from 'pages/BlogPage';
 import CourseDetailsPage from 'pages/CourseDetailsPage';
@@ -5,7 +6,7 @@ import CourseOrder from 'pages/CourseOrder';
 import CoursePage from 'pages/CoursePage';
 import DetailBlogPage from 'pages/DetailBlogPage';
 import SavePage from 'pages/SavePage';
-import TeacherProfile from 'pages/TeacherProfile';
+
 import ProfileStudent from 'pages/profile/ProfileStudent';
 import Login from 'pages/register/Login';
 import SignUp from 'pages/register/SignUp';
@@ -20,6 +21,9 @@ import ReportPage from '../pages/ReportPage';
 import SearchPage from '../pages/SearchPage';
 import Setting from '../pages/Setting';
 import ShoppingCard from '../pages/ShoppingCart';
+import ProfileInstructor from 'pages/profile/ProfileInstructor';
+import LessonGuest from 'pages/LessonGuest';
+import LessonStudent from 'pages/LessonStudent';
 
 
 
@@ -38,7 +42,9 @@ const App: React.FC = () => (
         <Route path="/log-in" element={<Login/>} />
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/profile-student" element={<ProfileStudent />} />
-        <Route path="/profile-instructor" element={<TeacherProfile />} />
+
+        <Route path="/profile-instructor" element={<ProfileInstructor />} />
+
         <Route path='/save' element={<SavePage />} />
         <Route path='/blog' element={<BlogPage/>} />
         <Route path='/course-details' element={<CourseDetailsPage/>} />
@@ -47,6 +53,9 @@ const App: React.FC = () => (
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
+        <Route path='/lesson-guest' element={<LessonGuest/>} />
+        <Route path='/lesson-student' element={<LessonStudent/>} />
+
 
       </Routes>
     </MainLayou>
