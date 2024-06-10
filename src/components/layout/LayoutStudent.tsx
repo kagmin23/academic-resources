@@ -1,5 +1,5 @@
 import { BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { Drawer, Input, Layout, Menu } from 'antd';
+import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -43,6 +43,9 @@ const MainLayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
+          <Link to="/log-in">
+            <Button className="w-full mt-4 text-lg">Log in</Button>
+          </Link>
           <Link to="/profile-student">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
           </Link>
@@ -112,7 +115,7 @@ const MainLayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
           </Menu.Item>
           <Menu.Item key="3" className="my-2">
             <Link to="/blog">Blog</Link>
-          </Menu.Item>
+            </Menu.Item>
           <Menu.Item key="4" className="my-2">
             <Link to="/category">Category</Link>
           </Menu.Item>
