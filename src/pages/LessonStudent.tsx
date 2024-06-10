@@ -116,7 +116,7 @@ const LessonStudent: React.FC = () => {
       <div>
         <iframe
           width="100%"
-          height="600"
+          height="360"
           src={lesson.videoUrl}
           title={`YouTube video player`}
           frameBorder="0"
