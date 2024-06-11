@@ -1,7 +1,20 @@
-import { Button, Card, Col, Row } from 'antd';
+import { Button, Card, Col, Row , Menu } from 'antd';
 // import 'antd/dist/antd.css';
-import React from 'react';
+import React ,{ useState } from 'react';
 // import './styles.css';
+import{ Layout } from "antd";
+import {
+
+  ContainerOutlined,
+  DesktopOutlined,
+  MailOutlined,
+ 
+  PieChartOutlined,
+} from '@ant-design/icons';
+import type { MenuProps } from 'antd';
+import type { DrawerProps, RadioChangeEvent } from 'antd';
+import { Drawer} from 'antd';
+
 
 interface Course {
   id: number;
@@ -10,6 +23,7 @@ interface Course {
   description: string;
   price: number;
 }
+
 
 const courses: Course[] = [
   {
@@ -56,14 +70,138 @@ const courses: Course[] = [
   },
 ];
 
+
+//Menu_ant
+type MenuItem = Required<MenuProps>['items'][number];
+
+const items: MenuItem[] = [
+  { key: '1', icon: <PieChartOutlined />, label: 'Popular' },
+  { key: '2', icon: <DesktopOutlined />, label: 'Rate' },
+  { key: '3', icon: <ContainerOutlined />, label: 'Name Course' },
+  {
+    key: 'category',
+    label: 'Category',
+    icon: <MailOutlined />,
+    children: [
+      { key: '5', label: 'HTML/CSS' },
+      { key: '6', label: 'Java' },
+      { key: '7', label: 'Typescrip' },
+      { key: '8', label: 'C#' },
+      { key: '9', label: 'TAT' },
+      { key: '10', label: 'LNN' },
+      { key: '11', label: 'Javascrip' },
+      { key: '12', label: 'C++' },
+      { key: '13', label: 'C#' },
+      { key: '14', label: 'C++' },
+      { key: '15', label: 'C#' },
+      { key: '16', label: 'HTML/CSS' },
+      { key: '17', label: 'Java' },
+      { key: '18', label: 'Typescrip' },
+      { key: '19', label: 'C#' },
+      { key: '20', label: 'TAT' },
+
+    ],
+  },
+  {
+    type: 'group',
+    label: 'Filter',
+    children: [
+      { label: 'Option 1', key: 'setting:3' },
+      { label: 'Option 2', key: 'setting:4' },
+      { label: 'Option 3', key: 'setting:5' },
+      { label: 'Option 4', key: 'setting:6' },
+    ],
+  },
+  
+];
+
+
+
+
+
+
 const CoursePage: React.FC = () => {
+  // MEnu
+  
+  const onClick: MenuProps['onClick'] = (e) => {
+    console.log('click ', e);
+  };
+  //Menu 2
+  const [open, setOpen] = useState(false);
+ 
+  const showDrawer = () => {
+    setOpen(true);
+  };
+
+  const onClose = () => {
+    setOpen(false);
+  };
+
+  
+
+
   return (
-    <div className="container mx-auto mt-4">
-      <Row gutter={[16, 16]}>
-        <Col xs={24} sm={24} md={16} lg={16} xl={16}>
-          <Row gutter={[16, 16]}>
+    <div className=" mx-auto h-fit">
+      <Row gutter={[16, 16]} >
+      {/* Menu ở Màn hình md trở lên */}
+      <Col xs={0} sm={0} md={6} lg={6} xl={6}>
+          {/* Sidebar content */}
+
+
+          {/* <div className="p-4 bg-gray-200"> */}
+            {/* <h2 className="mb-4 text-lg font-semibold">Menu</h2> */}
+
+            {/* Add filters here */}
+
+          <div className="flex flex-col h-full">
+          <div className='h-[90vh] w-full flex-grow '>
+          <Menu
+          onClick={onClick}
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+          mode="inline"
+          items={items}
+           theme="dark"
+          className='h-full overflow-y-auto lg:text-base xl:text-lg p-2'
+          />
+         </div>
+         </div>
+
+
+
+          {/* </div> */}
+        </Col>
+        
+        <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto'> 
+
+        {/* Menu màn hình <md */}
+        <Button type="primary" onClick={showDrawer} className='md:hidden mb-4'>
+          Menu
+        </Button>
+       
+        <Drawer  
+        placement={'left'}
+        closable={false}
+        onClose={onClose}      
+        open={open}
+        bodyStyle={{ padding: 0, margin: 0 }} 
+        
+      >
+        <Menu
+          onClick={onClick}
+          defaultSelectedKeys={['1']}
+          defaultOpenKeys={['sub1']}
+          mode="inline"
+          items={items}
+           theme="dark"
+          className='h-full overflow-y-auto lg:text-base xl:text-lg p-2 w-full'
+          />
+      </Drawer>
+      {/* Content Course */}
+       
+          <Row gutter={[16, 16]} className='xl:px-6 ' >
             {courses.map((course) => (
-              <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8}>
+              <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8} >
                 <Card
                   hoverable
                   cover={<img alt={course.title} src={course.image} />}
@@ -77,17 +215,12 @@ const CoursePage: React.FC = () => {
                     </div>
                   </div>
                 </Card>
+                
               </Col>
             ))}
           </Row>
         </Col>
-        <Col xs={0} sm={0} md={8} lg={8} xl={8}>
-          {/* Sidebar content */}
-          <div className="p-4 bg-gray-200">
-            <h2 className="mb-4 text-lg font-semibold">Menu</h2>
-            {/* Add filters here */}
-          </div>
-        </Col>
+        
       </Row>
     </div>
   );
