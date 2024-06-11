@@ -14,6 +14,7 @@ export { default as Report } from './ReportPage';
 export { default as SavePage } from './SavePage';
 export { default as SearchPage } from './SearchPage';
 export { default as Setting } from './Setting';
+export { default as CertificatePage } from './Certificate';
 export { default as ShoppingCart } from './ShoppingCart';
 export { default as ProfileStudent } from '../pages/profile/ProfileStudent';
 export { default as ProfileInstructor } from '../pages/profile/ProfileInstructor';

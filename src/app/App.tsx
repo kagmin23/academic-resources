@@ -12,6 +12,7 @@ import {
   BlogPage,
   BuyNow,
   CategoryPage,
+  CertificatePage,
   Contact,
   CourseDetailsPage,
   CourseOrder,
@@ -26,6 +27,7 @@ import { SavePage, SearchPage, ShoppingCart } from 'pages';
 // import { AddCourse } from 'pages';
 
 import PaymentSuccess from 'pages/PaymentSuccess';
+import { Certificate } from 'crypto';
 
 
 
@@ -51,7 +53,7 @@ const App: React.FC = () => (
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
-
+        <Route path='/certificate' element={<CertificatePage/>} />
         <Route path='/payment-successfully' element={<PaymentSuccess/>}/>
         <Route path='/profile-student' element={<ProfileStudent/>} />
         <Route path='/profile-instructor' element={<ProfileInstructor/>} />
