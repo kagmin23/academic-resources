@@ -18,6 +18,7 @@ import {
   CoursePage,
   DetailBlogPage,
   HomePage,
+  LessonStudent,
   ProfileInstructor,
   ProfileStudent,
 } from 'pages';
@@ -51,7 +52,7 @@ const App: React.FC = () => (
         <Route path='/course' element={<CoursePage/>} />
         <Route path='/course-order' element={<CourseOrder/>} />
         <Route path='/about' element={<About/>} />
-
+        <Route path='/lesson-student' element={<LessonStudent/>} />
         <Route path='/payment-successfully' element={<PaymentSuccess/>}/>
         <Route path='/profile-student' element={<ProfileStudent/>} />
         <Route path='/profile-instructor' element={<ProfileInstructor/>} />
