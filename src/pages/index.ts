@@ -9,7 +9,6 @@ export { default as CourseOrder } from './CourseOrder';
 export { default as CoursePage } from './CoursePage';
 export { default as DetailBlogPage } from './DetailBlogPage';
 export { default as HomePage } from './HomePage';
-export { default as LessonGuest } from './LessonGuest';
 export { default as LessonStudent } from './LessonStudent';
 export { default as Report } from './ReportPage';
 export { default as SavePage } from './SavePage';

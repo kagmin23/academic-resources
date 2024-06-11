@@ -88,7 +88,7 @@ const HomePage: React.FC = () => {
                 cover={<img alt={course.title} src={course.img} />}
                 className='text-xl'>
                 Course description here
-                <Link to="/course-order"><Button type="primary" className='p-5 text-lg ml-9'>$$$</Button></Link>
+                <Link to="/course-details"><Button type="primary" className='p-5 text-lg ml-9'>$$$</Button></Link>
               </Card>
             </Col>
           ))}
@@ -133,7 +133,7 @@ const HomePage: React.FC = () => {
                 cover={<img alt={course.title} src={course.img} />}
               >
                 Course description here
-                <Link to="/course-order"><Button type="primary">$$$</Button></Link>
+                <Link to="/course-details"><Button type="primary">$$$</Button></Link>
               </Card>
             </Col>
           ))}

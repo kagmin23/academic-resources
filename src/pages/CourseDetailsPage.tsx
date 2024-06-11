@@ -7,19 +7,31 @@ import {
     LikeOutlined,
     PlayCircleOutlined,
     ShareAltOutlined,
-    StarOutlined,
+    StarOutlined, FileOutlined, LockOutlined
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Collapse, Modal, Radio, Tabs } from 'antd';
+import { Avatar, Badge, Button, Modal, Radio, Tabs, Menu } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
+const { SubMenu } = Menu;
 const { TabPane } = Tabs;
-const { Panel } = Collapse;
 const { Group } = Radio;
 
 const CourseDetail: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [openSection, setOpenSection] = useState<string | string[]>([]);
+
+    const lessons = [
+        { key: 'lesson1', title: 'Getting Started', duration: '30 minutes', preview: true },
+        { key: 'lesson2', title: 'Content Management', duration: '30 minutes' },
+        { key: 'lesson3', title: 'Course Download', duration: '30 minutes' },
+        { key: 'lesson4', title: 'Course Download 02', duration: '30 minutes' },
+        { key: 'lesson5', title: 'Contextualising Sustainability for a Changing World', duration: '10 minutes' },
+    ];
+
+    const assignments = [
+        { key: 'assignment1', title: 'Certificate On Theme Development 01', duration: '10 minutes', preview: true },
+        { key: 'assignment2', title: 'Certificate On Theme Development 02', duration: '30 minutes' },
+    ];
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -29,9 +41,15 @@ const CourseDetail: React.FC = () => {
         setIsModalVisible(false);
     };
 
-    const handleToggle = (key: string | string[]) => {
-        setOpenSection(key);
+    const handleClick = (e: any) => {
+        const lesson = lessons.find(lesson => lesson.key === e.key);
+        if (lesson) {
+            setSelectedLesson(lesson.title);
+        }
     };
+
+
+    const [selectedLesson, setSelectedLesson] = useState(lessons[0]?.title);
 
     const renderStars = (starCount: number) => {
         const stars = [];
@@ -202,81 +220,36 @@ const CourseDetail: React.FC = () => {
                             </div>
                         </TabPane>
                         <TabPane tab={<span className='text-xl font-semibold'>Course Content</span>} key="2">
-                            <div className="p-4">
-                                <div className="flex items-center mb-4 font-semibold">
-                                    <h3 className="mr-auto text-2xl">Course content</h3>
-                                    <span className="text-xl cursor-pointer hover:text-red-700">Expand all</span>
-                                    <span className="ml-4 text-xl">402 lectures</span>
-                                    <span className="ml-4 text-xl">47:06:29</span>
-                                </div>
-                                <Collapse activeKey={openSection} onChange={handleToggle}>
-                                    <Panel header={<span className="text-xl font-semibold">Introduction to this Course</span>} key="introCourse">
-                                        <div className="text-lg">
-                                            <ul className="p-0 list-none">
-                                                <li className="flex justify-between mb-2">
-                                                    <span>A Note On Asking For Help</span>
-                                                    <span>00:12</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Introducing Our TA</span>
-                                                    <span>01:42</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Join the Online Community</span>
-                                                    <span>00:51</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Why This Course?</span>
-                                                    <span>07:48</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Syllabus Download</span>
-                                                    <span>01:42</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Lecture Slides</span>
-                                                    <span>00:11</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </Panel>
-                                    <Panel header={<span className="text-xl font-semibold">Introduction to Front End Development</span>} key="introFrontEnd">
-                                        <div className="text-lg">
-                                            <div className="flex justify-between mb-2">
-                                                <span>8 lectures</span>
-                                                <span>22:08</span>
+                            <Menu
+                                mode="inline"
+                                defaultSelectedKeys={[lessons[0].key]}
+                                onClick={handleClick}
+                                className="h-full"
+                            >
+                                <SubMenu key="sub1" title="Lesson" icon={<FileOutlined />}>
+                                    {lessons.map(lesson => (
+                                        <Menu.Item key={lesson.key} icon={lesson.preview ? <FileOutlined /> : <LockOutlined />} className="flex items-center h-24">
+                                            <div className="w-full">
+                                                <div className="text-base">{lesson.title}</div>
+                                                <div className="text-sm text-gray-500">{lesson.duration}</div>
                                             </div>
-                                            <ul className="p-0 list-none">
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Unit Objectives</span>
-                                                    <span>00:12</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Note about Setting Up Front-End Developer Environment</span>
-                                                    <span>01:42</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Setting Up Front-End Developer Environment</span>
-                                                    <span>00:51</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Note about Introduction to the Web</span>
-                                                    <span>07:48</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>Introduction to the Web</span>
-                                                    <span>01:42</span>
-                                                </li>
-                                                <li className="flex justify-between mb-2">
-                                                    <span>The Front End Holy Trinity</span>
-                                                    <span>00:11</span>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </Panel>
-                                </Collapse>
-                            </div>
+                                        </Menu.Item>
+                                    ))}
+                                </SubMenu>
+
+                                <SubMenu key="sub2" title="Assignment" icon={<FileOutlined />}>
+                                    {assignments.map(assignment => (
+                                        <Menu.Item key={assignment.key} icon={assignment.preview ? <FileOutlined /> : <LockOutlined />} className="flex items-center h-24">
+                                            <div className="w-full">
+                                                <div className="text-base">{assignment.title}</div>
+                                                <div className="text-sm text-gray-500">{assignment.duration}</div>
+                                            </div>
+                                        </Menu.Item>
+                                    ))}
+                                </SubMenu>
+                            </Menu>
                         </TabPane>
+
                         <TabPane tab={<span className='text-xl font-semibold '>Reviews</span>} key="3">
                             <div className="flex flex-col md:flex-row">
                                 <div className="p-4 md:w-1/2">
@@ -396,8 +369,12 @@ const CourseDetail: React.FC = () => {
                         </TabPane>
                     </Tabs>
                 </div>
+
             </div>
+
+
         </div>
+
     );
 };
 
