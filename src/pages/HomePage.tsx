@@ -93,7 +93,7 @@ const HomePage: React.FC = () => {
             </Col>
           ))}
         </Row>
-        <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
+        <Link to="/course"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
 
         <div className="body-homebox">
           <div className="box image-box">
@@ -179,6 +179,8 @@ const HomePage: React.FC = () => {
             </Col>
           ))}
         </Row>
+        <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
+
 
         <div className="p-8 bg-gray-100 contact-home">
           <h1 className="text-2xl font-bold">Subscriber</h1>
