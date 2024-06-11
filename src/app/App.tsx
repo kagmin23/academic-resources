@@ -18,6 +18,8 @@ import {
   CoursePage,
   DetailBlogPage,
   HomePage,
+  ProfileInstructor,
+  ProfileStudent,
 } from 'pages';
 // import { LessonStudent } from 'pages';
 import { SavePage, SearchPage, ShoppingCart } from 'pages';
@@ -51,6 +53,8 @@ const App: React.FC = () => (
         <Route path='/about' element={<About/>} />
 
         <Route path='/payment-successfully' element={<PaymentSuccess/>}/>
+        <Route path='/profile-student' element={<ProfileStudent/>} />
+        <Route path='/profile-instructor' element={<ProfileInstructor/>} />
 
 
       </Routes>
