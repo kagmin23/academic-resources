@@ -1,21 +1,12 @@
-import {
-  CaretRightOutlined,
-  FileDoneOutlined,
-  FileTextOutlined,
-  HeartOutlined,
-  LogoutOutlined,
-  QuestionCircleOutlined,
-  SettingOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
-} from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography } from 'antd';
 import React, { useState } from 'react';
+import { Layout, Menu, Avatar, Card, Typography, Row, Col, Image, Tabs, Button } from 'antd';
+import { UserOutlined, FileTextOutlined, FileDoneOutlined, ShoppingCartOutlined, SettingOutlined, LogoutOutlined, MailOutlined, CalendarOutlined, ManOutlined, WomanOutlined, FacebookOutlined, LinkedinOutlined, CaretRightOutlined } from '@ant-design/icons';
 import Setting from '../Setting';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
+
 const coursesData = [
   {
     key: '1',
@@ -110,20 +101,21 @@ const coursesData = [
 ];
 
 const aboutData = {
-  avatarSrc: 'https://scontent.fsgn2-11.fna.fbcdn.net/v/t1.6435-9/104658671_897847847393418_5352404516257749893_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGUgtsdH1x6vQbbqnErk1SxR7lr7k5dPtpHuWvuTl0-2r6Xr_X6XfF0uExI1CK6UE3BDbeLgnLryq8J5oHoBPMg&_nc_ohc=iEvrApXw3JAQ7kNvgFGQPeU&_nc_ht=scontent.fsgn2-11.fna&oh=00_AYCFbiTtCWBz3IK8e1vQqJ3a3clnb0JU3pcmJjTFAqt3Yw&oe=6688AB83',
-  name: 'David Heb',
-  email: 'mrdavid@gmail.com',
-  dob: '01/01/1990',
-  gender: 'Male',
-  courseCreatedDate: '01/01/2020',
+  avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
+  name: 'David Doe',
+  email: 'davidd09@gmail.com',
+  dob: 'January 1, 2003',
+  gender: 'Female',
+  courseCreatedDate: 'January 15, 2023',
   facebook: 'https://www.facebook.com/vu.hanthien.545',
-  linkedin: 'https://linkedin.com/in/david',
+  linkedin: 'https://linkedin.com/in/david34',
 };
 
 const ProfileInstructor: React.FC = () => {
   const [filteredCourses, setFilteredCourses] = useState(coursesData);
   const [showAbout, setShowAbout] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   const displayAboutInfo = () => {
     setShowAbout(true);
@@ -146,97 +138,96 @@ const ProfileInstructor: React.FC = () => {
     }
   };
 
+  const onCollapse = (collapsed: boolean) => {
+    setCollapsed(collapsed);
+  };
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider width={250} className="site-layout-background" style={{ backgroundColor: 'white' }}>
+      <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="flex items-center justify-center my-6">
-          <Avatar size={100} src="https://scontent.fsgn2-3.fna.fbcdn.net/v/t1.6435-9/186556739_1150264392151761_8313708048043301527_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeHXsXaD_LXdCCQoT27K49QqsybeY3n4YzGzJt5jefhjMe-LvbYoDtWlBcSBNxVRmHZfIZuh7RHur-kdbSDnpZJQ&_nc_ohc=0BmXcTKsr64Q7kNvgH-rsgU&_nc_ht=scontent.fsgn2-3.fna&oh=00_AYD7JAjZaEOuZLxHAtxYW_9yIdDjrFT7baEYLIWwRHvJTA&oe=6688B321" icon={<UserOutlined />} />
+          <Avatar size={70} src={aboutData.avatarSrc} icon={<UserOutlined />} />
         </div>
-        <Title level={4} className="text-center">David Heb</Title>
-        <Menu mode="inline" defaultSelectedKeys={['1']} style={{borderRight: 0 }}>
+        <Menu theme='dark' defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<FileTextOutlined />} onClick={displayAboutInfo}>
             About
           </Menu.Item>
           <Menu.Item key="2" icon={<FileTextOutlined />} onClick={() => filterCoursesByStatus('all')}>
             My Courses
           </Menu.Item>
-          <Menu.Item key="3" icon={<FileDoneOutlined />} onClick={() => filterCoursesByStatus('1')}>
-            Students
-          </Menu.Item>
-          <Menu.Item key="4" icon={<FileDoneOutlined />} onClick={() => filterCoursesByStatus('1')}>
+          <Menu.Item key="3" icon={<FileDoneOutlined />}>
             Certificates
           </Menu.Item>
-          <Menu.Item key="5" icon={<HeartOutlined />}>
-            Wishlist
-          </Menu.Item>
-          <Menu.Item key="6" icon={<ShoppingCartOutlined />}>
+          <Menu.Item key="4" icon={<ShoppingCartOutlined />}>
             Orders
           </Menu.Item>
-          <Menu.Item key="7" icon={<FileDoneOutlined />}>
+          <Menu.Item key="5" icon={<FileDoneOutlined />}>
             Assignments
           </Menu.Item>
-          <Menu.Item key="8" icon={<SettingOutlined />} onClick={displaySettings}>
+          <Menu.Item key="6" icon={<SettingOutlined />} onClick={displaySettings}>
             Settings
           </Menu.Item>
-          <Menu.Item key="9" icon={<LogoutOutlined />}>
+          <Menu.Item key="7" icon={<LogoutOutlined />}>
             Logout
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout>
-        <Content style={{ padding: '20px' }}>
+      <Layout className="site-layout">
+        <Content>
           {showAbout ? (
-            <div style={{ padding: 10 }}>
-              <Avatar size={100} src={aboutData.avatarSrc} />
-              <Title level={4}>{aboutData.name}</Title>
-              <Text>Email: {aboutData.email}</Text>
-              <br />
-              <Text>Date Of Birth: {aboutData.dob}</Text>
-              <br />
-              <Text>Gender: {aboutData.gender}</Text>
-              <br />
-              <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
-              <br />
-              <Text>Facebook: <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">{aboutData.facebook}</a></Text>
-              <br />
-              <Text>LinkedIn: <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">{aboutData.linkedin}</a></Text>
-            </div>
+            <Card style={{ maxWidth: 500, maxHeight: 350, overflow: 'auto', margin: 20 }}>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+                  <Avatar size={64} src={aboutData.avatarSrc} />
+                  <Title level={4} style={{ marginLeft: 16 }}>{aboutData.name}</Title>
+                </div>
+                <div style={{ marginBottom: 8 }}>
+                  <MailOutlined style={{ marginRight: 8 }} />
+                  <Text>Email: {aboutData.email}</Text>
+                </div>
+                <div style={{ marginBottom: 8 }}>
+                  <CalendarOutlined style={{ marginRight: 8 }} />
+                  <Text>Date Of Birth: {aboutData.dob}</Text>
+                </div>
+                <div style={{ marginBottom: 8 }}>
+                  {aboutData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
+                  <Text>Gender: {aboutData.gender}</Text>
+                </div>
+                <div style={{ marginBottom: 8 }}>
+                  <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
+                </div>
+                <div style={{ marginBottom: 8 }}>
+                  <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">
+                    <FacebookOutlined style={{ marginRight: 8 }} />
+                    Facebook
+                  </a>
+                </div>
+                <div>
+                  <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">
+                    <LinkedinOutlined style={{ marginRight: 8 }} />
+                    LinkedIn
+                  </a>
+                </div>
+              </div>
+            </Card>
           ) : showSettings ? (
-            <Setting /> // Render Settings component
+            <Setting />
           ) : (
-            <div style={{ padding: 10 }}>
-              <Row gutter={[5, 5]} className="mb-4" justify="space-between">
-                {[
-                  { text: 'Total Course', value: 80 },
-                  { text: 'Published Course', value: 1 },
-                  { text: 'Pending Course', value: 60 },
-                  { text: 'Total Students', value: 3 },
-                  { text: 'Students Completed', value: 3 },
-                  { text: 'Students In-progress', value: 0 },
-                ].map((item, index) => (
-                  <Col xs={24} sm={12} md={4} lg={4} xl={4} key={index}>
-                    <Card style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', padding: '5px 0' }}>
-                      <Text>{item.text}</Text>
-                      <Title level={5} style={{ color: 'orange', margin: 0 }}>{item.value}</Title>
-                    </Card>
-                  </Col>
-                ))}
-              </Row>
+            <div style={{ padding: 20 }}>
               <Tabs defaultActiveKey="all" onChange={filterCoursesByStatus}>
                 <TabPane tab="All" key="all">
                   <Row gutter={[16, 16]}>
                     {filteredCourses.map(course => (
-                      <Col span={8} key={course.key}>
+                      <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
                         <Card
-                          cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
+                          cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
                           actions={[
-                            <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>Start Learning</Button>
+                            <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
+                              Start Learning
+                            </Button>,
                           ]}
                         >
-                          <Card.Meta
-                            title={course.name}
-                            description={`Instructor: ${course.instructor}`}
-                          />
+                          <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
                           <Text>{course.lessons}</Text>
                           <br />
                           <Text style={{ color: 'blue' }}>{course.price}</Text>
@@ -247,46 +238,49 @@ const ProfileInstructor: React.FC = () => {
                 </TabPane>
                 <TabPane tab="Published" key="1">
                   <Row gutter={[16, 16]}>
-                    {filteredCourses.filter(course => course.status === '1').map(course => (
-                      <Col span={8} key={course.key}>
-                        <Card
-                          cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
-                          actions={[
-                            <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>Start Learning</Button>
-                          ]}
-                        >
-                          <Card.Meta
-                            title={course.name}
-                            description={`Instructor: ${course.instructor}`}
-                          />
-                          <Text>{course.lessons}</Text>
-                          <br />
-                          <Text style={{ color: 'blue' }}>{course.price}</Text>
-                        </Card>
-                      </Col>
-                    ))}
+                    {filteredCourses
+                      .filter(course => course.status === '1')
+                      .map(course => (
+                        <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
+                          <Card
+                            cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
+                            actions={[
+                              <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
+                                Start Learning
+                              </Button>,
+                            ]}
+                          >
+                            <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
+                            <Text>{course.lessons}</Text>
+                            <br />
+                            <Text style={{ color: 'blue' }}>{course.price}</Text>
+                          </Card>
+                        </Col>
+                      ))}
                   </Row>
                 </TabPane>
+               
                 <TabPane tab="Pending" key="0">
                   <Row gutter={[16, 16]}>
-                    {filteredCourses.filter(course => course.status === '0').map(course => (
-                      <Col span={8} key={course.key}>
-                        <Card
-                          cover={<Image src={course.image} style={{ height: 200, objectFit: 'cover' }} />}
-                          actions={[
-                            <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>Start Learning</Button>
-                          ]}
-                        >
-                          <Card.Meta
-                            title={course.name}
-                            description={`Instructor: ${course.instructor}`}
-                          />
-                          <Text>{course.lessons}</Text>
-                          <br />
-                          <Text style={{ color: 'blue' }}>{course.price}</Text>
-                        </Card>
-                      </Col>
-                    ))}
+                    {filteredCourses
+                      .filter(course => course.status === '0')
+                      .map(course => (
+                        <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
+                          <Card
+                            cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
+                            actions={[
+                              <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
+                                Start Learning
+                              </Button>,
+                            ]}
+                          >
+                            <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
+                            <Text>{course.lessons}</Text>
+                            <br />
+                            <Text style={{ color: 'blue' }}>{course.price}</Text>
+                          </Card>
+                        </Col>
+                      ))}
                   </Row>
                 </TabPane>
               </Tabs>
@@ -296,6 +290,7 @@ const ProfileInstructor: React.FC = () => {
       </Layout>
     </Layout>
   );
-};
-
-export default ProfileInstructor;
+  };
+  
+  export default ProfileInstructor;
+  
