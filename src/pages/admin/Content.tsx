@@ -69,7 +69,7 @@ const columns = [
   },
 ];
 
-const CategoryPage: React.FC = () => {
+const ContentAdmin: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleCollapsed = () => {
@@ -120,4 +120,4 @@ const CategoryPage: React.FC = () => {
   );
 };
 
-export default CategoryPage;
+export default ContentAdmin;
