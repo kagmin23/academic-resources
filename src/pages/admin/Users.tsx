@@ -117,12 +117,12 @@ const Users: React.FC = () => {
         <Input
           placeholder="Gender"
           value={newItem.gender}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          onChange={(e) => setNewItem({ ...newItem, gender: e.target.value })}
         />
         <Input
           placeholder="Date Of Birth"
           value={newItem.dateofbirth}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          onChange={(e) => setNewItem({ ...newItem, dateofbirth: e.target.value })}
         />
         <Input
           placeholder="Phone"

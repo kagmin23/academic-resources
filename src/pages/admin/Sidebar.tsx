@@ -19,7 +19,7 @@ const Sidebar: React.FC = () => {
     {
       icon: PieChartOutlined,
       heading: "Dashboard",
-      href: '/dashboard'
+      href: '/admin-page/dashboard'
     },
     {
       icon: UserSwitchOutlined,

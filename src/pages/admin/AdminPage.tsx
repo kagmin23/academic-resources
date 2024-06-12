@@ -4,6 +4,7 @@ import Content from './Content';
 import Report from './Report';
 import Sidebar from './Sidebar';
 import Users from './Users';
+import Dashboard from 'pages/admin/DashBoard';
 
 const AdminPage: React.FC = () => {
   return (
@@ -11,6 +12,7 @@ const AdminPage: React.FC = () => {
       <Sidebar />
       <div className="flex-grow p-4 bg-white rounded shadow-md">
         <Routes>
+        <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/user' element={<Users />} />
           <Route path='/content' element={<Content />} />
           <Route path='/report' element={<Report />} />
