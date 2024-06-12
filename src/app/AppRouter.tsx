@@ -25,6 +25,7 @@ import { SavePage, SearchPage, ShoppingCart } from 'pages';
 
 import { AuthProvider } from 'context/AuthContext';
 import PaymentSuccess from 'pages/PaymentSuccess';
+import AdminPage from 'pages/admin/AdminPage';
 import ProfileInstructor from 'pages/profile/ProfileInstructor';
 import ProfileStudent from 'pages/profile/ProfileStudent';
 import LayoutGuest from '../components/layout/LayoutGuest';
@@ -66,8 +67,10 @@ const AppRouter: React.FC = () => (
         <Route path='/profile-student' element={<ProfileStudent/>} />
         <Route path='/profile-instructor' element={<ProfileInstructor/>} />
 
-      </Routes>
+        <Route path='/admin-page/*' element={<AdminPage/>} /></Routes>
+
     </LayoutGuest>
+
 
     {/* <MainLayoutInstructor>
       <Routes>

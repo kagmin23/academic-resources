@@ -1,4 +1,3 @@
-// src/App.tsx
 import { FlagOutlined } from "@ant-design/icons";
 import { Layout, Table } from "antd";
 import React from "react";

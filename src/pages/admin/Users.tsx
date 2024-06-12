@@ -13,9 +13,9 @@ interface Item {
 }
 
 const initialData: Item[] = [
-  { id: 1, name: "Phan", gender: "Male", dateofbirth: "07/17", email: "phan@gma", phone: "0111", role: "" },
-  { id: 2, name: "Kang", gender: "Male", dateofbirth: "07/17", email: "kang@gma", phone: "0222", role: "" },
-  { id: 3, name: "Min", gender: "Male", dateofbirth: "07/17", email: "min@gma", phone: "0333", role: "" },
+  { id: 1, name: "Phan", gender: "Male", dateofbirth: "07/17", email: "phan@gma", phone: "0111", role: "Admin" },
+  { id: 2, name: "Kang", gender: "Male", dateofbirth: "07/17", email: "kang@gma", phone: "0222", role: "Student" },
+  { id: 3, name: "Min", gender: "Male", dateofbirth: "07/17", email: "min@gma", phone: "0333", role: "Instructor" },
 ];
 
 const Users: React.FC = () => {
@@ -151,12 +151,12 @@ const Users: React.FC = () => {
         <Input
           placeholder="Gender"
           value={newItem.gender}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          onChange={(e) => setNewItem({ ...newItem, gender: e.target.value })}
         />
         <Input
           placeholder="Date Of Birth"
           value={newItem.dateofbirth}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          onChange={(e) => setNewItem({ ...newItem, dateofbirth: e.target.value })}
         />
         <Input
           placeholder="Phone"
