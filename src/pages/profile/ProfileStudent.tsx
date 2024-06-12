@@ -1,27 +1,25 @@
-
 import React, { useState } from 'react';
 import {
   FileDoneOutlined,
   FileTextOutlined,
-  HeartOutlined,
   LogoutOutlined,
-  QuestionCircleOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Avatar, Card, Col, Image, Layout, Menu, Row, Table, Tabs, Typography } from 'antd';
-
+import { Avatar, Image, Layout, Menu, Table, Tabs, Typography, Button, Card } from 'antd';
 import Setting from 'pages/Setting';
+import { MailOutlined, CalendarOutlined, ManOutlined, WomanOutlined , FacebookOutlined, LinkedinOutlined} from '@ant-design/icons';
 
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
+
 const coursesData = [
   {
     key: '1',
     image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
-    name: 'How To Teach Online COurse Efectively',
+    name: 'How To Teach Online Course Effectively',
     result: '100%',
     expiration: 'April 20, 2023 10:04 pm',
     endTime: 'February 9, 2023 10:04 pm',
@@ -88,43 +86,26 @@ const columns = [
     key: 'endTime',
   },
 ];
+
 const aboutData = {
-  avatarSrc: 'https://scontent.fsgn2-11.fna.fbcdn.net/v/t1.6435-9/104658671_897847847393418_5352404516257749893_n.jpg?_nc_cat=105&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeGUgtsdH1x6vQbbqnErk1SxR7lr7k5dPtpHuWvuTl0-2r6Xr_X6XfF0uExI1CK6UE3BDbeLgnLryq8J5oHoBPMg&_nc_ohc=iEvrApXw3JAQ7kNvgFGQPeU&_nc_ht=scontent.fsgn2-11.fna&oh=00_AYCFbiTtCWBz3IK8e1vQqJ3a3clnb0JU3pcmJjTFAqt3Yw&oe=6688AB83',
-  name: 'Tuyet TAT',
-  email: 'anhtuyettat@gmail.com',
+  avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
+  name: 'David Doe',
+  email: 'davidd09@gmail.com',
   dob: 'January 1, 2003',
   gender: 'Female',
   courseCreatedDate: 'January 15, 2023',
   facebook: 'https://www.facebook.com/vu.hanthien.545',
-  linkedin: 'https://linkedin.com/in/tuyet',
+  linkedin: 'https://linkedin.com/in/david34',
 };
 
-const about = (
-  <div style={{ padding: 24 }}>
-    <Card>
-      <Row gutter={[16, 16]}>
-        <Col span={8}>
-          <Avatar size={100} src="https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/294936500_1442942606217270_8077083163445073553_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFeYEgptEmQ6A6exliBZRUpaWKlbIJiyh1pYqVsgmLKHai-pSGOpMvw5g2CUaGj3ngdVOnrfGX2YneIAYZHuXtv&_nc_ohc=DSVGGwKu1KkQ7kNvgEMYq8R&_nc_ht=scontent.fsgn2-10.fna&oh=00_AYCC587Q6FZcUHP0gDN7l4X0cgFiOYTXCiRFHtqKVniwNw&oe=66671327" />
-        </Col>
-        <Col span={16}>
-          <Title level={4}>Tuyet cao thu</Title>
-          <Text>Email: tat10@gmail.com</Text>
-          <br />
-          <Text>Date of Birth: January 1, 2003</Text>
-          <br />
-          <Text>Gender: Female</Text>
-          <br />
-          <Text>Course Created Date: January 15, 2023</Text>
-        </Col>
-      </Row>
-    </Card>
-  </div>
-);
-
-const ProfileStudent: React.FC = () => {
- 
+const ProfileStudent = () => {
+  const [collapsed, setCollapsed] = useState(false);
   const [showAbout, setShowAbout] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
+
+  const onCollapse = (collapsed: boolean) => {
+    setCollapsed(collapsed);
+  };
 
   const displayAboutInfo = () => {
     setShowAbout(true);
@@ -136,21 +117,18 @@ const ProfileStudent: React.FC = () => {
     setShowSettings(true);
   };
 
-  // Function to display My Courses information
   const displayMyCourses = () => {
-    setShowAbout(false); // Hide the About section
-    setShowSettings(false); // Hide the Settings section (if it's visible)
-    // Add any additional logic here if needed
+    setShowAbout(false);
+    setShowSettings(false);
   };
-  
+
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider width={250} className="site-layout-background" style={{ backgroundColor: 'white' }}>
+      <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
         <div className="flex items-center justify-center my-6">
-          <Avatar size={100} src="https://scontent.fsgn2-10.fna.fbcdn.net/v/t39.30808-6/294936500_1442942606217270_8077083163445073553_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeFeYEgptEmQ6A6exliBZRUpaWKlbIJiyh1pYqVsgmLKHai-pSGOpMvw5g2CUaGj3ngdVOnrfGX2YneIAYZHuXtv&_nc_ohc=DSVGGwKu1KkQ7kNvgEMYq8R&_nc_ht=scontent.fsgn2-10.fna&oh=00_AYCC587Q6FZcUHP0gDN7l4X0cgFiOYTXCiRFHtqKVniwNw&oe=66671327" icon={<UserOutlined />} />
+          <Avatar size={70} src="https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp" icon={<UserOutlined />} />
         </div>
-        <Title level={4} className="text-center">TAT</Title>
-        <Menu mode="inline" defaultSelectedKeys={['1']} style={{borderRight: 0 }}>
+        <Menu theme='dark' defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<FileTextOutlined />} onClick={displayAboutInfo}>
             About
           </Menu.Item>
@@ -158,103 +136,83 @@ const ProfileStudent: React.FC = () => {
             My Courses
           </Menu.Item>
           <Menu.Item key="3" icon={<FileDoneOutlined />}>
-            Students
-          </Menu.Item>
-          <Menu.Item key="4" icon={<FileDoneOutlined />}>
             Certificates
           </Menu.Item>
-          <Menu.Item key="5" icon={<HeartOutlined />}>
-            Wishlist
-          </Menu.Item>
-          <Menu.Item key="6" icon={<ShoppingCartOutlined />}>
+          <Menu.Item key="4" icon={<ShoppingCartOutlined />}>
             Orders
           </Menu.Item>
-          <Menu.Item key="7" icon={<FileDoneOutlined />}>
+          <Menu.Item key="5" icon={<FileDoneOutlined />}>
             Assignments
           </Menu.Item>
-          <Menu.Item key="8" icon={<SettingOutlined />} onClick={displaySettings}>
+          <Menu.Item key="6" icon={<SettingOutlined />} onClick={displaySettings}>
             Settings
           </Menu.Item>
-          <Menu.Item key="9" icon={<LogoutOutlined />}>
+          <Menu.Item key="7" icon={<LogoutOutlined />}>
             Logout
           </Menu.Item>
         </Menu>
       </Sider>
-      <Layout>
-        <Content style={{ padding: '20px' }}>
-          {showAbout ? (
-            <div style={{ padding: 10 }}>
-              <Avatar size={100} src={aboutData.avatarSrc} />
-              <Title level={4}>{aboutData.name}</Title>
-              <Text>Email: {aboutData.email}</Text>
-              <br />
-              <Text>Date Of Birth: {aboutData.dob}</Text>
-              <br />
-              <Text>Gender: {aboutData.gender}</Text>
-              <br />
-              <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
-              <br />
-              <Text>Facebook: <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">{aboutData.facebook}</a></Text>
-              <br />
-              <Text>LinkedIn: <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">{aboutData.linkedin}</a></Text>
-            </div>
-          ) : showSettings ? (
-            <Setting /> // Render Settings component
-          ) : (
-            <div style={{ padding: 10 }}>
-              <Row gutter={[16, 16]} className="mb-6">
-                <Col xs={24} sm={12} md={8} lg={4}>
-                  <Card style={{ height: '100%' }}>
-                    <Text>Enrolled Course</Text>
-                    <Title level={5} style={{ color: 'orange' }}>5</Title>
-                  </Card>
-                </Col>
-                <Col xs={24} sm={12} md={8} lg={4}>
-                  <Card style={{ height: '100%' }}>
-                    <Text>Inprogress Course</Text>
-                    <Title level={5} style={{ color: 'orange' }}>1</Title>
-                  </Card>
-                </Col>
-                <Col xs={24} sm={12} md={8} lg={4}>
-                  <Card style={{ height: '100%' }}>
-                    <Text>Finished Course</Text>
-                    <Title level={5} style={{ color: 'orange' }}>4</Title>
-                  </Card>
-                </Col>
-                <Col xs={24} sm={12} md={8} lg={4}>
-                  <Card style={{ height: '100%' }}>
-                    <Text>Passed Course</Text>
-                    <Title level={5} style={{ color: 'orange' }}>4</Title>
-                  </Card>
-                </Col>
-                <Col xs={24} sm={12} md={8} lg={4}>
-                  <Card style={{ height: '100%' }}>
-                    <Text>Failed Course</Text>
-                    <Title level={5} style={{ color: 'orange' }}>0</Title>
-                  </Card>
-                </Col>
-              </Row>
-              <Tabs defaultActiveKey="2">
-                <TabPane tab="All" key="1">
-                  <Table columns={columns} dataSource={coursesData} pagination={false} />
-                </TabPane>
-                <TabPane tab="In Progress" key="2">
-                  <Table columns={columns} dataSource={coursesData.filter(course => course.result == '0%')} pagination={false} />
-                </TabPane>
-                <TabPane tab="Finished" key="3">
-                  <Table columns={columns} dataSource={coursesData.filter(course => course.result !== '0%')} pagination={false} />
-                </TabPane>
-                <TabPane tab="Passed" key="4">
-                  <Table columns={columns} dataSource={coursesData.filter(course => course.result !== '0%')} pagination={false} />
-                </TabPane>
-                <TabPane tab="Failed" key="5">
-                </TabPane>
-              </Tabs>
-            </div>
-          )}
-        </Content>
+      <Layout className="site-layout">
+      <Content >
+  {showAbout ? (
+    <Card style={{ maxWidth: 500, maxHeight: 350, overflow: 'auto', margin: 20}}>
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+          <Avatar size={64} src={aboutData.avatarSrc} />
+          <Title level={4} style={{ marginLeft: 16 }}>{aboutData.name}</Title>
+        </div>
+        <div style={{ marginBottom: 8 }}>
+          <MailOutlined style={{ marginRight: 8 }} />
+          <Text>Email: {aboutData.email}</Text>
+        </div>
+        <div style={{ marginBottom: 8 }}>
+          <CalendarOutlined style={{ marginRight: 8 }} />
+          <Text>Date Of Birth: {aboutData.dob}</Text>
+        </div>
+        <div style={{ marginBottom: 8 }}>
+          {aboutData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
+          <Text>Gender: {aboutData.gender}</Text>
+        </div>
+        <div style={{ marginBottom: 8 }}>
+          <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
+        </div>
+        <div style={{ marginBottom: 8 }}>
+  <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">
+    <FacebookOutlined style={{ marginRight: 8 }} />
+    Facebook
+  </a>
+</div>
+<div>
+  <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">
+    <LinkedinOutlined style={{ marginRight: 8 }} />
+    LinkedIn
+  </a>
+</div>
+      </div>
+    </Card>
+  ) : showSettings ? (
+    <Setting /> // Render Settings component
+  ) : (
+    <div style={{ margin: 40 }}>
+    <Tabs defaultActiveKey="1">
+      <TabPane tab="All" key="1">
+        <Table columns={columns} dataSource={coursesData} pagination={false} />
+      </TabPane>
+      <TabPane tab="In Progress" key="2">
+        <Table columns={columns} dataSource={coursesData.filter(course => course.result !== '100%')} pagination={false} />
+      </TabPane>
+      <TabPane tab="Finished" key="3">
+        <Table columns={columns} dataSource={coursesData.filter(course => course.result === '100%')} pagination={false} />
+      </TabPane>
+    </Tabs>
+    </div>
+  )}
+</Content>
+
       </Layout>
     </Layout>
   );
 };
+
 export default ProfileStudent;
+
