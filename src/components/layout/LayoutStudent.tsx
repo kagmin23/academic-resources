@@ -1,23 +1,21 @@
-import { BookOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
-import { useAuth } from '../../context/AuthContext';
 
 const { Header, Content } = Layout;
 const { Search } = Input;
 
 interface MainLayoutProps {
-  children?: React.ReactNode;
+  children: React.ReactNode;
 }
 
-const LayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
+const MainLayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn, login, logout } = useAuth();
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
@@ -45,15 +43,9 @@ const LayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          {isLoggedIn ? (
-            <Button onClick={logout} className="w-full mt-4 text-lg">
-              Log out <LogoutOutlined />
-            </Button>
-          ) : (
-            <Button onClick={() => navigate('/login')} className="w-full mt-4 text-lg">
-              Log in
-            </Button>
-          )}
+          <Link to="/">
+            <Button className="w-full mt-4 text-lg">Log out</Button>
+          </Link>
           <Link to="/profile-student">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
           </Link>
@@ -123,7 +115,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
           </Menu.Item>
           <Menu.Item key="3" className="my-2">
             <Link to="/blog">Blog</Link>
-          </Menu.Item>
+            </Menu.Item>
           <Menu.Item key="4" className="my-2">
             <Link to="/category">Category</Link>
           </Menu.Item>
@@ -138,7 +130,6 @@ const LayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
       <Content className="p-4 pt-16">
         <div className="p-4 bg-white rounded shadow">
           {children}
-          <Outlet />
         </div>
       </Content>
       <Footer />
@@ -146,4 +137,4 @@ const LayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
   );
 };
 
-export default LayoutStudent;
+export default MainLayoutStudent;
