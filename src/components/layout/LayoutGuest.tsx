@@ -1,4 +1,4 @@
-import { BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BookOutlined, LoginOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
@@ -12,7 +12,7 @@ interface MainLayoutProps {
   children: React.ReactNode;
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const LayoutGuest: React.FC<MainLayoutProps> = ({ children }) => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
@@ -44,7 +44,7 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             className="hidden ml-4 w-72 md:block md:w-96"
           />
           <Link to="/log-in">
-            <Button className="w-full mt-4 text-lg">Log in</Button>
+            <Button className="w-full mt-4 text-lg">Log in<LoginOutlined /></Button>
           </Link>
           <Link to="/log-in">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
@@ -137,4 +137,4 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   );
 };
 
-export default MainLayout;
+export default LayoutGuest;
