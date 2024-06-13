@@ -11,6 +11,7 @@ import {
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Drawer } from 'antd';
+import { Link } from 'react-router-dom';
 
 
 interface Course {
@@ -138,7 +139,7 @@ const CoursePage: React.FC = () => {
 
 
   return (
-    <div className="mx-auto  h-fit">
+    <div className="mx-auto h-fit">
       <Row gutter={[16, 16]} >
       {/* Menu ở Màn hình md trở lên */}
       <Col xs={0} sm={0} md={6} lg={6} xl={6}>
@@ -169,17 +170,17 @@ const CoursePage: React.FC = () => {
           {/* </div> */}
         </Col>
         
-        <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto'> 
+        <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto'>
 
         {/* Menu màn hình <md */}
         <Button type="primary" onClick={showDrawer} className='mb-4 md:hidden'>
           Menu
         </Button>
        
-        <Drawer  
+        <Drawer
         placement={'left'}
         closable={false}
-        onClose={onClose}      
+        onClose={onClose}
         open={open}
         bodyStyle={{ padding: 0, margin: 0 }} 
         
@@ -207,7 +208,7 @@ const CoursePage: React.FC = () => {
                   <div className="flex items-center justify-between mt-4">
                     <span>${course.price}</span>
                     <div>
-                      <Button type="primary" className="mr-2">Buy Now</Button>
+                      <Link to="/course-details"><Button type="primary" className="mr-2">Buy Now</Button></Link>
                       <Button>Add to Cart</Button>
                     </div>
                   </div>

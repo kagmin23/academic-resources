@@ -10,23 +10,23 @@ const Login: React.FC = () => {
 
   const users = [
     {
-      email: "admin@example.com",
+      email: "admin123",
       password: "admin123",
       roleId: 1, // Change role to numerical ID
-      role: "admin",
+      role: "Admin",
     },
     {
       email: "user123",
       password: "123",
       roleId: 2, // Change role to numerical ID
-      role: "user",
+      role: "Student",
     },
-    {
-      email: "user1234",
-      password: "1234",
-      roleId: 3, // Change role to numerical ID
-      role: "instructor",
-    },
+    // {
+    //   email: "user1234",
+    //   password: "1234",
+    //   roleId: 3, // Change role to numerical ID
+    //   role: "instructor",
+    // },
   ];
 
   const handleLogin = () => {

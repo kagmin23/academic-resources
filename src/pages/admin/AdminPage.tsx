@@ -1,7 +1,8 @@
 import Dashboard from 'pages/admin/DashBoard';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Content from './Content';
+import Category from './Category';
+import Content from './Course';
 import Report from './Report';
 import Sidebar from './Sidebar';
 import Users from './Users';
@@ -14,7 +15,8 @@ const AdminPage: React.FC = () => {
         <Routes>
         <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/user' element={<Users />} />
-          <Route path='/content' element={<Content />} />
+          <Route path='/course' element={<Content />} />
+          <Route path='/category' element={<Category />} />
           <Route path='/report' element={<Report />} />
           <Route path="*" element={<h1>404</h1>} />
         </Routes>

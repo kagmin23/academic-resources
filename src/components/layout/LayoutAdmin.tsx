@@ -1,4 +1,4 @@
-import { BookOutlined, LoginOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BookOutlined, LogoutOutlined, MenuOutlined, PieChartOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
@@ -12,7 +12,7 @@ interface MainLayoutProps {
   children?: React.ReactNode;  // Optional to match with default ReactNode
 }
 
-const LayoutGuest: React.FC<MainLayoutProps> = () => {
+const LayoutStudent: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
@@ -43,10 +43,11 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          <Link to="/log-in">
-            <Button className="w-full mt-4 text-lg">Log in<LoginOutlined /></Button>
+          <Link to="/admin-page"><Button><PieChartOutlined /> Dash Board</Button></Link>
+          <Link to="/">
+            <Button className="w-full mt-4 text-lg">Log out<LogoutOutlined /></Button>
           </Link>
-          <Link to="/log-in">
+          <Link to="/profile-student">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
           </Link>
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
@@ -88,6 +89,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
               <Link to="/shopping-cart"></Link>
             </Menu.Item>
+
           </Menu>
         </div>
       </div>
@@ -137,4 +139,4 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
   );
 };
 
-export default LayoutGuest;
+export default LayoutStudent;

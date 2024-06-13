@@ -1,4 +1,4 @@
-import { ContainerOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, PieChartOutlined, SwapOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { ContainerOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, SwapOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -10,7 +10,7 @@ interface SidebarDataType {
   href: string;
 }
 
-const Sidebar: React.FC = () => {
+const SidebarAdmin: React.FC = () => {
   const [selected, setSelected] = useState<number>(0);
   const [expanded, setExpanded] = useState<boolean>(true);
   const navigate = useNavigate();
@@ -28,8 +28,13 @@ const Sidebar: React.FC = () => {
     },
     {
       icon: ContainerOutlined,
-      heading: "Content",
-      href: "/admin-page/content"
+      heading: "Course",
+      href: "/admin-page/course"
+    },
+    {
+      icon: MenuUnfoldOutlined,
+      heading: 'Category',
+      href: "/admin-page/category"
     },
     {
       icon: FlagOutlined,
@@ -74,4 +79,4 @@ const Sidebar: React.FC = () => {
   );
 };
 
-export default Sidebar;
+export default SidebarAdmin;

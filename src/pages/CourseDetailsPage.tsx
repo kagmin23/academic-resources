@@ -3,13 +3,15 @@ import {
     DislikeOutlined,
     ExclamationCircleOutlined,
     EyeOutlined,
+    FileOutlined,
     HeartOutlined,
     LikeOutlined,
+    LockOutlined,
     PlayCircleOutlined,
     ShareAltOutlined,
-    StarOutlined, FileOutlined, LockOutlined
+    StarOutlined
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Modal, Radio, Tabs, Menu } from 'antd';
+import { Avatar, Badge, Button, Menu, Modal, Radio, Tabs } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -116,7 +118,7 @@ const CourseDetail: React.FC = () => {
                             <p className="mt-2 text-lg">Last updated 1/2024</p>
                             <div className="mt-4 ">
                                 <Button type="primary" className="p-5 mr-2 text-lg font-semibold bg-red-600">Add to Cart</Button>
-                                <Link to="/course-order"><Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>Buy Now</Button></Link>
+                                <Link to="/buy-now"><Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>Buy Now</Button></Link>
                             </div>
                             <p className="mt-2 text-lg">30-Day Money-Back Guarantee</p>
                         </div>

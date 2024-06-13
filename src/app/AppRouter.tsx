@@ -4,7 +4,6 @@ import React from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import ReportPage from '../pages/ReportPage';
 
-
 import {
   About,
   BlogPage,
@@ -19,78 +18,57 @@ import {
   LessonStudent,
   Setting,
 } from 'pages';
-// import { LessonStudent } from 'pages';
+
 import { SavePage, SearchPage, ShoppingCart } from 'pages';
-// import { AddCourse } from 'pages';
 
 import { AuthProvider } from 'context/AuthContext';
 import PaymentSuccess from 'pages/PaymentSuccess';
 import AdminPage from 'pages/admin/AdminPage';
-import ProfileInstructor from 'pages/profile/ProfileInstructor';
 import ProfileStudent from 'pages/profile/ProfileStudent';
+import LayoutAdmin from '../components/layout/LayoutAdmin';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import LayoutStudent from '../components/layout/LayoutStudent';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 
-
 const AppRouter: React.FC = () => (
   <AuthProvider>
-  <Router>
-
-    <LayoutGuest>
+    <Router>
       <Routes>
+        {/* Layout for Guest */}
+        <Route path="/" element={<LayoutGuest />}>
+          <Route index element={<Navigate to="/home" />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/log-in" element={<Login />} />
+          <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/search" element={<SearchPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/course-details" element={<CourseDetailsPage />} />
+          <Route path="/detail-blog" element={<DetailBlogPage />} />
+          <Route path="/course" element={<CoursePage />} />
+          <Route path="/course-order" element={<CourseOrder />} />
+          <Route path="/about" element={<About />} />
+        </Route>
 
-    <Route path="/" element={<Navigate to="/home" />} />
-        <Route path="/home" element={<HomePage />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/sign-up" element={<SignUp />} />
-
-        <Route path="/" element={<HomePage/>} />
-        <Route path="/search" element={<SearchPage />} />
-        <Route path="/category" element={<ProtectedRouter allowedRoles={[3]}><CategoryPage /></ProtectedRouter>} />
-        <Route path="/shopping-card" element={<ProtectedRouter allowedRoles={[3]}><ShoppingCart /></ProtectedRouter>} />
-        <Route path="/buy-now" element={<BuyNow />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/report" element={<ReportPage />} />
-        <Route path="/log-in" element={<Login/>} />
-        <Route path="/sign-up" element={<SignUp />} />
-
-        <Route path='/save' element={<SavePage />} />
-        <Route path='/blog' element={<BlogPage/>} />
-        <Route path='/course-details' element={<CourseDetailsPage/>} />
-        <Route path='/detail-blog' element={<DetailBlogPage/>} />
-        <Route path='/course' element={<CoursePage/>} />
-        <Route path='/course-order' element={<CourseOrder/>} />
-        <Route path='/about' element={<About/>} />
-        <Route path='/lesson-student' element={<LessonStudent/>} />
-        <Route path='/payment-successfully' element={<PaymentSuccess/>}/>
-        <Route path='/profile-student' element={<ProfileStudent/>} />
-        <Route path='/profile-instructor' element={<ProfileInstructor/>} />
-
-        <Route path='/admin-page/*' element={<AdminPage/>} /></Routes>
-
-    </LayoutGuest>
-
-
-    {/* <MainLayoutInstructor>
-      <Routes>
-        <Route path='/add' element={<AddCourse/>} />
-        <Route path="/profile-instructor" element={<ProfileInstructor />} />
-        <Route path='/setting' element={<Setting/>} />
-      </Routes>
-    </MainLayoutInstructor> */}
-
-    <LayoutStudent>
-      <Routes>
-
-    <Route path="/" element={<Navigate to="/home" />} />
+        {/* Layout for Students */}
+        <Route path="/" element={<LayoutStudent />}>
+          <Route path="/category" element={<ProtectedRouter allowedRoles={[2]}><CategoryPage /></ProtectedRouter>} />
+          <Route path="/shopping-cart" element={<ProtectedRouter allowedRoles={[2]}><ShoppingCart /></ProtectedRouter>} />
           <Route path="/profile-student" element={<ProtectedRouter allowedRoles={[2]}><ProfileStudent /></ProtectedRouter>} />
-          <Route path='/setting' element={<Setting/>} />
-          <Route path='/lesson-student' element={<LessonStudent/>} />
-      </Routes>
-      </LayoutStudent>
+          <Route path="/buy-now" element={<ProtectedRouter allowedRoles={[2]}><BuyNow /></ProtectedRouter>} />
+          <Route path="/contact" element={<ProtectedRouter allowedRoles={[2]}><Contact /></ProtectedRouter>} />
+          <Route path="/report" element={<ProtectedRouter allowedRoles={[2]}><ReportPage /></ProtectedRouter>} />
+          <Route path="/setting" element={<ProtectedRouter allowedRoles={[2]}><Setting /></ProtectedRouter>} />
+          <Route path="/lesson-student" element={<ProtectedRouter allowedRoles={[2]}><LessonStudent /></ProtectedRouter>} />
+          <Route path="/save" element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />
+          <Route path="/payment-successfully" element={<ProtectedRouter allowedRoles={[2]}><PaymentSuccess /></ProtectedRouter>} />
+        </Route>
 
-  </Router>
+        <Route path="/" element={<LayoutAdmin />}>
+          <Route path="/admin-page/*" element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
+          </Route>
+
+      </Routes>
+    </Router>
   </AuthProvider>
 );
 

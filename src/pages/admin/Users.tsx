@@ -1,4 +1,5 @@
-import { Button, Input, Modal, Table, message } from "antd";
+import { Button, Input, Layout, Modal, Table, message } from "antd";
+import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import React, { useState } from "react";
 
@@ -18,7 +19,7 @@ const initialData: Item[] = [
   { id: 3, name: "Min", gender: "Male", dateofbirth: "07/17", email: "min@gma", phone: "0333", role: "Instructor" },
 ];
 
-const Users: React.FC = () => {
+const UsersAdmin: React.FC = () => {
   const [data, setData] = useState<Item[]>(initialData);
   const [editingItem, setEditingItem] = useState<Partial<Item>>({});
   const [newItem, setNewItem] = useState<Partial<Item>>({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "" });
@@ -98,7 +99,8 @@ const Users: React.FC = () => {
   ];
 
   return (
-    <div className="container p-4">
+    <Layout>
+      <Content className="p-4">
       <h2 className="mb-4 text-xl font-bold">Manager Account</h2>
       <div className="mb-4 search-container">
         <Input.Search
@@ -174,8 +176,9 @@ const Users: React.FC = () => {
           onChange={(e) => setEditingItem({ ...editingItem, role: e.target.value })}
         />
       </Modal>
-    </div>
+    </Content>
+    </Layout>
   );
 };
 
-export default Users;
+export default UsersAdmin;

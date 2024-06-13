@@ -2,17 +2,17 @@ import { BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content } = Layout;
 const { Search } = Input;
 
 interface MainLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;  // Optional to match with default ReactNode
 }
 
-const MainLayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
+const LayoutStudent: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
@@ -86,7 +86,7 @@ const MainLayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
               <Link to="/contact">Contact</Link>
             </Menu.Item>
             <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-              <Link to="/shopping-card"></Link>
+              <Link to="/shopping-cart"></Link>
             </Menu.Item>
           </Menu>
         </div>
@@ -115,7 +115,7 @@ const MainLayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
           </Menu.Item>
           <Menu.Item key="3" className="my-2">
             <Link to="/blog">Blog</Link>
-            </Menu.Item>
+          </Menu.Item>
           <Menu.Item key="4" className="my-2">
             <Link to="/category">Category</Link>
           </Menu.Item>
@@ -123,13 +123,13 @@ const MainLayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
             <Link to="/about">About</Link>
           </Menu.Item>
           <Menu.Item key="6" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-            <Link to="/shopping-card"></Link>
+            <Link to="/shopping-cart"></Link>
           </Menu.Item>
         </Menu>
       </Drawer>
       <Content className="p-4 pt-16">
         <div className="p-4 bg-white rounded shadow">
-          {children}
+          <Outlet />
         </div>
       </Content>
       <Footer />
@@ -137,4 +137,4 @@ const MainLayoutStudent: React.FC<MainLayoutProps> = ({ children }) => {
   );
 };
 
-export default MainLayoutStudent;
+export default LayoutStudent;
