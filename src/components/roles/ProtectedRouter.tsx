@@ -9,6 +9,9 @@ interface ProtectedRouteProps {
 const ProtectedRouter: React.FC<ProtectedRouteProps> = ({ allowedRoles, children }) => {
   const userData = localStorage.getItem('userData');
   let userRole: number | null = null;
+  console.log('====================================');
+  console.log(userData);
+  console.log('====================================');
 
   if (userData) {
     try {

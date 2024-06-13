@@ -10,39 +10,52 @@ const Login: React.FC = () => {
 
   const users = [
     {
-      email: "admin123",
-      password: "admin123",
-      roleId: 1, // Change role to numerical ID
+      email: "admin",
+      password: "123",
+      roleId: 1, // SET ROlE
       role: "Admin",
     },
     {
-      email: "user123",
+      email: "user",
       password: "123",
-      roleId: 2, // Change role to numerical ID
+      roleId: 2,
       role: "Student",
     },
-    // {
-    //   email: "user1234",
-    //   password: "1234",
-    //   roleId: 3, // Change role to numerical ID
-    //   role: "instructor",
-    // },
+    {
+      email: "instructor",
+      password: "123",
+      roleId: 3,
+      role: "Instructor",
+    },
   ];
 
   const handleLogin = () => {
     const user = users.find(user => user.email === email && user.password === password);
     if (user) {
       message.success(`Welcome, ${user.role}!`);
-      localStorage.setItem('userData', JSON.stringify(user)); // Save user data
-      if (user.role === 'user') {
-        navigate('/user');
-      } else {
-        navigate('/');
+      localStorage.setItem('userData', JSON.stringify(user));
+  
+      switch (user.role) {
+        case 'Guest':
+          navigate('/guest');
+          break;
+        case 'Student':
+          navigate('/student');
+          break;
+        case 'Instructor':
+          navigate('/instructor');
+          break;
+        case 'Admin':
+          navigate('/admin');
+          break;
+        default:
+          navigate('/home');
       }
     } else {
       message.error('Invalid email or password');
     }
   };
+  
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
