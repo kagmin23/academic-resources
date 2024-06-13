@@ -13,12 +13,12 @@ const AdminPage: React.FC = () => {
       <Sidebar />
       <div className="flex-grow p-4 bg-white rounded shadow-md">
         <Routes>
-        <Route path='/dashboard' element={<Dashboard />} />
-          <Route path='/user' element={<Users />} />
-          <Route path='/course' element={<Content />} />
-          <Route path='/category' element={<Category />} />
-          <Route path='/report' element={<Report />} />
-          <Route path="*" element={<h1>404</h1>} />
+        <Route path={`/`} element={<Dashboard />} />
+          <Route path={`user`} element={<Users />} />
+          <Route path={`course`} element={<Content />} />
+          <Route path={`category`} element={<Category />} />
+          <Route path={`report`} element={<Report />} />
+          <Route path={`*`} element={<h1>404</h1>} />
         </Routes>
       </div>
     </div>
