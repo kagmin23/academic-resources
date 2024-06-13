@@ -19,28 +19,28 @@ const Footer: React.FC = () => {
             </ul>
           </div>
           <div className="flex flex-wrap">
-            <a href="#" className="mb-2 mr-4">Mua ngay</a>
-            <a href="#" className="mb-2 mr-4">Menu</a>
-            <a href="#" className="mb-2 mr-4">Khóa học</a>
-            <a href="#" className="mb-2 mr-4">Chủ đề</a>
-            <a href="#" className="mb-2 mr-4">Thông tin cho sinh viên tiềm năng</a>
-            <a href="#" className="mb-2 mr-4">Lớp học</a>
-            <a href="#" className="mb-2 mr-4">Vẽ tranh</a>
-            <a href="#" className="mb-2 mr-4">Chứng nhận</a>
-            <a href="#" className="mb-2 mr-4">Sinh viên tiềm năng</a>
-            <a href="#" className="mb-2 mr-4">Chương trình</a>
-            <a href="#" className="mb-2 mr-4">Phác thảo</a>
-            <a href="#" className="mb-2 mr-4">Tiết lộ</a>
-            <a href="#" className="mb-2 mr-4">Cha mẹ và gia đình</a>
-            <a href="#" className="mb-2 mr-4">Về chúng tôi</a>
-            <a href="#" className="mb-2 mr-4">Vẽ</a>
-            <a href="#" className="mb-2 mr-4">Mã sinh viên</a>
-            <a href="#" className="mb-2 mr-4">Sinh viên chuyển tiếp</a>
-            <a href="#" className="mb-2 mr-4">Liên hệ</a>
-            <a href="#" className="mb-2 mr-4">Kỹ thuật số</a>
-            <a href="#" className="mb-2 mr-4">An toàn khuôn viên</a>
-            <a href="#" className="mb-2 mr-4">Sinh viên quân đội</a>
-          </div>
+              <a href="#" className="mb-2 mr-4">Buy Now</a>
+              <a href="#" className="mb-2 mr-4">Menu</a>
+              <a href="#" className="mb-2 mr-4">Courses</a>
+              <a href="#" className="mb-2 mr-4">Topics</a>
+              <a href="#" className="mb-2 mr-4">Information for Prospective Students</a>
+              <a href="#" className="mb-2 mr-4">Classes</a>
+              <a href="#" className="mb-2 mr-4">Painting</a>
+              <a href="#" className="mb-2 mr-4">Certification</a>
+              <a href="#" className="mb-2 mr-4">Prospective Students</a>
+              <a href="#" className="mb-2 mr-4">Programs</a>
+              <a href="#" className="mb-2 mr-4">Sketching</a>
+              <a href="#" className="mb-2 mr-4">Disclosure</a>
+              <a href="#" className="mb-2 mr-4">Parents and Families</a>
+              <a href="#" className="mb-2 mr-4">About Us</a>
+              <a href="#" className="mb-2 mr-4">Drawing</a>
+              <a href="#" className="mb-2 mr-4">Student Code</a>
+              <a href="#" className="mb-2 mr-4">Transfer Students</a>
+              <a href="#" className="mb-2 mr-4">Contact</a>
+              <a href="#" className="mb-2 mr-4">Digital</a>
+              <a href="#" className="mb-2 mr-4">Campus Safety</a>
+              <a href="#" className="mb-2 mr-4">Military Students</a>
+            </div>
         </div>
         <div className="pt-4 mt-8 text-sm text-center border-t border-gray-700 md:text-left">
           Riêng tư | Điều khoản | Sơ đồ trang web | Mua

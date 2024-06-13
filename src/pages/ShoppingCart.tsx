@@ -58,7 +58,7 @@ export default function ShoppingCart() {
             <Card title={<div style={cardTitleStyle}>Your Courses</div>}>
             {courses.map((course, index) => (
                 <Card.Grid key={index} style={gridStyle} className='md:flex '>
-                <img src={course.image} alt="Product" className='w-4/5 h-24 mx-auto md:w-1/3 md:h-36' /> 
+                <img src={course.image} alt="Product" className='w-4/5 h-24 mx-auto md:w-1/3 md:h-36' />
                 <div className='w-full md:flex md:w-2/3'>
                 <div className='flex-grow mx-4'>
                   <div className='w-full font-bold text-center md:text-lg sm:text-sm md:text-left'>{course.name}</div>

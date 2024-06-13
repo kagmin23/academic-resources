@@ -1,3 +1,4 @@
+import { AuthProvider } from 'context/AuthContext';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './app/App';
@@ -9,7 +10,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <App />
+    <AuthProvider>
+      <App />
+    </AuthProvider>
   </React.StrictMode>
 );
 

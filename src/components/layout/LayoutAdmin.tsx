@@ -1,18 +1,18 @@
-import { BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BookOutlined, LogoutOutlined, MenuOutlined, PieChartOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content } = Layout;
 const { Search } = Input;
 
 interface MainLayoutProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;  // Optional to match with default ReactNode
 }
 
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+const LayoutStudent: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
@@ -43,8 +43,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          <Link to="/log-in">
-            <Button className="w-full mt-4 text-lg">Log in</Button>
+          <Link to="/admin-page"><Button><PieChartOutlined /> Dash Board</Button></Link>
+          <Link to="/">
+            <Button className="w-full mt-4 text-lg">Log out<LogoutOutlined /></Button>
           </Link>
           <Link to="/profile-student">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
@@ -86,8 +87,9 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
               <Link to="/contact">Contact</Link>
             </Menu.Item>
             <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-              <Link to="/shopping-card"></Link>
+              <Link to="/shopping-cart"></Link>
             </Menu.Item>
+
           </Menu>
         </div>
       </div>
@@ -123,13 +125,13 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
             <Link to="/about">About</Link>
           </Menu.Item>
           <Menu.Item key="6" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-            <Link to="/shopping-card"></Link>
+            <Link to="/shopping-cart"></Link>
           </Menu.Item>
         </Menu>
       </Drawer>
       <Content className="p-4 pt-16">
         <div className="p-4 bg-white rounded shadow">
-          {children}
+          <Outlet />
         </div>
       </Content>
       <Footer />
@@ -137,4 +139,4 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
   );
 };
 
-export default MainLayout;
+export default LayoutStudent;

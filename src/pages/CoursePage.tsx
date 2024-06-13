@@ -1,19 +1,19 @@
-import { Button, Card, Col, Row , Menu } from 'antd';
-// import 'antd/dist/antd.css';
-import React ,{ useState } from 'react';
-// import './styles.css';
-import{ Layout } from "antd";
-import {
 
+import { Button, Card, Col, Menu, Row } from 'antd';
+// import 'antd/dist/antd.css';
+import React, { useState } from 'react';
+// import './styles.css';
+import {
   ContainerOutlined,
   DesktopOutlined,
   MailOutlined,
- 
+
   PieChartOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import type { DrawerProps, RadioChangeEvent } from 'antd';
-import { Drawer} from 'antd';
+import { Drawer } from 'antd';
+import { Link } from 'react-router-dom';
+
 
 
 interface Course {
@@ -141,7 +141,9 @@ const CoursePage: React.FC = () => {
 
 
   return (
+
     <div className=" mx-auto h-fit">
+
       <Row gutter={[16, 16]} >
       {/* Menu ở Màn hình md trở lên */}
       <Col xs={0} sm={0} md={6} lg={6} xl={6}>
@@ -162,7 +164,8 @@ const CoursePage: React.FC = () => {
           mode="inline"
           items={items}
            theme="dark"
-          className='h-full overflow-y-auto lg:text-base xl:text-lg p-2'
+          className='h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
+
           />
          </div>
          </div>
@@ -172,17 +175,19 @@ const CoursePage: React.FC = () => {
           {/* </div> */}
         </Col>
         
-        <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto'> 
+
+        <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto'>
 
         {/* Menu màn hình <md */}
-        <Button type="primary" onClick={showDrawer} className='md:hidden mb-4'>
+        <Button type="primary" onClick={showDrawer} className='mb-4 md:hidden'>
           Menu
         </Button>
        
-        <Drawer  
+        <Drawer
         placement={'left'}
         closable={false}
-        onClose={onClose}      
+        onClose={onClose}
+
         open={open}
         bodyStyle={{ padding: 0, margin: 0 }} 
         
@@ -194,7 +199,9 @@ const CoursePage: React.FC = () => {
           mode="inline"
           items={items}
            theme="dark"
-          className='h-full overflow-y-auto lg:text-base xl:text-lg p-2 w-full'
+
+          className='w-full h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
+
           />
       </Drawer>
       {/* Content Course */}
@@ -210,7 +217,7 @@ const CoursePage: React.FC = () => {
                   <div className="flex items-center justify-between mt-4">
                     <span>${course.price}</span>
                     <div>
-                      <Button type="primary" className="mr-2">Buy Now</Button>
+                      <Link to="/course-details"><Button type="primary" className="mr-2">Buy Now</Button></Link>
                       <Button>Add to Cart</Button>
                     </div>
                   </div>

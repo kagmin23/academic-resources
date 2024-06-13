@@ -88,12 +88,12 @@ const HomePage: React.FC = () => {
                 cover={<img alt={course.title} src={course.img} />}
                 className='text-xl'>
                 Course description here
-                <Link to="/course-order"><Button type="primary" className='p-5 text-lg ml-9'>$$$</Button></Link>
+                <Link to="/course-details"><Button type="primary" className='p-5 text-lg ml-9'>$$$</Button></Link>
               </Card>
             </Col>
           ))}
         </Row>
-        <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
+        <Link to="/course"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
 
         <div className="body-homebox">
           <div className="box image-box">
@@ -133,7 +133,7 @@ const HomePage: React.FC = () => {
                 cover={<img alt={course.title} src={course.img} />}
               >
                 Course description here
-                <Link to="/course-order"><Button type="primary">$$$</Button></Link>
+                <Link to="/course-details"><Button type="primary">$$$</Button></Link>
               </Card>
             </Col>
           ))}
@@ -179,6 +179,8 @@ const HomePage: React.FC = () => {
             </Col>
           ))}
         </Row>
+        <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
+
 
         <div className="p-8 bg-gray-100 contact-home">
           <h1 className="text-2xl font-bold">Subscriber</h1>
