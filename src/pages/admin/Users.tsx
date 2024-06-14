@@ -1,4 +1,4 @@
-import { Button, Input, Layout, Modal, Table, message } from "antd";
+import { Button, Input, Layout, Modal, Switch, Table, message } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import React, { useState } from "react";
@@ -11,18 +11,19 @@ interface Item {
   email: string;
   phone: string;
   role: string;
+  status: boolean;
 }
 
 const initialData: Item[] = [
-  { id: 1, name: "Phan", gender: "Male", dateofbirth: "07/17", email: "phan@gma", phone: "0111", role: "Admin" },
-  { id: 2, name: "Kang", gender: "Male", dateofbirth: "07/17", email: "kang@gma", phone: "0222", role: "Student" },
-  { id: 3, name: "Min", gender: "Male", dateofbirth: "07/17", email: "min@gma", phone: "0333", role: "Instructor" },
+  { id: 1, name: "Phan", gender: "Male", dateofbirth: "07/17", email: "phan@gma", phone: "0111", role: "Admin", status: false },
+  { id: 2, name: "Kang", gender: "Male", dateofbirth: "07/17", email: "kang@gma", phone: "0222", role: "Student" , status: true},
+  { id: 3, name: "Min", gender: "Male", dateofbirth: "07/17", email: "min@gma", phone: "0333", role: "Instructor", status: false },
 ];
 
 const UsersAdmin: React.FC = () => {
   const [data, setData] = useState<Item[]>(initialData);
   const [editingItem, setEditingItem] = useState<Partial<Item>>({});
-  const [newItem, setNewItem] = useState<Partial<Item>>({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "" });
+  const [newItem, setNewItem] = useState<Partial<Item>>({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "", status: undefined });
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -35,9 +36,9 @@ const UsersAdmin: React.FC = () => {
       newItem.phone &&
       newItem.role
     ) {
-      const newData = [...data, { id: data.length + 1, ...newItem } as Item];
+      const newData = [...data, { id: data.length + 1, ...newItem, status: newItem.status ?? false } as Item];
       setData(newData);
-      setNewItem({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "" });
+      setNewItem({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "", status: undefined });
     } else {
       message.error("Please fill in all fields");
     }
@@ -66,8 +67,15 @@ const UsersAdmin: React.FC = () => {
     if (value.trim() !== "") {
       setSearchTerm(value);
     } else {
-      message.error("Please fill in all fields");
+      message.error("Please enter a search term");
     }
+  };
+
+  const handleStatusChange = (checked: boolean, record: Item) => {
+    const updatedData = data.map(item =>
+      item.id === record.id ? { ...item, status: checked } : item
+    );
+    setData(updatedData);
   };
 
   const filteredData = data.filter(
@@ -96,87 +104,98 @@ const UsersAdmin: React.FC = () => {
         </>
       ),
     },
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
+      render: (status: boolean, record: Item) => (
+        <Switch
+          checked={status}
+          onChange={(checked: boolean) => handleStatusChange(checked, record)}
+        />
+      ),
+    },
   ];
 
   return (
     <Layout>
       <Content className="p-4">
-      <h2 className="mb-4 text-xl font-bold">Manager Account</h2>
-      <div className="mb-4 search-container">
-        <Input.Search
-          placeholder="Search"
-          enterButton="Search"
-          onSearch={handleSearch}
-          className="w-full"
-        />
-      </div>
-      <div className="flex mb-4 space-x-2 add-container">
-        <Input
-          placeholder="Name"
-          value={newItem.name}
-          onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-        />
-        <Input
-          placeholder="Gender"
-          value={newItem.gender}
-          onChange={(e) => setNewItem({ ...newItem, gender: e.target.value })}
-        />
-        <Input
-          placeholder="Date Of Birth"
-          value={newItem.dateofbirth}
-          onChange={(e) => setNewItem({ ...newItem, dateofbirth: e.target.value })}
-        />
-        <Input
-          placeholder="Phone"
-          value={newItem.phone}
-          onChange={(e) => setNewItem({ ...newItem, phone: e.target.value })}
-        />
-        <Input
-          placeholder="Email"
-          value={newItem.email}
-          onChange={(e) => setNewItem({ ...newItem, email: e.target.value })}
-        />
-        <Input
-          placeholder="Role"
-          value={newItem.role}
-          onChange={(e) => setNewItem({ ...newItem, role: e.target.value })}
-        />
-        <Button type="primary" onClick={handleAdd}>Add</Button>
-      </div>
-      <Table dataSource={filteredData} columns={columns} rowKey="id" />
-      <Modal title="Edit Item" open={isModalOpen} onOk={handleUpdate} onCancel={() => setModalOpen(false)}>
-        <Input
-          placeholder="Name"
-          value={editingItem.name}
-          onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-        />
-        <Input
-          placeholder="Gender"
-          value={newItem.gender}
-          onChange={(e) => setNewItem({ ...newItem, gender: e.target.value })}
-        />
-        <Input
-          placeholder="Date Of Birth"
-          value={newItem.dateofbirth}
-          onChange={(e) => setNewItem({ ...newItem, dateofbirth: e.target.value })}
-        />
-        <Input
-          placeholder="Phone"
-          value={editingItem.phone}
-          onChange={(e) => setEditingItem({ ...editingItem, phone: e.target.value })}
-        />
-        <Input
-          placeholder="Email"
-          value={editingItem.email}
-          onChange={(e) => setEditingItem({ ...editingItem, email: e.target.value })}
-        />
-        <Input
-          placeholder="Role"
-          value={editingItem.role}
-          onChange={(e) => setEditingItem({ ...editingItem, role: e.target.value })}
-        />
-      </Modal>
-    </Content>
+        <h2 className="mb-4 text-xl font-bold">Manager Account</h2>
+        <div className="mb-4 search-container">
+          <Input.Search
+            placeholder="Search"
+            enterButton="Search"
+            onSearch={handleSearch}
+            className="w-full"
+          />
+        </div>
+        <div className="flex mb-4 space-x-2 add-container">
+          <Input
+            placeholder="Name"
+            value={newItem.name}
+            onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+          />
+          <Input
+            placeholder="Gender"
+            value={newItem.gender}
+            onChange={(e) => setNewItem({ ...newItem, gender: e.target.value })}
+          />
+          <Input
+            placeholder="Date Of Birth"
+            value={newItem.dateofbirth}
+            onChange={(e) => setNewItem({ ...newItem, dateofbirth: e.target.value })}
+          />
+          <Input
+            placeholder="Phone"
+            value={newItem.phone}
+            onChange={(e) => setNewItem({ ...newItem, phone: e.target.value })}
+          />
+          <Input
+            placeholder="Email"
+            value={newItem.email}
+            onChange={(e) => setNewItem({ ...newItem, email: e.target.value })}
+          />
+          <Input
+            placeholder="Role"
+            value={newItem.role}
+            onChange={(e) => setNewItem({ ...newItem, role: e.target.value })}
+          />
+          <Button type="primary" onClick={handleAdd}>Add</Button>
+        </div>
+        <Table dataSource={filteredData} columns={columns} rowKey="id" />
+        <Modal title="Edit Item" open={isModalOpen} onOk={handleUpdate} onCancel={() => setModalOpen(false)}>
+          <Input
+            placeholder="Name"
+            value={editingItem.name}
+            onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+          />
+          <Input
+            placeholder="Gender"
+            value={editingItem.gender}
+            onChange={(e) => setEditingItem({ ...editingItem, gender: e.target.value })}
+          />
+          <Input
+            placeholder="Date Of Birth"
+            value={editingItem.dateofbirth}
+            onChange={(e) => setEditingItem({ ...editingItem, dateofbirth: e.target.value })}
+          />
+          <Input
+            placeholder="Phone"
+            value={editingItem.phone}
+            onChange={(e) => setEditingItem({ ...editingItem, phone: e.target.value })}
+          />
+          <Input
+            placeholder="Email"
+            value={editingItem.email}
+            onChange={(e) => setEditingItem({ ...editingItem, email: e.target.value })}
+          />
+          <Input
+            placeholder="Role"
+            value={editingItem.role}
+            onChange={(e) => setEditingItem({ ...editingItem, role: e.target.value })}
+          />
+        </Modal>
+      </Content>
     </Layout>
   );
 };
