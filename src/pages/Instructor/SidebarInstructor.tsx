@@ -19,12 +19,12 @@ const SidebarAdmin: React.FC = () => {
     {
       icon: PieChartOutlined,
       heading: "Dashboard",
-      href: '/instructor/dashboard'
+      href:  "/instructor/profile-instructor"
     },
     {
       icon: ContainerOutlined,
       heading: "Manager Course",
-      href: "/instructor/manager-course"
+      href: "/instructor/profile-instructor/manager-course"
     },
     {
       icon: LineChartOutlined,
