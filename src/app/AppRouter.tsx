@@ -32,7 +32,7 @@ import LayoutGuest from '../components/layout/LayoutGuest';
 import LayoutStudent from '../components/layout/LayoutStudent';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import Report from '../pages/ReportPage';
-import UserRouter from 'pages/user/UserRouter';
+import StudentRouter from 'pages/student/StudentRouter';
 const AppRouter: React.FC = () => (
   <AuthProvider>
     <Router>
@@ -54,7 +54,7 @@ const AppRouter: React.FC = () => (
 
         {/* Layout for Students */}
        
-        <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><UserRouter /></ProtectedRouter>}/>
+        <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><StudentRouter /></ProtectedRouter>}/>
         {/* <Route path={``} element={<ProtectedRouter allowedRoles={[2]}><UserRouter /></ProtectedRouter>} /> */}
         {/* <Route path={``} element={<HomePage />} />
           <Route path={`blog`} element={<BlogPage />} />
@@ -77,7 +77,11 @@ const AppRouter: React.FC = () => (
         <Route path="/admin/*" element={<LayoutAdmin />}>
           {/* <Route path="home" element={<HomePage />} /> */}
           <Route path={``} element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
+
           </Route>
+
+          {/* viết tiếp */}
+          {/* <Route path="/admin/*"  element={<ProtectedRouter allowedRoles={[2]}><AdminPage /></ProtectedRouter>}/> */}
 
           <Route path="/" element={<LayoutAdmin />}>
           <Route path="admin-page/*" element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
