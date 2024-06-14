@@ -116,7 +116,7 @@ import React, { useState } from 'react';
   
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <Layout className="site-layout" style={{ marginLeft: "240px" }}>
+        <Layout className="site-layout">
           <Header className="p-0 bg-white">
             <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
               {/* <Button icon={<MenuUnfoldOutlined />} className="flex items-center">

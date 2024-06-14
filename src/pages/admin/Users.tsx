@@ -118,7 +118,7 @@ const UsersAdmin: React.FC = () => {
   ];
 
   return (
-    <Layout style={{ marginLeft: "240px" }}>
+    <Layout>
       <Content className="p-4">
         <h2 className="mb-4 text-xl font-bold">Manager Account</h2>
         <div className="mb-4 search-container">

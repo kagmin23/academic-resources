@@ -144,34 +144,6 @@ const ProfileInstructor: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-        <div className="flex items-center justify-center my-6">
-          <Avatar size={70} src={aboutData.avatarSrc} icon={<UserOutlined />} />
-        </div>
-        <Menu theme='dark' defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<FileTextOutlined />} onClick={displayAboutInfo}>
-            About
-          </Menu.Item>
-          <Menu.Item key="2" icon={<FileTextOutlined />} onClick={() => filterCoursesByStatus('all')}>
-            My Courses
-          </Menu.Item>
-          <Menu.Item key="3" icon={<FileDoneOutlined />}>
-            Certificates
-          </Menu.Item>
-          <Menu.Item key="4" icon={<ShoppingCartOutlined />}>
-            Orders
-          </Menu.Item>
-          <Menu.Item key="5" icon={<FileDoneOutlined />}>
-            Assignments
-          </Menu.Item>
-          <Menu.Item key="6" icon={<SettingOutlined />} onClick={displaySettings}>
-            Settings
-          </Menu.Item>
-          <Menu.Item key="7" icon={<LogoutOutlined />}>
-            Logout
-          </Menu.Item>
-        </Menu>
-      </Sider>
       <Layout className="site-layout">
         <Content>
           {showAbout ? (

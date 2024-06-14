@@ -34,6 +34,7 @@ import LayoutStudent from '../components/layout/LayoutStudent';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import Report from '../pages/ReportPage';
 import UserRouter from 'pages/user/UserRouter';
+import DashboardInstructor from 'pages/Instructor/DashboardInstructor';
 const AppRouter: React.FC = () => (
   <AuthProvider>
     <Router>
@@ -82,7 +83,7 @@ const AppRouter: React.FC = () => (
 
           <Route path="/" element={<LayoutInstructor />}>
           <Route path="admin-page/*" element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
-          <Route path="profile-instructor/*" element={<ProtectedRouter allowedRoles={[3]}><ProfileInstructor /></ProtectedRouter>} />
+          <Route path="dashboard-instructor/*" element={<ProtectedRouter allowedRoles={[3]}><DashboardInstructor /></ProtectedRouter>} />
           </Route>
 
       </Routes>
