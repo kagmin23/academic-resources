@@ -18,32 +18,32 @@ const SidebarAdmin: React.FC = () => {
   const SidebarData: SidebarDataType[] = [
     {
       icon: PieChartOutlined,
-      heading: "Dashboard",
+      heading: " Dashboard ",
       href: '/admin-page/dashboard'
     },
     {
       icon: UserSwitchOutlined,
-      heading: "Manager Users",
+      heading: " Manager Users ",
       href: '/admin-page/user'
     },
     {
       icon: ContainerOutlined,
-      heading: "Manager Course",
+      heading: " Manager Course ",
       href: "/admin-page/course"
     },
     {
       icon: MenuUnfoldOutlined,
-      heading: 'Manager Category',
+      heading: ' Manager Category ',
       href: "/admin-page/category"
     },
     {
       icon: FlagOutlined,
-      heading: 'Manager Report',
+      heading: ' Manager Report ',
       href: "/admin-page/report"
     },
     {
       icon: LineChartOutlined,
-      heading: 'Analytics',
+      heading: ' Analytics ',
       href: "/admin-page/analytics"
     },
     {
