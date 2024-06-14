@@ -16,13 +16,13 @@ import {
 import { SearchPage } from 'pages';
 
 import { AuthProvider } from 'context/AuthContext';
+import InstructorRouter from 'pages/Instructor/InstructorRouter';
 import AdminPage from 'pages/admin/AdminPage';
-import LayoutAdmin from '../components/layout/LayoutAdmin';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import LayoutInstructor from '../components/layout/LayoutInstructor';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import InstructorPage from '../pages/Instructor/InstructorPage';
-import UserRouter from '../pages/router/UserRouter';
+import StudentRouter from '../pages/Student/StudentRouter';
 
 
 const AppRouter: React.FC = () => (
@@ -46,7 +46,12 @@ const AppRouter: React.FC = () => (
 
         {/* Layout for Students */}
        
-        <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><UserRouter /></ProtectedRouter>}/>
+        <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><StudentRouter /></ProtectedRouter>}/>
+        <Route path="/instructor/*"  element={<ProtectedRouter allowedRoles={[3]}><InstructorRouter /></ProtectedRouter>}/>
+         
+        <Route path="/admin/*"  element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>}/>
+
+
         {/* <Route path={``} element={<ProtectedRouter allowedRoles={[2]}><UserRouter /></ProtectedRouter>} /> */}
         {/* <Route path={``} element={<HomePage />} />
           <Route path={`blog`} element={<BlogPage />} />
@@ -66,10 +71,11 @@ const AppRouter: React.FC = () => (
         {/* </Route> */}
           {/* <Route path="/home" element={<HomePage />} /> */}
 
-        <Route path="/admin/*" element={<LayoutAdmin />}>
+        {/* <Route path="/admin/*" element={<LayoutAdmin />}> */}
           {/* <Route path="home" element={<HomePage />} /> */}
-          <Route path={``} element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
-          </Route>
+           {/* <Route path={``} element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
+
+          </Route>  */}
 
           <Route path="/instructor/*" element={<LayoutInstructor />}>
           {/* <Route path="admin-page/*" element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
