@@ -19,9 +19,7 @@ import { AuthProvider } from 'context/AuthContext';
 import InstructorRouter from 'pages/Instructor/InstructorRouter';
 import AdminPage from 'pages/admin/AdminPage';
 import LayoutGuest from '../components/layout/LayoutGuest';
-import LayoutInstructor from '../components/layout/LayoutInstructor';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
-import InstructorPage from '../pages/Instructor/InstructorPage';
 import StudentRouter from '../pages/Student/StudentRouter';
 
 
@@ -77,13 +75,13 @@ const AppRouter: React.FC = () => (
 
           </Route>  */}
 
-          <Route path="/instructor/*" element={<LayoutInstructor />}>
+          {/* <Route path="/instructor/*" element={<LayoutInstructor />}> */}
           {/* <Route path="admin-page/*" element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
           <Route path="profile-instructor/*" element={<ProtectedRouter allowedRoles={[3]}><ProfileInstructor /></ProtectedRouter>} /> */}
 
-          <Route path={`instructor-page`} element={<ProtectedRouter allowedRoles={[3]}><InstructorPage /></ProtectedRouter>} />
+          {/* <Route path={`instructor-page`} element={<ProtectedRouter allowedRoles={[3]}><InstructorPage /></ProtectedRouter>} /> */}
 
-          </Route>
+          {/* </Route> */}
           
 
       </Routes>
