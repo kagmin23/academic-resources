@@ -21,6 +21,7 @@ import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import InstructorPage from '../pages/Instructor/InstructorPage';
 import StudentRouter from '../pages/Student/StudentRouter';
+import InstructorRouter from 'pages/Instructor/InstructorRouter';
 
 
 const AppRouter: React.FC = () => (
@@ -45,7 +46,8 @@ const AppRouter: React.FC = () => (
         {/* Layout for Students */}
        
         <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><StudentRouter /></ProtectedRouter>}/>
-        <Route path="/instructor/*"  element={<ProtectedRouter allowedRoles={[3]}><InstructorPage /></ProtectedRouter>}/>
+        <Route path="/instructor/*"  element={<ProtectedRouter allowedRoles={[3]}><InstructorRouter /></ProtectedRouter>}/>
+         
         <Route path="/admin/*"  element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>}/>
 
 

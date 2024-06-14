@@ -1,22 +1,24 @@
-import {
-  About,
-  BlogPage,
-  BuyNow,
-  CategoryPage,
-  Contact,
-  CoursePage,
-  HomePage,
-  LessonStudent,
-  SavePage,
-  Setting,
-  ShoppingCart
-} from 'pages';
-import PaymentSuccess from 'pages/PaymentSuccess';
+import React from 'react'
 import { Route, Routes } from 'react-router-dom';
-import LayoutInstructor from '../../components/layout/LayoutInstructor';
-import ProtectedRouter from '../../components/roles/ProtectedRouter';
-import Report from '../ReportPage';
-import InstructorPage from './InstructorPage';
+import LayoutInstructor from '../../components/layout/LayoutInstructor'
+import {
+    About,
+    BlogPage,
+    BuyNow,
+    CategoryPage,
+    Contact,
+    CoursePage,
+    HomePage,
+    LessonStudent,
+    ProfileInstructor,
+    SavePage,
+    Setting,
+    ShoppingCart,
+  } from 'pages';
+  import PaymentSuccess from 'pages/PaymentSuccess';
+  import ProtectedRouter from '../../components/roles/ProtectedRouter';
+  import Report from '../ReportPage';
+  import InstructorPage from './InstructorPage'
 
 export default function InstructorRouter() {
   return (
