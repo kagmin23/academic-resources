@@ -5,6 +5,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content } = Layout;
+
 const { Search } = Input;
 
 interface MainLayoutProps {
@@ -29,9 +30,10 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
   };
 
   return (
-    <Layout className="min-h-screen">
+    <div >
+     
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
-        <Link to="/">
+        <Link to={`/`}>
           <h1 className="text-xl text-white">
             <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
           </h1>
@@ -46,10 +48,10 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           <Link to="/">
             <Button className="w-full mt-4 text-lg">Log out<LogoutOutlined /></Button>
           </Link>
-          <Link to="/profile-student">
+          {/* <Link to="/profile-student">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
-          </Link>
-          <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
+          </Link> */}
+          {/* <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} /> */}
         </div>
       </Header>
       {/* <div className="pt-16">
@@ -92,49 +94,51 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           </Menu>
         </div>
       </div> */}
-      <Drawer
+      {/* <Drawer
         title="Menu"
         placement="right"
         onClose={toggleDrawer}
         visible={drawerVisible}
-      >
+      > */}
         {/* <Search
           placeholder="Search courses"
           onSearch={onSearch}
           className="w-full mb-4"
         /> */}
-        <Menu
+        {/* <Menu
           mode="vertical"
           selectedKeys={selectedKeys}
           onClick={handleMenuClick}
         >
           <Menu.Item key="1" className="my-2">
-            <Link to="/">Home</Link>
+            <Link to={`/`}>Home</Link>
           </Menu.Item>
           <Menu.Item key="2" className="my-2">
-            <Link to="/course">Courses</Link>
+            <Link to={`/course`}>Courses</Link>
           </Menu.Item>
           <Menu.Item key="3" className="my-2">
-            <Link to="/blog">Blog</Link>
+            <Link to={`/blog`}>Blog</Link>
           </Menu.Item>
           <Menu.Item key="4" className="my-2">
-            <Link to="/category">Category</Link>
+            <Link to={`/category`}>Category</Link>
           </Menu.Item>
           <Menu.Item key="5" className="my-2">
-            <Link to="/about">About</Link>
+            <Link to={`/about`}>About</Link>
           </Menu.Item>
           <Menu.Item key="6" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-            <Link to="/shopping-cart"></Link>
+            <Link to={`/shopping-cart`}></Link>
           </Menu.Item>
         </Menu>
-      </Drawer>
-      <Content className="p-4 pt-16">
-        <div className="p-4 bg-white rounded shadow">
+      </Drawer> */}
+      {/* <Content className="p-4 pt-16"> */}
+        {/* <div className="p-4 bg-white rounded shadow"> */}
           <Outlet />
-        </div>
-      </Content>
-      {/* <Footer /> */}
-    </Layout>
+        {/* </div> */}
+      {/* </Content> */}
+
+      {/* <Footer />  */}
+    </div> 
+    
   );
 };
 
