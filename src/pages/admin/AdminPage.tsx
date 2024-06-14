@@ -21,6 +21,7 @@ const AdminPage: React.FC = () => {
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>
       </div>
+      
     </div>
   );
 }
