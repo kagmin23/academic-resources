@@ -17,8 +17,8 @@ import { SearchPage } from 'pages';
 
 import { AuthProvider } from 'context/AuthContext';
 import InstructorRouter from 'pages/Instructor/InstructorRouter';
+import StudentRouter from 'pages/Student/StudentRouter';
 import AdminPage from 'pages/admin/AdminPage';
-import StudentRouter from '../../src/pages/Student/StudentRouter';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 
