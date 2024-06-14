@@ -1,23 +1,22 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom';
-import LayoutInstructor from '../../components/layout/LayoutInstructor'
 import {
-    About,
-    BlogPage,
-    BuyNow,
-    CategoryPage,
-    Contact,
-    CoursePage,
-    HomePage,
-    LessonStudent,
-    ProfileInstructor,
-    SavePage,
-    Setting,
-    ShoppingCart,
-  } from 'pages';
-  import PaymentSuccess from 'pages/PaymentSuccess';
-  import ProtectedRouter from '../../components/roles/ProtectedRouter';
-  import Report from '../ReportPage';
+  About,
+  BlogPage,
+  BuyNow,
+  CategoryPage,
+  Contact,
+  CoursePage,
+  HomePage,
+  LessonStudent,
+  SavePage,
+  Setting,
+  ShoppingCart
+} from 'pages';
+import PaymentSuccess from 'pages/PaymentSuccess';
+import { Route, Routes } from 'react-router-dom';
+import LayoutInstructor from '../../components/layout/LayoutInstructor';
+import ProtectedRouter from '../../components/roles/ProtectedRouter';
+import Report from '../ReportPage';
+import InstructorPage from './InstructorPage';
 
 export default function InstructorRouter() {
   return (
@@ -31,7 +30,7 @@ export default function InstructorRouter() {
          <Route path={`course`}element={<ProtectedRouter allowedRoles={[3]}><CoursePage /></ProtectedRouter>} />
          <Route path={`category`} element={<ProtectedRouter allowedRoles={[3]}><CategoryPage /></ProtectedRouter>} />
          <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={[3]}><ShoppingCart /></ProtectedRouter>} />
-         <Route path={`profile-instructor`} element={<ProtectedRouter allowedRoles={[3]}><ProfileInstructor /></ProtectedRouter>} />
+         <Route path={`profile-instructor`} element={<ProtectedRouter allowedRoles={[3]}><InstructorPage /></ProtectedRouter>} />
          <Route path={`buy-now`} element={<ProtectedRouter allowedRoles={[3]}><BuyNow /></ProtectedRouter>} />
          <Route path={`contact`} element={<ProtectedRouter allowedRoles={[3]}><Contact /></ProtectedRouter>} />
          <Route path={`report`} element={<ProtectedRouter allowedRoles={[3]}><Report /></ProtectedRouter>} />
