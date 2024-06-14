@@ -30,7 +30,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
   };
 
   return (
-    <div >
+    <div className='mb-16'>
      
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
         <Link to={`/`}>

@@ -11,12 +11,10 @@ import Footer from 'components/Footer';
 const AdminPage: React.FC = () => {
   return (
     <div>
-      <div className='mb-16'>
-      <LayoutAdmin />
-      </div>
-    <div className="flex min-h-screen mb-8">
+      <LayoutAdmin/>
+    <div className="flex min-h-screen mb-5">
       <Sidebar />
-      <div className="flex-grow p-4">
+      <div className="flex-grow p-4 bg-white rounded shadow-md">
         <Routes>
         <Route path={`/`} element={<Dashboard />} />
           <Route path={`user`} element={<Users />} />
