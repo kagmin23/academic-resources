@@ -35,43 +35,43 @@ const DashboardInstructor: React.FC = () => {
 
     const coursesData = [
         {
-          key: '1',
-          image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
-          name: 'How To Teach Online Course Effectively',
-          instructor: 'F8',
-          lessons: '9 Lessons',
-          price: 'Free',
-          status: '1',
+            key: '1',
+            image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
+            name: 'How To Teach Online Course Effectively',
+            instructor: 'F8',
+            lessons: '9 Lessons',
+            price: 'Free',
+            status: '1',
         },
         {
-          key: '2',
-          image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/new-hEADWAY.png',
-          name: 'New Headway',
-          instructor: 'DTD',
-          lessons: '3 Lessons',
-          price: 'Free',
-          status: '1',
+            key: '2',
+            image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/new-hEADWAY.png',
+            name: 'New Headway',
+            instructor: 'DTD',
+            lessons: '3 Lessons',
+            price: 'Free',
+            status: '1',
         },
         {
-          key: '3',
-          image: 'https://accountlp.thimpress.com/wp-content/uploads/2024/03/f7aad5d3f7e5c9cf37b0c24a9d075887-800x600.png',
-          name: 'Database',
-          instructor: 'VanTTN',
-          lessons: '19 Lessons',
-          price: 'Free',
-          status: '0',
+            key: '3',
+            image: 'https://accountlp.thimpress.com/wp-content/uploads/2024/03/f7aad5d3f7e5c9cf37b0c24a9d075887-800x600.png',
+            name: 'Database',
+            instructor: 'VanTTN',
+            lessons: '19 Lessons',
+            price: 'Free',
+            status: '0',
         },
         {
-          key: '4',
-          image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/home-banner-top-800x600.jpg',
-          name: 'Testing',
-          instructor: 'ChiLTQ',
-          lessons: '20 Lessons',
-          price: 'Free',
-          status: '0',
+            key: '4',
+            image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/home-banner-top-800x600.jpg',
+            name: 'Testing',
+            instructor: 'ChiLTQ',
+            lessons: '20 Lessons',
+            price: 'Free',
+            status: '0',
         },
-        
-      ];
+
+    ];
 
     const [filteredCourses, setFilteredCourses] = useState(coursesData);
 
@@ -111,16 +111,18 @@ const DashboardInstructor: React.FC = () => {
                                         </div>
                                     </div>
                                     <div className="flex flex-col lg:ml-4 mt-4 lg:mt-0">
-                                        <Button type="primary" className="mb-4">Subscribe</Button>
-                                        <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer" className="mb-2">
-                                            <FacebookOutlined style={{ fontSize: '24px' }} />
-                                        </a>
-                                        <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer" className="mb-2">
-                                            <LinkedinOutlined style={{ fontSize: '24px' }} />
-                                        </a>
-                                        <a href={aboutData.youtube} target="_blank" rel="noopener noreferrer" className="mb-2">
-                                            <YoutubeOutlined style={{ fontSize: '24px' }} />
-                                        </a>
+                                        <Button type="primary" className="mb-4 mr-9 p-5 text-xl bg-red-600">Subscribe</Button>
+                                        <div className="flex flex-row lg:ml-4 mt-4 lg:mt-0 gap-4">
+                                            <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer" className="mb-2 text-blue-700">
+                                                <FacebookOutlined style={{ fontSize: '28px' }} />
+                                            </a>
+                                            <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer" className="mb-2 text-pink-700">
+                                                <LinkedinOutlined style={{ fontSize: '28px' }} />
+                                            </a>
+                                            <a href={aboutData.youtube} target="_blank" rel="noopener noreferrer" className="mb-2 text-red-600">
+                                                <YoutubeOutlined style={{ fontSize: '30px' }} />
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                                 <div className="flex flex-wrap items-center mt-4">
