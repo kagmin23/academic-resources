@@ -1,4 +1,4 @@
-import { Button, Input, Layout, Modal, Switch, Table, message } from "antd";
+import { Button, Input, Layout, Modal, Table, message } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import React, { useState } from "react";
@@ -11,19 +11,18 @@ interface Item {
   email: string;
   phone: string;
   role: string;
-  status: boolean;
 }
 
 const initialData: Item[] = [
-  { id: 1, name: "Phan", gender: "Male", dateofbirth: "07/17", email: "phan@gma", phone: "0111", role: "Admin", status: false },
-  { id: 2, name: "Kang", gender: "Male", dateofbirth: "07/17", email: "kang@gma", phone: "0222", role: "Student" , status: true},
-  { id: 3, name: "Min", gender: "Male", dateofbirth: "07/17", email: "min@gma", phone: "0333", role: "Instructor", status: false },
+  { id: 1, name: "Phan", gender: "Male", dateofbirth: "07/17", email: "phan@gma", phone: "0111", role: "Admin" },
+  { id: 2, name: "Kang", gender: "Male", dateofbirth: "07/17", email: "kang@gma", phone: "0222", role: "Student" },
+  { id: 3, name: "Min", gender: "Male", dateofbirth: "07/17", email: "min@gma", phone: "0333", role: "Instructor" },
 ];
 
 const UsersAdmin: React.FC = () => {
   const [data, setData] = useState<Item[]>(initialData);
   const [editingItem, setEditingItem] = useState<Partial<Item>>({});
-  const [newItem, setNewItem] = useState<Partial<Item>>({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "", status: undefined });
+  const [newItem, setNewItem] = useState<Partial<Item>>({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "" });
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
@@ -36,9 +35,9 @@ const UsersAdmin: React.FC = () => {
       newItem.phone &&
       newItem.role
     ) {
-      const newData = [...data, { id: data.length + 1, ...newItem, status: newItem.status ?? false } as Item];
+      const newData = [...data, { id: data.length + 1, ...newItem } as Item];
       setData(newData);
-      setNewItem({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "", status: undefined });
+      setNewItem({ name: "", gender: "", dateofbirth: "", email: "", phone: "", role: "" });
     } else {
       message.error("Please fill in all fields");
     }
@@ -63,28 +62,19 @@ const UsersAdmin: React.FC = () => {
     setData(updatedData);
   };
 
-  const handleSearch = (value: string) => {
-    if (value.trim() !== "") {
-      setSearchTerm(value);
-    } else {
-      message.error("Please enter a search term");
-    }
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
   };
 
-  const handleStatusChange = (checked: boolean, record: Item) => {
-    const updatedData = data.map(item =>
-      item.id === record.id ? { ...item, status: checked } : item
-    );
-    setData(updatedData);
-  };
-
-  const filteredData = data.filter(
-    (item) =>
-      item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      item.role.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredData = searchTerm.trim()
+    ? data.filter(
+        (item) =>
+          item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.phone.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          item.role.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    : data;
 
   const columns: ColumnsType<Item> = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
@@ -104,17 +94,6 @@ const UsersAdmin: React.FC = () => {
         </>
       ),
     },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: boolean, record: Item) => (
-        <Switch
-          checked={status}
-          onChange={(checked: boolean) => handleStatusChange(checked, record)}
-        />
-      ),
-    },
   ];
 
   return (
@@ -124,8 +103,8 @@ const UsersAdmin: React.FC = () => {
         <div className="mb-4 search-container">
           <Input.Search
             placeholder="Search"
-            enterButton="Search"
-            onSearch={handleSearch}
+            value={searchTerm}
+            onChange={handleSearchChange}
             className="w-full"
           />
         </div>

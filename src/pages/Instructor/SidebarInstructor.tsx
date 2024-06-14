@@ -1,4 +1,4 @@
-import { ContainerOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, SwapOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { ContainerOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, SwapOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -19,32 +19,27 @@ const SidebarAdmin: React.FC = () => {
     {
       icon: PieChartOutlined,
       heading: "Dashboard",
-      href: '/admin/dashboard'
-    },
-    {
-      icon: UserSwitchOutlined,
-      heading: "Users",
-      href: '/admin/user'
+      href: '/instructor-page/dashboard'
     },
     {
       icon: ContainerOutlined,
-      heading: "Course",
-      href: "/admin/course"
+      heading: "Manager Course",
+      href: "/instructor-page/course"
     },
     {
       icon: MenuUnfoldOutlined,
       heading: 'Category',
-      href: "/admin/category"
+      href: "/instructor-page/category"
     },
     {
       icon: FlagOutlined,
       heading: 'Report',
-      href: "/admin/report"
+      href: "/instructor-page/report"
     },
     {
       icon: LineChartOutlined,
       heading: 'Analytics',
-      href: "/admin/analytics"
+      href: "/instructor-page/analytics"
     },
     {
       icon: LogoutOutlined,
