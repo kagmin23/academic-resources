@@ -1,3 +1,4 @@
+
 import { Button, Card, Col, Menu, Row } from 'antd';
 // import 'antd/dist/antd.css';
 import React, { useState } from 'react';
@@ -12,6 +13,7 @@ import {
 import type { MenuProps } from 'antd';
 import { Drawer } from 'antd';
 import { Link } from 'react-router-dom';
+
 
 
 interface Course {
@@ -139,7 +141,9 @@ const CoursePage: React.FC = () => {
 
 
   return (
-    <div className="mx-auto h-fit">
+
+    <div className=" mx-auto h-fit">
+
       <Row gutter={[16, 16]} >
       {/* Menu ở Màn hình md trở lên */}
       <Col xs={0} sm={0} md={6} lg={6} xl={6}>
@@ -161,6 +165,7 @@ const CoursePage: React.FC = () => {
           items={items}
            theme="dark"
           className='h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
+
           />
          </div>
          </div>
@@ -170,6 +175,7 @@ const CoursePage: React.FC = () => {
           {/* </div> */}
         </Col>
         
+
         <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto'>
 
         {/* Menu màn hình <md */}
@@ -181,6 +187,7 @@ const CoursePage: React.FC = () => {
         placement={'left'}
         closable={false}
         onClose={onClose}
+
         open={open}
         bodyStyle={{ padding: 0, margin: 0 }} 
         
@@ -192,7 +199,9 @@ const CoursePage: React.FC = () => {
           mode="inline"
           items={items}
            theme="dark"
+
           className='w-full h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
+
           />
       </Drawer>
       {/* Content Course */}
