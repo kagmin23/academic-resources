@@ -1,7 +1,5 @@
 import {
   CameraOutlined,
-  DeleteOutlined,
-  EditOutlined,
   EyeOutlined,
   FunnelPlotOutlined,
   LaptopOutlined,
@@ -34,10 +32,10 @@ const initialDataSource: DataType[] = [
     image: 'https://via.placeholder.com/50',
     title: 'Item 1',
     status: false,
-    description: 'Description for Item 1',
+    description: 'Description for Item 1 ',
     price: 100,
     created_at: '2024-01-01',
-    instructor: 'Instructor 1',
+    instructor: 'Instructor 1 ',
   },
   {
     key: '2',
@@ -191,26 +189,24 @@ const CourseAdmin: React.FC = () => {
                 expandedRowKeys: expandedKeys,
                 onExpand: (expanded, record) => handleViewMore(record.key),
                 expandedRowRender: (record: DataType) => (
-                  <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px' }}>
+                  <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
                     <Row gutter={16}>
                       <Col span={24}>
-                        <Title level={5}>Course Details</Title>
+                        <Title level={5} className='text-2xl'>Course Details</Title>
                       </Col>
                     </Row>
-                    <Row gutter={16}>
-                      <Col span={12}>
+                    <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Col span={8}>
                         <Text strong>Description:</Text>
                         <p>{record.description}</p>
                       </Col>
-                      <Col span={12}>
-                        <Text strong>Price:</Text>
-                        <p>${record.price}</p>
-                      </Col>
-                    </Row>
-                    <Row gutter={16}>
-                      <Col span={12}>
+                      <Col span={8} style={{ textAlign: 'center' }}>
                         <Text strong>Instructor:</Text>
                         <p>{record.instructor}</p>
+                      </Col>
+                      <Col span={7} style={{ textAlign: 'center'}}>
+                        <Text strong>Price:</Text>
+                        <p>${record.price}</p>
                       </Col>
                     </Row>
                   </div>

@@ -23,22 +23,22 @@ const SidebarAdmin: React.FC = () => {
     },
     {
       icon: UserSwitchOutlined,
-      heading: "Users",
+      heading: "Manager Users",
       href: '/admin-page/user'
     },
     {
       icon: ContainerOutlined,
-      heading: "Course",
+      heading: "Manager Course",
       href: "/admin-page/course"
     },
     {
       icon: MenuUnfoldOutlined,
-      heading: 'Category',
+      heading: 'Manager Category',
       href: "/admin-page/category"
     },
     {
       icon: FlagOutlined,
-      heading: 'Report',
+      heading: 'Manager Report',
       href: "/admin-page/report"
     },
     {
