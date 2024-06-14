@@ -1,6 +1,5 @@
-import { BookOutlined, LogoutOutlined, MenuOutlined, PieChartOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BookOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
-import Footer from 'components/Footer';
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
@@ -38,12 +37,12 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           </h1>
         </Link>
         <div className="flex items-center gap-16">
-          <Search
+          {/* <Search
             placeholder="Search courses"
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
-          />
-          <Link to="/admin-page"><Button><PieChartOutlined /> Dash Board</Button></Link>
+          /> */}
+          {/* <Link to="/admin-page"><Button><PieChartOutlined /> Dash Board</Button></Link> */}
           <Link to="/">
             <Button className="w-full mt-4 text-lg">Log out<LogoutOutlined /></Button>
           </Link>
@@ -53,7 +52,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
         </div>
       </Header>
-      <div className="pt-16">
+      {/* <div className="pt-16">
         <div className="fixed left-0 right-0 z-50 hidden top-18 md:flex md:items-center md:gap-5">
           <Menu
             theme="dark"
@@ -92,18 +91,18 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
 
           </Menu>
         </div>
-      </div>
+      </div> */}
       <Drawer
         title="Menu"
         placement="right"
         onClose={toggleDrawer}
         visible={drawerVisible}
       >
-        <Search
+        {/* <Search
           placeholder="Search courses"
           onSearch={onSearch}
           className="w-full mb-4"
-        />
+        /> */}
         <Menu
           mode="vertical"
           selectedKeys={selectedKeys}
@@ -134,7 +133,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           <Outlet />
         </div>
       </Content>
-      <Footer />
+      {/* <Footer /> */}
     </Layout>
   );
 };

@@ -29,6 +29,7 @@ import PaymentSuccess from 'pages/PaymentSuccess';
 import AdminPage from 'pages/admin/AdminPage';
 import LayoutAdmin from '../components/layout/LayoutAdmin';
 import LayoutGuest from '../components/layout/LayoutGuest';
+import LayoutInstructor from '../components/layout/LayoutInstructor';
 import LayoutStudent from '../components/layout/LayoutStudent';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import Report from '../pages/ReportPage';
@@ -77,7 +78,7 @@ const AppRouter: React.FC = () => (
           <Route path={``} element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
           </Route>
 
-          <Route path="/" element={<LayoutAdmin />}>
+          <Route path="/" element={<LayoutInstructor />}>
           <Route path="admin-page/*" element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
           <Route path="profile-instructor/*" element={<ProtectedRouter allowedRoles={[3]}><ProfileInstructor /></ProtectedRouter>} />
           </Route>
