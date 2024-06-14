@@ -16,12 +16,11 @@ import {
 import { SearchPage } from 'pages';
 
 import { AuthProvider } from 'context/AuthContext';
+import InstructorRouter from 'pages/Instructor/InstructorRouter';
 import AdminPage from 'pages/admin/AdminPage';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
-import InstructorPage from '../pages/Instructor/InstructorPage';
 import StudentRouter from '../pages/Student/StudentRouter';
-import InstructorRouter from 'pages/Instructor/InstructorRouter';
 
 
 const AppRouter: React.FC = () => (
@@ -47,7 +46,6 @@ const AppRouter: React.FC = () => (
        
         <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><StudentRouter /></ProtectedRouter>}/>
         <Route path="/instructor/*"  element={<ProtectedRouter allowedRoles={[3]}><InstructorRouter /></ProtectedRouter>}/>
-         
         <Route path="/admin/*"  element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>}/>
 
 

@@ -4,11 +4,10 @@ import {
   FunnelPlotOutlined,
   LaptopOutlined,
   PieChartOutlined,
-  PlusCircleOutlined,
   UserOutlined,
-  UsergroupAddOutlined,
+  UsergroupAddOutlined
 } from '@ant-design/icons';
-import { Button, Layout, Switch, Table, Row, Col, Typography } from 'antd';
+import { Button, Col, Layout, Row, Switch, Table, Typography } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useState } from 'react';
 
@@ -173,11 +172,11 @@ const CourseAdmin: React.FC = () => {
             <Button icon={<CameraOutlined />} className="flex items-center">
               Photography
             </Button>
-            <div className="h-6 mx-4 border-r"></div>
+            {/* <div className="h-6 mx-4 border-r"></div>
             <Button className="font-bold text-white bg-red-500">
               <PlusCircleOutlined />
               Add New Course
-            </Button>
+            </Button> */}
           </div>
         </Header>
         <Content className="m-4">
