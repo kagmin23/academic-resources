@@ -2,7 +2,7 @@ import { BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, useNavigate,Outlet } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content } = Layout;
@@ -31,6 +31,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
 
   return (
     <Layout className="min-h-screen">
+
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
         <Link to={``}>
           <h1 className="text-xl text-white">
@@ -133,7 +134,8 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
         </div>
       </Content>
       <Footer />
-    </Layout>
+     </Layout> 
+    
   );
 };
 

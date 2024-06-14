@@ -32,7 +32,7 @@ import LayoutGuest from '../components/layout/LayoutGuest';
 import LayoutStudent from '../components/layout/LayoutStudent';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import Report from '../pages/ReportPage';
-
+import UserRouter from 'pages/user/UserRouter';
 const AppRouter: React.FC = () => (
   <AuthProvider>
     <Router>
@@ -53,8 +53,10 @@ const AppRouter: React.FC = () => (
         </Route>
 
         {/* Layout for Students */}
-        <Route path="/student/*" element={<LayoutStudent />}>
-        <Route path={``} element={<HomePage />} />
+       
+        <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><UserRouter /></ProtectedRouter>}/>
+        {/* <Route path={``} element={<ProtectedRouter allowedRoles={[2]}><UserRouter /></ProtectedRouter>} /> */}
+        {/* <Route path={``} element={<HomePage />} />
           <Route path={`blog`} element={<BlogPage />} />
           <Route path={`about`} element={<About />} />
 
@@ -68,8 +70,8 @@ const AppRouter: React.FC = () => (
           <Route path={`setting`} element={<ProtectedRouter allowedRoles={[2]}><Setting /></ProtectedRouter>} />
           <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[2]}><LessonStudent /></ProtectedRouter>} />
           <Route path={`save`} element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />
-          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[2]}><PaymentSuccess /></ProtectedRouter>} />
-        </Route>
+          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[2]}><PaymentSuccess /></ProtectedRouter>} /> */}
+        {/* </Route> */}
           {/* <Route path="/home" element={<HomePage />} /> */}
 
         <Route path="/admin/*" element={<LayoutAdmin />}>
