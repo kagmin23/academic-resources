@@ -1,5 +1,5 @@
 export { default as ProfileInstructor } from '../pages/Instructor/ProfileInstructor';
-export { default as ProfileStudent } from '../pages/Student/ProfileStudent';
+export { default as ProfileStudent } from './Student/ProfileStudent';
 export { default as About } from './About';
 export { default as AddCourse } from './AddCourse';
 export { default as BlogPage } from './BlogPage';

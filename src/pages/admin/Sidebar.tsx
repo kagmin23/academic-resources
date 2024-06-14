@@ -18,33 +18,33 @@ const SidebarAdmin: React.FC = () => {
   const SidebarData: SidebarDataType[] = [
     {
       icon: PieChartOutlined,
-      heading: " Dashboard ",
-      href: '/admin-page/dashboard'
+      heading: "Dashboard",
+      href: '/admin/dashboard'
     },
     {
       icon: UserSwitchOutlined,
-      heading: " Manager Users ",
-      href: '/admin-page/user'
+      heading: "Users",
+      href: '/admin/user'
     },
     {
       icon: ContainerOutlined,
-      heading: " Manager Course ",
-      href: "/admin-page/course"
+      heading: "Course",
+      href: "/admin/course"
     },
     {
       icon: MenuUnfoldOutlined,
-      heading: ' Manager Category ',
-      href: "/admin-page/category"
+      heading: 'Category',
+      href: "/admin/category"
     },
     {
       icon: FlagOutlined,
-      heading: ' Manager Report ',
-      href: "/admin-page/report"
+      heading: 'Report',
+      href: "/admin/report"
     },
     {
       icon: LineChartOutlined,
-      heading: ' Analytics ',
-      href: "/admin-page/analytics"
+      heading: 'Analytics',
+      href: "/admin/analytics"
     },
     {
       icon: LogoutOutlined,
@@ -54,7 +54,7 @@ const SidebarAdmin: React.FC = () => {
   ];
 
   return (
-    <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#1F2937] shadow-lg fixed`}>
+    <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#1F2937] shadow-lg`}>
       <div className="flex items-center justify-between p-4">
         <Link to="/admin-page"><span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>
           ADMINI<span className="text-blue-500">STRATOR</span>
