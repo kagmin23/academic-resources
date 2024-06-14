@@ -19,20 +19,7 @@ const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 
 const DashboardInstructor: React.FC = () => {
-    const [isModalVisible, setIsModalVisible] = useState(false);
 
-    const lessons = [
-        { key: 'lesson1', title: 'Getting Started', duration: '30 minutes', preview: true },
-        { key: 'lesson2', title: 'Content Management', duration: '30 minutes' },
-        { key: 'lesson3', title: 'Course Download', duration: '30 minutes' },
-        { key: 'lesson4', title: 'Course Download 02', duration: '30 minutes' },
-        { key: 'lesson5', title: 'Contextualising Sustainability for a Changing World', duration: '10 minutes' },
-    ];
-
-    const assignments = [
-        { key: 'assignment1', title: 'Certificate On Theme Development 01', duration: '10 minutes', preview: true },
-        { key: 'assignment2', title: 'Certificate On Theme Development 02', duration: '30 minutes' },
-    ];
 
     const aboutData = {
         avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
@@ -48,16 +35,43 @@ const DashboardInstructor: React.FC = () => {
 
     const coursesData = [
         {
-            key: '1',
-            image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
-            name: 'How To Teach Online Course Effectively',
-            instructor: 'F8',
-            lessons: '9 Lessons',
-            price: 'Free',
-            status: '1',
+          key: '1',
+          image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
+          name: 'How To Teach Online Course Effectively',
+          instructor: 'F8',
+          lessons: '9 Lessons',
+          price: 'Free',
+          status: '1',
         },
-        // Additional course data...
-    ];
+        {
+          key: '2',
+          image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/new-hEADWAY.png',
+          name: 'New Headway',
+          instructor: 'DTD',
+          lessons: '3 Lessons',
+          price: 'Free',
+          status: '1',
+        },
+        {
+          key: '3',
+          image: 'https://accountlp.thimpress.com/wp-content/uploads/2024/03/f7aad5d3f7e5c9cf37b0c24a9d075887-800x600.png',
+          name: 'Database',
+          instructor: 'VanTTN',
+          lessons: '19 Lessons',
+          price: 'Free',
+          status: '0',
+        },
+        {
+          key: '4',
+          image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/home-banner-top-800x600.jpg',
+          name: 'Testing',
+          instructor: 'ChiLTQ',
+          lessons: '20 Lessons',
+          price: 'Free',
+          status: '0',
+        },
+        
+      ];
 
     const [filteredCourses, setFilteredCourses] = useState(coursesData);
 
@@ -70,11 +84,11 @@ const DashboardInstructor: React.FC = () => {
     };
 
     return (
-        <div className="text-white bg-gray-900 wrapper">
-            <div className="py-8">
+        <div className="text-white bg-[#D6E0FF] wrapper">
+            <div className="py-8 text-black">
                 <div className="container px-4 mx-auto">
                     <div className="flex flex-col items-center justify-center lg:flex-row lg:space-x-8">
-                        <div className="py-4 bg-white shadow-md w-full">
+                        <div className="py-4  shadow-md w-full">
                             <div className="container px-3 mx-auto">
                                 <div className="flex flex-col lg:flex-row items-start lg:items-center">
                                     <Avatar size={128} src={aboutData.avatarSrc} className="lg:mr-4 mb-4 lg:mb-0" />
@@ -110,20 +124,20 @@ const DashboardInstructor: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-wrap items-center mt-4">
-                                    <Badge showZero className="flex flex-col items-center text-white p-4 border border-gray-300 rounded-lg">
-                                        <EyeOutlined className="mb-2 mr-1 text-2xl text-white" />
+                                    <Badge showZero className="flex flex-col items-center  p-4 border border-gray-300 rounded-lg">
+                                        <EyeOutlined className="mb-2 mr-1 text-2xl " />
                                         <span>1452</span>
                                     </Badge>
-                                    <Badge showZero className="flex flex-col items-center text-white p-4 ml-2 border border-gray-300 rounded-lg">
-                                        <LikeOutlined className="mb-2 mr-1 text-2xl text-white" />
+                                    <Badge showZero className="flex flex-col items-center  p-4 ml-2 border border-gray-300 rounded-lg">
+                                        <LikeOutlined className="mb-2 mr-1 text-2xl " />
                                         <span>100</span>
                                     </Badge>
-                                    <Badge showZero className="flex flex-col items-center text-white p-4 ml-2 border border-gray-300 rounded-lg">
-                                        <DislikeOutlined className="mb-2 mr-1 text-2xl text-white" />
+                                    <Badge showZero className="flex flex-col items-center  p-4 ml-2 border border-gray-300 rounded-lg">
+                                        <DislikeOutlined className="mb-2 mr-1 text-2xl " />
                                         <span>20</span>
                                     </Badge>
-                                    <Badge showZero className="flex flex-col items-center text-white p-4 ml-2 border border-gray-300 rounded-lg">
-                                        <ShareAltOutlined className="mb-2 text-2xl text-white" />
+                                    <Badge showZero className="flex flex-col items-center  p-4 ml-2 border border-gray-300 rounded-lg">
+                                        <ShareAltOutlined className="mb-2 text-2xl" />
                                         <span>9</span>
                                     </Badge>
                                 </div>
@@ -158,9 +172,9 @@ const DashboardInstructor: React.FC = () => {
                                         ))}
                                     </Row>
                                 </TabPane>
-                           
-                        
-                                
+
+
+
                                 <TabPane tab="Pending" key="0">
                                     <Row gutter={[16, 16]}>
                                         {filteredCourses

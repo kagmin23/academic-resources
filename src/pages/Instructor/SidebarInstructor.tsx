@@ -19,27 +19,17 @@ const SidebarAdmin: React.FC = () => {
     {
       icon: PieChartOutlined,
       heading: "Dashboard",
-      href: '/instructor-page/dashboard'
+      href: '/instructor/dashboard'
     },
     {
       icon: ContainerOutlined,
       heading: "Manager Course",
-      href: "/instructor-page/course"
-    },
-    {
-      icon: MenuUnfoldOutlined,
-      heading: 'Category',
-      href: "/instructor-page/category"
-    },
-    {
-      icon: FlagOutlined,
-      heading: 'Report',
-      href: "/instructor-page/report"
+      href: "/instructor/manager-course"
     },
     {
       icon: LineChartOutlined,
       heading: 'Analytics',
-      href: "/instructor-page/analytics"
+      href: "/instructor/analytics"
     },
     {
       icon: LogoutOutlined,

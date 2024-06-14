@@ -12,7 +12,7 @@ const AdminPage: React.FC = () => {
       <div className="flex-grow p-4 bg-white rounded shadow-md">
         <Routes>
         <Route path={`/`} element={<DashboardInstructor />} />
-        <Route path={`instructor-manager-course`} element={<ManagerInstructor />} />
+        <Route path={`manager-course`} element={<ManagerInstructor />} />
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>
       </div>
