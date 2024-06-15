@@ -142,7 +142,7 @@ const CoursePage: React.FC = () => {
 
   return (
 
-    <div className=" mx-auto h-fit">
+    <div className="mx-auto h-fit">
 
       <Row gutter={[16, 16]} >
       {/* Menu ở Màn hình md trở lên */}
@@ -205,8 +205,7 @@ const CoursePage: React.FC = () => {
           />
       </Drawer>
       {/* Content Course */}
-       
-          <Row gutter={[16, 16]} className='xl:px-6 ' >
+      <Link to="/course-details"><Row gutter={[16, 16]} className='xl:px-6 ' >
             {courses.map((course) => (
               <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8} >
                 <Card
@@ -225,7 +224,7 @@ const CoursePage: React.FC = () => {
                 
               </Col>
             ))}
-          </Row>
+          </Row></Link>
         </Col>
         
       </Row>

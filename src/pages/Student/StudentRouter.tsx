@@ -1,25 +1,24 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom';
 import LayoutStudent from 'components/layout/LayoutStudent';
 import {
-    About,
-    BlogPage,
-    BuyNow,
-    CategoryPage,
-    Contact,
-    CoursePage,
-    HomePage,
-    LessonStudent,
-    ProfileStudent,
-    SavePage,
-    Setting,
-    ShoppingCart,
-  } from 'pages';
-  import PaymentSuccess from 'pages/PaymentSuccess';
-  import ProtectedRouter from '../../components/roles/ProtectedRouter';
-  import Report from '../ReportPage';
+  About,
+  BlogPage,
+  BuyNow,
+  CategoryPage,
+  Contact,
+  CoursePage,
+  HomePage,
+  LessonStudent,
+  ProfileStudent,
+  SavePage,
+  Setting,
+  ShoppingCart,
+} from 'pages';
+import PaymentSuccess from 'pages/PaymentSuccess';
+import { Route, Routes } from 'react-router-dom';
+import ProtectedRouter from '../../components/roles/ProtectedRouter';
+import Report from '../ReportPage';
  
-export default function UserRouter() {
+export default function StudentRouter() {
   return (
     <div >
     

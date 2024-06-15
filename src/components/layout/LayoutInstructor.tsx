@@ -1,4 +1,4 @@
-import { BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BookOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
@@ -12,7 +12,7 @@ interface MainLayoutProps {
   children?: React.ReactNode;  // Optional to match with default ReactNode
 }
 
-const LayoutStudent: React.FC<MainLayoutProps> = () => {
+const LayoutInstructor: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
   return (
     <Layout className="min-h-screen">
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
-        <Link to="/">
+       <Link to={``}>
           <h1 className="text-xl text-white">
             <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
           </h1>
@@ -44,9 +44,9 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             className="hidden ml-4 w-72 md:block md:w-96"
           />
           <Link to="/">
-            <Button className="w-full mt-4 text-lg">Log out</Button>
+            <Button className="w-full mt-4 text-lg">Log out<LogoutOutlined /></Button>
           </Link>
-          <Link to="/profile-student">
+          <Link to={`profile-instructor`}>
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
           </Link>
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
@@ -62,31 +62,31 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             className="flex-grow gap-2 md:flex md:justify-end"
           >
             <Menu.Item key="1" className="mx-2">
-              <Link to="/">Home</Link>
+              <Link to={``}>Home</Link>
             </Menu.Item>
             <Menu.Item key="2" className="mx-2">
-              <Link to="/course">Courses</Link>
+              <Link to={`course`}>Courses</Link>
             </Menu.Item>
             <Menu.Item key="3" className="mx-2">
-              <Link to="/blog">Blog</Link>
+              <Link to={`blog`}>Blog</Link>
             </Menu.Item>
             <Menu.Item key="4" className="mx-2">
-              <Link to="/category">Category</Link>
+              <Link to={`category`}>Category</Link>
             </Menu.Item>
             <Menu.Item key="5" className="mx-2">
-              <Link to="/top-instructor">Instructor</Link>
+              <Link to={`top-instructor`}>Instructor</Link>
             </Menu.Item>
             <Menu.Item key="6" className="mx-2">
-              <Link to="/about">About</Link>
+              <Link to={`about`}>About</Link>
             </Menu.Item>
             <Menu.Item key="7" className="mx-2">
-              <Link to="/save">Save</Link>
+              <Link to={`save`}>Save</Link>
             </Menu.Item>
             <Menu.Item key="8" className="mx-2">
-              <Link to="/contact">Contact</Link>
+              <Link to={`contact`}>Contact</Link>
             </Menu.Item>
             <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-              <Link to="/shopping-cart"></Link>
+             <Link to={`shopping-cart`}></Link>
             </Menu.Item>
           </Menu>
         </div>
@@ -108,22 +108,22 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           onClick={handleMenuClick}
         >
           <Menu.Item key="1" className="my-2">
-            <Link to="/">Home</Link>
+            <Link to={``}>Home</Link>
           </Menu.Item>
           <Menu.Item key="2" className="my-2">
-            <Link to="/course">Courses</Link>
+            <Link to={`course`}>Courses</Link>
           </Menu.Item>
           <Menu.Item key="3" className="my-2">
-            <Link to="/blog">Blog</Link>
+            <Link to={`blog`}>Blog</Link>
           </Menu.Item>
           <Menu.Item key="4" className="my-2">
-            <Link to="/category">Category</Link>
+            <Link to={`category`}>Category</Link>
           </Menu.Item>
           <Menu.Item key="5" className="my-2">
-            <Link to="/about">About</Link>
+            <Link to={`about`}>About</Link>
           </Menu.Item>
           <Menu.Item key="6" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-            <Link to="/shopping-cart"></Link>
+            <Link to={`shopping-cart`}></Link>
           </Menu.Item>
         </Menu>
       </Drawer>
@@ -137,4 +137,4 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
   );
 };
 
-export default LayoutStudent;
+export default LayoutInstructor;

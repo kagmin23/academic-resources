@@ -120,7 +120,7 @@ const SavePage: React.FC = () => {
                     </a>
                     <span className={shoppingCartHoveredIndex === index ? 'text-red-500 font-semibold' : ''}>{item.price}</span>
                     <a
-                      href="/buy-now"
+                      href='buy-now'
                       onMouseEnter={() => setShoppingCartHoveredIndex(index)}
                       onMouseLeave={() => setShoppingCartHoveredIndex(null)}
                       className={shoppingCartHoveredIndex === index ? 'text-red-500' : ''}
