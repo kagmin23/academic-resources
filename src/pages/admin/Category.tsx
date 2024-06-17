@@ -5,7 +5,7 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Modal, Table } from 'antd';
-import debounce from 'lodash/debounce';
+import { debounce } from 'lodash';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 
