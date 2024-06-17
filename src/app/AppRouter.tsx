@@ -10,7 +10,8 @@ import {
   CourseOrder,
   CoursePage,
   DetailBlogPage,
-  HomePage
+  HomePage,
+  TopInstructorPage
 } from 'pages';
 
 import { SearchPage } from 'pages';
@@ -18,6 +19,7 @@ import { SearchPage } from 'pages';
 import { AuthProvider } from 'context/AuthContext';
 import InstructorRouter from 'pages/Instructor/InstructorRouter';
 import AdminPage from 'pages/admin/AdminPage';
+import ForgotPassword from 'pages/register/ForgotPassword';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import StudentRouter from '../pages/Student/StudentRouter';
@@ -33,6 +35,7 @@ const AppRouter: React.FC = () => (
           <Route path="/home" element={<HomePage />} />
           <Route path="/log-in" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/course-details" element={<CourseDetailsPage />} />
@@ -40,6 +43,7 @@ const AppRouter: React.FC = () => (
           <Route path="/course" element={<CoursePage />} />
           <Route path="/course-order" element={<CourseOrder />} />
           <Route path="/about" element={<About />} />
+          <Route path="/top-instructor" element={<TopInstructorPage />} />
         </Route>
 
         {/* Layout for Students */}

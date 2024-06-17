@@ -121,12 +121,12 @@ const HomePage: React.FC = () => {
         </Row> */}
         <div className='flex items-center justify-center w-full bg-slate-300'>
         <div className= 'w-full text-center '>
-        <ul className="mt-8 ml-4 text-4xl font-bold">Popular Courses</ul>
+        <ul className="mt-20 ml-4 text-4xl font-bold">Popular Courses</ul>
         <Carousel arrows slidesPerRow={3} autoplay dotPosition='bottom'>
           {Course.map((course) => (
           <div className='w-full h-full p-10'>
             <div className= 'flex mb-3 sm:space-x-10 '>
-            <h1 className='text-sm font-bold  sm:text-xl'>{course.title}</h1>
+            <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
             <Link  to="/course-details"><Button size='small' type="primary" className='p-2 text-lg float-end ml-9'>$$$</Button></Link>
             </div>
            <Link to="/course-details"> 
@@ -158,7 +158,7 @@ const HomePage: React.FC = () => {
 
         <div className='flex items-center justify-center w-full bg-slate-300'>
         <div className='w-full text-center'>
-        <ul className="mt-8 ml-4 text-4xl font-bold">Popular Courses</ul>
+        <ul className="mt-10 ml-4 text-4xl font-bold">New Courses</ul>
         <Carousel arrows fade slidesPerRow={3} autoplay  dotPosition='bottom'>
           {[
             {
@@ -197,14 +197,20 @@ const HomePage: React.FC = () => {
         </div>
         </div>
 
-        <Link to="/category">
           <div className="flex items-center justify-center h-24 mt-8 text-2xl font-bold">
             Top Categories
           </div>
-        </Link>
 
         <Row gutter={[16, 16]} className="justify-center">
           {[
+            {
+              title: "HTML",
+              img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKrMluJOagc_Q-_PTfTYahHFFtgCsGsCDo_Qna-EQurzJ3l4yQsc0hdpz9d_5pFzKUSY&usqp=CAU",
+            },
+            {
+              title: "Javascript",
+              img: "https://play-lh.googleusercontent.com/rfWOJQVBHoAZ_B43v0ySFlLmJBLtksVGAxGaFRh2ex4nOmNQ86qzG4sYWV63IKrXlvI",
+            },
             {
               title: "Tailwind",
               img: "https://www.svgrepo.com/show/374118/tailwind.svg",
@@ -225,6 +231,11 @@ const HomePage: React.FC = () => {
               title: "Ant Design",
               img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbK58xrNN4qN90eMgx4KAkgz53IWUAqfNsGA&s",
             },
+            {
+              title: "GitHub",
+              img: "https://cdn-icons-png.flaticon.com/512/2111/2111425.png",
+            },
+
           ].map((category, index) => (
             <Col xs={24} sm={12} md={6} key={index} className="flex justify-center">
               <Card
@@ -237,8 +248,6 @@ const HomePage: React.FC = () => {
             </Col>
           ))}
         </Row>
-        <Link to="/category"><p style={{textAlign:"center", paddingTop: "10px", fontSize:"20px"}}>View More&nbsp;<ArrowRightOutlined /></p></Link>
-
 
         <div className="p-8 bg-gray-100 contact-home">
           <h1 className="text-2xl font-bold">Subscriber</h1>

@@ -1,5 +1,4 @@
 export { default as ProfileInstructor } from '../pages/Instructor/ProfileInstructor';
-export { default as ProfileStudent } from './Student/ProfileStudent';
 export { default as About } from './About';
 export { default as AddCourse } from './AddCourse';
 export { default as BlogPage } from './BlogPage';
@@ -17,4 +16,6 @@ export { default as SavePage } from './SavePage';
 export { default as SearchPage } from './SearchPage';
 export { default as Setting } from './Setting';
 export { default as ShoppingCart } from './ShoppingCart';
+export { default as ProfileStudent } from './Student/ProfileStudent';
+export { default as TopInstructorPage } from './TopInstructorPage';
 

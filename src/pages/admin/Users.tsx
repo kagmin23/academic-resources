@@ -141,6 +141,7 @@ const UsersAdmin: React.FC = () => {
           />
           <Button type="primary" onClick={handleAdd}>Add</Button>
         </div>
+        <div className="pt-5">
         <Table dataSource={filteredData} columns={columns} rowKey="id" />
         <Modal title="Edit Item" open={isModalOpen} onOk={handleUpdate} onCancel={() => setModalOpen(false)}>
           <Input
@@ -174,6 +175,7 @@ const UsersAdmin: React.FC = () => {
             onChange={(e) => setEditingItem({ ...editingItem, role: e.target.value })}
           />
         </Modal>
+        </div>
       </Content>
     </Layout>
   );

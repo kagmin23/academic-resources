@@ -9,7 +9,8 @@ import {
   LessonStudent,
   SavePage,
   Setting,
-  ShoppingCart
+  ShoppingCart,
+  TopInstructorPage
 } from 'pages';
 import PaymentSuccess from 'pages/PaymentSuccess';
 import { Route, Routes } from 'react-router-dom';
@@ -38,6 +39,8 @@ export default function InstructorRouter() {
          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[3]}><LessonStudent /></ProtectedRouter>} />
          <Route path={`save`} element={<ProtectedRouter allowedRoles={[3]}><SavePage /></ProtectedRouter>} />
          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[3]}><PaymentSuccess /></ProtectedRouter>} />
+         <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={[2]}><TopInstructorPage /></ProtectedRouter>} />
+
          </Route>
     </Routes>
 

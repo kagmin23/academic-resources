@@ -152,7 +152,7 @@ const CategoryAdmin: React.FC = () => {
               <Input
                 placeholder="Search"
                 onChange={handleSearchChange}
-                className="w-full h-12 text-lg border-2 border-solid border-gray-300 rounded"
+                className="w-full h-12 text-lg border-2 border-gray-300 border-solid rounded"
                 value={searchTerm}
               />
             </div>
