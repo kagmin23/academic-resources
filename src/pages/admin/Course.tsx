@@ -7,9 +7,10 @@ import {
   UserOutlined,
   UsergroupAddOutlined
 } from '@ant-design/icons';
-import { Button, Col, Layout, Row, Switch, Table, Typography } from 'antd';
+import { Button, Col, Input, Layout, Row, Switch, Table, Typography } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useState } from 'react';
+import debounce from 'lodash/debounce';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Text } = Typography;
@@ -89,6 +90,7 @@ const initialDataSource: DataType[] = [
 ];
 
 const CourseAdmin: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
@@ -108,6 +110,20 @@ const CourseAdmin: React.FC = () => {
     );
     setDataSource(updatedDataSource);
   };
+
+  const debouncedSearch = debounce((value: string) => {
+    setSearchTerm(value);
+  }, 300);
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    debouncedSearch(event.target.value);
+  };
+
+  const filteredDataSource = dataSource.filter(item =>
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.instructor.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const columns = [
     {
@@ -154,7 +170,7 @@ const CourseAdmin: React.FC = () => {
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
           <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
-            <Button icon={<FunnelPlotOutlined />} className="flex items-center">
+            {/* <Button icon={<FunnelPlotOutlined />} className="flex items-center">
               All
             </Button>
             <Button icon={<PieChartOutlined />} className="flex items-center">
@@ -171,18 +187,21 @@ const CourseAdmin: React.FC = () => {
             </Button>
             <Button icon={<CameraOutlined />} className="flex items-center">
               Photography
-            </Button>
-            {/* <div className="h-6 mx-4 border-r"></div>
-            <Button className="font-bold text-white bg-red-500">
-              <PlusCircleOutlined />
-              Add New Course
             </Button> */}
+            <div className="flex flex-1 ml-4">
+              <Input
+                placeholder="Search"
+                onChange={handleSearchChange}
+                className="w-full h-12 text-lg border-2 border-gray-300 border-solid rounded"
+                value={searchTerm}
+              />
+            </div>
           </div>
         </Header>
         <Content className="m-4">
           <div className="p-4 bg-white">
             <Table
-              dataSource={dataSource}
+              dataSource={filteredDataSource}
               columns={columns}
               expandable={{
                 expandedRowKeys: expandedKeys,
