@@ -5,7 +5,7 @@ import {
   PlusCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Modal, Table } from 'antd';
-import { debounce } from 'lodash';
+// import { debounce } from 'lodash';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 
@@ -89,13 +89,13 @@ const CategoryAdmin: React.FC = () => {
     setDataSource(updatedDataSource);
   };
 
-  const debouncedSearch = debounce((value: string) => {
-    setSearchTerm(value);
-  }, 300);
+  // const debouncedSearch = debounce((value: string) => {
+  //   setSearchTerm(value);
+  // }, 300);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
-  };
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   debouncedSearch(event.target.value);
+  // };
 
   const columns = [
     {
@@ -151,7 +151,7 @@ const CategoryAdmin: React.FC = () => {
             <div className="flex flex-1 ml-4">
               <Input
                 placeholder="Search"
-                onChange={handleSearchChange}
+                // onChange={handleSearchChange}
                 className="w-full h-12 text-lg border-2 border-gray-300 border-solid rounded"
                 value={searchTerm}
               />

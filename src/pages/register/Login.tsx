@@ -1,4 +1,4 @@
-import { FacebookOutlined, GoogleOutlined, TwitterOutlined } from '@ant-design/icons';
+import { GoogleOutlined } from '@ant-design/icons';
 import { Button, Input, message } from 'antd';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -66,12 +66,6 @@ const Login: React.FC = () => {
         <h2 className="text-2xl font-bold text-center">Welcome Back</h2>
         <p className="text-center text-gray-600">Login To Your Academic Account!</p>
         <div className="flex flex-col space-y-2">
-          <Button icon={<FacebookOutlined />} type="primary" className="flex items-center justify-center w-full h-12">
-            Continue with Facebook
-          </Button>
-          <Button icon={<TwitterOutlined />} type="primary" className="flex items-center justify-center w-full h-12">
-          Continue with Twitter
-          </Button>
           <Button icon={<GoogleOutlined />} type="primary" className="flex items-center justify-center w-full h-12">
           Continue with Google
           </Button>

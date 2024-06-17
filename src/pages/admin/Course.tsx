@@ -10,7 +10,7 @@ import {
 import { Button, Col, Input, Layout, Row, Switch, Table, Typography } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useState } from 'react';
-import debounce from 'lodash/debounce';
+// import debounce from 'lodash/debounce';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Text } = Typography;
@@ -111,13 +111,13 @@ const CourseAdmin: React.FC = () => {
     setDataSource(updatedDataSource);
   };
 
-  const debouncedSearch = debounce((value: string) => {
-    setSearchTerm(value);
-  }, 300);
+  // const debouncedSearch = debounce((value: string) => {
+  //   setSearchTerm(value);
+  // }, 300);
 
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
-  };
+  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   debouncedSearch(event.target.value);
+  // };
 
   const filteredDataSource = dataSource.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -191,7 +191,7 @@ const CourseAdmin: React.FC = () => {
             <div className="flex flex-1 ml-4">
               <Input
                 placeholder="Search"
-                onChange={handleSearchChange}
+                // onChange={handleSearchChange}
                 className="w-full h-12 text-lg border-2 border-gray-300 border-solid rounded"
                 value={searchTerm}
               />
