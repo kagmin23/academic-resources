@@ -10,7 +10,8 @@ import {
   CourseOrder,
   CoursePage,
   DetailBlogPage,
-  HomePage
+  HomePage,
+  TopInstructorPage
 } from 'pages';
 
 import { SearchPage } from 'pages';
@@ -40,6 +41,7 @@ const AppRouter: React.FC = () => (
           <Route path="/course" element={<CoursePage />} />
           <Route path="/course-order" element={<CourseOrder />} />
           <Route path="/about" element={<About />} />
+          <Route path="/top-instructor" element={<TopInstructorPage />} />
         </Route>
 
         {/* Layout for Students */}
