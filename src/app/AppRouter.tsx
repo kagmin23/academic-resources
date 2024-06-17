@@ -10,18 +10,19 @@ import {
   CourseOrder,
   CoursePage,
   DetailBlogPage,
-  HomePage
+  HomePage,
+  TopInstructorPage
 } from 'pages';
 
 import { SearchPage } from 'pages';
 
 import { AuthProvider } from 'context/AuthContext';
+import InstructorRouter from 'pages/Instructor/InstructorRouter';
 import AdminPage from 'pages/admin/AdminPage';
+import ForgotPassword from 'pages/register/ForgotPassword';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
-import InstructorPage from '../pages/Instructor/InstructorPage';
 import StudentRouter from '../pages/Student/StudentRouter';
-import InstructorRouter from 'pages/Instructor/InstructorRouter';
 
 
 const AppRouter: React.FC = () => (
@@ -34,6 +35,7 @@ const AppRouter: React.FC = () => (
           <Route path="/home" element={<HomePage />} />
           <Route path="/log-in" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/search" element={<SearchPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/course-details" element={<CourseDetailsPage />} />
@@ -41,13 +43,13 @@ const AppRouter: React.FC = () => (
           <Route path="/course" element={<CoursePage />} />
           <Route path="/course-order" element={<CourseOrder />} />
           <Route path="/about" element={<About />} />
+          <Route path="/top-instructor" element={<TopInstructorPage />} />
         </Route>
 
         {/* Layout for Students */}
        
         <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><StudentRouter /></ProtectedRouter>}/>
         <Route path="/instructor/*"  element={<ProtectedRouter allowedRoles={[3]}><InstructorRouter /></ProtectedRouter>}/>
-         
         <Route path="/admin/*"  element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>}/>
 
 

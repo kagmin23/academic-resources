@@ -1,25 +1,25 @@
-import React from 'react'
-import { Route, Routes } from 'react-router-dom';
 import LayoutStudent from 'components/layout/LayoutStudent';
 import {
-    About,
-    BlogPage,
-    BuyNow,
-    CategoryPage,
-    Contact,
-    CoursePage,
-    HomePage,
-    LessonStudent,
-    ProfileStudent,
-    SavePage,
-    Setting,
-    ShoppingCart,
-  } from 'pages';
-  import PaymentSuccess from 'pages/PaymentSuccess';
-  import ProtectedRouter from '../../components/roles/ProtectedRouter';
-  import Report from '../ReportPage';
+  About,
+  BlogPage,
+  BuyNow,
+  CategoryPage,
+  Contact,
+  CoursePage,
+  HomePage,
+  LessonStudent,
+  ProfileStudent,
+  SavePage,
+  Setting,
+  ShoppingCart,
+  TopInstructorPage,
+} from 'pages';
+import PaymentSuccess from 'pages/PaymentSuccess';
+import { Route, Routes } from 'react-router-dom';
+import ProtectedRouter from '../../components/roles/ProtectedRouter';
+import Report from '../ReportPage';
  
-export default function UserRouter() {
+export default function StudentRouter() {
   return (
     <div >
     
@@ -39,6 +39,7 @@ export default function UserRouter() {
                     <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[2]}><LessonStudent /></ProtectedRouter>} />
                     <Route path={`save`} element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[2]}><PaymentSuccess /></ProtectedRouter>} />
+                    <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={[2]}><TopInstructorPage /></ProtectedRouter>} />
                     </Route>
                </Routes>
 

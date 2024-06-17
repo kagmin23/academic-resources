@@ -71,7 +71,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
               <Link to="/blog">Blog</Link>
             </Menu.Item>
             <Menu.Item key="4" className="mx-2">
-              <Link to="/category">Category</Link>
+              <Link to="/log-in">Category</Link>
             </Menu.Item>
             <Menu.Item key="5" className="mx-2">
               <Link to="/top-instructor">Instructor</Link>
@@ -80,13 +80,13 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
               <Link to="/about">About</Link>
             </Menu.Item>
             <Menu.Item key="7" className="mx-2">
-              <Link to="/save">Save</Link>
+              <Link to="/log-in">Save</Link>
             </Menu.Item>
             <Menu.Item key="8" className="mx-2">
-              <Link to="/contact">Contact</Link>
+              <Link to="/log-in">Contact</Link>
             </Menu.Item>
             <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-              <Link to="/shopping-cart"></Link>
+              <Link to="/log-in"></Link>
             </Menu.Item>
           </Menu>
         </div>
