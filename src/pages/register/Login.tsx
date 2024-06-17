@@ -84,7 +84,7 @@ const Login: React.FC = () => {
               <input type="checkbox" className="form-checkbox" />
               <span className="ml-2 text-gray-600">Remember Me</span>
             </label>
-            <a href="#" className="text-blue-600">Forgot Password?</a>
+            <a href="/forgot-password" className="text-blue-600">Forgot Password?</a>
           </div>
           <Button type="primary" className="w-full h-12 bg-red-500 hover:bg-red-600" onClick={handleLogin}>Login </Button>
         </div>
