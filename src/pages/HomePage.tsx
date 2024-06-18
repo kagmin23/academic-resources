@@ -120,7 +120,7 @@ const HomePage: React.FC = () => {
   );
 
   return (
-    <div className="homepage bg-gray-100">
+    <div className="bg-gray-100 homepage">
       <header className="hero-image" style={{ position: 'relative' }}>
         <img src="https://img.emg-services.net/HtmlPages/HtmlPage12273/untitled-design-10.jpg" alt="Academic-Resource" style={{ width: '100%' }} />
         <Button
@@ -166,11 +166,11 @@ const HomePage: React.FC = () => {
                 <div className='w-full h-full p-10' key={index}>
                   <div className='flex mb-3 ml-3 sm:space-x-10'>
                     <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
-                    <Link to="/course-details">
+                    <Link to={`course-details`}>
                       <Button size='small' type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button>
                     </Link>
                   </div>
-                  <Link to="/course-details">
+                  <Link to={`course-details`}>
                     <img className="rounded-xl h-80 w-96" src={course.img} alt="no image" />
                   </Link>
                 </div>
@@ -190,7 +190,7 @@ const HomePage: React.FC = () => {
           <div className="text-sm box text-box">
             <p className="pt-10 mb-10">Limitless Learning, More</p>
             <p className="mb-10">Possibilities</p>
-            <ul className="underline mb-10 text-lg">Answer A Few Questions For Your Top Picks</ul>
+            <ul className="mb-10 text-lg underline">Answer A Few Questions For Your Top Picks</ul>
           </div>
         </div>
 
@@ -213,11 +213,11 @@ const HomePage: React.FC = () => {
                 <div className='w-full h-full p-10' key={index}>
                   <div className='flex mb-3 ml-3 sm:space-x-10'>
                     <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
-                    <Link to="/course-details">
+                    <Link to={`course-details`}>
                       <Button type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button>
                     </Link>
                   </div>
-                  <Link to="/course-details">
+                  <Link to={`course-details`}>
                     <img className="w-full rounded-xl" src={course.img} alt="no image" />
                   </Link>
                 </div>
