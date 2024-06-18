@@ -121,18 +121,23 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="homepage bg-gray-100">
-      <header className="hero-image relative">
-        <img src="https://img.emg-services.net/HtmlPages/HtmlPage12273/untitled-design-10.jpg" alt="Academic-Resource" className="w-full" />
+      <header className="hero-image" style={{ position: 'relative' }}>
+        <img src="https://img.emg-services.net/HtmlPages/HtmlPage12273/untitled-design-10.jpg" alt="Academic-Resource" style={{ width: '100%' }} />
         <Button
           type="primary"
           shape="circle"
           icon={<DownOutlined />}
           size="large"
-          className="absolute bottom-5 left-1/2 transform -translate-x-1/2"
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
           href="#content"
           onClick={handleScroll}
         />
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-center text-black">
+        <div className="box-header" style={{ position: 'absolute', bottom: '70px', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', color: 'black' }}>
           <ol className="text-black">100,000 Online Courses
             <li>Explore a variety of fresh topics</li>
           </ol>
@@ -159,10 +164,10 @@ const HomePage: React.FC = () => {
             >
               {Courses.map((course, index) => (
                 <div className='w-full h-full p-10' key={index}>
-                  <div className='flex mb-3 sm:space-x-10'>
+                  <div className='flex mb-3 ml-3 sm:space-x-10'>
                     <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
                     <Link to="/course-details">
-                      <Button size='small' type="primary" className='p-2 text-lg float-end ml-9'>$$$</Button>
+                      <Button size='small' type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button>
                     </Link>
                   </div>
                   <Link to="/course-details">
