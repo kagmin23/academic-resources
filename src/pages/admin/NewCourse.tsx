@@ -23,6 +23,8 @@ interface DataType {
   instructor: string;
   category: string;
   lesson: number;
+  date:string;
+  refused: boolean;
 }
 
 const initialDataSource: DataType[] = [
@@ -38,6 +40,9 @@ const initialDataSource: DataType[] = [
     instructor: 'Instructor 1 ',
     category: 'English, Math, History',
     lesson: 10,
+    date:'10/06/2024',
+    refused: false,
+
   },
   {
     key: '2',
@@ -50,6 +55,9 @@ const initialDataSource: DataType[] = [
     instructor: 'Instructor 2',
     category: 'English, Math, History',
     lesson: 12,
+    date:'10/06/2024',
+    refused: false,
+
   },
   {
     key: '3',
@@ -62,6 +70,9 @@ const initialDataSource: DataType[] = [
     instructor: 'Instructor 3',
     category: 'English, Math, History',
     lesson: 5,
+    date:'10/06/2024',
+    refused: true,
+    
   },
   {
     key: '4',
@@ -74,6 +85,9 @@ const initialDataSource: DataType[] = [
     instructor: 'Instructor 4',
     category: 'English, Math, History',
     lesson: 15,
+    date:'10/06/2024',
+    refused: false,
+
   },
   {
     key: '5',
@@ -86,6 +100,9 @@ const initialDataSource: DataType[] = [
     instructor: 'Instructor 5',
     category: 'English, Math, History',
     lesson: 11,
+    date:'10/06/2024',
+    refused: false,
+
   },
   {
     key: '6',
@@ -98,6 +115,9 @@ const initialDataSource: DataType[] = [
     instructor: 'Instructor 6',
     category: 'English, Math, History',
     lesson: 18,
+    date:'10/06/2024',
+    refused: true,
+
   },
 ];
 
@@ -106,6 +126,7 @@ const NewCourseAdmin: React.FC = () => {
   const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [refusedKey, setRefusedKey] = useState<string | null>(null);
 
   const handleViewMore = (key: string) => {
     setExpandedKeys(prevKeys =>
@@ -113,14 +134,24 @@ const NewCourseAdmin: React.FC = () => {
     );
   };
 
-  const showModal = () => {
+  const showModal = (key: string) => {
+    setRefusedKey(key);
     setIsModalOpen(true);
   };
   const handleOk = () => {
+    if (refusedKey) {
+      setDataSource(prevDataSource =>
+        prevDataSource.map(item =>
+          item.key === refusedKey ? { ...item, refused: true } : item
+        )
+      );
+    }
     setIsModalOpen(false);
+    setRefusedKey(null);
   };
   const handleCancel = () => {
     setIsModalOpen(false);
+    setRefusedKey(null);
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,15 +195,23 @@ const NewCourseAdmin: React.FC = () => {
       title: 'Course Approval',
       dataIndex: 'created_at',
       key: 'action',
-      render: () => (
-        <div>
-          <button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
-            <CheckOutlined />
-          </button>
-          <button onClick={showModal} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
-            <CloseOutlined />
-          </button>
-        </div>
+      render: (text: string, record: DataType) => (
+        record.refused ? (
+          <div>
+            <button className="px-4 py-2 font-bold text-white bg-gray-500 rounded" disabled>
+              Refused approval
+            </button>
+          </div>
+        ) : (
+          <div>
+            <button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
+              <CheckOutlined />
+            </button>
+            <button onClick={() => showModal(record.key)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+              <CloseOutlined />
+            </button>
+          </div>
+        )
       ),
     },
   ];
@@ -181,20 +220,22 @@ const NewCourseAdmin: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
-          <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
-            <div className="flex flex-1 ml-4">
+          <div className="flex flex-wrap items-center justify-center gap-4 p-2 bg-[#939fb1]">
+            <div className='w-1/2 text-2xl font-bold text-white px-5'>New Courses:</div>
+            <div className="flex flex-1 px-5 w-1/2">
               <Input
+              
                 placeholder="Search"
                 prefix={<SearchOutlined />}
                 onChange={handleSearchChange}
-                className="w-full h-12 text-lg border-2 border-gray-300 border-solid rounded"
+                className="w-full h-11 text-lg border-2 border-gray-300 border-solid rounded-full"
                 value={searchTerm}
               />
             </div>
           </div>
         </Header>
         <Content className="m-4">
-          <div className="p-4 bg-white">
+          <div className="p-4 bg-white mt-5">
             <Table
               dataSource={filteredDataSource}
               columns={columns}
@@ -210,30 +251,35 @@ const NewCourseAdmin: React.FC = () => {
                       </Col>
                     </Row>
                     <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Col span={12}>
+                      <Col span={13}>
                         <Text strong>Description:</Text>
                         <p>{record.description}</p>
                       </Col>
                       <Col span={1}></Col>
-                      <Col span={11}>
+                      <Col span={10}>
                         <Text strong>Category:</Text>
                         <p>{record.category}</p>
                       </Col>
                     </Row>
                     <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                      <Col span={8}>
+                      <Col span={5}>
                         <Text strong>Instructor:</Text>
                         <p>{record.instructor}</p>
-                      </Col>
-                      <Col span={5}>
-                        <Text strong>Price:</Text>
-                        <p>${record.price}</p>
                       </Col>
                       <Col span={5}>
                         <Text strong>Number of Lessons:</Text>
                         <p>{record.lesson} lessons</p>
                       </Col>
-                      <Col span={6}>
+                      <Col span={4}>
+                        <Text strong>Price:</Text>
+                        <p>{record.price},000,00VNĐ</p>
+                      </Col>
+                      
+                      <Col span={5}>
+                        <Text strong>Create Date:</Text>
+                        <p>{record.date}</p>
+                      </Col>
+                      <Col span={5}>
                         <button className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
                           Preview Course
                         </button>
@@ -250,6 +296,7 @@ const NewCourseAdmin: React.FC = () => {
         <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
       </Layout>
       <Modal title="Approve Course" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+
         <p>Are you sure you refuse to approve this course?</p>
       </Modal>
     </Layout>
