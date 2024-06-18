@@ -343,7 +343,7 @@ const LessonDetail: React.FC = () => {
 
   return (
     <div className="flex flex-col lg:flex-row p-4">
-      <div className="w-full lg:w-2/3 p-4">
+      <div className="w-full p-4">
         <Title level={2}>NodeJs Super</Title>
         <Text>Bởi: Du Thanh Dược</Text> <br />
         <Text>Cập nhật: 06/2024</Text>
