@@ -16,6 +16,9 @@ const ForgotPassword: React.FC = () => {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md">
+      <div className="flex justify-center mb-4">
+          <img src="mainLogoAcademic.png" alt="Edumy" className="w-32 h-32" />
+        </div>
         <h2 className="mb-6 text-2xl font-bold text-center">Forgot Password</h2>
         <Form
           name="forgot_password"

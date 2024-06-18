@@ -12,7 +12,7 @@ const DetailBlogPage: React.FC = () => {
                     <Button 
                         type='default' 
                         icon={<ArrowLeftOutlined />} 
-                        className="p-4 font-semibold bg-white text-gray-700 text-lg border border-none rounded-lg hover:bg-gray-100 transform transition-transform duration-300 hover:scale-110"
+                        className="p-4 font-semibold fixed bg-white text-gray-700 text-lg border border-none rounded-lg hover:bg-gray-100 transform transition-transform duration-300 hover:scale-110"
                     >
                         Back
                     </Button>

@@ -83,7 +83,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
               <Link to="/log-in">Save</Link>
             </Menu.Item>
             <Menu.Item key="8" className="mx-2">
-              <Link to="/log-in">Contact</Link>
+              <Link to="/contact">Contact</Link>
             </Menu.Item>
             <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
               <Link to="/log-in"></Link>
