@@ -11,10 +11,12 @@ import {
   ManOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
+  UploadOutlined,
   UserOutlined,
   WomanOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Card, DatePicker, Form, Image, Input, Layout, Menu, Table, Tabs, Typography } from 'antd';
+import { Avatar, Button, Card, DatePicker, Form, Image, Input, Layout, Menu, Select, Table, Tabs, Typography, Upload } from 'antd';
+import { Option } from 'antd/es/mentions';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -99,25 +101,31 @@ const columns = [
 const aboutDataKey = 'aboutData'; // Key for storing data in localStorage
 
 const ProfileStudent = () => {
+  const [avatarSrc, setAvatarSrc] = useState("https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp");
+
   const [collapsed, setCollapsed] = useState(false);
   const [showAbout, setShowAbout] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
   const [showMyCourses, setShowMyCourses] = useState(false); // State to control visibility of My Courses section
   const [aboutData, setAboutData] = useState({
     avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
-    name: 'David Doe',
-    info: 'I am a Web Designer',
-    email: 'davidd09@gmail.com',
-    dob: '2003-01-01',
-    gender: 'Female',
-    courseCreatedDate: '2023-01-15',
-    facebook: 'https://www.facebook.com/vu.hanthien.545',
-    linkedin: 'https://linkedin.com/in/david34',
+    name: 'John Doe',
+    email: 'johndoe@gmail.com',
+    dob: '1990-01-01',
+    gender: 'Male',
+    info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   });
   const navigate = useNavigate();
 
   const onCollapse = (collapsed: boolean) => {
     setCollapsed(collapsed);
+  };
+
+  const handleImageChange = (info: any) => {
+    if (info.file.status === 'done') {
+      const imageUrl = info.file.response.imageUrl;
+      setAvatarSrc(imageUrl);
+    }
   };
 
   const displayAboutInfo = () => {
@@ -147,9 +155,6 @@ const ProfileStudent = () => {
   };
 
   const onFinish = (values: any) => {
-    console.log('Received values:', values);
-
-    // Update aboutData state with new values
     const updatedAboutData = {
       ...aboutData,
       email: values.email,
@@ -157,19 +162,25 @@ const ProfileStudent = () => {
       facebook: values.facebook,
       linkedin: values.linkedin,
     };
-
-    // Save updated aboutData to localStorage
     localStorage.setItem(aboutDataKey, JSON.stringify(updatedAboutData));
-
-    // Update state to reflect changes
     setAboutData(updatedAboutData);
-    setShowAbout(true); // Show the About section
-    setShowSettings(false); // Hide the Settings section
-    setShowMyCourses(false); // Ensure My Courses section is hidden when saving changes
+    setShowAbout(true);
+    setShowMyCourses(false);
+    setShowSettings(false);
+    console.log('Form submitted:', values);
+  };
+
+  const handleTabChange = (key: any) => {
+    setShowAbout(key === 'about');
+    setShowMyCourses(key === 'mycourses');
+    setShowSettings(key === 'settings');
+  };
+
+  const handlePasswordChange = () => {
+    console.log('Redirecting to password change page...');
   };
 
   useEffect(() => {
-    // Load aboutData from localStorage on component mount
     const storedAboutData = localStorage.getItem(aboutDataKey);
     if (storedAboutData) {
       setAboutData(JSON.parse(storedAboutData));
@@ -179,8 +190,20 @@ const ProfileStudent = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} width={250}>
-        <div className="flex items-center justify-center my-6">
-          <Avatar size={70} src="https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp" icon={<UserOutlined />} />
+        <div className="text-center">
+          <div className="flex items-center justify-center mt-6">
+            <Avatar size={70} src={avatarSrc} icon={<UserOutlined />} />
+          </div>
+          <Upload
+            name="avatar"
+            showUploadList={false}
+            action="/api/upload"
+            onChange={handleImageChange}
+          >
+            <button className=" hover:text-blue-700 text-white font-semibold py-2 px-4 rounded">
+              <UploadOutlined /> Change Avatar
+            </button>
+          </Upload>
         </div>
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
           <Menu.Item key="1" icon={<FileImageOutlined />} onClick={displayAboutInfo}>
@@ -209,12 +232,14 @@ const ProfileStudent = () => {
       <Layout className="site-layout">
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            {showAbout ? (
-              <Card style={{ maxWidth: 500, maxHeight: 350, overflow: 'auto', margin: 20 }}>
+            {showAbout && (
+              <Card style={{ maxHeight: 350, overflow: 'auto', margin: 20 }}>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
                     <Avatar size={64} src={aboutData.avatarSrc} />
-                    <Title level={4} style={{ marginLeft: 16 }}>{aboutData.name}</Title>
+                    <Title level={4} style={{ marginLeft: 16 }}>
+                      {aboutData.name}
+                    </Title>
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     <FileImageOutlined style={{ marginRight: 8 }} />
@@ -225,24 +250,12 @@ const ProfileStudent = () => {
                     <Text>Date Of Birth: {aboutData.dob}</Text>
                   </div>
                   <div style={{ marginBottom: 8 }}>
-                    {aboutData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style ={{ marginRight: 8 }} />}
+                    {aboutData.gender === 'Male' ? (
+                      <ManOutlined style={{ marginRight: 8 }} />
+                    ) : (
+                      <WomanOutlined style={{ marginRight: 8 }} />
+                    )}
                     <Text>Gender: {aboutData.gender}</Text>
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <ClockCircleOutlined style={{ marginRight: 8 }} />
-                    <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">
-                      <FacebookOutlined style={{ marginRight: 8 }} />
-                      Facebook
-                    </a>
-                  </div>
-                  <div>
-                    <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">
-                      <LinkedinOutlined style={{ marginRight: 8 }} />
-                      LinkedIn
-                    </a>
                   </div>
                   <div style={{ marginBottom: 8 }}>
                     <ContactsOutlined style={{ marginRight: 8 }} />
@@ -250,66 +263,52 @@ const ProfileStudent = () => {
                   </div>
                 </div>
               </Card>
-            ) : showMyCourses ? (  // Render My Courses section only if showMyCourses is true
-              <div style={{ margin: 40 }}>
-                <Tabs defaultActiveKey="1">
-                  <TabPane tab="All" key="1">
-                    <Table columns={columns} dataSource={coursesData} pagination={false} />
-                  </TabPane>
-                  <TabPane tab="In Progress" key="2">
-                    <Table columns={columns} dataSource={coursesData.filter(course => course.result !== '100%')} pagination={false} />
-                  </TabPane>
-                  <TabPane tab="Finished" key="3">
-                    <Table columns={columns} dataSource={coursesData.filter(course => course.result === '100%')} pagination={false} />
-                  </TabPane>
-                </Tabs>
-              </div>
-            ) : showSettings ? (
-              <Card title="Account Settings" style={{ maxWidth: 500, margin: 20 }}>
+            )}
+            {showSettings && (
+              <div>
                 <Form
                   name="settingsForm"
                   initialValues={{
                     email: aboutData.email,
-                    dob: moment(aboutData.dob, 'YYYY-MM-DD'),
                     info: aboutData.info,
-                    facebook: aboutData.facebook,
-                    linkedin: aboutData.linkedin,
+                    dob: moment(aboutData.dob, 'YYYY-MM-DD'),
+                    gender: aboutData.gender,
                   }}
                   onFinish={onFinish}
                 >
                   <Form.Item
                     name="email"
                     label="Email"
-                    rules={[{ required: true, message: 'Please input your email!' }]}
+                    rules={[
+                      { required: true, message: 'Please input your email!' },
+                      { type: 'email', message: 'Please enter a valid email address!' },
+                      { pattern: /^[\w-\.]+@gmail\.com$/, message: 'Email must be @gmail.com' },
+                    ]}
                   >
                     <Input />
                   </Form.Item>
-                  <Form.Item
-                    name="dob"
-                    label="Date of Birth"
-                    rules={[{ required: true, message: 'Please select your date of birth!' }]}
-                  >
-                    <DatePicker style={{ width: '100%' }} disabled />
-                  </Form.Item>
-                  <Form.Item
-                    name="facebook"
-                    label="Facebook"
-                    rules={[{ required: true, message: 'Please input your Facebook profile!' }]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    name="linkedin"
-                    label="LinkedIn"
-                    rules={[{ required: true, message: 'Please input your LinkedIn profile!' }]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <Form.Item
-                    name="info"
-                    label="Info"
-                    rules={[{ required: true, message: 'Please input your info!' }]}
-                  >
+                  <div className='flex flex-row'>
+                    <Form.Item
+                      name="dob"
+                      label="Date of Birth"
+                      rules={[{ required: true, message: 'Please select your date of birth!' }]}
+                    >
+                      <DatePicker style={{ width: '100%' }} />
+                    </Form.Item>
+                    <Form.Item
+                      className='ml-80'
+                      name="gender"
+                      label="Gender"
+                      rules={[{ required: true, message: 'Please select your gender!' }]}
+                    >
+                      <Select className=''>
+                        <Option value="Male">Male</Option>
+                        <Option value="Female">Female</Option>
+                        <Option value="Other">Other</Option>
+                      </Select>
+                    </Form.Item>
+                  </div>
+                  <Form.Item name="information" label="Information" rules={[{ required: true, message: 'Please input your info!' }]}>
                     <TextArea rows={4} />
                   </Form.Item>
                   <Form.Item>
@@ -318,8 +317,8 @@ const ProfileStudent = () => {
                     </Button>
                   </Form.Item>
                 </Form>
-              </Card>
-            ) : null}
+              </div>
+            )}
           </div>
         </Content>
       </Layout>
