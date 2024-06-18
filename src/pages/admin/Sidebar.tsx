@@ -43,8 +43,8 @@ const SidebarAdmin: React.FC = () => {
     },
     {
       icon: LineChartOutlined,
-      heading: 'Analytics',
-      href: "/admin/analytics"
+      heading: 'Transaction History',
+      href: "/admin/transaction-history"
     },
     {
       icon: LogoutOutlined,

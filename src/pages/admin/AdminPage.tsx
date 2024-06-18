@@ -1,13 +1,14 @@
+import Footer from 'components/Footer';
 import Dashboard from 'pages/admin/DashBoard';
 import React from 'react';
-import { Route, Routes ,Outlet} from 'react-router-dom';
+import { Outlet, Route, Routes } from 'react-router-dom';
+import LayoutAdmin from '../../components/layout/LayoutAdmin';
 import Category from './Category';
 import Content from './Course';
 import Report from './Report';
 import Sidebar from './Sidebar';
+import TransactionHistory from './TransactionHistory';
 import Users from './Users';
-import LayoutAdmin from'../../components/layout/LayoutAdmin';
-import Footer from 'components/Footer';
 const AdminPage: React.FC = () => {
   return (
     <div>
@@ -21,6 +22,7 @@ const AdminPage: React.FC = () => {
           <Route path={`course`} element={<Content />} />
           <Route path={`category`} element={<Category />} />
           <Route path={`report`} element={<Report />} />
+          <Route path={`transaction-history`} element={<TransactionHistory />} />
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>
         <Outlet />
