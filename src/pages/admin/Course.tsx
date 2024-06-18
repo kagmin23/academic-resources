@@ -164,34 +164,16 @@ const CourseAdmin: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
-          <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
-            {/* <Button icon={<FunnelPlotOutlined />} className="flex items-center">
-              All
-            </Button>
-            <Button icon={<PieChartOutlined />} className="flex items-center">
-              Development
-            </Button>
-            <Button icon={<UserOutlined />} className="flex items-center">
-              Business
-            </Button>
-            <Button icon={<LaptopOutlined />} className="flex items-center">
-              IT & Software
-            </Button>
-            <Button icon={<UsergroupAddOutlined />} className="flex items-center">
-              Marketing
-            </Button>
-            <Button icon={<CameraOutlined />} className="flex items-center">
-              Photography
-            </Button> */}
-            <div className="flex flex-1 ml-4">
-              <Input
-                placeholder="Search"
-                prefix={<SearchOutlined />}
-                onChange={handleSearchChange}
-                className="w-full h-12 text-lg border-2 border-gray-300 border-solid rounded"
-                value={searchTerm}
-              />
-            </div>
+        <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pl-4">
+          <div className="w-full md:w-1/3">
+            <Input
+              placeholder="Search"
+              prefix={<SearchOutlined />}
+              onChange={handleSearchChange}
+              className="w-full h-10 text-lg border-2 border-gray-300 border-solid rounded"
+              value={searchTerm}
+            />
+          </div>
           </div>
         </Header>
         <Content className="m-4">
