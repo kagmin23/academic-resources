@@ -1,19 +1,14 @@
 import {
-  CameraOutlined,
   DeleteOutlined,
   EditOutlined,
   EyeOutlined,
-  FunnelPlotOutlined,
-  LaptopOutlined,
-  PieChartOutlined,
   PlusCircleOutlined,
-  UserOutlined,
-  UsergroupAddOutlined
+  SearchOutlined,
 } from '@ant-design/icons';
-import { Button,Col, Row, Form, Input, Layout, Modal, Table, Typography } from 'antd';
+import { Button, Col, Form, Input, Layout, Modal, Row, Table, Typography } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useState } from 'react';
-import Title from 'antd/lib/typography/Title';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -33,42 +28,43 @@ const initialDataSource: DataType[] = [
     key: '1',
     image: 'https://via.placeholder.com/50',
     title: 'Item 1',
-    created_at: '2024-01-01'
+    created_at: '2024-01-01',
   },
   {
     key: '2',
     image: 'https://via.placeholder.com/50',
     title: 'Item 2',
-    created_at: '2024-01-02'
+    created_at: '2024-01-02',
   },
   {
     key: '3',
     image: 'https://via.placeholder.com/50',
     title: 'Item 3',
-    created_at: '2024-01-03'
+    created_at: '2024-01-03',
   },
   {
     key: '4',
     image: 'https://via.placeholder.com/50',
     title: 'Item 4',
-    created_at: '2024-01-04'
+    created_at: '2024-01-04',
   },
   {
     key: '5',
     image: 'https://via.placeholder.com/50',
     title: 'Item 5',
-    created_at: '2024-01-05'
+    created_at: '2024-01-05',
   },
   {
     key: '6',
     image: 'https://via.placeholder.com/50',
     title: 'Item 6',
-    created_at: '2024-01-06'
+    created_at: '2024-01-06',
   },
 ];
 
 const CourseAdmin: React.FC = () => {
   const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
+  const [filteredDataSource, setFilteredDataSource] = useState<DataType[]>(initialDataSource);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<DataType | null>(null);
@@ -94,10 +90,10 @@ const CourseAdmin: React.FC = () => {
     );
   };
 
-
   const handleDelete = (record: DataType) => {
     const newDataSource = dataSource.filter(item => item.key !== record.key);
     setDataSource(newDataSource);
+    setFilteredDataSource(newDataSource);
   };
 
   const handleSave = () => {
@@ -110,6 +106,7 @@ const CourseAdmin: React.FC = () => {
             item.key === currentRecord.key ? { ...item, ...values } : item
           );
           setDataSource(newDataSource);
+          setFilteredDataSource(newDataSource);
         } else {
           const newRecord = {
             ...values,
@@ -117,12 +114,20 @@ const CourseAdmin: React.FC = () => {
             created_at: new Date().toISOString().split('T')[0],
           };
           setDataSource([...dataSource, newRecord]);
+          setFilteredDataSource([...dataSource, newRecord]);
         }
         setIsModalVisible(false);
       })
       .catch(info => {
         console.log('Validate Failed:', info);
       });
+  };
+
+  const handleSearch = (value: string) => {
+    const filteredData = dataSource.filter(item =>
+      item.title.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredDataSource(filteredData);
   };
 
   const columns = [
@@ -161,24 +166,12 @@ const CourseAdmin: React.FC = () => {
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
           <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
-            <Button icon={<FunnelPlotOutlined />} className="flex items-center">
-              All
-            </Button>
-            <Button icon={<PieChartOutlined />} className="flex items-center">
-              Development
-            </Button>
-            <Button icon={<UserOutlined />} className="flex items-center">
-              Business
-            </Button>
-            <Button icon={<LaptopOutlined />} className="flex items-center">
-              IT & Software
-            </Button>
-            <Button icon={<UsergroupAddOutlined />} className="flex items-center">
-              Marketing
-            </Button>
-            <Button icon={<CameraOutlined />} className="flex items-center">
-              Photography
-            </Button>
+            <Input
+              placeholder="Search..."
+              prefix={<SearchOutlined />}
+              onChange={e => handleSearch(e.target.value)}
+              style={{ width: 200 }}
+            />
             <div className="h-6 mx-4 border-r"></div>
             <Button className="font-bold text-white bg-red-500" onClick={handleAddNewCourse}>
               <PlusCircleOutlined />
@@ -187,39 +180,39 @@ const CourseAdmin: React.FC = () => {
           </div>
         </Header>
         <Content className="m-4">
-        <Table
-              dataSource={initialDataSource}
-              columns={columns}
-              expandable={{
-                expandedRowKeys: expandedKeys,
-                onExpand: (expanded, record) => handleViewMore(record.key),
-                expandedRowRender: (record: DataType) => (
-                  <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
-                    <Row gutter={16}>
-                      <Col span={24}>
-                        <Title level={5} className='text-2xl'>Category Details</Title>
-                      </Col>
-                    </Row>
-                    <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Col span={8}>
-                        <Text strong>Description:</Text>
-                        <p>{record.description || '-'}</p>
-                      </Col>
-                      <Col span={8} style={{ textAlign: 'center' }}>
-                        <Text strong>Instructor:</Text>
-                        <p>{record.instructor || '-'}</p>
-                      </Col>
-                      <Col span={7} style={{ textAlign: 'center' }}>
-                        <Text strong>Price:</Text>
-                        <p>${record.price || '-'}</p>
-                      </Col>
-                    </Row>
-                  </div>
-                ),
-                expandIcon: () => null,
-              }}
-              rowKey="key"
-            />
+          <Table
+            dataSource={filteredDataSource}
+            columns={columns}
+            expandable={{
+              expandedRowKeys: expandedKeys,
+              onExpand: (expanded, record) => handleViewMore(record.key),
+              expandedRowRender: (record: DataType) => (
+                <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
+                  <Row gutter={16}>
+                    <Col span={24}>
+                      <Title level={5} className='text-2xl'>Category Details</Title>
+                    </Col>
+                  </Row>
+                  <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <Col span={8}>
+                      <Text strong>Description:</Text>
+                      <p>{record.description || '-'}</p>
+                    </Col>
+                    <Col span={8} style={{ textAlign: 'center' }}>
+                      <Text strong>Instructor:</Text>
+                      <p>{record.instructor || '-'}</p>
+                    </Col>
+                    <Col span={7} style={{ textAlign: 'center' }}>
+                      <Text strong>Price:</Text>
+                      <p>${record.price || '-'}</p>
+                    </Col>
+                  </Row>
+                </div>
+              ),
+              expandIcon: () => null,
+            }}
+            rowKey="key"
+          />
         </Content>
         <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
       </Layout>
