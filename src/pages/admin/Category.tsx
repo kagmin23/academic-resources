@@ -3,12 +3,12 @@ import {
   EditOutlined,
   EyeOutlined,
   PlusCircleOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
-import { Button, Form, Col, Row, Input, Layout, Modal, Table, Typography } from 'antd';
-import { debounce } from 'lodash';
+import { Button, Col, Form, Input, Layout, Modal, Row, Table, Typography } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import Title from 'antd/lib/typography/Title';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -45,8 +45,7 @@ const CategoryAdmin: React.FC = () => {
 
   useEffect(() => {
     const filteredData = dataSource.filter(
-      item =>
-        item.title.toLowerCase().includes(searchTerm.toLowerCase())
+      item => item.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredDataSource(filteredData);
   }, [searchTerm, dataSource]);
@@ -101,12 +100,8 @@ const CategoryAdmin: React.FC = () => {
     setDataSource(updatedDataSource);
   };
 
-  const debouncedSearch = debounce((value: string) => {
-    setSearchTerm(value);
-  }, 300);
-
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debouncedSearch(event.target.value);
+    setSearchTerm(event.target.value);
   };
 
   const columns = [
@@ -163,6 +158,7 @@ const CategoryAdmin: React.FC = () => {
             <div className="flex flex-1 ml-4">
               <Input
                 placeholder="Search"
+                prefix={<SearchOutlined />}
                 onChange={handleSearchChange}
                 className="w-full h-12 text-lg border-2 border-gray-300 border-solid rounded"
                 value={searchTerm}

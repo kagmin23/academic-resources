@@ -1,11 +1,6 @@
 import {
-  CameraOutlined,
   EyeOutlined,
-  FunnelPlotOutlined,
-  LaptopOutlined,
-  PieChartOutlined,
-  UserOutlined,
-  UsergroupAddOutlined
+  SearchOutlined
 } from '@ant-design/icons';
 import { Button, Col, Input, Layout, Row, Switch, Table, Typography } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
@@ -115,9 +110,9 @@ const CourseAdmin: React.FC = () => {
   //   setSearchTerm(value);
   // }, 300);
 
-  // const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   debouncedSearch(event.target.value);
-  // };
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
   const filteredDataSource = dataSource.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -191,7 +186,8 @@ const CourseAdmin: React.FC = () => {
             <div className="flex flex-1 ml-4">
               <Input
                 placeholder="Search"
-                // onChange={handleSearchChange}
+                prefix={<SearchOutlined />}
+                onChange={handleSearchChange}
                 className="w-full h-12 text-lg border-2 border-gray-300 border-solid rounded"
                 value={searchTerm}
               />
