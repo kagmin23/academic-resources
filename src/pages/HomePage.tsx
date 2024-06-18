@@ -73,52 +73,7 @@ const HomePage: React.FC = () => {
         </div>
       </header>
 
-      {/* <Anchor affix={false}>
-        <AnchorLink href="#content" title="Scroll to content" />
-      </Anchor> */}
-
       <div id="content">
-        {/* <ul className="mt-8 ml-4 text-2xl font-bold">Popular Courses</ul>
-        <Row gutter={[16, 16]}>
-          {[
-            {
-              title: "Course 1",
-              img: "https://media.licdn.com/dms/image/D4D12AQFvpv0FBeM8Ew/article-cover_image-shrink_720_1280/0/1700885047727?e=2147483647&v=beta&t=gKhQO6rfZq3p58Sa-GM9zFs5CgwZJqVyqPBcZtm2Pm0",
-            },
-            {
-              title: "Course 2",
-              img: "https://media.licdn.com/dms/image/D4D12AQFc3mT14dY9hg/article-cover_image-shrink_720_1280/0/1711408267815?e=2147483647&v=beta&t=HjY5P1_eU4eY5HjbdubrEi5WC-e3CRaAUkCqCf3SNHM",
-            },
-            {
-              title: "Course 3",
-              img: "https://media.licdn.com/dms/image/D4D12AQEWzo3Jn9T45A/article-cover_image-shrink_720_1280/0/1699138098059?e=2147483647&v=beta&t=mPHE7l2LY1WF1evOaWKldsg3ilnQWtUWSTahMpWnvGg",
-            },
-            {
-              title: "Course 4",
-              img: "https://media.licdn.com/dms/image/D4D12AQEzdr9CEqQnQQ/article-cover_image-shrink_720_1280/0/1701126577885?e=2147483647&v=beta&t=IQxCJTYMact7JzHJKFdsGiIE0j-Vt-hlUMQA4_GJtpU",
-            },
-            {
-              title: "Course 5",
-              img: "https://media.licdn.com/dms/image/D4D12AQHj6wiq5tpbAA/article-inline_image-shrink_1500_2232/0/1701126774921?e=1721865600&v=beta&t=HYaCCKDctqqeekdiERqAxu9SS72nnzZNX0cD28_2Ls4",
-            },
-            {
-              title: "Course 6",
-              img: "https://media.licdn.com/dms/image/D4E12AQEw_AaFDPr3TA/article-cover_image-shrink_720_1280/0/1702893319300?e=2147483647&v=beta&t=o4sdtfjIw2j4Oc9RjZRfMJjMC2IFJLFT8e_MoMMAkMQ",
-            },
-          ].map((course, index) => (
-            <Col xs={24} sm={12} md={8} key={index} >
-              <Card
-                title={course.title}
-                bordered={false}
-                cover={<img alt={course.title} src={course.img} />}
-                className='text-xl'>
-                Course description here
-                <Link to="/course-details"><Button type="primary" className='p-5 text-lg ml-9'>$$$</Button></Link>
-              </Card>
-            </Col>
-          ))}
-          
-        </Row> */}
         <div className='flex items-center justify-center w-full bg-slate-300'>
         <div className= 'w-full text-center '>
         <ul className="mt-20 ml-4 text-4xl font-bold">Popular Courses</ul>
@@ -127,9 +82,9 @@ const HomePage: React.FC = () => {
           <div className='w-full h-full p-10'>
             <div className= 'flex mb-3 sm:space-x-10 '>
             <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
-            <Link  to="/course-details"><Button size='small' type="primary" className='p-2 text-lg float-end ml-9'>$$$</Button></Link>
+            <Link  to={`course-details`}><Button size='small' type="primary" className='p-2 text-lg float-end ml-9'>$$$</Button></Link>
             </div>
-           <Link to="/course-details"> 
+           <Link to={`course-details`}>
             <img className=" rounded-xl" src={course.img} alt="no image" />
             </Link>
             
@@ -185,9 +140,9 @@ const HomePage: React.FC = () => {
             <div className='w-full h-full p-10'>
             <div className= 'flex mb-3 ml-3 sm:space-x-10 '>
             <h1 className='text-sm font-bold sm:text-xl'>{course2.title}</h1>
-            <Link  to="/course-details"><Button type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button></Link>
+            <Link to={`course-details`}><Button type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button></Link>
             </div>
-           <Link to="/course-details"> 
+           <Link to={`course-details`}>
             <img className="w-full rounded-xl" src={course2.img} alt="no image" />
             </Link>
             </div>

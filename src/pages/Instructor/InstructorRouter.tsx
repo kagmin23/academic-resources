@@ -4,6 +4,7 @@ import {
   BuyNow,
   CategoryPage,
   Contact,
+  CourseDetailsPage,
   CoursePage,
   HomePage,
   LessonStudent,
@@ -30,6 +31,7 @@ export default function InstructorRouter() {
          <Route path={`about`} element={<About />} />
          <Route path={`course`}element={<ProtectedRouter allowedRoles={[3]}><CoursePage /></ProtectedRouter>} />
          <Route path={`category`} element={<ProtectedRouter allowedRoles={[3]}><CategoryPage /></ProtectedRouter>} />
+         <Route path={`course-details`} element={<ProtectedRouter allowedRoles={[3]}><CourseDetailsPage /></ProtectedRouter>} />
          <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={[3]}><ShoppingCart /></ProtectedRouter>} />
          <Route path={`profile-instructor/*`} element={<ProtectedRouter allowedRoles={[3]}><InstructorPage /></ProtectedRouter>} />
          <Route path={`buy-now`} element={<ProtectedRouter allowedRoles={[3]}><BuyNow /></ProtectedRouter>} />

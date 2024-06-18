@@ -88,10 +88,10 @@ const DashboardInstructor: React.FC = () => {
             <div className="py-8 text-black">
                 <div className="container px-4 mx-auto">
                     <div className="flex flex-col items-center justify-center lg:flex-row lg:space-x-8">
-                        <div className="py-4  shadow-md w-full">
+                        <div className="w-full py-4 shadow-md">
                             <div className="container px-3 mx-auto">
-                                <div className="flex flex-col lg:flex-row items-start lg:items-center">
-                                    <Avatar size={128} src={aboutData.avatarSrc} className="lg:mr-4 mb-4 lg:mb-0" />
+                                <div className="flex flex-col items-start lg:flex-row lg:items-center">
+                                    <Avatar size={128} src={aboutData.avatarSrc} className="mb-4 lg:mr-4 lg:mb-0" />
                                     <div className="flex-grow">
                                         <Title level={4}>{aboutData.name}</Title>
                                         <div className="mb-2">
@@ -110,9 +110,8 @@ const DashboardInstructor: React.FC = () => {
                                             <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
                                         </div>
                                     </div>
-                                    <div className="flex flex-col lg:ml-4 mt-4 lg:mt-0">
-                                        <Button type="primary" className="mb-4 mr-9 p-5 text-xl bg-red-600">Subscribe</Button>
-                                        <div className="flex flex-row lg:ml-4 mt-4 lg:mt-0 gap-4">
+                                    <div className="flex flex-col mt-4 lg:ml-4 lg:mt-0">
+                                        <div className="flex flex-row gap-4 mt-4 lg:ml-4 lg:mt-0">
                                             <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer" className="mb-2 text-blue-700">
                                                 <FacebookOutlined style={{ fontSize: '28px' }} />
                                             </a>
@@ -126,19 +125,19 @@ const DashboardInstructor: React.FC = () => {
                                     </div>
                                 </div>
                                 <div className="flex flex-wrap items-center mt-4">
-                                    <Badge showZero className="flex flex-col items-center  p-4 border border-gray-300 rounded-lg">
+                                    <Badge showZero className="flex flex-col items-center p-4 border border-gray-300 rounded-lg">
                                         <EyeOutlined className="mb-2 mr-1 text-2xl " />
                                         <span>1452</span>
                                     </Badge>
-                                    <Badge showZero className="flex flex-col items-center  p-4 ml-2 border border-gray-300 rounded-lg">
+                                    <Badge showZero className="flex flex-col items-center p-4 ml-2 border border-gray-300 rounded-lg">
                                         <LikeOutlined className="mb-2 mr-1 text-2xl " />
                                         <span>100</span>
                                     </Badge>
-                                    <Badge showZero className="flex flex-col items-center  p-4 ml-2 border border-gray-300 rounded-lg">
+                                    <Badge showZero className="flex flex-col items-center p-4 ml-2 border border-gray-300 rounded-lg">
                                         <DislikeOutlined className="mb-2 mr-1 text-2xl " />
                                         <span>20</span>
                                     </Badge>
-                                    <Badge showZero className="flex flex-col items-center  p-4 ml-2 border border-gray-300 rounded-lg">
+                                    <Badge showZero className="flex flex-col items-center p-4 ml-2 border border-gray-300 rounded-lg">
                                         <ShareAltOutlined className="mb-2 text-2xl" />
                                         <span>9</span>
                                     </Badge>

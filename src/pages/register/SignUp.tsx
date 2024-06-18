@@ -7,7 +7,7 @@ const SignUp: React.FC = () => {
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded shadow-md">
         <div className="flex justify-center mb-4">
-          <img src="https://demo.createdbycocoon.com/moodle/edumy/splash/asset/footer_logo.png" alt="Edumy" className="h-12" />
+          <img src="mainLogoAcademic.png" alt="Edumy" className="w-32 h-32" />
         </div>
         <h2 className="text-2xl font-bold text-center">Welcome to Edumy</h2>
         <p className="text-center text-gray-600">Sign Up and Start Learning!</p>
