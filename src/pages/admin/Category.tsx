@@ -4,17 +4,22 @@ import {
   EyeOutlined,
   PlusCircleOutlined,
 } from '@ant-design/icons';
-import { Button, Form, Input, Layout, Modal, Table } from 'antd';
+import { Button, Form, Col, Row, Input, Layout, Modal, Table, Typography } from 'antd';
 import { debounce } from 'lodash';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
+import Title from 'antd/lib/typography/Title';
 
 const { Header, Content, Footer } = Layout;
+const { Text } = Typography;
 
 interface DataType {
   key: string;
   image: string;
   title: string;
+  description?: string;
+  instructor?: string;
+  price?: number;
 }
 
 const getInitialDataSource = (): DataType[] => {
@@ -36,6 +41,7 @@ const CategoryAdmin: React.FC = () => {
   const [editingRecord, setEditingRecord] = useState<DataType | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [form] = Form.useForm();
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
   useEffect(() => {
     const filteredData = dataSource.filter(
@@ -53,6 +59,12 @@ const CategoryAdmin: React.FC = () => {
     setEditingRecord(null);
     setIsModalVisible(true);
     form.resetFields();
+  };
+
+  const handleViewMore = (key: string) => {
+    setExpandedKeys(prevKeys =>
+      prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]
+    );
   };
 
   const handleSave = (record: DataType) => {
@@ -127,7 +139,7 @@ const CategoryAdmin: React.FC = () => {
           ></Button>
           <Button
             icon={<EyeOutlined />}
-            onClick={() => console.log('View more:', record)}
+            onClick={() => handleViewMore(record.key)}
           ></Button>
         </div>
       ),
@@ -160,7 +172,39 @@ const CategoryAdmin: React.FC = () => {
         </Header>
         <Content className="m-4">
           <div className="p-4 bg-white">
-            <Table dataSource={filteredDataSource} columns={columns} />
+            <Table
+              dataSource={filteredDataSource}
+              columns={columns}
+              expandable={{
+                expandedRowKeys: expandedKeys,
+                onExpand: (expanded, record) => handleViewMore(record.key),
+                expandedRowRender: (record: DataType) => (
+                  <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
+                    <Row gutter={16}>
+                      <Col span={24}>
+                        <Title level={5} className='text-2xl'>Category Details</Title>
+                      </Col>
+                    </Row>
+                    <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                      <Col span={8}>
+                        <Text strong>Description:</Text>
+                        <p>{record.description || '-'}</p>
+                      </Col>
+                      <Col span={8} style={{ textAlign: 'center' }}>
+                        <Text strong>Instructor:</Text>
+                        <p>{record.instructor || '-'}</p>
+                      </Col>
+                      <Col span={7} style={{ textAlign: 'center' }}>
+                        <Text strong>Price:</Text>
+                        <p>${record.price || '-'}</p>
+                      </Col>
+                    </Row>
+                  </div>
+                ),
+                expandIcon: () => null,
+              }}
+              rowKey="key"
+            />
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>
