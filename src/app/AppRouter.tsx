@@ -33,6 +33,7 @@ const AppRouter: React.FC = () => (
         <Route path={`/`} element={<LayoutGuest />}>
           <Route index element={<Navigate to={`/home`} />} />
           <Route path={`/home`} element={<HomePage />} />
+          <Route path={`/home/course-details`} element={<CourseDetailsPage/>} />
           <Route path="/log-in" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
