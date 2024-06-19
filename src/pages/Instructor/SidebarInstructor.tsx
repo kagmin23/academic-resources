@@ -1,4 +1,4 @@
-import { ContainerOutlined, DeploymentUnitOutlined, LineChartOutlined, LogoutOutlined, PieChartOutlined, SwapOutlined } from "@ant-design/icons";
+import { ContainerOutlined, DeploymentUnitOutlined, LineChartOutlined, LogoutOutlined, PieChartOutlined, SafetyOutlined, SwapOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -33,12 +33,12 @@ const SidebarAdmin: React.FC = () => {
       href: "/instructor/profile-instructor/",
       children: [
         {
-          icon: LineChartOutlined,
-          heading: 'personal info',
+          icon: UserOutlined ,
+          heading: 'Personal info',
           href: "/instructor/profile-instructor/instructor-setting"
         },
         {
-          icon: LineChartOutlined,
+          icon: SafetyOutlined,
           heading: 'Change password',
           href: "/instructor/profile-instructor/instructor-changepassword"
         },

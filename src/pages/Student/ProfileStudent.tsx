@@ -24,7 +24,6 @@ import { useNavigate } from 'react-router-dom';
 const { TextArea } = Input;
 const { Content, Sider } = Layout;
 const { Title, Text } = Typography;
-const { TabPane } = Tabs;
 
 const coursesData = [
   {
@@ -106,6 +105,8 @@ const ProfileStudent = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [showAbout, setShowAbout] = useState(true);
   const [showSettings, setShowSettings] = useState(false);
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [showInformation, setShowInformation] = useState(false);
   const [showMyCourses, setShowMyCourses] = useState(false); // State to control visibility of My Courses section
   const [aboutData, setAboutData] = useState({
     avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
@@ -138,12 +139,32 @@ const ProfileStudent = () => {
     setShowAbout(false);
     setShowSettings(true);
     setShowMyCourses(false); // Ensure My Courses section is hidden when displaying Settings
+    setShowChangePassword(false);
+    setShowInformation(false);
+  };
+
+  const displayChangePassword = () => {
+    setShowAbout(false);
+    setShowSettings(false);
+    setShowMyCourses(false);
+    setShowChangePassword(true);
+    setShowInformation(false);
+  };
+
+  const displayInformation = () => {
+    setShowAbout(false);
+    setShowSettings(false);
+    setShowMyCourses(false);
+    setShowChangePassword(false);
+    setShowInformation(true);
   };
 
   const displayMyCourses = () => {
     setShowAbout(false);
     setShowSettings(false);
     setShowMyCourses(true); // Show My Courses section when this tab is selected
+    setShowChangePassword(false);
+    setShowInformation(false);
   };
 
   const navigateToAssignments = () => {
@@ -167,17 +188,20 @@ const ProfileStudent = () => {
     setShowAbout(true);
     setShowMyCourses(false);
     setShowSettings(false);
+    setShowChangePassword(false);
+    setShowInformation(false);
     console.log('Form submitted:', values);
+  };
+
+  const handlePasswordChange = (values: any) => {
+    // Implement password change logic here
+    console.log('Password change form submitted:', values);
   };
 
   const handleTabChange = (key: any) => {
     setShowAbout(key === 'about');
     setShowMyCourses(key === 'mycourses');
     setShowSettings(key === 'settings');
-  };
-
-  const handlePasswordChange = () => {
-    console.log('Redirecting to password change page...');
   };
 
   useEffect(() => {
@@ -221,9 +245,10 @@ const ProfileStudent = () => {
           <Menu.Item key="5" icon={<FileDoneOutlined />} onClick={navigateToAssignments}>
             Assignments
           </Menu.Item>
-          <Menu.Item key="6" icon={<SettingOutlined />} onClick={displaySettings}>
-            Settings
-          </Menu.Item>
+          <Menu.SubMenu key="6" icon={<SettingOutlined />} title="Settings">
+            <Menu.Item key="6-1" onClick={displayInformation}>Information</Menu.Item>
+            <Menu.Item key="6-2" onClick={ displayChangePassword}>Change Password</Menu.Item>
+          </Menu.SubMenu>
           <Menu.Item key="7" icon={<LogoutOutlined />}>
             Logout
           </Menu.Item>
@@ -265,7 +290,25 @@ const ProfileStudent = () => {
               </Card>
             )}
             {showSettings && (
-              <div>
+              <Card style={{ margin: 20 }}>
+                <Title level={4}>Settings</Title>
+                <div>
+                  <Menu mode="horizontal" onClick={({ key }) => {
+                    if (key === 'information') {
+                      displayInformation();
+                    } else if (key === 'changePassword') {
+                      displayChangePassword();
+                    }
+                  }}>
+                    <Menu.Item key="information">Information</Menu.Item>
+                    <Menu.Item key="changePassword">Change Pasword</Menu.Item>
+                  </Menu>
+                </div>
+              </Card>
+            )}
+            { showInformation && (
+              <Card style={{ margin: 20 }}>
+                <Title level={4}>Information</Title>
                 <Form
                   name="settingsForm"
                   initialValues={{
@@ -308,7 +351,7 @@ const ProfileStudent = () => {
                       </Select>
                     </Form.Item>
                   </div>
-                  <Form.Item name="information" label="Information" rules={[{ required: true, message: 'Please input your info!' }]}>
+                  <Form.Item name="info" label="Information" rules={[{ required: true, message: 'Please input your info!' }]}>
                     <TextArea rows={4} />
                   </Form.Item>
                   <Form.Item>
@@ -317,7 +360,66 @@ const ProfileStudent = () => {
                     </Button>
                   </Form.Item>
                 </Form>
-              </div>
+              </Card>
+
+            )}
+            {showChangePassword && (
+              <Card style={{ margin: 20 }}>
+                <div className="flex h-screen">
+                  <main className="flex-1 p-6 overflow-auto">
+                    <h1 className="text-2xl font-bold">Mật khẩu và bảo mật</h1>
+                    <p className="text-gray-600">Quản lý mật khẩu và cài đặt bảo mật.</p>
+                    <div className="mt-4">
+                      <section className="mb-6">
+                        <div className="mb-4">
+                          <h2 className="text-xl font-semibold">Đăng nhập &amp; khôi phục</h2>
+                        </div>
+                        <div className="space-y-4">
+                          <InfoItem label="Đổi mật khẩu" value="Chưa đổi mật khẩu" />
+                        </div>
+                      </section>
+                    </div>
+                  </main>
+                </div>
+                <Title level={4}>Change Password</Title>
+                <Form
+                  name="changePasswordForm"
+                  onFinish={handlePasswordChange}
+                >
+                  <Form.Item
+                    name="currentPassword"
+                    label="Current Password"
+                    rules={[{ required: true, message: 'Please input your current password!' }]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
+                  <Form.Item
+                    name="newPassword"
+                    label="New Password"
+                    rules={[{ required: true, message: 'Please input your new password!' }]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
+                  <Form.Item
+                    name="confirmPassword"
+                    label="Confirm Password"
+                    rules={[{ required: true, message: 'Please confirm your new password!' }]}
+                  >
+                    <Input.Password />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                      Change Password
+                    </Button>
+                  </Form.Item>
+                </Form>
+              </Card>
+            )}
+            {showMyCourses && (
+              <Card style={{ margin: 20 }}>
+                <Title level={4}>My Courses</Title>
+                <Table dataSource={coursesData} columns={columns} />
+              </Card>
             )}
           </div>
         </Content>
@@ -325,5 +427,27 @@ const ProfileStudent = () => {
     </Layout>
   );
 };
+
+type InfoItemProps = {
+  label: string;
+  value: React.ReactNode;
+
+};
+
+const InfoItem: React.FC<InfoItemProps> = ({ label, value }) => {
+  return (
+    <div className="flex justify-between items-center p-4 border rounded-lg">
+      <div>
+        <h4 className="text-lg font-medium">{label}</h4>
+        <span className="text-gray-800">{value}</span>
+      </div>
+      <button className="text-gray-500">
+        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" className="h-5 w-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+          <path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path>
+        </svg>
+      </button>
+    </div>
+  );
+}
 
 export default ProfileStudent;
