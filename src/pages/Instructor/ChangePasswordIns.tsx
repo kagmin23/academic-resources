@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button } from 'antd'; 
+import { Form, Input, Button, notification } from 'antd'; 
 
 const ChangepasswordIns: React.FC = () => {
     return (
@@ -28,14 +28,23 @@ type InfoItemProps = {
 
 const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+    const [form] = Form.useForm();
 
     const toggleDropdown = () => {
         setIsDropdownVisible(!isDropdownVisible);
     }
 
+    const onFinish = (values: any) => {
+        console.log('Received values of form: ', values);
+        notification.success({
+            message: 'Success',
+            description: 'Password has been updated successfully!',
+        });
+    };
+
     return (
         <div className="p-4 border rounded-lg">
-            <div className="flex justify-between items-center" onClick={toggleDropdown}>
+            <div className="flex justify-between items-center cursor-pointer" onClick={toggleDropdown}>
                 <div>
                     <h4 className="text-lg font-medium">{label}</h4>
                     <span className="text-gray-800">Haven't changed password yet</span>
@@ -48,44 +57,46 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
             </div>
             {isDropdownVisible && (
                 <div className="mt-4 space-y-4">
-                    <Form.Item
-                        name="currentPassword"
-                        label="Current Password"
-                        rules={[{ required: true, message: 'Please input your current password!' }]}
-                    >
-                        <Input.Password />
-                    </Form.Item>
-                    <Form.Item
-                        name="newPassword"
-                        label="New Password"
-                        rules={[{ required: true, message: 'Please input your new password!' }]}
-                    >
-                        <Input.Password />
-                    </Form.Item>
-                    <Form.Item
-                        name="confirmPassword"
-                        label="Confirm Password"
-                        dependencies={['newPassword']}
-                        hasFeedback
-                        rules={[
-                            { required: true, message: 'Please confirm your new password!' },
-                            ({ getFieldValue }) => ({
-                                validator(_, value) {
-                                    if (!value || getFieldValue('newPassword') === value) {
-                                        return Promise.resolve();
-                                    }
-                                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                                },
-                            }),
-                        ]}
-                    >
-                        <Input.Password />
-                    </Form.Item>
-                    <Form.Item>
+                    <Form form={form} name="change_password" onFinish={onFinish}>
+                        <Form.Item
+                            name="currentPassword"
+                            label="Current Password"
+                            rules={[{ required: true, message: 'Please input your current password!' }]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item
+                            name="newPassword"
+                            label="New Password"
+                            rules={[{ required: true, message: 'Please input your new password!' }]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item
+                            name="confirmPassword"
+                            label="Confirm Password"
+                            dependencies={['newPassword']}
+                            hasFeedback
+                            rules={[
+                                { required: true, message: 'Please confirm your new password!' },
+                                ({ getFieldValue }) => ({
+                                    validator(_, value) {
+                                        if (!value || getFieldValue('newPassword') === value) {
+                                            return Promise.resolve();
+                                        }
+                                        return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                                    },
+                                }),
+                            ]}
+                        >
+                            <Input.Password />
+                        </Form.Item>
+                        <Form.Item>
                             <Button type="primary" htmlType="submit" className='ml-8 text-lg font-semibold'>
-                              Save
+                                Save
                             </Button>
-                          </Form.Item>
+                        </Form.Item>
+                    </Form>
                 </div>
             )}
         </div>

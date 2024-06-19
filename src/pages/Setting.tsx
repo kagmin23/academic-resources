@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Typography, Modal } from 'antd';
+import { Button, Form, Input, Typography } from 'antd';
+import 'tailwindcss/tailwind.css';
 
 const { Text } = Typography;
 
@@ -23,7 +24,6 @@ const Setting: React.FC = () => {
     'TikTok': false,
   });
 
-  const [editingItem, setEditingItem] = useState<string | null>(null);
   const [email, setEmail] = useState<string>('ngoclnse@gmail.com');
   const [userName, setUserName] = useState<string>('lenhungock17hcm');
   const [bio, setBio] = useState<string>('Chưa cập nhật');
@@ -36,28 +36,22 @@ const Setting: React.FC = () => {
   });
 
   const handleItemClick = (label: string) => {
-    setEditingItem(label);
-    setItemStates({ ...itemStates, [label]: true });
-  };
-
-  const handleCancelEdit = () => {
-    setEditingItem(null);
-    setItemStates({ ...itemStates, [editingItem!]: false });
+    setItemStates({ ...itemStates, [label]: !itemStates[label] });
   };
 
   const handleEmailSave = (values: any) => {
     setEmail(values.newEmail);
-    handleCancelEdit();
+    setItemStates({ ...itemStates, 'Email': false });
   };
 
   const handleUserNameSave = (values: any) => {
     setUserName(values.newUserName);
-    handleCancelEdit();
+    setItemStates({ ...itemStates, 'User Name': false });
   };
 
   const handleBioSave = (values: any) => {
     setBio(values.newBio);
-    handleCancelEdit();
+    setItemStates({ ...itemStates, 'Giới thiệu': false });
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -70,12 +64,12 @@ const Setting: React.FC = () => {
       };
       reader.readAsDataURL(e.target.files[0]);
     }
-    handleCancelEdit();
+    setItemStates({ ...itemStates, 'Avatar': false });
   };
 
   const handleSocialLinkSave = (values: any) => {
-    setSocialLinks({ ...socialLinks, [editingItem!]: values.newSocialLink });
-    handleCancelEdit();
+    setSocialLinks({ ...socialLinks, [values.label]: values.newSocialLink });
+    setItemStates({ ...itemStates, [values.label]: false });
   };
 
   return (
@@ -90,27 +84,31 @@ const Setting: React.FC = () => {
               <p className="text-gray-600">Manage your display name, username, bio and avatar.</p>
             </div>
             <div className="space-y-4">
+              <div className='p-4 border rounded-lg'>
               <ProfileItem
                 label="Email"
                 value={email}
                 isOpen={itemStates['Email']}
                 onItemClick={handleItemClick}
                 onSave={handleEmailSave}
-              />
+              /></div>
+              <div className='p-4 border rounded-lg'>
               <ProfileItem
                 label="User Name"
                 value={userName}
                 isOpen={itemStates['User Name']}
                 onItemClick={handleItemClick}
                 onSave={handleUserNameSave}
-              />
+              /></div>
+              <div className='p-4 border rounded-lg'>
               <ProfileItem
                 label="Giới thiệu"
                 value={bio}
                 isOpen={itemStates['Giới thiệu']}
                 onItemClick={handleItemClick}
                 onSave={handleBioSave}
-              />
+              /></div>
+              <div className='p-4 border rounded-lg'>
               <ProfileItem
                 label="Avatar"
                 value={<img className="h-16 w-16 rounded-full" src={avatar} alt="avatar" />}
@@ -118,7 +116,7 @@ const Setting: React.FC = () => {
                 onItemClick={handleItemClick}
                 onSave={handleAvatarChange}
                 isFileUpload
-              />
+              /></div>
             </div>
           </section>
           <section>
@@ -141,49 +139,6 @@ const Setting: React.FC = () => {
           </section>
         </div>
       </main>
-
-      <Modal
-        title={`Edit ${editingItem}`}
-        visible={editingItem !== null}
-        onCancel={handleCancelEdit}
-        footer={[
-          <Button key="cancel" onClick={handleCancelEdit}>
-            Cancel
-          </Button>,
-          <Button
-            key="save"
-            type="primary"
-            htmlType="submit"
-            form={`${editingItem?.toLowerCase().replace(' ', '')}Form`}
-          >
-            Save
-          </Button>,
-        ]}
-      >
-        <Form
-          id={`${editingItem?.toLowerCase().replace(' ', '')}Form`}
-          onFinish={editingItem === 'Email' ? handleEmailSave : editingItem === 'User Name' ? handleUserNameSave : editingItem === 'Giới thiệu' ? handleBioSave : handleSocialLinkSave}
-        >
-          {editingItem !== 'Avatar' && (
-            <Form.Item
-              name={`new${editingItem?.replace(' ', '')}`}
-              label={`New ${editingItem}`}
-              rules={[{ required: true, message: `Please input your new ${editingItem?.toLowerCase()}!` }]}
-            >
-              <Input />
-            </Form.Item>
-          )}
-          {editingItem === 'Avatar' && (
-            <Form.Item
-              name={`newAvatar`}
-              label={` Avatar`}
-              rules={[{ required: true, message: 'Please select an avatar!' }]}
-            >
-              <Input type="file" accept="image/*" onChange={handleAvatarChange} />
-            </Form.Item>
-          )}
-        </Form>
-      </Modal>
     </div>
   );
 };
@@ -239,17 +194,17 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
           <Form onFinish={handleSave}>
             {isFileUpload ? (
               <Form.Item
-                name="newFile"
-                label={`New ${label}`}
-                rules={[{ required: true, message: `Please select a new ${label.toLowerCase()}!` }]}
+                name="updateFile"
+                label={`Update ${label}`}
+                rules={[{ required: true, message: `Please select a update ${label.toLowerCase()}!` }]}
               >
                 <Input type="file" accept="image/*" />
               </Form.Item>
             ) : (
               <Form.Item
-                name={`new${label.replace(' ', '')}`}
-                label={`New ${label}`}
-                rules={[{ required: true, message: `Please input your new ${label.toLowerCase()}!` }]}
+                name={`update${label.replace(' ', '')}`}
+                label={`Update ${label}`}
+                rules={[{ required: true, message: `Please input your update ${label.toLowerCase()}!` }]}
               >
                 <Input />
               </Form.Item>
