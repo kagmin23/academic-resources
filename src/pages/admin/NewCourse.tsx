@@ -204,12 +204,12 @@ const NewCourseAdmin: React.FC = () => {
           </div>
         ) : (
           <div>
-            <button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
+            <Button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
               <CheckOutlined />
-            </button>
-            <button onClick={() => showModal(record.key)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+            </Button>
+            <Button onClick={() => showModal(record.key)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
               <CloseOutlined />
-            </button>
+            </Button>
           </div>
         )
       ),
@@ -219,23 +219,21 @@ const NewCourseAdmin: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Layout className="site-layout">
-        <Header className="p-0 bg-white">
-          <div className="flex flex-wrap items-center justify-center gap-4 p-2 bg-[#939fb1]">
-            <div className='w-1/2 text-2xl font-bold text-white px-5'>New Courses:</div>
-            <div className="flex flex-1 px-5 w-1/2">
-              <Input
-              
-                placeholder="Search"
-                prefix={<SearchOutlined />}
-                onChange={handleSearchChange}
-                className="w-full h-11 text-lg border-2 border-gray-300 border-solid rounded-full"
-                value={searchTerm}
-              />
-            </div>
+      <Header className="p-0 bg-white">
+        <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pl-4">
+          <div className="w-full md:w-1/3">
+            <Input
+              placeholder="Search"
+              prefix={<SearchOutlined />}
+              onChange={handleSearchChange}
+              className="w-full h-10 text-lg border-2 border-gray-300 border-solid rounded"
+              value={searchTerm}
+            />
+          </div>
           </div>
         </Header>
         <Content className="m-4">
-          <div className="p-4 bg-white mt-5">
+          <div className="p-4 mt-5 bg-white">
             <Table
               dataSource={filteredDataSource}
               columns={columns}
@@ -295,7 +293,7 @@ const NewCourseAdmin: React.FC = () => {
         </Content>
         <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
       </Layout>
-      <Modal title="Approve Course" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="Unapprove Course" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
 
         <p>Are you sure you refuse to approve this course?</p>
       </Modal>
