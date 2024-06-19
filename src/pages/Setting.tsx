@@ -12,7 +12,7 @@ interface FormValues {
   linkedin: string;
 }
 
-const Setting: React.FC = () => {
+const SettingInstructor: React.FC = () => {
   const [itemStates, setItemStates] = useState<{ [key: string]: boolean }>({
     'Email': false,
     'User Name': false,
@@ -256,4 +256,4 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
   );
 };
 
-export default Setting;
+export default SettingInstructor;

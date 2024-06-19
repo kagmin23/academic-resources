@@ -9,7 +9,6 @@ import {
   CoursePage,
   HomePage,
   LessonStudent,
-  ProfileStudent,
   SavePage,
   Setting,
   ShoppingCart,
@@ -20,6 +19,7 @@ import { Route, Routes } from 'react-router-dom';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import RouterLesson from './RouterLesson';
+import StudentPage from 'pages/Student/StudentPage';
 export default function StudentRouter() {
   return (
     <div >
@@ -33,7 +33,7 @@ export default function StudentRouter() {
                     <Route path={`category`} element={<ProtectedRouter allowedRoles={[2]}><CategoryPage /></ProtectedRouter>} />
                     <Route path={`course-details`} element={<ProtectedRouter allowedRoles={[2]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={[2]}><ShoppingCart /></ProtectedRouter>} />
-                    <Route path={`profile-student`} element={<ProtectedRouter allowedRoles={[2]}><ProfileStudent /></ProtectedRouter>} />
+                    <Route path={`profile-student/*`} element={<ProtectedRouter allowedRoles={[2]}><StudentPage /></ProtectedRouter>} />
                     <Route path={`buy-now`} element={<ProtectedRouter allowedRoles={[2]}><BuyNow /></ProtectedRouter>} />
                     <Route path={`contact`} element={<ProtectedRouter allowedRoles={[2]}><Contact /></ProtectedRouter>} />
                     <Route path={`report`} element={<ProtectedRouter allowedRoles={[2]}><Report /></ProtectedRouter>} />

@@ -1,462 +1,259 @@
-import {
-  CalendarOutlined,
-  ContactsOutlined,
-  FileDoneOutlined,
-  FileImageOutlined,
-  FileTextOutlined,
-  LogoutOutlined,
-  ManOutlined,
-  SettingOutlined,
-  ShoppingCartOutlined,
-  UploadOutlined,
-  UserOutlined,
-  WomanOutlined,
-} from '@ant-design/icons';
-import { Avatar, Button, Card, DatePicker, Form, Image, Input, Layout, Menu, Select, Table, notification, Typography, Upload } from 'antd';
-import { Option } from 'antd/es/mentions';
-import moment from 'moment';
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Button, Form, Input, Typography, notification } from 'antd';
+import 'tailwindcss/tailwind.css';
 
-const { TextArea } = Input;
-const { Content, Sider } = Layout;
-const { Title, Text } = Typography;
+const { Text } = Typography;
 
-const coursesData = [
-  {
-    key: '1',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
-    name: 'How To Teach Online Course Effectively',
-    result: '100%',
-    expiration: 'April 20, 2023 10:04 pm',
-    endTime: 'February 9, 2023 10:04 pm',
-  },
-  {
-    key: '2',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/12/create-an-lms-website-with-learnpress-3-400x300.jpg',
-    name: 'Create an LMS Website with LeanPress',
-    result: '85.71%',
-    expiration: 'March 3, 2023 7:15 am',
-    endTime: 'January 3, 2023 3:15 pm',
-  },
-  {
-    key: '3',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/12/create-an-lms-website-with-learnpress-3-400x300.jpg',
-    name: 'Introduction LearnPress - LMS plugin',
-    result: '80%',
-    expiration: 'June 24, 2023 11:12 am',
-    endTime: 'April 21, 2023 9:16 am',
-  },
-  {
-    key: '4',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/12/create-an-lms-website-with-learnpress-3-400x300.jpg',
-    name: 'Introduction LearnPress - LMS plugin',
-    result: '0%',
-    expiration: 'November 27, 2023 5:46 am',
-    endTime: '-',
-  },
-  {
-    key: '5',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/new-hEADWAY.png',
-    name: 'New Headway',
-    result: '100%',
-    expiration: 'July 3, 2024 1:43 pm',
-    endTime: 'April 11, 2024 8:22 am',
-  },
-];
+interface FormValues {
+  name: string;
+  email: string;
+  password: string;
+  facebook: string;
+  linkedin: string;
+}
 
-const columns = [
-  {
-    title: 'Image',
-    dataIndex: 'image',
-    key: 'image',
-    render: (text: string) => <Image src={text} width={100} />,
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Result',
-    dataIndex: 'result',
-    key: 'result',
-  },
-  {
-    title: 'Expiration time',
-    dataIndex: 'expiration',
-    key: 'expiration',
-  },
-  {
-    title: 'End time',
-    dataIndex: 'endTime',
-    key: 'endTime',
-  },
-];
-
-const aboutDataKey = 'aboutData';
-
-const ProfileStudent = () => {
-  const [avatarSrc, setAvatarSrc] = useState("https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp");
-
-  const [collapsed, setCollapsed] = useState(false);
-  const [showAbout, setShowAbout] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
-  const [showChangePassword, setShowChangePassword] = useState(false);
-  const [showInformation, setShowInformation] = useState(false);
-  const [showMyCourses, setShowMyCourses] = useState(false);
-  const [aboutData, setAboutData] = useState({
-    avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
-    name: 'John Doe',
-    email: 'johndoe@gmail.com',
-    dob: '1990-01-01',
-    gender: 'Male',
-    info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+const SettingStudent: React.FC = () => {
+  const [itemStates, setItemStates] = useState<{ [key: string]: boolean }>({
+    'Email': false,
+    'User Name': false,
+    'Giới thiệu': false,
+    'Avatar': false,
+    'GitHub': false,
+    'Facebook': false,
+    'YouTube': false,
+    'TikTok': false,
   });
-  const navigate = useNavigate();
 
-  const onCollapse = (collapsed: boolean) => {
-    setCollapsed(collapsed);
+  const [email, setEmail] = useState<string>('ngoclnse@gmail.com');
+  const [userName, setUserName] = useState<string>('lenhungock17hcm');
+  const [bio, setBio] = useState<string>('Chưa cập nhật');
+  const [avatar, setAvatar] = useState<string>('https://files.fullstack.edu.vn/f8-prod/user_photos/379503/65826d8841a16.jpg');
+  const [socialLinks, setSocialLinks] = useState<{ [key: string]: string }>({
+    'GitHub': '',
+    'Facebook': '',
+    'YouTube': '',
+    'TikTok': '',
+  });
+
+  const handleItemClick = (label: string) => {
+    setItemStates({ ...itemStates, [label]: !itemStates[label] });
   };
 
-  const [form] = Form.useForm();
-  const handleImageChange = (info: any) => {
-    if (info.file.status === 'done') {
-      const imageUrl = info.file.response.imageUrl;
-      setAvatarSrc(imageUrl);
+  const handleEmailSave = (values: any) => {
+    setEmail(values.newEmail);
+    setItemStates({ ...itemStates, 'Email': false });
+    notification.success({
+      message: 'Success',
+      description: 'Updated Email successfully',
+    });
+  };
+
+  const handleUserNameSave = (values: any) => {
+    setUserName(values.newUserName);
+    setItemStates({ ...itemStates, 'User Name': false });
+    notification.success({
+      message: 'Success',
+      description: 'Updated User Name successfully',
+    });
+  };
+
+  const handleBioSave = (values: any) => {
+    setBio(values.newBio);
+    setItemStates({ ...itemStates, 'Giới thiệu': false });
+    notification.success({
+      message: 'Success',
+      description: 'Updated Bio successfully',
+    });
+  };
+
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        if (e.target) {
+          setAvatar(e.target.result as string);
+        }
+      };
+      reader.readAsDataURL(e.target.files[0]);
     }
+    setItemStates({ ...itemStates, 'Avatar': false });
+    notification.success({
+      message: 'Success',
+      description: 'Updated Avatar successfully',
+    });
   };
 
-  const displayAboutInfo = () => {
-    setShowAbout(true);
-    setShowSettings(false);
-    setShowMyCourses(false); // Ensure My Courses section is hidden when displaying About info
+  const handleSocialLinkSave = (values: any) => {
+    setSocialLinks({ ...socialLinks, [values.label]: values.newSocialLink });
+    setItemStates({ ...itemStates, [values.label]: false });
+    notification.success({
+      message: 'Success',
+      description: `Updated ${values.label} successfully`,
+    });
   };
 
-  const displaySettings = () => {
-    setShowAbout(false);
-    setShowSettings(true);
-    setShowMyCourses(false); // Ensure My Courses section is hidden when displaying Settings
-    setShowChangePassword(false);
-    setShowInformation(false);
-  };
+  return (
+    <div className="flex h-screen">
+      <main className="flex-1 p-6 overflow-auto">
+        <h1 className="text-2xl font-bold">Information</h1>
+        <p className="text-gray-600">Manage your personal information.</p>
+        <div className="mt-4">
+          <section className="mb-6">
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold">Basic information</h2>
+              <p className="text-gray-600">Manage your display name, username, bio and avatar.</p>
+            </div>
+            <div className="space-y-4">
+              <div className='p-4 border rounded-lg'>
+                <ProfileItem
+                  label="Email"
+                  value={email}
+                  isOpen={itemStates['Email']}
+                  onItemClick={handleItemClick}
+                  onSave={handleEmailSave}
+                />
+              </div>
+              <div className='p-4 border rounded-lg'>
+                <ProfileItem
+                  label="User Name"
+                  value={userName}
+                  isOpen={itemStates['User Name']}
+                  onItemClick={handleItemClick}
+                  onSave={handleUserNameSave}
+                />
+              </div>
+              <div className='p-4 border rounded-lg'>
+                <ProfileItem
+                  label="Giới thiệu"
+                  value={bio}
+                  isOpen={itemStates['Giới thiệu']}
+                  onItemClick={handleItemClick}
+                  onSave={handleBioSave}
+                />
+              </div>
+              <div className='p-4 border rounded-lg'>
+                <ProfileItem
+                  label="Avatar"
+                  value={<img className="h-16 w-16 rounded-full" src={avatar} alt="avatar" />}
+                  isOpen={itemStates['Avatar']}
+                  onItemClick={handleItemClick}
+                  onSave={handleAvatarChange}
+                  isFileUpload
+                />
+              </div>
+            </div>
+          </section>
+          <section>
+            <div className="mb-4">
+              <h2 className="text-xl font-semibold">Social network information</h2>
+              <p className="text-gray-600">Manage links to your social media sites.</p>
+            </div>
+            <div className="space-y-4">
+              {Object.keys(socialLinks).map((social) => (
+                <div className='p-4 border rounded-lg' key={social}>
+                  <ProfileItem
+                    label={social}
+                    value={socialLinks[social]}
+                    isOpen={itemStates[social]}
+                    onItemClick={handleItemClick}
+                    onSave={handleSocialLinkSave}
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
+    </div>
+  );
+};
 
-  const displayChangePassword = () => {
-    setShowAbout(false);
-    setShowSettings(false);
-    setShowMyCourses(false);
-    setShowChangePassword(true);
-    setShowInformation(false);
-  };
+type ProfileItemProps = {
+  label: string;
+  value: React.ReactNode;
+  isOpen: boolean;
+  onItemClick: (label: string) => void;
+  onSave: (values: any) => void;
+  isFileUpload?: boolean;
+};
 
-  const displayInformation = () => {
-    setShowAbout(false);
-    setShowSettings(false);
-    setShowMyCourses(false);
-    setShowChangePassword(false);
-    setShowInformation(true);
-  };
+const ProfileItem: React.FC<ProfileItemProps> = ({
+  label,
+  value,
+  isOpen,
+  onItemClick,
+  onSave,
+  isFileUpload = false,
+}) => {
+  const [form] = Form.useForm();
 
-  const displayMyCourses = () => {
-    setShowAbout(false);
-    setShowSettings(false);
-    setShowMyCourses(true); // Show My Courses section when this tab is selected
-    setShowChangePassword(false);
-    setShowInformation(false);
-  };
-
-  const navigateToAssignments = () => {
-    navigate('/lesson-student');
-  };
-
-  const navigateToOrders = () => {
-    navigate('/save');
+  const handleSave = (values: any) => {
+    onSave(values);
   };
 
   const onFinish = (values: any) => {
-    console.log('Received values of form:', values);
+    console.log('Received values of form: ', values);
     notification.success({
       message: 'Success',
-      description: 'Password has been updated successfully!',
+      description: `Updated ${label} successfully`,
     });
-    const updatedAboutData = {
-      ...aboutData,
-      email: values.email,
-      info: values.info,
-    };
-    localStorage.setItem(aboutDataKey, JSON.stringify(updatedAboutData));
-    setAboutData(updatedAboutData);
-    setShowAbout(true);
-    setShowMyCourses(false);
-    setShowSettings(false);
-    setShowChangePassword(false);
-    setShowInformation(false);
-    console.log('Form submitted:', values);
   };
-
-  const handlePasswordChange = (values: any) => {
-    console.log('Password change form submitted:', values);
-  };
-
-  const handleTabChange = (key: any) => {
-    setShowAbout(key === 'about');
-    setShowMyCourses(key === 'mycourses');
-    setShowSettings(key === 'settings');
-  };
-
-  useEffect(() => {
-    const storedAboutData = localStorage.getItem(aboutDataKey);
-    if (storedAboutData) {
-      setAboutData(JSON.parse(storedAboutData));
-    }
-  }, []);
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={onCollapse} width={250}>
-        <div className="text-center">
-          <div className="flex items-center justify-center mt-6">
-            <Avatar size={70} src={avatarSrc} icon={<UserOutlined />} />
-          </div>
-          <Upload
-            name="avatar"
-            showUploadList={false}
-            action="/api/upload"
-            onChange={handleImageChange}
-          >
-            <button className=" hover:text-blue-700 text-white font-semibold py-2 px-4 rounded">
-              <UploadOutlined /> Change Avatar
-            </button>
-          </Upload>
+    <div>
+      <div className="flex justify-between items-center cursor-pointer" onClick={() => onItemClick(label)}>
+        <div>
+          <h4 className="text-lg font-medium">{label}</h4>
+          <Text className="text-gray-800">{value}</Text>
         </div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-          <Menu.Item key="1" icon={<FileImageOutlined />} onClick={displayAboutInfo}>
-            About
-          </Menu.Item>
-          <Menu.Item key="2" icon={<FileTextOutlined />} onClick={displayMyCourses}>
-            My Courses
-          </Menu.Item>
-          <Menu.Item key="3" icon={<FileDoneOutlined />}>
-            Certificates
-          </Menu.Item>
-          <Menu.Item key="4" icon={<ShoppingCartOutlined />} onClick={navigateToOrders}>
-            Orders
-          </Menu.Item>
-          <Menu.Item key="5" icon={<FileDoneOutlined />} onClick={navigateToAssignments}>
-            Assignments
-          </Menu.Item>
-          <Menu.SubMenu key="6" icon={<SettingOutlined />} title="Settings">
-            <Menu.Item key="6-1" onClick={displayInformation}>Information</Menu.Item>
-            <Menu.Item key="6-2" onClick={displayChangePassword}>Change Password</Menu.Item>
-          </Menu.SubMenu>
-          <Menu.Item key="7" icon={<LogoutOutlined />}>
-            Logout
-          </Menu.Item>
-        </Menu>
-      </Sider>
-      <Layout className="site-layout">
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            {showAbout && (
-              <Card style={{ maxHeight: 350, overflow: 'auto', margin: 20 }}>
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                    <Avatar size={64} src={aboutData.avatarSrc} />
-                    <Title level={4} style={{ marginLeft: 16 }}>
-                      {aboutData.name}
-                    </Title>
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <FileImageOutlined style={{ marginRight: 8 }} />
-                    <Text>Email: {aboutData.email}</Text>
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <CalendarOutlined style={{ marginRight: 8 }} />
-                    <Text>Date Of Birth: {aboutData.dob}</Text>
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
-                    {aboutData.gender === 'Male' ? (
-                      <ManOutlined style={{ marginRight: 8 }} />
-                    ) : (
-                      <WomanOutlined style={{ marginRight: 8 }} />
-                    )}
-                    <Text>Gender: {aboutData.gender}</Text>
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
-                    <ContactsOutlined style={{ marginRight: 8 }} />
-                    <Text>{aboutData.info}</Text>
-                  </div>
-                </div>
-              </Card>
-            )}
-            {showSettings && (
-              <Card style={{ margin: 20 }}>
-                <Title level={4}>Settings</Title>
-                <div>
-                  <Menu mode="horizontal" onClick={({ key }) => {
-                    if (key === 'information') {
-                      displayInformation();
-                    } else if (key === 'changePassword') {
-                      displayChangePassword();
-                    }
-                  }}>
-                    <Menu.Item key="information">Information</Menu.Item>
-                    <Menu.Item key="changePassword">Change Pasword</Menu.Item>
-                  </Menu>
-                </div>
-              </Card>
-            )}
-            {showInformation && (
-              <Card style={{ margin: 20 }}>
-                <Title level={4}>Information</Title>
-                <Form
-                  name="settingsForm"
-                  initialValues={{
-                    email: aboutData.email,
-                    info: aboutData.info,
-                    dob: moment(aboutData.dob, 'YYYY-MM-DD'),
-                    gender: aboutData.gender,
-                  }}
-                  onFinish={onFinish}
-                >
-                  <Form.Item
-                    name="email"
-                    label="Email"
-                    rules={[
-                      { required: true, message: 'Please input your email!' },
-                      { type: 'email', message: 'Please enter a valid email address!' },
-                      { pattern: /^[\w-\.]+@gmail\.com$/, message: 'Email must be @gmail.com' },
-                    ]}
-                  >
-                    <Input />
-                  </Form.Item>
-                  <div className='flex flex-row'>
-                    <Form.Item
-                      name="dob"
-                      label="Date of Birth"
-                      rules={[{ required: true, message: 'Please select your date of birth!' }]}
-                    >
-                      <DatePicker style={{ width: '100%' }} />
-                    </Form.Item>
-                    <Form.Item
-                      className='ml-80'
-                      name="gender"
-                      label="Gender"
-                      rules={[{ required: true, message: 'Please select your gender!' }]}
-                    >
-                      <Select className=''>
-                        <Option value="Male">Male</Option>
-                        <Option value="Female">Female</Option>
-                        <Option value="Other">Other</Option>
-                      </Select>
-                    </Form.Item>
-                  </div>
-                  <Form.Item name="info" label="Information" rules={[{ required: true, message: 'Please input your info!' }]}>
-                    <TextArea rows={4} />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                      Save Changes
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Card>
-
-            )}
-            {showChangePassword && (
-              <Card style={{ margin: 20 }}>
-                <div className="flex h-screen">
-            <main className="flex-1 p-6 overflow-auto">
-                <h1 className="text-2xl font-bold">Passwords and security</h1>
-                <p className="text-gray-600">Manage passwords and security settings.</p>
-                <div className="mt-4">
-                    <section className="mb-6">
-                        <div className="mb-4">
-                            <h2 className="text-xl font-semibold">Password recovery</h2>
-                        </div>
-                        <div className="space-y-4">
-                          <InfoItem label="Change Password" value="Chưa đổi mật khẩu" />
-                        </div>
-                      </section>
-                    </div>
-                  </main>
-                </div>
-                <Title level={4}>Change Password</Title>
-                <Form form={form} name="change_password" onFinish={onFinish}>
-                  <Form.Item
-                    name="currentPassword"
-                    label="Current Password"
-                    rules={[{ required: true, message: 'Please input your current password!' }]}
-                  >
-                    <Input.Password />
-                  </Form.Item>
-                  <Form.Item
-                    name="newPassword"
-                    label="New Password"
-                    rules={[{ required: true, message: 'Please input your new password!' }]}
-                  >
-                    <Input.Password />
-                  </Form.Item>
-                  <Form.Item
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    dependencies={['newPassword']}
-                    hasFeedback
-                    rules={[
-                      { required: true, message: 'Please confirm your new password!' },
-                      ({ getFieldValue }) => ({
-                        validator(_, value) {
-                          if (!value || getFieldValue('newPassword') === value) {
-                            return Promise.resolve();
-                          }
-                          return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                        },
-                      }),
-                    ]}
-                  >
-                    <Input.Password />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit">
-                      Change Password
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </Card>
-            )}
-            {showMyCourses && (
-              <Card style={{ margin: 20 }}>
-                <Title level={4}>My Courses</Title>
-                <Table dataSource={coursesData} columns={columns} />
-              </Card>
-            )}
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
-  );
-};
-
-type InfoItemProps = {
-  label: string;
-  value: React.ReactNode;
-
-};
-
-const InfoItem: React.FC<InfoItemProps> = ({ label, value }) => {
-  return (
-    <div className="flex justify-between items-center p-4 border rounded-lg">
-      <div>
-        <h4 className="text-lg font-medium">{label}</h4>
-        <span className="text-gray-800">{value}</span>
+        <button className="text-gray-500">
+          <svg
+            aria-hidden="true"
+            focusable="false"
+            data-prefix="fas"
+            data-icon="chevron-right"
+            className={`h-5 w-5 transition-transform ${isOpen ? 'rotate-90' : ''}`}
+            role="img"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 320 512"
+          >
+            <path
+              fill="currentColor"
+              d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
+            ></path>
+          </svg>
+        </button>
       </div>
-      <button className="text-gray-500">
-        <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" className="h-5 w-5" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
-          <path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path>
-        </svg>
-      </button>
+      {isOpen && (
+        <div className="mt-4 space-y-4">
+          <Form form={form} name={`update${label.replace(' ', '')}`} onFinish={onFinish}>
+            {isFileUpload ? (
+              <Form.Item
+                name="updateFile"
+                label={`Update ${label}`}
+                rules={[{ required: true, message: `Please select an update ${label.toLowerCase()}!` }]}
+              >
+                <Input type="file" accept="image/*" />
+              </Form.Item>
+            ) : (
+              <Form.Item
+                name={`update${label.replace(' ', '')}`}
+                label={`Update ${label}`}
+                rules={[{ required: true, message: `Please input your update ${label.toLowerCase()}!` }]}
+              >
+                <Input />
+              </Form.Item>
+            )}
+            <Form.Item>
+              <Button type="primary" htmlType="submit">
+                Save
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      )}
     </div>
   );
-}
+};
 
-export default ProfileStudent;
+export default SettingStudent;
