@@ -8,10 +8,11 @@ interface SidebarDataType {
   icon: React.ElementType;
   heading: string;
   href: string;
+  children?: SidebarDataType[];
 }
 
 const SidebarAdmin: React.FC = () => {
-  const [selected, setSelected] = useState<number>(0);
+  const [selected, setSelected] = useState<string | number>(0);
   const [expanded, setExpanded] = useState<boolean>(true);
   const navigate = useNavigate();
 
@@ -23,13 +24,37 @@ const SidebarAdmin: React.FC = () => {
     },
     {
       icon: ContainerOutlined,
-      heading: "Manager Course",
-      href: '/instructor/profile-instructor/manager-course'
+      heading: 'Manager Content',
+      href: "/instructor/profile-instructor/",
+      children: [
+        {
+          icon: ContainerOutlined,
+          heading: "Manager Course",
+          href: '/instructor/profile-instructor/manager-instructor-course'
+        },
+        {
+          icon: ContainerOutlined,
+          heading: "Manager Lesson",
+          href: '/instructor/profile-instructor/manager-instructor-lesson'
+        },
+      ]
     },
     {
-      icon: LineChartOutlined,
+      icon: ContainerOutlined,
       heading: 'Setting',
-      href: "/instructor/profile-instructor/instructor-setting"
+      href: "/instructor/profile-instructor/",
+      children: [
+        {
+          icon: LineChartOutlined,
+          heading: 'Personal Info',
+          href: "/instructor/profile-instructor/instructor-setting"
+        },
+        {
+          icon: LineChartOutlined,
+          heading: 'Change Password',
+          href: "/instructor/profile-instructor/instructor-changepassword"
+        },
+      ]
     },
     {
       icon: LogoutOutlined,
@@ -41,25 +66,46 @@ const SidebarAdmin: React.FC = () => {
   return (
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#1F2937] shadow-lg`}>
       <div className="flex items-center justify-between p-4">
-        <Link to="/admin-page"><span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>
-          ADMINI<span className="text-blue-500">STRATOR</span>
-        </span></Link>
+        <Link to="/admin-page">
+          <span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>
+            ADMINI<span className="text-blue-500">STRATOR</span>
+          </span>
+        </Link>
         <Button className="text-white" type="text" icon={<SwapOutlined />} onClick={() => setExpanded(!expanded)} />
       </div>
 
       <Menu mode="inline" selectedKeys={[selected.toString()]} className="h-full py-3 bg-[#D6E0FF]">
         {SidebarData.map((item, index) => (
-          <Menu.Item
-            key={index}
-            icon={<item.icon />}
-            className={selected === index ? "active bg-blue-500 text-white" : ""}
-            onClick={() => {
-              setSelected(index);
-              navigate(item.href);
-            }}
-          >
-            {expanded && item.heading}
-          </Menu.Item>
+          item.children && item.children.length > 0 ? (
+            <Menu.SubMenu key={index} icon={<item.icon />} title={item.heading}>
+              {item.children.map((child, childIndex) => (
+                <Menu.Item
+                  key={`${index}-${childIndex}`}
+                  icon={<child.icon />}
+                  className={selected === `${index}-${childIndex}` ? "active bg-blue-500 text-white" : ""}
+                  onClick={() => {
+                    setSelected(`${index}-${childIndex}`);
+                    navigate(child.href);
+                  }}
+                >
+                  {expanded && child.heading}
+                </Menu.Item>
+              ))}
+            </Menu.SubMenu>
+          ) : (
+            <Menu.Item
+              key={index}
+              icon={<item.icon />}
+              className={selected === index ? "active bg-blue-500 text-white" : ""}
+              onClick={() => {
+                setSelected(index);
+                navigate(item.href);
+              }}
+              style={item.heading === "Logout" ? { backgroundColor: '#FF1D1D', color: 'white', marginTop: '30px' } : { marginTop: '0px' }}
+            >
+              {expanded && item.heading}
+            </Menu.Item>
+          )
         ))}
         <Menu.Item icon={<DeploymentUnitOutlined />}>
           {expanded && 'By Academic'}

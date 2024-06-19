@@ -1,5 +1,5 @@
-import { BookOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Drawer, Input, Layout, Menu } from 'antd';
+import { BookOutlined } from '@ant-design/icons';
+import { Input, Layout } from 'antd';
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
@@ -45,9 +45,9 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             className="hidden ml-4 w-72 md:block md:w-96"
           /> */}
           {/* <Link to="/admin-page"><Button><PieChartOutlined /> Dash Board</Button></Link> */}
-          <Link to="/">
-            <Button className="w-full mt-4 text-lg">Log out<LogoutOutlined /></Button>
-          </Link>
+          {/* <Link to="/">
+            <Button className="w-full mt-4 text-xs">Log out<LogoutOutlined /></Button>
+          </Link> */}
           {/* <Link to="/profile-student">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
           </Link> */}

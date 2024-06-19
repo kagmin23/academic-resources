@@ -44,7 +44,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             className="hidden ml-4 w-72 md:block md:w-96"
           />
           <Link to="/log-in">
-            <Button className="w-full mt-4 text-lg">Log in<LoginOutlined /></Button>
+            <Button className="w-full mt-4 text-xs">Log in<LoginOutlined /></Button>
           </Link>
           <Link to="/log-in">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
