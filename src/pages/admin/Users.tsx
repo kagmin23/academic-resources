@@ -162,13 +162,13 @@ const UsersAdmin: React.FC = () => {
           {canAddUser() && (
             <Button type="primary" onClick={() => {
               setNewItem({
-                name: 'Your login value here', // Set your login value here
-                gender: '', // Set default value if needed
-                dateofbirth: moment(), // Set default value if needed
-                email: '', // Set default value if needed
-                phone: '', // Set default value if needed
-                role: 'admin', // Set default role if needed
-                status: true // Set default status if needed
+                name: 'Your login value here', 
+                gender: '', 
+                dateofbirth: moment(), 
+                email: '', 
+                phone: '', 
+                role: 'admin', 
+                status: true
               });
               setModalOpen(true);
             }}>Add New User</Button>
@@ -239,7 +239,7 @@ const UsersAdmin: React.FC = () => {
             onOk={handleAdd}
             onCancel={() => {
               setModalOpen(false);
-              setNewItem({}); // Clear new item state on cancel
+              setNewItem({}); 
             }}
           >
             <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
