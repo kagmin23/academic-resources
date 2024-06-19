@@ -1,8 +1,8 @@
-import { BookOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, BookOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
-import { Link, useNavigate,Outlet } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content } = Layout;
@@ -38,14 +38,20 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
           </h1>
         </Link>
-        <div className="flex items-center gap-16">
+        <div className="flex items-center gap-14">
           <Search
             placeholder="Search courses"
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
+
+          <div className="text-xl text-white ">
+                <BellOutlined className="pr-8" />
+                <Link to={`shopping-cart`}><ShoppingCartOutlined/></Link>
+            </div>
+
           <Link to="/">
-            <Button className="w-full mt-4 text-lg">Log out<LogoutOutlined /></Button>
+            <Button className="w-full mt-4 text-xs">Log out<LogoutOutlined /></Button>
           </Link>
           <Link to={`profile-student`}>
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
@@ -60,7 +66,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             mode="horizontal"
             selectedKeys={selectedKeys}
             onClick={handleMenuClick}
-            className="flex-grow gap-2 md:flex md:justify-end"
+            className="flex-grow gap-5 md:flex md:justify-end"
           >
             <Menu.Item key="1" className="mx-2">
             <Link to={``}>Home</Link>
@@ -86,9 +92,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             <Menu.Item key="8" className="mx-2">
               <Link to={`contact`}>Contact</Link>
             </Menu.Item>
-            <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-              <Link to={`shopping-cart`}></Link>
-            </Menu.Item>
+
           </Menu>
         </div>
       </div>

@@ -5,9 +5,9 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import LayoutAdmin from '../../components/layout/LayoutAdmin';
 import Category from './Category';
 import Content from './Course';
+import NewCourse from './NewCourse';
 import Report from './Report';
 import Sidebar from './Sidebar';
-import NewCourse from'./NewCourse';
 import TransactionHistory from './TransactionHistory';
 
 import Users from './Users';
@@ -22,7 +22,7 @@ const AdminPage: React.FC = () => {
         <Route path={`/`} element={<Dashboard />} />
           <Route path={`user`} element={<Users />} />
           <Route path={`course`} element={<Content />} />
-          <Route path={`newcourse`} element={<NewCourse/>}/>
+          <Route path={`approve-courses`} element={<NewCourse/>}/>
           <Route path={`category`} element={<Category />} />
           <Route path={`report`} element={<Report />} />
           <Route path={`transaction-history`} element={<TransactionHistory />} />
