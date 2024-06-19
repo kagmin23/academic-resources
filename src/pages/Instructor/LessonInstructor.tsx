@@ -86,7 +86,7 @@ import React, { useState } from 'react';
     const [form] = Form.useForm();
     const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
     const [videoModalVisible, setVideoModalVisible] = useState(false);
-    const [selectedVidleoUrl, setSelectedVideoUrl] = useState<string | null>(null);
+    const [selectedVideoUrl, setSelectedVideoUrl] = useState<string | null>(null);
   
     const handleAddNewCourse = () => {
       setIsEditMode(false);
