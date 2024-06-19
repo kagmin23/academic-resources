@@ -24,8 +24,20 @@ const SidebarAdmin: React.FC = () => {
     },
     {
       icon: ContainerOutlined,
+      heading: 'Manager Content',
+      href: "/instructor/profile-instructor/",
+      children: [
+        {
+      icon: ContainerOutlined,
       heading: "Manager Course",
-      href: '/instructor/profile-instructor/manager-course'
+      href: '/instructor/profile-instructor/manager-instructor-course'
+        },
+        {
+        icon: ContainerOutlined,
+      heading: "Manager Lesson",
+      href: '/instructor/profile-instructor/manager-instructor-lesson'
+        },
+      ]
     },
     {
       icon: ContainerOutlined,
