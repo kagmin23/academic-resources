@@ -20,7 +20,6 @@ import { Route, Routes } from 'react-router-dom';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import RouterLesson from './RouterLesson';
-import ChangepasswordStu from 'pages/Student/ChangePasswordStu';
 export default function StudentRouter() {
   return (
     <div >
@@ -39,7 +38,6 @@ export default function StudentRouter() {
                     <Route path={`contact`} element={<ProtectedRouter allowedRoles={[2]}><Contact /></ProtectedRouter>} />
                     <Route path={`report`} element={<ProtectedRouter allowedRoles={[2]}><Report /></ProtectedRouter>} />
                     <Route path={`setting`} element={<ProtectedRouter allowedRoles={[2]}><Setting /></ProtectedRouter>} />
-                    <Route path={`student-changepassword`} element={<ProtectedRouter allowedRoles={[2]}><ChangepasswordStu /></ProtectedRouter>} />
                     {/* <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[2]}><LessonStudent /></ProtectedRouter>} /> */}
                     <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={[2]}><RouterLesson /></ProtectedRouter>} />
                     <Route path={`save`} element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />

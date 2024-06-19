@@ -1,12 +1,9 @@
 import {
   CalendarOutlined,
-  ClockCircleOutlined,
   ContactsOutlined,
-  FacebookOutlined,
   FileDoneOutlined,
   FileImageOutlined,
   FileTextOutlined,
-  LinkedinOutlined,
   LogoutOutlined,
   ManOutlined,
   SettingOutlined,
@@ -15,7 +12,7 @@ import {
   UserOutlined,
   WomanOutlined,
 } from '@ant-design/icons';
-import { Avatar, Button, Card, DatePicker, Form, Image, Input, Layout, Menu, Select, Table, Tabs, Typography, Upload } from 'antd';
+import { Avatar, Button, Card, DatePicker, Form, Image, Input, Layout, Menu, Select, Table, notification, Typography, Upload } from 'antd';
 import { Option } from 'antd/es/mentions';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
@@ -97,7 +94,7 @@ const columns = [
   },
 ];
 
-const aboutDataKey = 'aboutData'; // Key for storing data in localStorage
+const aboutDataKey = 'aboutData';
 
 const ProfileStudent = () => {
   const [avatarSrc, setAvatarSrc] = useState("https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp");
@@ -107,7 +104,7 @@ const ProfileStudent = () => {
   const [showSettings, setShowSettings] = useState(false);
   const [showChangePassword, setShowChangePassword] = useState(false);
   const [showInformation, setShowInformation] = useState(false);
-  const [showMyCourses, setShowMyCourses] = useState(false); // State to control visibility of My Courses section
+  const [showMyCourses, setShowMyCourses] = useState(false);
   const [aboutData, setAboutData] = useState({
     avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
     name: 'John Doe',
@@ -122,6 +119,7 @@ const ProfileStudent = () => {
     setCollapsed(collapsed);
   };
 
+  const [form] = Form.useForm();
   const handleImageChange = (info: any) => {
     if (info.file.status === 'done') {
       const imageUrl = info.file.response.imageUrl;
@@ -176,12 +174,15 @@ const ProfileStudent = () => {
   };
 
   const onFinish = (values: any) => {
+    console.log('Received values of form:', values);
+    notification.success({
+      message: 'Success',
+      description: 'Password has been updated successfully!',
+    });
     const updatedAboutData = {
       ...aboutData,
       email: values.email,
       info: values.info,
-      facebook: values.facebook,
-      linkedin: values.linkedin,
     };
     localStorage.setItem(aboutDataKey, JSON.stringify(updatedAboutData));
     setAboutData(updatedAboutData);
@@ -194,7 +195,6 @@ const ProfileStudent = () => {
   };
 
   const handlePasswordChange = (values: any) => {
-    // Implement password change logic here
     console.log('Password change form submitted:', values);
   };
 
@@ -247,7 +247,7 @@ const ProfileStudent = () => {
           </Menu.Item>
           <Menu.SubMenu key="6" icon={<SettingOutlined />} title="Settings">
             <Menu.Item key="6-1" onClick={displayInformation}>Information</Menu.Item>
-            <Menu.Item key="6-2" onClick={ displayChangePassword}>Change Password</Menu.Item>
+            <Menu.Item key="6-2" onClick={displayChangePassword}>Change Password</Menu.Item>
           </Menu.SubMenu>
           <Menu.Item key="7" icon={<LogoutOutlined />}>
             Logout
@@ -306,7 +306,7 @@ const ProfileStudent = () => {
                 </div>
               </Card>
             )}
-            { showInformation && (
+            {showInformation && (
               <Card style={{ margin: 20 }}>
                 <Title level={4}>Information</Title>
                 <Form
@@ -366,26 +366,23 @@ const ProfileStudent = () => {
             {showChangePassword && (
               <Card style={{ margin: 20 }}>
                 <div className="flex h-screen">
-                  <main className="flex-1 p-6 overflow-auto">
-                    <h1 className="text-2xl font-bold">Mật khẩu và bảo mật</h1>
-                    <p className="text-gray-600">Quản lý mật khẩu và cài đặt bảo mật.</p>
-                    <div className="mt-4">
-                      <section className="mb-6">
+            <main className="flex-1 p-6 overflow-auto">
+                <h1 className="text-2xl font-bold">Passwords and security</h1>
+                <p className="text-gray-600">Manage passwords and security settings.</p>
+                <div className="mt-4">
+                    <section className="mb-6">
                         <div className="mb-4">
-                          <h2 className="text-xl font-semibold">Đăng nhập &amp; khôi phục</h2>
+                            <h2 className="text-xl font-semibold">Password recovery</h2>
                         </div>
                         <div className="space-y-4">
-                          <InfoItem label="Đổi mật khẩu" value="Chưa đổi mật khẩu" />
+                          <InfoItem label="Change Password" value="Chưa đổi mật khẩu" />
                         </div>
                       </section>
                     </div>
                   </main>
                 </div>
                 <Title level={4}>Change Password</Title>
-                <Form
-                  name="changePasswordForm"
-                  onFinish={handlePasswordChange}
-                >
+                <Form form={form} name="change_password" onFinish={onFinish}>
                   <Form.Item
                     name="currentPassword"
                     label="Current Password"
@@ -403,7 +400,19 @@ const ProfileStudent = () => {
                   <Form.Item
                     name="confirmPassword"
                     label="Confirm Password"
-                    rules={[{ required: true, message: 'Please confirm your new password!' }]}
+                    dependencies={['newPassword']}
+                    hasFeedback
+                    rules={[
+                      { required: true, message: 'Please confirm your new password!' },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('newPassword') === value) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                        },
+                      }),
+                    ]}
                   >
                     <Input.Password />
                   </Form.Item>

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Form, Input, Typography } from 'antd';
+import { Button, Form, Input, Typography, notification } from 'antd';
 import 'tailwindcss/tailwind.css';
 
 const { Text } = Typography;
@@ -42,16 +42,28 @@ const Setting: React.FC = () => {
   const handleEmailSave = (values: any) => {
     setEmail(values.newEmail);
     setItemStates({ ...itemStates, 'Email': false });
+    notification.success({
+      message: 'Success',
+      description: 'Updated Email successfully',
+    });
   };
 
   const handleUserNameSave = (values: any) => {
     setUserName(values.newUserName);
     setItemStates({ ...itemStates, 'User Name': false });
+    notification.success({
+      message: 'Success',
+      description: 'Updated User Name successfully',
+    });
   };
 
   const handleBioSave = (values: any) => {
     setBio(values.newBio);
     setItemStates({ ...itemStates, 'Giới thiệu': false });
+    notification.success({
+      message: 'Success',
+      description: 'Updated Bio successfully',
+    });
   };
 
   const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,11 +77,19 @@ const Setting: React.FC = () => {
       reader.readAsDataURL(e.target.files[0]);
     }
     setItemStates({ ...itemStates, 'Avatar': false });
+    notification.success({
+      message: 'Success',
+      description: 'Updated Avatar successfully',
+    });
   };
 
   const handleSocialLinkSave = (values: any) => {
     setSocialLinks({ ...socialLinks, [values.label]: values.newSocialLink });
     setItemStates({ ...itemStates, [values.label]: false });
+    notification.success({
+      message: 'Success',
+      description: `Updated ${values.label} successfully`,
+    });
   };
 
   return (
@@ -85,38 +105,42 @@ const Setting: React.FC = () => {
             </div>
             <div className="space-y-4">
               <div className='p-4 border rounded-lg'>
-              <ProfileItem
-                label="Email"
-                value={email}
-                isOpen={itemStates['Email']}
-                onItemClick={handleItemClick}
-                onSave={handleEmailSave}
-              /></div>
+                <ProfileItem
+                  label="Email"
+                  value={email}
+                  isOpen={itemStates['Email']}
+                  onItemClick={handleItemClick}
+                  onSave={handleEmailSave}
+                />
+              </div>
               <div className='p-4 border rounded-lg'>
-              <ProfileItem
-                label="User Name"
-                value={userName}
-                isOpen={itemStates['User Name']}
-                onItemClick={handleItemClick}
-                onSave={handleUserNameSave}
-              /></div>
+                <ProfileItem
+                  label="User Name"
+                  value={userName}
+                  isOpen={itemStates['User Name']}
+                  onItemClick={handleItemClick}
+                  onSave={handleUserNameSave}
+                />
+              </div>
               <div className='p-4 border rounded-lg'>
-              <ProfileItem
-                label="Giới thiệu"
-                value={bio}
-                isOpen={itemStates['Giới thiệu']}
-                onItemClick={handleItemClick}
-                onSave={handleBioSave}
-              /></div>
+                <ProfileItem
+                  label="Giới thiệu"
+                  value={bio}
+                  isOpen={itemStates['Giới thiệu']}
+                  onItemClick={handleItemClick}
+                  onSave={handleBioSave}
+                />
+              </div>
               <div className='p-4 border rounded-lg'>
-              <ProfileItem
-                label="Avatar"
-                value={<img className="h-16 w-16 rounded-full" src={avatar} alt="avatar" />}
-                isOpen={itemStates['Avatar']}
-                onItemClick={handleItemClick}
-                onSave={handleAvatarChange}
-                isFileUpload
-              /></div>
+                <ProfileItem
+                  label="Avatar"
+                  value={<img className="h-16 w-16 rounded-full" src={avatar} alt="avatar" />}
+                  isOpen={itemStates['Avatar']}
+                  onItemClick={handleItemClick}
+                  onSave={handleAvatarChange}
+                  isFileUpload
+                />
+              </div>
             </div>
           </section>
           <section>
@@ -126,14 +150,15 @@ const Setting: React.FC = () => {
             </div>
             <div className="space-y-4">
               {Object.keys(socialLinks).map((social) => (
-                <ProfileItem
-                  key={social}
-                  label={social}
-                  value={socialLinks[social]}
-                  isOpen={itemStates[social]}
-                  onItemClick={handleItemClick}
-                  onSave={handleSocialLinkSave}
-                />
+                <div className='p-4 border rounded-lg' key={social}>
+                  <ProfileItem
+                    label={social}
+                    value={socialLinks[social]}
+                    isOpen={itemStates[social]}
+                    onItemClick={handleItemClick}
+                    onSave={handleSocialLinkSave}
+                  />
+                </div>
               ))}
             </div>
           </section>
@@ -160,8 +185,18 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
   onSave,
   isFileUpload = false,
 }) => {
+  const [form] = Form.useForm();
+
   const handleSave = (values: any) => {
     onSave(values);
+  };
+
+  const onFinish = (values: any) => {
+    console.log('Received values of form: ', values);
+    notification.success({
+      message: 'Success',
+      description: `Updated ${label} successfully`,
+    });
   };
 
   return (
@@ -191,12 +226,12 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
       </div>
       {isOpen && (
         <div className="mt-4 space-y-4">
-          <Form onFinish={handleSave}>
+          <Form form={form} name={`update${label.replace(' ', '')}`} onFinish={onFinish}>
             {isFileUpload ? (
               <Form.Item
                 name="updateFile"
                 label={`Update ${label}`}
-                rules={[{ required: true, message: `Please select a update ${label.toLowerCase()}!` }]}
+                rules={[{ required: true, message: `Please select an update ${label.toLowerCase()}!` }]}
               >
                 <Input type="file" accept="image/*" />
               </Form.Item>
