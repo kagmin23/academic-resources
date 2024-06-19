@@ -66,6 +66,7 @@ const UsersAdmin: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
+
   const filteredData = searchTerm.trim()
     ? data.filter(
         (item) =>

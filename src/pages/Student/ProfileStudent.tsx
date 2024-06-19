@@ -113,7 +113,6 @@ const ProfileStudent = () => {
     email: 'johndoe@gmail.com',
     dob: '1990-01-01',
     gender: 'Male',
-    courseCreatedDate: '2022-01-01',
     info: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
   });
   const navigate = useNavigate();
@@ -234,7 +233,7 @@ const ProfileStudent = () => {
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
             {showAbout && (
-              <Card style={{ maxWidth: 500, maxHeight: 350, overflow: 'auto', margin: 20 }}>
+              <Card style={{ maxHeight: 350, overflow: 'auto', margin: 20 }}>
                 <div style={{ display: 'flex', flexDirection: 'column' }}>
                   <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
                     <Avatar size={64} src={aboutData.avatarSrc} />
@@ -259,10 +258,6 @@ const ProfileStudent = () => {
                     <Text>Gender: {aboutData.gender}</Text>
                   </div>
                   <div style={{ marginBottom: 8 }}>
-                    <ClockCircleOutlined style={{ marginRight: 8 }} />
-                    <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
-                  </div>
-                  <div style={{ marginBottom: 8 }}>
                     <ContactsOutlined style={{ marginRight: 8 }} />
                     <Text>{aboutData.info}</Text>
                   </div>
@@ -271,57 +266,57 @@ const ProfileStudent = () => {
             )}
             {showSettings && (
               <div>
-              <Form
-                name="settingsForm"
-                initialValues={{
-                  email: aboutData.email,
-                  info: aboutData.info,
-                  dob: moment(aboutData.dob, 'YYYY-MM-DD'),
-                  gender: aboutData.gender,
-                }}
-                onFinish={onFinish}
-              >
-                <Form.Item
-                  name="email"
-                  label="Email"
-                  rules={[
-                    { required: true, message: 'Please input your email!' },
-                    { type: 'email', message: 'Please enter a valid email address!' },
-                    { pattern: /^[\w-\.]+@gmail\.com$/, message: 'Email must be @gmail.com' },
-                  ]}
+                <Form
+                  name="settingsForm"
+                  initialValues={{
+                    email: aboutData.email,
+                    info: aboutData.info,
+                    dob: moment(aboutData.dob, 'YYYY-MM-DD'),
+                    gender: aboutData.gender,
+                  }}
+                  onFinish={onFinish}
                 >
-                  <Input />
-                </Form.Item>
-                <div className='flex flex-row'>
-                <Form.Item
-                  name="dob"
-                  label="Date of Birth"
-                  rules={[{ required: true, message: 'Please select your date of birth!' }]}
-                >
-                  <DatePicker style={{ width: '100%' }} />
-                </Form.Item>
-                <Form.Item
-                className='ml-80'
-                  name="gender"
-                  label="Gender"
-                  rules={[{ required: true, message: 'Please select your gender!' }]}
-                >
-                  <Select>
-                    <Option value="Male">Male</Option>
-                    <Option value="Female">Female</Option>
-                    <Option value="Other">Other</Option>
-                  </Select>
-                </Form.Item>
-                </div>
-                <Form.Item name="information" label="Information" rules={[{ required: true, message: 'Please input your info!' }]}>
-                  <TextArea rows={4} />
-                </Form.Item>
-                <Form.Item>
-                  <Button type="primary" htmlType="submit">
-                    Save Changes
-                  </Button>
-                </Form.Item>
-              </Form>
+                  <Form.Item
+                    name="email"
+                    label="Email"
+                    rules={[
+                      { required: true, message: 'Please input your email!' },
+                      { type: 'email', message: 'Please enter a valid email address!' },
+                      { pattern: /^[\w-\.]+@gmail\.com$/, message: 'Email must be @gmail.com' },
+                    ]}
+                  >
+                    <Input />
+                  </Form.Item>
+                  <div className='flex flex-row'>
+                    <Form.Item
+                      name="dob"
+                      label="Date of Birth"
+                      rules={[{ required: true, message: 'Please select your date of birth!' }]}
+                    >
+                      <DatePicker style={{ width: '100%' }} />
+                    </Form.Item>
+                    <Form.Item
+                      className='ml-80'
+                      name="gender"
+                      label="Gender"
+                      rules={[{ required: true, message: 'Please select your gender!' }]}
+                    >
+                      <Select className=''>
+                        <Option value="Male">Male</Option>
+                        <Option value="Female">Female</Option>
+                        <Option value="Other">Other</Option>
+                      </Select>
+                    </Form.Item>
+                  </div>
+                  <Form.Item name="information" label="Information" rules={[{ required: true, message: 'Please input your info!' }]}>
+                    <TextArea rows={4} />
+                  </Form.Item>
+                  <Form.Item>
+                    <Button type="primary" htmlType="submit">
+                      Save Changes
+                    </Button>
+                  </Form.Item>
+                </Form>
               </div>
             )}
           </div>

@@ -6,8 +6,8 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 import {
   About,
   BlogPage,
+  Contact,
   CourseDetailsPage,
-  CourseOrder,
   CoursePage,
   DetailBlogPage,
   HomePage,
@@ -30,19 +30,20 @@ const AppRouter: React.FC = () => (
     <Router>
       <Routes>
         {/* Layout for Guest */}
-        <Route path="/" element={<LayoutGuest />}>
-          <Route index element={<Navigate to="/home" />} />
-          <Route path="/home" element={<HomePage />} />
+        <Route path={`/`} element={<LayoutGuest />}>
+          <Route index element={<Navigate to={`/home`} />} />
+          <Route path={`/home`} element={<HomePage />} />
+          <Route path={`/home/course-details`} element={<CourseDetailsPage/>} />
           <Route path="/log-in" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/search" element={<SearchPage />} />
+          <Route path={`search`} element={<SearchPage />} />
           <Route path="/blog" element={<BlogPage />} />
-          <Route path="/course-details" element={<CourseDetailsPage />} />
+          <Route path={`course-details`} element={<CourseDetailsPage />} />
           <Route path="/detail-blog" element={<DetailBlogPage />} />
           <Route path="/course" element={<CoursePage />} />
-          <Route path="/course-order" element={<CourseOrder />} />
           <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
           <Route path="/top-instructor" element={<TopInstructorPage />} />
         </Route>
 

@@ -1,11 +1,13 @@
-import { FlagOutlined } from "@ant-design/icons";
-import { Layout, Table } from "antd";
-import React from "react";
+import { FlagOutlined, SearchOutlined } from "@ant-design/icons";
+import { Input, Layout, Table } from "antd";
+import React, { useState } from "react";
 import "tailwindcss/tailwind.css";
 
 const { Content } = Layout;
 
 const ReportAdmin: React.FC = () => {
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
   const columns = [
     {
       title: "Report ID",
@@ -68,11 +70,35 @@ const ReportAdmin: React.FC = () => {
     },
   ];
 
+  const filteredData = data.filter(item =>
+    item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.reason.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.status.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
   return (
     <Layout>
       <Content className="p-4">
-        <h1 className="mb-4 text-2xl">Report Management <FlagOutlined /></h1>
-        <Table columns={columns} dataSource={data} />
+        <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0">
+          <h1 className="text-2xl font-bold">
+            Report Management <FlagOutlined />
+          </h1>
+          <div className="w-full md:w-1/3">
+            <Input
+              placeholder="Search"
+              prefix={<SearchOutlined />}
+              onChange={handleSearchChange}
+              className="h-10 text-lg border-2 border-gray-300 border-solid rounded"
+              value={searchTerm}
+            />
+          </div>
+        </div>
+        <Table columns={columns} dataSource={filteredData} />
       </Content>
     </Layout>
   );

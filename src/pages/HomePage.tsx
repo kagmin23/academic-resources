@@ -120,19 +120,24 @@ const HomePage: React.FC = () => {
   );
 
   return (
-    <div className="homepage">
-      <header className="hero-image relative">
-        <img src="https://img.emg-services.net/HtmlPages/HtmlPage12273/untitled-design-10.jpg" alt="Academic-Resource" className="w-full" />
+    <div className="bg-gray-100 homepage">
+      <header className="hero-image" style={{ position: 'relative' }}>
+        <img src="https://img.emg-services.net/HtmlPages/HtmlPage12273/untitled-design-10.jpg" alt="Academic-Resource" style={{ width: '100%' }} />
         <Button
           type="primary"
           shape="circle"
           icon={<DownOutlined />}
           size="large"
-          className="absolute bottom-5 left-1/2 transform -translate-x-1/2"
+          style={{
+            position: 'absolute',
+            bottom: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
           href="#content"
           onClick={handleScroll}
         />
-        <div className="absolute bottom-20 left-1/2 transform -translate-x-1/2 text-center text-black">
+        <div className="box-header" style={{ position: 'absolute', bottom: '70px', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', color: 'black' }}>
           <ol className="text-black">100,000 Online Courses
             <li>Explore a variety of fresh topics</li>
           </ol>
@@ -146,7 +151,7 @@ const HomePage: React.FC = () => {
       </header>
 
       <div id="content">
-        <div className='flex items-center justify-center w-full bg-white'>
+        <div className='flex items-center justify-center w-full '>
           <div className='w-full text-center'>
             <ul className="mt-20 ml-4 text-4xl font-bold">Popular Courses</ul>
             <Carousel
@@ -154,19 +159,19 @@ const HomePage: React.FC = () => {
               slidesToShow={3}
               autoplay
               dotPosition='bottom'
-              prevArrow={<CustomPrevArrow />}
-              nextArrow={<CustomNextArrow />}
+              prevArrow={<div className='flex flex-row'><CustomPrevArrow /></div>}
+              nextArrow={<div className='flex flex-row'><CustomNextArrow /></div>}
             >
               {Courses.map((course, index) => (
                 <div className='w-full h-full p-10' key={index}>
-                  <div className='flex mb-3 sm:space-x-10'>
+                  <div className='flex mb-3 ml-3 sm:space-x-10'>
                     <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
-                    <Link to="/course-details">
-                      <Button size='small' type="primary" className='p-2 text-lg float-end ml-9'>$$$</Button>
+                    <Link to={`course-details`}>
+                      <Button size='small' type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button>
                     </Link>
                   </div>
-                  <Link to="/course-details">
-                    <img className="rounded-xl" src={course.img} alt="no image" />
+                  <Link to={`course-details`}>
+                    <img className="rounded-xl h-80 w-96" src={course.img} alt="no image" />
                   </Link>
                 </div>
               ))}
@@ -180,12 +185,12 @@ const HomePage: React.FC = () => {
 
         <div className="body-homebox">
           <div className="box image-box">
-            <img src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" className="body-image" />
+            <img src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" className="" />
           </div>
           <div className="text-sm box text-box">
             <p className="pt-10 mb-10">Limitless Learning, More</p>
             <p className="mb-10">Possibilities</p>
-            <ul className="underline mb-10 text-lg">Answer A Few Questions For Your Top Picks</ul>
+            <ul className="mb-10 text-lg underline">Answer A Few Questions For Your Top Picks</ul>
           </div>
         </div>
 
@@ -193,7 +198,7 @@ const HomePage: React.FC = () => {
           <button className="text-white">Join for free <ArrowRightOutlined /></button>
         </div>
 
-        <div className='flex items-center justify-center w-full bg-white'>
+        <div className='flex items-center justify-center w-full'>
           <div className='w-full text-center'>
             <ul className="mt-10 ml-4 text-4xl font-bold">New Courses</ul>
             <Carousel
@@ -201,18 +206,18 @@ const HomePage: React.FC = () => {
               slidesToShow={3}
               autoplay
               dotPosition='bottom'
-              prevArrow={<CustomPrevArrow />}
-              nextArrow={<CustomNextArrow />}
+              prevArrow={<div className='flex flex-row'><CustomPrevArrow /></div>}
+              nextArrow={<div className='flex flex-row'><CustomNextArrow /></div>}
             >
               {NewCourses.map((course, index) => (
                 <div className='w-full h-full p-10' key={index}>
                   <div className='flex mb-3 ml-3 sm:space-x-10'>
                     <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
-                    <Link to="/course-details">
+                    <Link to={`course-details`}>
                       <Button type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button>
                     </Link>
                   </div>
-                  <Link to="/course-details">
+                  <Link to={`course-details`}>
                     <img className="w-full rounded-xl" src={course.img} alt="no image" />
                   </Link>
                 </div>
@@ -231,7 +236,7 @@ const HomePage: React.FC = () => {
               <Card
                 bordered={false}
                 className="w-48 transition duration-300 ease-in-out hover:shadow-md"
-                cover={<img alt={category.title} src={category.img} className="object-contain h-32" />}
+                cover={<img alt={category.title} src={category.img} className="object-contain h-32 p-3" />}
               >
                 <div className="text-center">{category.title}</div>
               </Card>
