@@ -33,6 +33,8 @@ const UsersAdmin: React.FC = () => {
   const [filteredRole, setFilteredRole] = useState<string | undefined>(undefined);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState<boolean>(false);
   const [deleteItemId, setDeleteItemId] = useState<number | undefined>();
+  const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
+  const [lockItemId, setLockItemId] = useState<number | undefined>();
 
   const handleAdd = () => {
     if (
@@ -86,10 +88,28 @@ const UsersAdmin: React.FC = () => {
   };
 
   const handleStatusChange = (checked: boolean, item: Item) => {
-    const updatedData = data.map((dataItem) =>
-      dataItem.id === item.id ? { ...dataItem, status: checked } : dataItem
-    );
-    setData(updatedData);
+    if (!checked) {
+      setLockItemId(item.id);
+      setLockConfirmVisible(true);
+    } else {
+      const updatedData = data.map((dataItem) =>
+        dataItem.id === item.id ? { ...dataItem, status: checked } : dataItem
+      );
+      setData(updatedData);
+      message.success(`User status ${checked ? 'activated' : 'deactivated'} successfully`);
+    }
+  };
+
+  const handleLockStatus = () => {
+    if (lockItemId) {
+      const updatedData = data.map((item) =>
+        item.id === lockItemId ? { ...item, status: false } : item
+      );
+      setData(updatedData);
+      setLockItemId(undefined);
+      setLockConfirmVisible(false);
+      message.success("User status locked successfully");
+    }
   };
 
   const filteredData = data.filter((item) => {
@@ -110,10 +130,10 @@ const UsersAdmin: React.FC = () => {
     { title: 'Phone', dataIndex: 'phone', key: 'phone' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
     { title: 'Role', dataIndex: 'role', key: 'role' },
-    { 
-      title: 'Status', 
-      dataIndex: 'status', 
-      key: 'status', 
+    {
+      title: 'Status',
+      dataIndex: 'status',
+      key: 'status',
       render: (status, item) => (
         <Switch
           checked={status}
@@ -121,6 +141,7 @@ const UsersAdmin: React.FC = () => {
         />
       ),
     },
+    
     {
       title: 'Actions',
       key: 'actions',
@@ -156,20 +177,20 @@ const UsersAdmin: React.FC = () => {
           </Select>
         </div>
         <div className="mb-4">
-
-            <Button type="primary" onClick={() => {
-              setNewItem({
-                name: 'Your login value here',
-                gender: '',
-                dateofbirth: moment(),
-                email: '',
-                phone: '',
-                role: '',
-                status: true
-              });
-              setModalOpen(true);
-            }}><PlusCircleOutlined />Add New User</Button>
-
+          <Button type="primary" onClick={() => {
+            setNewItem({
+              name: '',
+              gender: '',
+              dateofbirth: moment(),
+              email: '',
+              phone: '',
+              role: '',
+              status: true
+            });
+            setModalOpen(true);
+          }}>
+            <PlusCircleOutlined /> Add New User
+          </Button>
         </div>
         <Table dataSource={filteredData} columns={columns} rowKey="id" />
 
@@ -216,82 +237,92 @@ const UsersAdmin: React.FC = () => {
               <Switch
                 checked={editingItem.status}
                 onChange={(checked) => setEditingItem({ ...editingItem, status: checked })}
-              />
-            </Form.Item>
-          </Form>
-        </Modal>
-
-        <Modal
-          title="Confirm Delete"
-          visible={deleteConfirmVisible}
-          onOk={handleDelete}
-          onCancel={() => setDeleteConfirmVisible(false)}
-          >
-            <p>Are you sure you want to delete this user?</p>
-          </Modal>
-          
-          <Modal
-            title="Add New User"
-            visible={isModalOpen}
-            onOk={handleAdd}
-            onCancel={() => {
-              setModalOpen(false);
-              setNewItem({}); 
-            }}
-          >
-            <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
-              <Form.Item label="Name">
-                <Input
-                  value={newItem.name}
-                  onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+             
                 />
-              </Form.Item>
-              <Form.Item label="Gender">
-                <Input
-                  value={newItem.gender}
-                  onChange={(e) => setNewItem({ ...newItem, gender: e.target.value })}
-                />
-              </Form.Item>
-              <Form.Item label="Date Of Birth">
-                <DatePicker
-                  value={moment(newItem.dateofbirth)}
-                  onChange={(date) => setNewItem({ ...newItem, dateofbirth: date })}
-                />
-              </Form.Item>
-              <Form.Item label="Phone">
-                <Input
-                  value={newItem.phone}
-                  onChange={(e) => setNewItem({ ...newItem, phone: e.target.value })}
-                />
-              </Form.Item>
-              <Form.Item label="Email">
-                <Input
-                  value={newItem.email}
-                  onChange={(e) => setNewItem({ ...newItem, email: e.target.value })}
-                />
-              </Form.Item>
-              <Form.Item label="Role">
-                <Select
-                  value={newItem.role}
-                  onChange={(value) => setNewItem({ ...newItem, role: value })}
-                >
-                  <Option value="admin">Admin</Option>
-                  <Option value="student">Student</Option>
-                  <Option value="instructor">Instructor</Option>
-                </Select>
-              </Form.Item>
-              <Form.Item label="Status">
-                <Switch
-                  checked={newItem.status}
-                  onChange={(checked) => setNewItem({ ...newItem, status: checked })}
-                />
-              </Form.Item>
-            </Form>
-          </Modal>
-        </Content>
-      </Layout>
-    );
-  };
-  
-  export default UsersAdmin;
-  
+                </Form.Item>
+              </Form>
+            </Modal>
+    
+            <Modal
+              title="Confirm Delete"
+              visible={deleteConfirmVisible}
+              onOk={handleDelete}
+              onCancel={() => setDeleteConfirmVisible(false)}
+            >
+              <p>Are you sure you want to delete this user?</p>
+            </Modal>
+    
+            <Modal
+              title="Confirm Lock Status"
+              visible={lockConfirmVisible}
+              onOk={handleLockStatus}
+              onCancel={() => setLockConfirmVisible(false)}
+            >
+              <p>Are you sure you want to lock this user?</p>
+            </Modal>
+    
+            <Modal
+              title="Add New User"
+              visible={isModalOpen}
+              onOk={handleAdd}
+              onCancel={() => {
+                setModalOpen(false);
+                setNewItem({});
+              }}
+            >
+              <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
+                <Form.Item label="Name">
+                  <Input
+                    value={newItem.name}
+                    onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
+                  />
+                </Form.Item>
+                <Form.Item label="Gender">
+                  <Input
+                    value={newItem.gender}
+                    onChange={(e) => setNewItem({ ...newItem, gender: e.target.value })}
+                  />
+                </Form.Item>
+                <Form.Item label="Date Of Birth">
+                  <DatePicker
+                    value={moment(newItem.dateofbirth)}
+                    onChange={(date) => setNewItem({ ...newItem, dateofbirth: date })}
+                  />
+                </Form.Item>
+                <Form.Item label="Phone">
+                  <Input
+                    value={newItem.phone}
+                    onChange={(e) => setNewItem({ ...newItem, phone: e.target.value })}
+                  />
+                </Form.Item>
+                <Form.Item label="Email">
+                  <Input
+                    value={newItem.email}
+                    onChange={(e) => setNewItem({ ...newItem, email: e.target.value })}
+                  />
+                </Form.Item>
+                <Form.Item label="Role">
+                  <Select
+                    value={newItem.role}
+                    onChange={(value) => setNewItem({ ...newItem, role: value })}
+                  >
+                    <Option value="admin">Admin</Option>
+                    <Option value="student">Student</Option>
+                    <Option value="instructor">Instructor</Option>
+                  </Select>
+                </Form.Item>
+                <Form.Item label="Status">
+                  <Switch
+                    checked={newItem.status}
+                    onChange={(checked) => setNewItem({ ...newItem, status: checked })}
+                  />
+                </Form.Item>
+              </Form>
+            </Modal>
+          </Content>
+        </Layout>
+      );
+    };
+    
+    export default UsersAdmin;
+    
