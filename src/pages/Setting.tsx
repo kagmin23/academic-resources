@@ -2,7 +2,8 @@ import React from 'react';
 import { Button, Form, Input, Typography } from 'antd';
 // import axios from 'axios';
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
+
 
 interface FormValues {
   name: string;
@@ -28,62 +29,52 @@ const Setting: React.FC = () => {
 //   };
 
   return (
-    <div style={{ padding: 10 }}>
-      <Title level={4}>Settings</Title>
-      <Form<FormValues>
-        layout="vertical"
-        // onFinish={handleFormSubmit}
-        initialValues={{
-          name: '',
-          email: '',
-          password: '',
-          facebook: '',
-          linkedin: '',
-        }}
-      >
-        <Form.Item
-          label="Name"
-          name="name"
-          rules={[{ required: true, message: 'Please input your name!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: 'Please input your email!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="Password"
-          name="password"
-          rules={[{ required: true, message: 'Please input your password!' }]}
-        >
-          <Input.Password />
-        </Form.Item>
-        <Form.Item
-          label="Facebook"
-          name="facebook"
-          rules={[{ required: true, message: 'Please input your Facebook profile link!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          label="LinkedIn"
-          name="linkedin"
-          rules={[{ required: true, message: 'Please input your LinkedIn profile link!' }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
-            Update
-          </Button>
-        </Form.Item>
-      </Form>
-    </div>
+    <div className="flex h-screen">
+                <main className="flex-1 p-6 overflow-auto">
+                  <h1 className="text-2xl font-bold">Thông tin cá nhân</h1>
+                  <p className="text-gray-600">Quản lý thông tin cá nhân của bạn.</p>
+                  <div className="mt-4">
+                    <section className="mb-6">
+                      <div className="mb-4">
+                        <h2 className="text-xl font-semibold">Thông tin cơ bản</h2>
+                        <p className="text-gray-600">Quản lý tên hiển thị, tên người dùng, bio và avatar của bạn.</p>
+                      </div>
+                      <div className="space-y-4">
+                        <ProfileItem label="Họ và tên" value="Nhu Ngoc (K17 HCM) Le" />
+                        <ProfileItem label="Tên người dùng" value="lenhungock17hcm" />
+                        <ProfileItem label="Giới thiệu" value="Chưa cập nhật" />
+                        <ProfileItem label="Ảnh đại diện" value={<img className="h-16 w-16 rounded-full" src="https://files.fullstack.edu.vn/f8-prod/user_photos/379503/65826d8841a16.jpg" alt="avatar" />} />
+                      </div>
+                    </section>
+                    <section>
+                      <div className="mb-4">
+                        <h2 className="text-xl font-semibold">Thông tin mạng xã hội</h2>
+                        <p className="text-gray-600">Quản lý liên kết tới các trang mạng xã hội của bạn.</p>
+                      </div>
+                      <div className="space-y-4">
+                        <ProfileItem label="Trang web cá nhân" value="Chưa cập nhật" />
+                        <ProfileItem label="GitHub" value="Chưa cập nhật" />
+                        <ProfileItem label="LinkedIn" value="Chưa cập nhật" />
+                        <ProfileItem label="Facebook" value="Chưa cập nhật" />
+                        <ProfileItem label="YouTube" value="Chưa cập nhật" />
+                        <ProfileItem label="TikTok" value="Chưa cập nhật" />
+                      </div>
+                    </section>
+                  </div>
+                </main>
+              </div>
   );
 };
+type ProfileItemProps = {
+  label: string;
+  value: React.ReactNode;
+};
+
+const ProfileItem: React.FC<ProfileItemProps> = ({ label, value }) => (
+  <div className="flex justify-between items-center p-4 border rounded-lg">
+    <Text strong>{label}:</Text>
+    <Text>{value}</Text>
+  </div>
+);
 
 export default Setting;
