@@ -19,7 +19,7 @@ import LayoutInstructor from '../../components/layout/LayoutInstructor';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import InstructorPage from './InstructorPage';
-
+import RouterLesson from 'pages/Student/RouterLesson';
 export default function InstructorRouter() {
   return (
     <div >
@@ -40,6 +40,7 @@ export default function InstructorRouter() {
          <Route path={`setting`} element={<ProtectedRouter allowedRoles={[3]}><Setting /></ProtectedRouter>} />
          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[3]}><LessonStudent /></ProtectedRouter>} />
          {/* <Route path={`lesson-student/:id`} element={<ProtectedRouter allowedRoles={[3]}><LessonStudent /></ProtectedRouter>} /> */}
+         <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={[3]}><RouterLesson /></ProtectedRouter>} />
          <Route path={`save`} element={<ProtectedRouter allowedRoles={[3]}><SavePage /></ProtectedRouter>} />
          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[3]}><PaymentSuccess /></ProtectedRouter>} />
          <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={[2]}><TopInstructorPage /></ProtectedRouter>} />

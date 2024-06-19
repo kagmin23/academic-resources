@@ -119,6 +119,11 @@ const SidebarLesson: React.FC = () => {
     }
     setCompletedLessons([...completedLessons, lesson.key]);
     navigate(`/student/router-lesson/lesson-student/${lesson.id}`);
+    // if (userRole === 'student') {
+    //   navigate(`/student/router-lesson/lesson-student/${lesson.id}`);
+    // } else if (userRole === 'instructor') {
+    //   navigate(`/instructor/router-lesson/lesson-student/${lesson.id}`);
+    // }
   };
 
   const handleAssignmentClick = (assignment: Assignment) => {
@@ -133,8 +138,8 @@ const SidebarLesson: React.FC = () => {
   };
 
   return (
-    <div className="w-full lg:w-1/3 p-4 bg-gray-100">
-      <Card>
+    <div className="w-[28%] p-4 bg-gray-100">
+      <Card className='h-full'>
         <Menu mode="inline" className="mb-4">
           {chapters.map((chapter, chapterIndex) => (
             <SubMenu key={`lesson_${chapterIndex}`} title={`${chapterIndex + 1}. ${chapter.chapter}`}>

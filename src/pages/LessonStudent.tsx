@@ -325,13 +325,13 @@ const LessonDetail: React.FC = () => {
       <div>
         <iframe
           width="100%"
-          height="360"
+          height="470"
           src={lesson.videoUrl}
           title={`YouTube video player`}
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
-          className="mb-4"
+          className="mb-6"
         ></iframe>
         <div className="text-lg font-bold mt-4">Thông tin khóa học:</div>
         <ul className="list-disc pl-4 mt-2">
@@ -342,17 +342,18 @@ const LessonDetail: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row p-4">
-      <div className="w-full p-4">
-        <Title level={2}>NodeJs Super</Title>
-        <Text>Bởi: Du Thanh Dược</Text> <br />
-        <Text>Cập nhật: 06/2024</Text>
+    <div>
+      <div className="w-full px-6">
+        {/* <Title level={2}>NodeJs Super</Title> */}
+        
         <div className="my-4">
           <div>
             <h1 className="text-2xl font-bold mb-4">{selectedLesson?.title}</h1>
             {selectedLesson && renderContent(selectedLesson)}
           </div>
         </div>
+        <Text>Bởi: Du Thanh Dược</Text> <br />
+        <Text>Cập nhật: 06/2024</Text>
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ export default function RouterLesson() {
   return (
     <div className="flex">
     
-      <div className="flex-grow p-4 bg-white rounded shadow-md">
+      <div className="flex-grow p-4 bg-white">
         <Routes>
         <Route path={`/`} element={<LessonStudent />} />
         <Route path={`lesson-student/:id`} element={<LessonStudent />} />
