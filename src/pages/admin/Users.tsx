@@ -1,8 +1,9 @@
-import React, { useState } from "react";
-import { Button, Input, Layout, Modal, Table, message, Form, Select, Switch, DatePicker } from "antd";
+import { PlusCircleOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import moment, { Moment } from "moment";
+import React, { useState } from "react";
 
 const { Option } = Select;
 
@@ -96,10 +97,6 @@ const UsersAdmin: React.FC = () => {
     return item.role.toLowerCase() === filteredRole.toLowerCase();
   });
 
-  const canAddUser = () => {
-    return filteredRole === "admin";
-  };
-
   const columns: ColumnsType<Item> = [
     { title: 'ID', dataIndex: 'id', key: 'id' },
     { title: 'Username', dataIndex: 'name', key: 'name' },
@@ -140,7 +137,7 @@ const UsersAdmin: React.FC = () => {
     <Layout>
       <Content className="p-4">
         <h2 className="mb-4 text-xl font-bold">Manage Accounts</h2>
-        <div className="mb-4 flex items-center space-x-2">
+        <div className="flex items-center mb-4 space-x-2">
           <Input.Search
             placeholder="Search"
             value={searchTerm}
@@ -159,20 +156,20 @@ const UsersAdmin: React.FC = () => {
           </Select>
         </div>
         <div className="mb-4">
-          {canAddUser() && (
+
             <Button type="primary" onClick={() => {
               setNewItem({
-                name: 'Your login value here', 
-                gender: '', 
-                dateofbirth: moment(), 
-                email: '', 
-                phone: '', 
-                role: 'admin', 
+                name: 'Your login value here',
+                gender: '',
+                dateofbirth: moment(),
+                email: '',
+                phone: '',
+                role: '',
                 status: true
               });
               setModalOpen(true);
-            }}>Add New User</Button>
-          )}
+            }}><PlusCircleOutlined />Add New User</Button>
+
         </div>
         <Table dataSource={filteredData} columns={columns} rowKey="id" />
 
