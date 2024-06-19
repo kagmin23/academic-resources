@@ -1,4 +1,4 @@
-import { ContainerOutlined, CopyrightOutlined, LineChartOutlined, LogoutOutlined, PieChartOutlined, SwapOutlined } from "@ant-design/icons";
+import { ContainerOutlined, DeploymentUnitOutlined, LineChartOutlined, LogoutOutlined, PieChartOutlined, SwapOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -94,7 +94,7 @@ const SidebarAdmin: React.FC = () => {
             </Menu.Item>
           )
         ))}
-        <Menu.Item icon={<CopyrightOutlined />}>
+        <Menu.Item icon={<DeploymentUnitOutlined />}>
           {expanded && 'By Academic'}
         </Menu.Item>
       </Menu>
