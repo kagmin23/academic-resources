@@ -62,7 +62,7 @@ const initialDataSource: DataType[] = [
   },
 ];
 
-const CourseAdmin: React.FC = () => {
+const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
   const [filteredDataSource, setFilteredDataSource] = useState<DataType[]>(initialDataSource);
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -244,4 +244,4 @@ const CourseAdmin: React.FC = () => {
   );
 };
 
-export default CourseAdmin;
+export default ManagerCourseInstructor;
