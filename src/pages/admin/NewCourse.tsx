@@ -204,12 +204,12 @@ const NewCourseAdmin: React.FC = () => {
           </div>
         ) : (
           <div>
-            <button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
+            <Button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
               <CheckOutlined />
-            </button>
-            <button onClick={() => showModal(record.key)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+            </Button>
+            <Button onClick={() => showModal(record.key)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
               <CloseOutlined />
-            </button>
+            </Button>
           </div>
         )
       ),
@@ -293,7 +293,7 @@ const NewCourseAdmin: React.FC = () => {
         </Content>
         <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
       </Layout>
-      <Modal title="Approve Course" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
+      <Modal title="Unapprove Course" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
 
         <p>Are you sure you refuse to approve this course?</p>
       </Modal>

@@ -6,6 +6,7 @@ import {
   SearchOutlined,
 } from '@ant-design/icons';
 import { Button, Col, Form, Input, Layout, Modal, Row, Table, Typography } from 'antd';
+import TextArea from 'antd/es/input/TextArea';
 import Title from 'antd/lib/typography/Title';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
@@ -25,12 +26,12 @@ interface DataType {
 const getInitialDataSource = (): DataType[] => {
   const savedData = localStorage.getItem('categoryData');
   return savedData ? JSON.parse(savedData) : [
-    { key: '1', image: 'https://via.placeholder.com/50', title: 'Item 1' },
-    { key: '2', image: 'https://via.placeholder.com/50', title: 'Item 2' },
-    { key: '3', image: 'https://via.placeholder.com/50', title: 'Item 3' },
-    { key: '4', image: 'https://via.placeholder.com/50', title: 'Item 4' },
-    { key: '5', image: 'https://via.placeholder.com/50', title: 'Item 5' },
-    { key: '6', image: 'https://via.placeholder.com/50', title: 'Item 6' },
+    { key: '1', image: 'https://via.placeholder.com/50', title: 'Item 1', description: 'abc' },
+    { key: '2', image: 'https://via.placeholder.com/50', title: 'Item 2', description: 'def' },
+    { key: '3', image: 'https://via.placeholder.com/50', title: 'Item 3', description: 'xyz' },
+    { key: '4', image: 'https://via.placeholder.com/50', title: 'Item 4', description: 'kml' },
+    { key: '5', image: 'https://via.placeholder.com/50', title: 'Item 5', description: 'iop' },
+    { key: '6', image: 'https://via.placeholder.com/50', title: 'Item 6', description: 'ert' },
   ];
 };
 
@@ -112,9 +113,14 @@ const CategoryAdmin: React.FC = () => {
       render: (text: string) => <img src={text} alt="item" className="w-12 h-12" />,
     },
     {
-      title: 'Description',
+      title: 'Title',
       dataIndex: 'title',
       key: 'title',
+    },
+    {
+      title: 'Description',
+      dataIndex: 'description',
+      key: 'description',
     },
     {
       title: 'Actions',
@@ -217,7 +223,7 @@ const CategoryAdmin: React.FC = () => {
       >
         <Form
           form={form}
-          initialValues={editingRecord || { image: '', title: '' }}
+          initialValues={editingRecord || { image: '', title: '', description:'' }}
         >
           <Form.Item
             name="image"
@@ -232,6 +238,13 @@ const CategoryAdmin: React.FC = () => {
             rules={[{ required: true, message: 'Please input the title!' }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="Description"
+            label="Description"
+            rules={[{ required: true, message: 'Please input the description!' }]}
+          >
+            <TextArea />
           </Form.Item>
         </Form>
       </Modal>
