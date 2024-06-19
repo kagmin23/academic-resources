@@ -1,25 +1,22 @@
 import {
   CalendarOutlined,
-  ClockCircleOutlined,
   ContactsOutlined,
-  FacebookOutlined,
   FileDoneOutlined,
   FileImageOutlined,
   FileTextOutlined,
-  LinkedinOutlined,
   LogoutOutlined,
   ManOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
   UploadOutlined,
   UserOutlined,
-  WomanOutlined,
+  WomanOutlined
 } from '@ant-design/icons';
-import { Avatar, Button, Card, DatePicker, Form, Image, Input, Layout, Menu, Select, Table, Tabs, Typography, Upload } from 'antd';
+import { Avatar, Button, Card, DatePicker, Form, Image, Input, Layout, Menu, Select, Tabs, Typography, Upload } from 'antd';
 import { Option } from 'antd/es/mentions';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const { TextArea } = Input;
 const { Content, Sider } = Layout;
@@ -200,7 +197,7 @@ const ProfileStudent = () => {
             action="/api/upload"
             onChange={handleImageChange}
           >
-            <button className=" hover:text-blue-700 text-white font-semibold py-2 px-4 rounded">
+            <button className="px-4 py-2 font-semibold text-white rounded hover:text-blue-700">
               <UploadOutlined /> Change Avatar
             </button>
           </Upload>
@@ -224,9 +221,14 @@ const ProfileStudent = () => {
           <Menu.Item key="6" icon={<SettingOutlined />} onClick={displaySettings}>
             Settings
           </Menu.Item>
-          <Menu.Item key="7" icon={<LogoutOutlined />}>
-            Logout
-          </Menu.Item>
+          
+          <div className="mt-7">
+          <Link to="/"><Menu.Item className="bg-[#FF1D1D] text-center">
+              <LogoutOutlined />&nbsp;&nbsp;&nbsp;Logout
+            </Menu.Item>
+          </Link>
+          </div>
+
         </Menu>
       </Sider>
       <Layout className="site-layout">

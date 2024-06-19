@@ -28,14 +28,14 @@ const SidebarAdmin: React.FC = () => {
       href: "/instructor/profile-instructor/",
       children: [
         {
-      icon: ContainerOutlined,
-      heading: "Manager Course",
-      href: '/instructor/profile-instructor/manager-instructor-course'
+          icon: ContainerOutlined,
+          heading: "Manager Course",
+          href: '/instructor/profile-instructor/manager-instructor-course'
         },
         {
-        icon: ContainerOutlined,
-      heading: "Manager Lesson",
-      href: '/instructor/profile-instructor/manager-instructor-lesson'
+          icon: ContainerOutlined,
+          heading: "Manager Lesson",
+          href: '/instructor/profile-instructor/manager-instructor-lesson'
         },
       ]
     },
@@ -46,12 +46,12 @@ const SidebarAdmin: React.FC = () => {
       children: [
         {
           icon: LineChartOutlined,
-          heading: 'personal info',
+          heading: 'Personal Info',
           href: "/instructor/profile-instructor/instructor-setting"
         },
         {
           icon: LineChartOutlined,
-          heading: 'Change password',
+          heading: 'Change Password',
           href: "/instructor/profile-instructor/instructor-changepassword"
         },
       ]
@@ -101,6 +101,7 @@ const SidebarAdmin: React.FC = () => {
                 setSelected(index);
                 navigate(item.href);
               }}
+              style={item.heading === "Logout" ? { backgroundColor: '#FF1D1D', color: 'white', marginTop: '30px' } : { marginTop: '0px' }}
             >
               {expanded && item.heading}
             </Menu.Item>
