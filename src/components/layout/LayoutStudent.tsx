@@ -57,7 +57,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             <Badge count={notificationCountCart} offset={[5, 5]} >
             <div className="flex items-center space-x-4 text-xl text-white">
 
-              <Link to="/shopping-cart">
+              <Link to={`shopping-cart`}>
                 <ShoppingCartOutlined className="text-xl" />
               </Link>
               </div>
