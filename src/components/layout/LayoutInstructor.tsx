@@ -1,5 +1,5 @@
 import { BellOutlined, BookOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Drawer, Input, Layout, Menu } from 'antd';
+import { Badge, Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -16,6 +16,9 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const navigate = useNavigate();
+
+  const notificationCountBell = 7;
+  const notificationCountCart = 9;
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
@@ -44,10 +47,20 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             className="hidden ml-4 w-72 md:block md:w-96"
           />
 
-            <div className="text-xl text-white ">
-                <BellOutlined className="pr-8" />
-                <Link to={`shopping-cart`}><ShoppingCartOutlined/></Link>
-            </div>
+        <Badge count={notificationCountBell} offset={[3, 1]}>
+                <div className="flex items-center space-x-4 text-xl text-white">
+                  <BellOutlined  />
+              </div>
+
+            </Badge>
+            <Badge count={notificationCountCart} offset={[5, 5]} >
+            <div className="flex items-center space-x-4 text-xl text-white">
+
+              <Link to="/shopping-cart">
+                <ShoppingCartOutlined className="text-xl" />
+              </Link>
+              </div>
+            </Badge>
 
           <Link to="/">
             <Button className="w-full mt-4 text-xs">Log out<LogoutOutlined /></Button>
