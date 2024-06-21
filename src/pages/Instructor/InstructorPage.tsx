@@ -6,6 +6,7 @@ import LessonInstructor from '../Instructor/LessonInstructor';
 import ManagerInstructor from '../Instructor/ManagerInstructor';
 import SidebarInstructor from '../Instructor/SidebarInstructor';
 import ChangepasswordIns from 'pages/Instructor/ChangePasswordIns';
+import ManagerCertificate from './ManagerCertificate';
 
 
 const InstructorPage: React.FC = () => {
@@ -17,6 +18,7 @@ const InstructorPage: React.FC = () => {
           <Route path={`/`} element={<DashboardInstructor />} />
           <Route path={`manager-instructor-course`} element={<ManagerInstructor />} />
           <Route path={`manager-instructor-lesson`} element={<LessonInstructor />} />
+          <Route path={`manager-instructor-certificate`} element={<ManagerCertificate   />} />
           <Route path={`instructor-setting`} element={<Setting />} />
           <Route path={`instructor-changepassword`} element={<ChangepasswordIns />} />
           <Route path={`*`} element={<h1>404</h1>} />
