@@ -9,8 +9,10 @@ import NewCourse from './NewCourse';
 import Report from './Report';
 import Sidebar from './Sidebar';
 import TransactionHistory from './TransactionHistory';
+import ProfileAdmin from './ProfileAdmin';
 
 import Users from './Users';
+import ChangepasswordAd from 'pages/admin/ChangePasswordAd';
 const AdminPage: React.FC = () => {
   return (
     <div>
@@ -25,6 +27,8 @@ const AdminPage: React.FC = () => {
           <Route path={`approve-courses`} element={<NewCourse/>}/>
           <Route path={`category`} element={<Category />} />
           <Route path={`report`} element={<Report />} />
+          <Route path={`info-admin`} element={<ProfileAdmin />} />
+          <Route path={`admin-changepassword`} element={<ChangepasswordAd />} />
           <Route path={`transaction-history`} element={<TransactionHistory />} />
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>

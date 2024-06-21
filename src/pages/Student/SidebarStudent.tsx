@@ -1,4 +1,4 @@
-import { ContainerOutlined, DeploymentUnitOutlined, LogoutOutlined, PieChartOutlined, SafetyOutlined, ScheduleOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import { ContainerOutlined, DeploymentUnitOutlined, LogoutOutlined, PieChartOutlined, SafetyOutlined, ScheduleOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import { Avatar, Menu, Typography } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -56,7 +56,7 @@ const SidebarStudent: React.FC = () => {
         href: "/student/profile-student/*",
       },
     {
-      icon: ContainerOutlined,
+      icon: SettingOutlined,
       heading: 'Setting',
       href: "/student/profile-student/",
       children: [
