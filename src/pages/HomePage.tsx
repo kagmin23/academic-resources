@@ -64,15 +64,15 @@ const Categories = [
     img: "https://play-lh.googleusercontent.com/rfWOJQVBHoAZ_B43v0ySFlLmJBLtksVGAxGaFRh2ex4nOmNQ86qzG4sYWV63IKrXlvI",
   },
   {
-    title: "Tailwind",
-    img: "https://www.svgrepo.com/show/374118/tailwind. ",
+    title: "Tailwind CSS",
+    img: "https://ahmedkhald.com/static/media/tailwind.bf288b24c40bf937884e.png",
   },
   {
     title: "React",
     img: "https://cdn1.iconfinder.com/data/icons/education-set-3-3/74/15-512.png",
   },
   {
-    title: "NextJs",
+    title: "NextJS",
     img: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/nextjs-icon.png",
   },
   {

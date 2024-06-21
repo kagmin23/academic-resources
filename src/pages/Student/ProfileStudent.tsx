@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { Button, Form, Input, Typography, notification } from 'antd';
+import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css';
 
 const { Text } = Typography;
@@ -124,7 +124,7 @@ const SettingStudent: React.FC = () => {
               </div>
               <div className='p-4 border rounded-lg'>
                 <ProfileItem
-                  label="Giới thiệu"
+                  label="Bio"
                   value={bio}
                   isOpen={itemStates['Giới thiệu']}
                   onItemClick={handleItemClick}
@@ -134,7 +134,7 @@ const SettingStudent: React.FC = () => {
               <div className='p-4 border rounded-lg'>
                 <ProfileItem
                   label="Avatar"
-                  value={<img className="h-16 w-16 rounded-full" src={avatar} alt="avatar" />}
+                  value={<img className="w-16 h-16 rounded-full" src={avatar} alt="avatar" />}
                   isOpen={itemStates['Avatar']}
                   onItemClick={handleItemClick}
                   onSave={handleAvatarChange}
@@ -201,7 +201,7 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
 
   return (
     <div>
-      <div className="flex justify-between items-center cursor-pointer" onClick={() => onItemClick(label)}>
+      <div className="flex items-center justify-between cursor-pointer" onClick={() => onItemClick(label)}>
         <div>
           <h4 className="text-lg font-medium">{label}</h4>
           <Text className="text-gray-800">{value}</Text>

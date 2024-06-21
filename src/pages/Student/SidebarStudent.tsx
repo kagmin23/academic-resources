@@ -81,14 +81,14 @@ const SidebarStudent: React.FC = () => {
 
   return (
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#475a75] shadow-lg`}>
-      <div className="flex flex-col justify-between p-4 items-center">
+      <div className="flex flex-col items-center justify-between p-4">
         <Avatar size={64} src={aboutData.avatarSrc} />
         <Title level={4} style={{ marginLeft: 16, color: "white" }}>{aboutData.name}</Title>
       </div>
       <Menu mode="inline" selectedKeys={[selected.toString()]} className="h-full py-3 bg-[#475a75]">
         {SidebarData.map((item, index) => (
           item.children && item.children.length > 0 ? (
-            <Menu.SubMenu key={index} icon={<item.icon />} title={item.heading} popupClassName="text-white">
+            <Menu.SubMenu key={index} icon={<item.icon />} title={item.heading} >
               {item.children.map((child, childIndex) => (
                 <Menu.Item
                   key={`${index}-${childIndex}`}

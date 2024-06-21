@@ -22,6 +22,7 @@ const AdminPage: React.FC = () => {
       <div className="flex-grow p-4 bg-white rounded shadow-md">
         <Routes>
         <Route path={`/`} element={<Dashboard />} />
+        <Route path={`dashboard`} element={<Dashboard />} />
           <Route path={`user`} element={<Users />} />
           <Route path={`course`} element={<Content />} />
           <Route path={`approve-courses`} element={<NewCourse/>}/>

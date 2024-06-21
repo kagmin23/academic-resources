@@ -1,4 +1,4 @@
-import { ContainerOutlined, DeploymentUnitOutlined, LogoutOutlined, PieChartOutlined, SafetyOutlined, SwapOutlined, UserOutlined } from "@ant-design/icons";
+import { ContainerOutlined, DeploymentUnitOutlined, LogoutOutlined,TrophyOutlined ,PieChartOutlined, SafetyOutlined, SwapOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -37,6 +37,11 @@ const SidebarAdmin: React.FC = () => {
           heading: "Manager Lesson",
           href: '/instructor/profile-instructor/manager-instructor-lesson'
         },
+        {
+          icon: TrophyOutlined ,
+          heading: "Manager Certificate",
+          href: '/instructor/profile-instructor/manager-instructor-certificate'
+        },
       ]
     },
     {
@@ -66,9 +71,9 @@ const SidebarAdmin: React.FC = () => {
   return (
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#1F2937] shadow-lg`}>
       <div className="flex items-center justify-between p-4">
-        <Link to="/admin-page">
+        <Link to="/admin-page"><UserSwitchOutlined className="text-white"/>
           <span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>
-            ADMINI<span className="text-blue-500">STRATOR</span>
+          YOUR<span className="text-blue-500">&nbsp;&nbsp;PROFILE</span>
           </span>
         </Link>
         <Button className="text-white" type="text" icon={<SwapOutlined />} onClick={() => setExpanded(!expanded)} />
