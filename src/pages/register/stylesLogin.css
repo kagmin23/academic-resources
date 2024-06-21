@@ -1,0 +1,20 @@
+@keyframes backgroundTransition {
+    0% {
+      background-image: url('https://s30876.pcdn.co/wp-content/uploads/The-Different-Types-of-Academic-Careers.jpg.optimal.jpg');
+    }
+    33% {
+      background-image: url('https://cdn.windowsreport.com/wp-content/uploads/2020/04/software-academic-writing.jpg');
+    }
+    66% {
+      background-image: url('https://media.licdn.com/dms/image/D5612AQEnaivzDzywkw/article-cover_image-shrink_720_1280/0/1698680712320?e=2147483647&v=beta&t=tklAFWqEOJNjKwyp6Mi7N-3Nbp_6u39M4ZnUBb2fZ8M');
+    }
+    100% {
+      background-image: url('https://www.servicescape.com/img/blog/post/jpg/postbg96381.jpg');
+    }
+  }
+  
+  .background-transition {
+    animation: backgroundTransition 15s infinite;
+    background-size: cover;
+  }
+  

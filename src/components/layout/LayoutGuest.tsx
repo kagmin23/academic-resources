@@ -1,4 +1,4 @@
-import { BookOutlined, LoginOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, BookOutlined, LoginOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
@@ -43,12 +43,27 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
+
+        <div className="flex items-center space-x-4 text-xl text-white">
+        <Link to="/log-in">
+                  <BellOutlined  />
+                  </Link>
+              </div>
+          <div className="flex items-center space-x-4 text-xl text-white">
+              <Link to="/log-in">
+                <ShoppingCartOutlined className="text-xl" />
+              </Link>
+        </div>
+
           <Link to="/log-in">
-            <Button className="w-full mt-4 text-xs">Log in<LoginOutlined /></Button>
+            <Button className="w-full mt-4 text-xs bg-green-200">Sign in<LoginOutlined /></Button>
           </Link>
-          <Link to="/log-in">
+          <Link to="/sign-up">
+            <Button className="w-full mt-4 text-xs text-white bg-red-400">Sign up<LoginOutlined /></Button>
+          </Link>
+          {/* <Link to="/log-in">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
-          </Link>
+          </Link> */}
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
         </div>
       </Header>
@@ -59,7 +74,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             mode="horizontal"
             selectedKeys={selectedKeys}
             onClick={handleMenuClick}
-            className="flex-grow gap-2 md:flex md:justify-end"
+            className="flex-grow gap-5 md:flex md:justify-end"
           >
             <Menu.Item key="1" className="mx-2">
               <Link to="/">Home</Link>
@@ -84,9 +99,6 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             </Menu.Item>
             <Menu.Item key="8" className="mx-2">
               <Link to="/contact">Contact</Link>
-            </Menu.Item>
-            <Menu.Item key="9" className="mx-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
-              <Link to="/log-in"></Link>
             </Menu.Item>
           </Menu>
         </div>

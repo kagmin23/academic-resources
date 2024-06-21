@@ -2,7 +2,7 @@ import { ArrowRightOutlined, DownOutlined, LeftOutlined, RightOutlined } from '@
 import { Button, Card, Carousel, Col, Input, Row } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
-
+import './styles.css'; // Import the custom CSS file
 
 const Courses = [
   {
@@ -121,32 +121,33 @@ const HomePage: React.FC = () => {
 
   return (
     <div className="bg-gray-100 homepage">
-      <header className="hero-image" style={{ position: 'relative' }}>
-        <img src="https://img.emg-services.net/HtmlPages/HtmlPage12273/untitled-design-10.jpg" alt="Academic-Resource" style={{ width: '100%' }} />
-        <Button
-          type="primary"
-          shape="circle"
-          icon={<DownOutlined />}
-          size="large"
-          style={{
-            position: 'absolute',
-            bottom: '20px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
-          href="#content"
-          onClick={handleScroll}
-        />
-        <div className="box-header" style={{ position: 'absolute', bottom: '70px', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', color: 'black' }}>
-          <ol className="text-black">100,000 Online Courses
-            <li>Explore a variety of fresh topics</li>
-          </ol>
-          <ol className="text-black">Expert Instruction
-            <li>Find the right instructor for you</li>
-          </ol>
-          <ol className="text-black">Unlimited Lifetime Access
-            <li>Learn on your schedule</li>
-          </ol>
+      <header className="hero-image">
+        <div className="overlay">
+          <Button
+            type="primary"
+            shape="circle"
+            icon={<DownOutlined />}
+            size="large"
+            style={{
+              position: 'absolute',
+              bottom: '20px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+            }}
+            href="#content"
+            onClick={handleScroll}
+          />
+          <div className="box-header" style={{ position: 'absolute', bottom: '70px', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', color: 'black' }}>
+            <ol className="text-black">100,000 Online Courses
+              <li>Explore a variety of fresh topics</li>
+            </ol>
+            <ol className="text-black">Expert Instruction
+              <li>Find the right instructor for you</li>
+            </ol>
+            <ol className="text-black">Unlimited Lifetime Access
+              <li>Learn on your schedule</li>
+            </ol>
+          </div>
         </div>
       </header>
 

@@ -205,7 +205,7 @@ const CoursePage: React.FC = () => {
           />
       </Drawer>
       {/* Content Course */}
-      <Link to="/course-details"><Row gutter={[16, 16]} className='xl:px-6 ' >
+      <Link to="/course-details"><Row gutter={[12, 12]} className='xl:px-1 ' >
             {courses.map((course) => (
               <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8} >
                 <Card

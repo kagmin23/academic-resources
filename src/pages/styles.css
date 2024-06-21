@@ -1,0 +1,22 @@
+@keyframes backgroundTransition {
+    0% {
+        background-image: url('https://media.licdn.com/dms/image/D4E12AQHe4YLniimEpg/article-cover_image-shrink_720_1280/0/1710954920981?e=2147483647&v=beta&t=--fS8m4XRKz_mSQPmhlnBFmQjrqRBLHmxrGbTiA07SY');
+      }
+      33% {
+        background-image: url('https://cdn.collection.bccampus.ca/assets/covers/course-packs/7/large_cover_course_pack_7_52f3171019.jpg');
+      }
+      66% {
+        background-image: url('https://kansas.kvc.org/wp-content/uploads/sites/2/2020/11/iStock-1216824582web-1038x576-1.jpg');
+      }
+      100% {
+        background-image: url('https://www.vid.no/site/assets/files/51723/colourbox25055767.1530x0.jpg');
+      }
+  }
+  
+  .hero-image {
+    animation: backgroundTransition 15s infinite;
+    background-size: cover;
+    background-position: center;
+    height: 80vh;
+    position: relative;
+  }
