@@ -2,6 +2,7 @@ import { AppstoreOutlined, BookOutlined, FilterOutlined, FlagOutlined, UserOutli
 import { Card, Col, DatePicker, Row, Space, Typography } from 'antd';
 import 'dayjs/locale/vi';
 import React, { useState } from 'react';
+import 'tailwindcss/tailwind.css';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -12,14 +13,11 @@ const Dashboard: React.FC = () => {
   const handleDateChange = (dates: any, dateStrings: [string, string]) => {
     setSelectedDates(dates);
     console.log('Đang lọc dữ liệu từ ngày:', dateStrings[0], 'đến ngày:', dateStrings[1]);
-    // Gọi hàm để xử lý lọc dữ liệu theo khoảng thời gian ở đây
     filterDataByRange(dates);
   };
 
   const filterDataByRange = (dates: any) => {
-    // Viết logic để lọc dữ liệu từ ngày đến ngày ở đây
-    // Ví dụ: Nếu bạn có mảng dữ liệu courses có trường date, bạn có thể lọc như sau
-    // const filteredCourses = courses.filter(course => dayjs(course.date).isBetween(dates[0], dates[1]));
+
   };
 
   return (
