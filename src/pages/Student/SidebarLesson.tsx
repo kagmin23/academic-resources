@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Menu, Card, message ,Modal} from 'antd';
-import { FileOutlined, LockOutlined, CheckOutlined } from '@ant-design/icons';
-import 'tailwindcss/tailwind.css';
+import { CheckOutlined, FileOutlined, LockOutlined } from '@ant-design/icons';
+import { Card, Menu, Modal, message } from 'antd';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import 'tailwindcss/tailwind.css';
 const { SubMenu } = Menu;
 
 interface Lesson {
@@ -119,6 +119,8 @@ const SidebarLesson: React.FC = () => {
     }
     setCompletedLessons([...completedLessons, lesson.key]);
     navigate(`/student/router-lesson/lesson-student/${lesson.id}`);
+
+    
     // if (userRole === 'student') {
     //   navigate(`/student/router-lesson/lesson-student/${lesson.id}`);
     // } else if (userRole === 'instructor') {

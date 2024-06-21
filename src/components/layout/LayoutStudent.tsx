@@ -64,7 +64,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             </Badge>
 
           <Link to="/">
-            <Button className="w-full mt-4 text-xs">Log out<LogoutOutlined /></Button>
+            <Button className="w-full mt-4 text-xs text-white bg-red-500">Log out<LogoutOutlined /></Button>
           </Link>
           <Link to={`profile-student`}>
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
