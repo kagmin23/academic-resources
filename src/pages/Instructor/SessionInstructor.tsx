@@ -1,10 +1,10 @@
 import {
-  DeleteOutlined,
-  DownCircleOutlined,
-  EditOutlined,
-  FileOutlined,
-  LockOutlined,
-  SearchOutlined
+    DeleteOutlined,
+    DownCircleOutlined,
+    EditOutlined,
+    FileOutlined,
+    LockOutlined,
+    SearchOutlined
 } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Menu, Modal, Table, Tabs, Typography } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
@@ -190,7 +190,6 @@ import React, { useState } from 'react';
                 onChange={e => handleSearch(e.target.value)}
                 style={{ width: 200 }}
               />
-
             </div>
           </Header>
           <Content>

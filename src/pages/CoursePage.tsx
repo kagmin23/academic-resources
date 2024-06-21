@@ -205,7 +205,7 @@ const CoursePage: React.FC = () => {
           />
       </Drawer>
       {/* Content Course */}
-      <Link to="/course-details"><Row gutter={[12, 12]} className='xl:px-1 ' >
+      <Link to="/course-details"><Row gutter={[15, 15]} className='xl:px-1 ' >
             {courses.map((course) => (
               <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8} >
                 <Card
@@ -213,12 +213,9 @@ const CoursePage: React.FC = () => {
                   cover={<img alt={course.title} src={course.image} />}
                 >
                   <Card.Meta title={course.title} description={course.description} />
-                  <div className="flex items-center justify-between mt-4">
-                    <span>${course.price}</span>
-                    <div>
-                      <Link to="/course-details"><Button type="primary" className="mr-2">Buy Now</Button></Link>
-                      <Button>Add to Cart</Button>
-                    </div>
+                  <div className="flex items-center justify-between mt-4 text-xs font-bold">
+                    <span>{course.price}.000 VND</span>
+
                   </div>
                 </Card>
                 

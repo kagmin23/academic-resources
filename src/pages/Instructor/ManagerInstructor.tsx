@@ -138,7 +138,7 @@ const ManagerCourseInstructor: React.FC = () => {
       render: (text: string) => <img src={text} alt="item" className="w-12 h-12" />,
     },
     {
-      title: 'Description',
+      title: 'Course Name',
       dataIndex: 'title',
       key: 'title',
     },
