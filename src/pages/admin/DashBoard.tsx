@@ -35,6 +35,7 @@ const Dashboard: React.FC = () => {
     { name: '2023-05-01', users: 189, courses: 480, categories: 218, reports: 200, revenue: 1800 },
     { name: '2023-06-01', users: 239, courses: 380, categories: 250, reports: 250, revenue: 2000 },
     { name: '2023-07-01', users: 349, courses: 430, categories: 210, reports: 300, revenue: 2200 },
+
   ];
 
   const [selectedDates, setSelectedDates] = useState<any[]>([]);
@@ -124,6 +125,7 @@ const Dashboard: React.FC = () => {
       <Row className="mt-8" gutter={[16, 16]}>
         <Col xs={24} lg={16}>
           <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+
             <Title level={3} className="mb-4 text-center">User and Course Statistics</Title>
             <ResponsiveContainer width="100%" height={400}>
               <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
