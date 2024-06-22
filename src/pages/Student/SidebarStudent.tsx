@@ -1,8 +1,18 @@
-import { ContainerOutlined, DeploymentUnitOutlined, LogoutOutlined, PieChartOutlined, SafetyOutlined, ScheduleOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
-import { Avatar, Menu, Typography } from "antd";
-import 'antd/dist/reset.css';
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Avatar, Menu, Typography } from "antd";
+import {
+  ContainerOutlined,
+  DeploymentUnitOutlined,
+  LogoutOutlined,
+  PieChartOutlined,
+  SafetyOutlined,
+  ScheduleOutlined,
+  SettingOutlined,
+  ShoppingCartOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import 'antd/dist/reset.css';
 
 const { Title } = Typography;
 
@@ -41,27 +51,27 @@ const SidebarStudent: React.FC = () => {
       href: "/student/profile-student/course-student",
     },
     {
-        icon: ContainerOutlined,
-        heading: 'Certificates',
-        href: "/student/profile-student/*",
-      },
-      {
-        icon: ShoppingCartOutlined,
-        heading: 'Orders',
-        href: "/student/profile-student/*",
-      },
-      {
-        icon: ScheduleOutlined,
-        heading: 'Assignments',
-        href: "/student/profile-student/*",
-      },
+      icon: ContainerOutlined,
+      heading: 'Certificates',
+      href: "/student/profile-student/*",
+    },
+    {
+      icon: ShoppingCartOutlined,
+      heading: 'Orders',
+      href: "/student/profile-student/*",
+    },
+    {
+      icon: ScheduleOutlined,
+      heading: 'Assignments',
+      href: "/student/profile-student/*",
+    },
     {
       icon: SettingOutlined,
       heading: 'Setting',
       href: "/student/profile-student/",
       children: [
         {
-          icon: UserOutlined ,
+          icon: UserOutlined,
           heading: 'Personal Info',
           href: "/student/profile-student/info-student"
         },
@@ -85,15 +95,26 @@ const SidebarStudent: React.FC = () => {
         <Avatar size={64} src={aboutData.avatarSrc} />
         <Title level={4} style={{ marginLeft: 16, color: "white" }}>{aboutData.name}</Title>
       </div>
-      <Menu mode="inline" selectedKeys={[selected.toString()]} className="h-full py-3 bg-[#475a75]">
+      <Menu
+        mode="inline"
+        selectedKeys={[selected.toString()]}
+        style={{ backgroundColor: '#475a75', color: 'white' }}
+        className="h-full py-3"
+      >
         {SidebarData.map((item, index) => (
           item.children && item.children.length > 0 ? (
-            <Menu.SubMenu key={index} icon={<item.icon />} title={item.heading} >
+            <Menu.SubMenu
+              key={index}
+              icon={<item.icon style={{ color: 'white' }} />}
+              title={<span style={{ color: 'white' }}>{item.heading}</span>}
+              style={{ color: 'white' }}
+            >
               {item.children.map((child, childIndex) => (
                 <Menu.Item
                   key={`${index}-${childIndex}`}
-                  icon={<child.icon />}
-                  className={selected === `${index}-${childIndex}` ? "active bg-blue-500 text-white" : ""}
+                  icon={<child.icon style={{ color: 'white' }} />}
+                  style={{ color: 'white' }}
+                  className={selected === `${index}-${childIndex}` ? "bg-blue-900" : ""}
                   onClick={() => {
                     setSelected(`${index}-${childIndex}`);
                     navigate(child.href);
@@ -106,19 +127,19 @@ const SidebarStudent: React.FC = () => {
           ) : (
             <Menu.Item
               key={index}
-              icon={<item.icon />}
-              className={selected === index ? "active bg-blue-500 text-white" : ""}
+              icon={<item.icon style={{ color: 'white' }} />}
+              style={{ color: 'white' }}
+              className={`${selected === index ? "bg-blue-900" : ""} ${item.heading === "Logout" ? "bg-red-600 mt-6" : "mt-0"}`}
               onClick={() => {
                 setSelected(index);
                 navigate(item.href);
               }}
-              style={item.heading === "Logout" ? { backgroundColor: '#FF1D1D', color: 'white', marginTop: '30px' } : { marginTop: '0px' }}
             >
               {expanded && item.heading}
             </Menu.Item>
           )
         ))}
-        <Menu.Item icon={<DeploymentUnitOutlined />} className="text-white">
+        <Menu.Item icon={<DeploymentUnitOutlined style={{ color: 'white' }} />} style={{ color: 'white' }}>
           {expanded && 'By Academic'}
         </Menu.Item>
       </Menu>

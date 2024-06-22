@@ -37,7 +37,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
           </h1>
         </Link>
-        <div className="flex items-center gap-16">
+        <div className="flex items-center gap-12">
           <Search
             placeholder="Search courses"
             onSearch={onSearch}
@@ -54,13 +54,14 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
                 <ShoppingCartOutlined className="text-xl" />
               </Link>
         </div>
-
+        <div className="flex gap-2">
           <Link to="/log-in">
-            <Button className="w-full mt-4 text-xs bg-green-200">Sign in<LoginOutlined /></Button>
+            <Button className="w-full mt-4 text-xs bg-green-300">Sign in<LoginOutlined /></Button>
           </Link>
           <Link to="/sign-up">
-            <Button className="w-full mt-4 text-xs text-white bg-red-400">Sign up<LoginOutlined /></Button>
+            <Button className="w-full mt-4 text-xs text-white bg-red-500">Sign up<LoginOutlined /></Button>
           </Link>
+          </div>
           {/* <Link to="/log-in">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
           </Link> */}

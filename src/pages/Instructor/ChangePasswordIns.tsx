@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, notification } from 'antd'; 
+import { Form, Input, Button, notification } from 'antd';
 
 const ChangepasswordIns: React.FC = () => {
     return (
@@ -57,7 +57,7 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
             </div>
             {isDropdownVisible && (
                 <div className="mt-4 space-y-4">
-                    <Form form={form} name="change_password" onFinish={onFinish}>
+                    <Form form={form} name="change_password" onFinish={onFinish} layout="vertical">
                         <Form.Item
                             name="currentPassword"
                             label="Current Password"
@@ -92,7 +92,7 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
                             <Input.Password />
                         </Form.Item>
                         <Form.Item>
-                            <Button type="primary" htmlType="submit" className='ml-8 text-lg font-semibold'>
+                            <Button type="primary" htmlType="submit" className="ml-8 text-lg font-semibold">
                                 Save
                             </Button>
                         </Form.Item>

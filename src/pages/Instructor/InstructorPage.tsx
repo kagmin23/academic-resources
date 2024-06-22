@@ -1,3 +1,4 @@
+import ChangepasswordIns from 'pages/Instructor/ChangePasswordIns';
 import DashboardInstructor from 'pages/Instructor/DashboardInstructor';
 import Setting from 'pages/Setting';
 import React from 'react';
@@ -5,8 +6,8 @@ import { Route, Routes } from 'react-router-dom';
 import LessonInstructor from '../Instructor/LessonInstructor';
 import ManagerInstructor from '../Instructor/ManagerInstructor';
 import SidebarInstructor from '../Instructor/SidebarInstructor';
-import ChangepasswordIns from 'pages/Instructor/ChangePasswordIns';
 import ManagerCertificate from './ManagerCertificate';
+import SessionInstructor from './SessionInstructor';
 
 
 const InstructorPage: React.FC = () => {
@@ -18,6 +19,7 @@ const InstructorPage: React.FC = () => {
           <Route path={`/`} element={<DashboardInstructor />} />
           <Route path={`manager-instructor-course`} element={<ManagerInstructor />} />
           <Route path={`manager-instructor-lesson`} element={<LessonInstructor />} />
+          <Route path={`manager-instructor-session`} element={<SessionInstructor />} />
           <Route path={`manager-instructor-certificate`} element={<ManagerCertificate   />} />
           <Route path={`instructor-setting`} element={<Setting />} />
           <Route path={`instructor-changepassword`} element={<ChangepasswordIns />} />
