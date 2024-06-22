@@ -5,7 +5,7 @@ import {
   FlagOutlined,
   UserOutlined
 } from '@ant-design/icons';
-import { Card, Col, DatePicker, Row, Space, Typography, Progress } from 'antd';
+import { Card, Col, DatePicker, Row, Space, Typography, Progress, message } from 'antd';
 import 'dayjs/locale/vi';
 import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css';
@@ -41,6 +41,10 @@ const Dashboard: React.FC = () => {
   const [data, setData] = useState(initialData);
 
   const handleDateChange = (dates: any, dateStrings: [string, string]) => {
+    if (dates && dates.length === 2 && dates[0].isAfter(dates[1])) {
+      message.error('Start date must be before end date.');
+      return;
+    }
     setSelectedDates(dates);
     console.log('Đang lọc dữ liệu từ ngày:', dateStrings[0], 'đến ngày:', dateStrings[1]);
     filterDataByRange(dates);
