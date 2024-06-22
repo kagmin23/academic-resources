@@ -12,9 +12,10 @@ import SessionInstructor from './SessionInstructor';
 
 const InstructorPage: React.FC = () => {
   return (
-    <div className="flex">
-    <SidebarInstructor />
-      <div className="flex-grow p-4 bg-white rounded shadow-md">
+    <div className="flex h-screen">
+      <div className='h-[89vh]'>
+    <SidebarInstructor /></div>
+      <div className="flex-grow ml-4  ">
         <Routes>
           <Route path={`/`} element={<DashboardInstructor />} />
           <Route path={`manager-instructor-course`} element={<ManagerInstructor />} />

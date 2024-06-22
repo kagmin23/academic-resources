@@ -144,7 +144,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
         </Menu>
       </Drawer>
       <Content className="p-4 pt-16">
-        <div className="p-4 bg-white rounded shadow">
+        <div className="p-4 bg-white h-fit rounded shadow">
           <Outlet />
         </div>
       </Content>
