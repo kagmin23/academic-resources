@@ -1,14 +1,42 @@
-import { AppstoreOutlined, BookOutlined, FilterOutlined, FlagOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  AppstoreOutlined,
+  BookOutlined,
+  FilterOutlined,
+  FlagOutlined,
+  UserOutlined
+} from '@ant-design/icons';
 import { Card, Col, DatePicker, Row, Space, Typography } from 'antd';
 import 'dayjs/locale/vi';
 import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer
+} from 'recharts';
+import dayjs from 'dayjs';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
 
 const Dashboard: React.FC = () => {
+  const initialData = [
+    { name: '2023-01-01', users: 400, courses: 240, categories: 240, reports: 50 },
+    { name: '2023-02-01', users: 300, courses: 138, categories: 221, reports: 80 },
+    { name: '2023-03-01', users: 200, courses: 980, categories: 229, reports: 100 },
+    { name: '2023-04-01', users: 278, courses: 390, categories: 200, reports: 150 },
+    { name: '2023-05-01', users: 189, courses: 480, categories: 218, reports: 200 },
+    { name: '2023-06-01', users: 239, courses: 380, categories: 250, reports: 250 },
+    { name: '2023-07-01', users: 349, courses: 430, categories: 210, reports: 300 },
+  ];
+
   const [selectedDates, setSelectedDates] = useState<any[]>([]);
+  const [data, setData] = useState(initialData);
 
   const handleDateChange = (dates: any, dateStrings: [string, string]) => {
     setSelectedDates(dates);
@@ -17,7 +45,18 @@ const Dashboard: React.FC = () => {
   };
 
   const filterDataByRange = (dates: any) => {
+    if (!dates || dates.length === 0) {
+      setData(initialData);
+      return;
+    }
 
+    const [startDate, endDate] = dates;
+    const filteredData = initialData.filter(item => {
+      const itemDate = dayjs(item.name);
+      return itemDate.isAfter(startDate) && itemDate.isBefore(endDate);
+    });
+
+    setData(filteredData);
   };
 
   return (
@@ -72,6 +111,27 @@ const Dashboard: React.FC = () => {
                 <p className="text-2xl font-bold">120</p>
               </div>
             </div>
+          </Card>
+        </Col>
+      </Row>
+
+      <Row className="mt-8">
+        <Col span={24}>
+          <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl">
+            <Title level={3} className="mb-4 text-center">User and Course Statistics</Title>
+            <ResponsiveContainer width="100%" height={400}>
+              <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="users" fill="#8884d8" />
+                <Bar dataKey="courses" fill="#82ca9d" />
+                <Bar dataKey="categories" fill="#ffc658" />
+                <Bar dataKey="reports" fill="#ff7300" />
+              </BarChart>
+            </ResponsiveContainer>
           </Card>
         </Col>
       </Row>
