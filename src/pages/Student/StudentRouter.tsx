@@ -29,7 +29,8 @@ export default function StudentRouter() {
                     <Route path={`/`} element={<HomePage />} />
                     <Route path={`blog`} element={<BlogPage />} />
                     <Route path={`about`} element={<About />} />
-                    <Route path={`course`}element={<ProtectedRouter allowedRoles={[2]}><CoursePage /></ProtectedRouter>} />
+                    <Route path={`course/`}element={<ProtectedRouter allowedRoles={[2]}><CoursePage /></ProtectedRouter>} />
+                    <Route path={`course/course-details`} element={<ProtectedRouter allowedRoles={[2]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`category`} element={<ProtectedRouter allowedRoles={[2]}><CategoryPage /></ProtectedRouter>} />
                     <Route path={`course-details`} element={<ProtectedRouter allowedRoles={[2]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={[2]}><ShoppingCart /></ProtectedRouter>} />

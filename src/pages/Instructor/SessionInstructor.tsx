@@ -451,7 +451,7 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
   return (
-    <Layout style={{ height: '100vh' }}>
+    <Layout style={{ height: '100vh' , }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
           <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
@@ -463,7 +463,7 @@ const ManagerCourseInstructor: React.FC = () => {
             />
           </div>
         </Header>
-        <Content className="m-4">
+        <Content className="m-4 overflow-y-scroll">
           <Table
             pagination={{ pageSize: 5 }}
             dataSource={filteredDataSource}
@@ -535,7 +535,7 @@ const ManagerCourseInstructor: React.FC = () => {
             rowKey="key"
           />
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
+        
       </Layout>
 
       <Modal

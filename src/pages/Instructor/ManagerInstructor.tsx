@@ -274,7 +274,7 @@ const handleChange = (value: string) => {
   ];
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
+    <Layout style={{ height: '100vh'}}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
           <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
@@ -284,16 +284,16 @@ const handleChange = (value: string) => {
               onChange={e => handleSearch(e.target.value)}
               style={{ width: 200 }}
             />
-            <div className="h-6 mx-4 border-r"></div>
+            <div className="h-6 lg:mx-4 border-r"></div>
             <Button className="font-bold text-white bg-red-500" onClick={handleAddNewCourse}>
               <PlusCircleOutlined />
               Add New Course
             </Button>
           </div>
         </Header>
-        <Content className="m-4">
+        <Content className="my-4 mx-4 xl:mx-6 overflow-y-auto">
           <Table
-          pagination={{ pageSize: 5 }}
+          pagination={{ pageSize: 6 }}
             dataSource={filteredDataSource}
             columns={columns}
             expandable={{
@@ -350,7 +350,7 @@ const handleChange = (value: string) => {
             rowKey="key"
           />
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
+        
       </Layout>
 
       <Modal
