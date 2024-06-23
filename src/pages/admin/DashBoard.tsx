@@ -5,22 +5,22 @@ import {
   FlagOutlined,
   UserOutlined
 } from '@ant-design/icons';
-import { Card, Col, DatePicker, Row, Space, Typography, Progress } from 'antd';
+import { Card, Col, DatePicker, Progress, Row, Space, Typography } from 'antd';
 import 'dayjs/locale/vi';
 import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-  LineChart,
-  Line
-} from 'recharts';
+// import {
+//   BarChart,
+//   Bar,
+//   XAxis,
+//   YAxis,
+//   CartesianGrid,
+//   Tooltip,
+//   Legend,
+//   ResponsiveContainer,
+//   LineChart,
+//   Line
+// } from 'recharts';
 import dayjs from 'dayjs';
 
 const { Title } = Typography;
@@ -73,7 +73,7 @@ const Dashboard: React.FC = () => {
 
       <Row gutter={[16, 16]}>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+          <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
             <div className="flex items-center justify-between">
               <BookOutlined className="text-4xl text-blue-500" />
               <div className="text-right">
@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+          <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
             <div className="flex items-center justify-between">
               <UserOutlined className="text-4xl text-green-500" />
               <div className="text-right">
@@ -95,7 +95,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+          <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
             <div className="flex items-center justify-between">
               <AppstoreOutlined className="text-4xl text-red-500" />
               <div className="text-right">
@@ -106,7 +106,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </Col>
         <Col xs={24} sm={12} lg={6}>
-          <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+          <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
             <div className="flex items-center justify-between">
               <FlagOutlined className="text-4xl text-yellow-500" />
               <div className="text-right">
@@ -120,10 +120,10 @@ const Dashboard: React.FC = () => {
 
       <Row className="mt-8" gutter={[16, 16]}>
         <Col xs={24} lg={16}>
-          <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+          <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
 
             <Title level={3} className="mb-4 text-center">User and Course Statistics</Title>
-            <ResponsiveContainer width="100%" height={400}>
+            {/* <ResponsiveContainer width="100%" height={400}>
               <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -135,23 +135,23 @@ const Dashboard: React.FC = () => {
                 <Bar dataKey="categories" fill="#ffc658" />
                 <Bar dataKey="reports" fill="#ff7300" />
               </BarChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer> */}
           </Card>
         </Col>
         <Col xs={24} lg={8}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+              <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
                 <Title level={3} className="mb-4 text-center">Ratings</Title>
-                <div className="flex justify-center items-center">
+                <div className="flex items-center justify-center">
                   <Progress type="circle" percent={90} format={() => '4.5/5'} />
                 </div>
               </Card>
             </Col>
             <Col span={24}>
-              <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+              <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
                 <Title level={3} className="mb-4 text-center">Total Revenue</Title>
-                <ResponsiveContainer width="100%" height={200}>
+                {/* <ResponsiveContainer width="100%" height={200}>
                   <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
@@ -160,7 +160,7 @@ const Dashboard: React.FC = () => {
                     <Legend />
                     <Line type="monotone" dataKey="revenue" stroke="#8884d8" activeDot={{ r: 8 }} />
                   </LineChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer> */}
               </Card>
             </Col>
           </Row>

@@ -165,12 +165,12 @@ const ManagerCourseInstructor: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
-          <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
+          <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
             <Input
               placeholder="Search..."
               prefix={<SearchOutlined />}
               onChange={e => handleSearch(e.target.value)}
-              style={{ width: 200 }}
+              style={{ width: 300 }}
             />
             <div className="h-6 mx-4 border-r"></div>
             <Button className="font-bold text-white bg-red-500" onClick={handleAddNewCourse}>

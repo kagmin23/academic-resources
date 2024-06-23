@@ -183,12 +183,12 @@ import React, { useState } from 'react';
       <Layout style={{ minHeight: '100vh' }}>
         <Layout className="site-layout">
           <Header className="p-0 bg-white">
-            <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
+            <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
               <Input
                 placeholder="Search..."
                 prefix={<SearchOutlined />}
                 onChange={e => handleSearch(e.target.value)}
-                style={{ width: 200 }}
+                style={{ width: 300 }}
               />
             </div>
           </Header>
@@ -209,7 +209,7 @@ import React, { useState } from 'react';
                           onClick={handleClick}
                           className="h-full"
                         >
-                          <SubMenu key="sub1" title="Lesson" icon={<FileOutlined />}>
+                          <SubMenu key="sub1" title="Session" icon={<FileOutlined />}>
                             {lessons.map(lesson => (
                           <Menu.Item key={lesson.key} icon={lesson.preview ? <FileOutlined /> : <LockOutlined />} className="flex items-center h-24">
                           <div className="w-full">

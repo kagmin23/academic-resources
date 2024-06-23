@@ -1,15 +1,12 @@
 import {
-    DeleteOutlined,
-    EditOutlined,
-    EyeOutlined,
-    PlusCircleOutlined,
-    SearchOutlined,
-    PlusOutlined
-  } from '@ant-design/icons';
-  import { Button, Col, Form, Input, Layout, Modal, Row, Table, Typography, Upload,Radio } from 'antd';
-  import Title from 'antd/lib/typography/Title';
-  import { AlignType } from 'rc-table/lib/interface';
-  import React, { useState } from 'react';
+  DeleteOutlined,
+  EditOutlined,
+  PlusCircleOutlined,
+  SearchOutlined
+} from '@ant-design/icons';
+import { Button, Form, Input, Layout, Modal, Table, Typography } from 'antd';
+import { AlignType } from 'rc-table/lib/interface';
+import React, { useState } from 'react';
   
   const { Header, Content, Footer } = Layout;
   const { Text } = Typography;
@@ -178,12 +175,12 @@ import {
       <Layout style={{ minHeight: '100vh' }}>
         <Layout className="site-layout">
           <Header className="p-0 bg-white">
-            <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
+            <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
               <Input
                 placeholder="Search..."
                 prefix={<SearchOutlined />}
                 onChange={e => handleSearch(e.target.value)}
-                style={{ width: 200 }}
+                style={{ width: 300 }}
               />
               <div className="h-6 mx-4 border-r"></div>
               <Button className="font-bold text-white bg-red-500" onClick={handleAddNewCourse}>
