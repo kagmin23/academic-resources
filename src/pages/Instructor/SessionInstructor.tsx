@@ -506,9 +506,9 @@ const ManagerCourseInstructor: React.FC = () => {
                         renderItem={(session, index) => (
                           <>
                             <List.Item actions={[
+                              <Button icon={<PlusOutlined />} className="mr-2 text-white bg-green-600" onClick={() => handleAddSessionAfter(index)}></Button>,
                               <Button icon={<EditOutlined />} className="mr-2 text-white bg-blue-500" onClick={() => handleSessionEdit(session)}></Button>,
                               <Button icon={<DeleteOutlined />} className="mr-2 text-white bg-red-600" onClick={() => handleSessionDelete(session)}></Button>,
-                              <Button icon={<PlusOutlined />} className="mr-2 text-white bg-green-600" onClick={() => handleAddSessionAfter(index)}></Button>
                             ]}>
                               <List.Item.Meta
                                 avatar={<ReadOutlined />}
@@ -521,7 +521,7 @@ const ManagerCourseInstructor: React.FC = () => {
                       />
                       <Divider className='p-0 m-0' />
                       <div className='flex justify-center w-full pr-5 my-5'>
-                        <Button className='text-base text-blue-700' onClick={() => handleAddSessionAfter(sessions.length - 1)}> <PlusOutlined /> Add New Session</Button>
+                        <Button type= "dashed" className='text-base text-blue-700' onClick={() => handleAddSessionAfter(sessions.length - 1)}> <PlusOutlined /> Add New Session</Button>
                       </div>
                     </TabPane>
                   </Tabs>
