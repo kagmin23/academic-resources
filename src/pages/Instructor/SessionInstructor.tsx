@@ -216,8 +216,8 @@
 //                       {/* <Menu mode="inline" defaultSelectedKeys={[sessions[0].key]} className="h-full">
                         
 //                         {sessions.map(session => (
-//                           <Menu.Item key={session.key} icon={<ReadOutlined />} className=" ">
-//                             <div className="w-full flex justify-between">
+//                           <Menu.Item key={session.key} icon={<ReadOutlined />} className="">
+//                             <div className="flex justify-between w-full">
 //                               <div>
 //                               <div className="text-base">{session.title}</div>
 //                               <div className="text-sm text-gray-500">{session.duration}</div></div>
@@ -253,7 +253,7 @@
 //                         )}
 //                       />
 //                       <Divider className='p-0 m-0'/>
-//                       <div className='my-5 w-full flex justify-center pr-5'>
+//                       <div className='flex justify-center w-full pr-5 my-5'>
 //                         <Button className='text-base text-blue-700'onClick={handleSessionAdd}> <PlusOutlined /> Add New Session</Button>
 
 //                       </div>
@@ -297,14 +297,11 @@ import {
   DeleteOutlined,
   DownCircleOutlined,
   EditOutlined,
-  FileOutlined,
-  LockOutlined,
-  SearchOutlined,
+  PlusOutlined,
   ReadOutlined,
-  PlusOutlined
+  SearchOutlined
 } from '@ant-design/icons';
-import { List } from "antd";
-import { Button, Form, Input, Layout, Menu, Modal, Table, Tabs, Typography, Divider } from 'antd';
+import { Button, Divider, Form, Input, Layout, List, Menu, Modal, Table, Tabs, Typography } from "antd";
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useState } from 'react';
 
@@ -454,12 +451,12 @@ const ManagerCourseInstructor: React.FC = () => {
     <Layout style={{ height: '100vh' , }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
-          <div className="flex flex-wrap items-center justify-center gap-4 p-4 bg-[#939fb1]">
+          <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
             <Input
               placeholder="Search..."
               prefix={<SearchOutlined />}
               onChange={e => handleSearch(e.target.value)}
-              style={{ width: 200 }}
+              style={{ width: 300 }}
             />
           </div>
         </Header>
@@ -523,7 +520,7 @@ const ManagerCourseInstructor: React.FC = () => {
                         )}
                       />
                       <Divider className='p-0 m-0' />
-                      <div className='my-5 w-full flex justify-center pr-5'>
+                      <div className='flex justify-center w-full pr-5 my-5'>
                         <Button className='text-base text-blue-700' onClick={() => handleAddSessionAfter(sessions.length - 1)}> <PlusOutlined /> Add New Session</Button>
                       </div>
                     </TabPane>
