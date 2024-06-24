@@ -20,6 +20,7 @@ import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import RouterLesson from './RouterLesson';
 import StudentPage from 'pages/Student/StudentPage';
+import Certificate from './Certificate';
 export default function StudentRouter() {
   return (
     <div >
@@ -44,6 +45,7 @@ export default function StudentRouter() {
                     <Route path={`save`} element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[2]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={[2]}><TopInstructorPage /></ProtectedRouter>} />
+                    <Route path={`certificate`} element={<ProtectedRouter allowedRoles={[2]}><Certificate /></ProtectedRouter>} />
                     </Route>
                </Routes>
 

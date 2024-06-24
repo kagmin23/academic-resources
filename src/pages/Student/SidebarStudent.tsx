@@ -53,7 +53,7 @@ const SidebarStudent: React.FC = () => {
     {
       icon: ContainerOutlined,
       heading: 'Certificates',
-      href: "/student/profile-student/*",
+      href: "/student/profile-student/certificate",
     },
     {
       icon: ShoppingCartOutlined,
