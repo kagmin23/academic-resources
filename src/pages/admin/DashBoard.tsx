@@ -35,7 +35,6 @@ const Dashboard: React.FC = () => {
     { name: '2023-05-01', users: 189, courses: 480, categories: 218, reports: 200, revenue: 1800 },
     { name: '2023-06-01', users: 239, courses: 380, categories: 250, reports: 250, revenue: 2000 },
     { name: '2023-07-01', users: 349, courses: 430, categories: 210, reports: 300, revenue: 2200 },
-
   ];
 
   const [selectedDates, setSelectedDates] = useState<any[]>([]);
@@ -124,10 +123,9 @@ const Dashboard: React.FC = () => {
 
       <Row className="mt-8" gutter={[16, 16]}>
         <Col xs={24} lg={16}>
-          <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
-
+          <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white" style={{ height: '600px' }}>
             <Title level={3} className="mb-4 text-center">User and Course Statistics</Title>
-            <ResponsiveContainer width="100%" height={400}>
+            <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -145,17 +143,17 @@ const Dashboard: React.FC = () => {
         <Col xs={24} lg={8}>
           <Row gutter={[16, 16]}>
             <Col span={24}>
-              <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+              <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white" style={{ height: '295px' }}>
                 <Title level={3} className="mb-4 text-center">Ratings</Title>
-                <div className="flex justify-center items-center">
+                <div className="flex justify-center items-center" style={{ height: '100%' }}>
                   <Progress type="circle" percent={90} format={() => '4.5/5'} />
                 </div>
               </Card>
             </Col>
             <Col span={24}>
-              <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white">
+              <Card className="transition-shadow duration-300 shadow-lg hover:shadow-xl rounded-lg p-4 bg-white" style={{ height: '295px' }}>
                 <Title level={3} className="mb-4 text-center">Total Revenue</Title>
-                <ResponsiveContainer width="100%" height={200}>
+                <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
