@@ -354,6 +354,24 @@ const initialDataSource: DataType[] = [
     name_course: 'Course name',
     created_at: '2024-01-03',
   },
+  {
+    key: '4',
+    image: 'https://via.placeholder.com/50',
+    created_at: '2024-01-04',
+    name_course: 'Course name'
+  },
+  {
+    key: '5',
+    image: 'https://via.placeholder.com/50',
+    created_at: '2024-01-05',
+    name_course: 'Course name'
+  },
+  {
+    key: '6',
+    image: 'https://via.placeholder.com/50',
+    created_at: '2024-01-06',
+    name_course: 'Course name'
+  },
 ];
 
 const ManagerCourseInstructor: React.FC = () => {
@@ -366,6 +384,7 @@ const ManagerCourseInstructor: React.FC = () => {
   const [sessionForm] = Form.useForm();
   const [currentSession, setCurrentSession] = useState<SessionType | null>(null);
   const [insertIndex, setInsertIndex] = useState<number | null>(null);
+  const [ sessionDelete, setSessionDelete ] = useState(null);
 
   const handleViewMore = (key: string) => {
     setExpandedKeys(prevKeys =>
@@ -421,7 +440,9 @@ const ManagerCourseInstructor: React.FC = () => {
   const handleSessionDelete = (session: SessionType) => {
     const newSessions = sessions.filter(item => item.key !== session.key);
     setSessions(newSessions);
+    setSessionDelete(null);
   };
+
 
   const handleAddSessionAfter = (index: number) => {
     setInsertIndex(index + 1);
@@ -480,7 +501,7 @@ const ManagerCourseInstructor: React.FC = () => {
               expandedRowRender: (record: DataType) => (
                 <div style={{ paddingBottom: "10px", backgroundColor: 'white', borderRadius: '4px' }}>
                   <Tabs centered>
-                    <TabPane tab={<span style={{ fontSize: '16px' }}>List of course Lesson:</span>} key="1" className='w-full'>
+                    <TabPane tab={<span style={{ fontSize: '16px' }}>List of course sessions:</span>} key="1" className='w-full'>
                       <List
                         className='px-2'
                         size="small"
@@ -503,7 +524,7 @@ const ManagerCourseInstructor: React.FC = () => {
                       />
                       <Divider className='p-0 m-0' />
                       <div className='flex justify-center w-full pr-5 my-5'>
-                        <Button type= "dashed" className='text-base text-blue-700' onClick={() => handleAddSessionAfter(sessions.length - 1)}> <PlusOutlined /> Add New Lesson</Button>
+                        <Button type= "dashed" className='text-base text-blue-700' onClick={() => handleAddSessionAfter(sessions.length - 1)}> <PlusOutlined /> Add New Session</Button>
                       </div>
                     </TabPane>
                   </Tabs>
