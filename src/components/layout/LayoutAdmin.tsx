@@ -1,8 +1,9 @@
 import { BookOutlined } from '@ant-design/icons';
-import { Input, Layout } from 'antd';
+import { Image, Input, Layout } from 'antd';
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
+import '../../assets/Logoacademic.png'
 
 const { Header, Content } = Layout;
 
@@ -31,13 +32,12 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
 
   return (
     <div className='mb-16'>
-     
+
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
-        <Link to={`/`}>
-          <h1 className="text-xl text-white">
-            <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
-          </h1>
-        </Link>
+        <div className='flex flex-row gap-5'>
+        <div className='h-10 w-10'><Image src='Logoacademic.png'></Image></div>
+        <h1 className="text-xl text-white ">Academic Resource</h1>
+        </div>
         <div className="flex items-center gap-16">
           {/* <Search
             placeholder="Search courses"
@@ -100,12 +100,12 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
         onClose={toggleDrawer}
         visible={drawerVisible}
       > */}
-        {/* <Search
+      {/* <Search
           placeholder="Search courses"
           onSearch={onSearch}
           className="w-full mb-4"
         /> */}
-        {/* <Menu
+      {/* <Menu
           mode="vertical"
           selectedKeys={selectedKeys}
           onClick={handleMenuClick}
@@ -131,14 +131,14 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
         </Menu>
       </Drawer> */}
       {/* <Content className="p-4 pt-16"> */}
-        {/* <div className="p-4 bg-white rounded shadow"> */}
-          <Outlet />
-        {/* </div> */}
+      {/* <div className="p-4 bg-white rounded shadow"> */}
+      <Outlet />
+      {/* </div> */}
       {/* </Content> */}
 
       {/* <Footer />  */}
-    </div> 
-    
+    </div>
+
   );
 };
 

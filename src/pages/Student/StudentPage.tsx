@@ -18,7 +18,7 @@ const StudentPage: React.FC = () => {
           <Route path={`course-student`} element={<MyCourseStudent />} />
           <Route path={`info-student`} element={<ProfileStudent />} />
           <Route path={`student-changepassword`} element={<ChangepasswordStu />} />
-          <Route path={`certificate`} element={<Certificate/>} />
+          <Route path={`certificate-student`} element={<Certificate/>} />
         </Routes>
       </div>
     </div>
