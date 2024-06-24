@@ -35,7 +35,6 @@ const Dashboard: React.FC = () => {
     { name: '2023-05-01', users: 189, courses: 480, categories: 218, reports: 200, revenue: 1800 },
     { name: '2023-06-01', users: 239, courses: 380, categories: 250, reports: 250, revenue: 2000 },
     { name: '2023-07-01', users: 349, courses: 430, categories: 210, reports: 300, revenue: 2200 },
-
   ];
 
   const [selectedDates, setSelectedDates] = useState<any[]>([]);

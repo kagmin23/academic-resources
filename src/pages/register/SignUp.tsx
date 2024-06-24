@@ -1,16 +1,18 @@
 import { Button, Checkbox, Form, Input, Radio, Upload, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
-import { UploadOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import type { UploadRequestOption } from 'rc-upload/lib/interface';
 
 const SignUp: React.FC = () => {
   const [form] = Form.useForm();
   const [value, setValue] = useState<string>('student');
   const [current, setCurrent] = useState<number>(0);
   const [formData, setFormData] = useState<any>({});
-  const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false, false, false]);
-  const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true); // State to show/hide radio group
+  const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false, false, false, false]);
+  const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
+  const [uploadStatus, setUploadStatus] = useState<string>('uploading');
 
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
@@ -21,7 +23,6 @@ const SignUp: React.FC = () => {
       const values = await form.validateFields();
       const updatedCompletedSteps = [...completedSteps];
       updatedCompletedSteps[current] = true;
-      setCompletedSteps(updatedCompletedSteps);
       setFormData({ ...formData, ...values });
       setCurrent(current + 1);
 
@@ -44,8 +45,11 @@ const SignUp: React.FC = () => {
       const updatedCompletedSteps = [...completedSteps];
       updatedCompletedSteps[current] = true;
       setCompletedSteps(updatedCompletedSteps);
-      setFormData({ ...formData, ...values });
-      console.log('Final Form Data:', formData);
+      const finalFormData = { ...formData, ...values };
+      setFormData(finalFormData);
+      console.log('Final Form Data:', finalFormData);
+
+      localStorage.setItem('formData', JSON.stringify(finalFormData));
 
       notification.success({
         message: 'Success',
@@ -56,11 +60,15 @@ const SignUp: React.FC = () => {
     }
   };
 
-  const skipStep = () => {
-    const updatedCompletedSteps = [...completedSteps];
-    updatedCompletedSteps[current] = true;
-    setCompletedSteps(updatedCompletedSteps);
-    setCurrent(current + 1);
+  const customUpload = (options: UploadRequestOption<any>) => {
+    const { file, onSuccess } = options;
+    const reader = new FileReader();
+    reader.readAsDataURL(file as Blob);
+    reader.onload = () => {
+      setFormData({ ...formData, avatar: reader.result });
+      if (onSuccess) onSuccess('ok');
+      setUploadStatus('done');
+    };
   };
 
   const steps = [
@@ -119,19 +127,18 @@ const SignUp: React.FC = () => {
       title: 'Update Avatar',
       content: (
         <Form form={form} className="space-y-4">
-          <Form.Item
-            name="avatar"
-            rules={[{ required: true, message: 'Please upload your avatar!' }]}
-          >
-            <Upload name="avatar" listType="picture" maxCount={1}>
-              <Button icon={<UploadOutlined />}>Upload Avatar</Button>
+          <Form.Item name="avatar">
+            <Upload customRequest={customUpload} listType="picture" maxCount={1}>
+              <Button icon={uploadStatus === 'done' ? <CheckCircleOutlined style={{ color: 'green' }} /> : <UploadOutlined />}>
+                {uploadStatus === 'done' ? 'Upload Complete' : 'Upload Avatar'}
+              </Button>
             </Upload>
           </Form.Item>
           <div className="flex justify-between">
-            <Button onClick={onPrev} className=" text-blue-400 ">
+            <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Button type="primary" onClick={onNext} className="  text-white">
+            <Button type="primary" onClick={onNext} className="text-white">
               Next
             </Button>
           </div>
@@ -142,17 +149,14 @@ const SignUp: React.FC = () => {
       title: 'Update Bio',
       content: (
         <Form form={form} className="space-y-4">
-          <Form.Item
-            name="bio"
-            rules={[{ required: true, message: 'Please input your bio!' }]}
-          >
+          <Form.Item name="bio">
             <Input.TextArea placeholder="Bio" size="large" rows={4} />
           </Form.Item>
           <div className="flex justify-between">
-            <Button onClick={onPrev} className=" text-blue-400">
+            <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Button type="primary" onClick={onNext} className=" hover:bg-red-600 text-white">
+            <Button type="primary" onClick={onNext} className="hover:bg-red-600 text-white">
               Next
             </Button>
           </div>
@@ -163,21 +167,18 @@ const SignUp: React.FC = () => {
       title: 'Update Phone',
       content: (
         <Form form={form} className="space-y-4">
-          <Form.Item 
+          <Form.Item
             name="phone"
             label="Phone Number"
-            rules={[
-              { required: true, message: 'Please input your phone number!' },
-              
-            ]}
+            rules={[{ required: true, message: 'Please input your phone number!' }]}
           >
             <Input addonBefore={'+84 VN'} placeholder="Phone Number" size="large" />
           </Form.Item>
           <div className="flex justify-between">
-            <Button onClick={onPrev} className=" text-blue-400">
+            <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Button type="primary" onClick={onNext} className=" hover:bg-red-600 text-white">
+            <Button type="primary" onClick={onNext} className="hover:bg-red-600 text-white">
               Next
             </Button>
           </div>
@@ -188,39 +189,39 @@ const SignUp: React.FC = () => {
       title: 'Optional Fields',
       content: (
         <Form form={form} className="space-y-4">
-      <Form.Item
-        name="github"
-        label="GitHub Link"
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
-      >
-        <Input placeholder="GitHub Link" size="large" />
-      </Form.Item>
-      <Form.Item
-        name="youtube"
-        label="YouTube Link"
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
-      >
-        <Input placeholder="YouTube Link" size="large" />
-      </Form.Item>
-      <Form.Item
-        name="facebook"
-        label="Facebook Link"
-        labelCol={{ span: 6 }}
-        wrapperCol={{ span: 18 }}
-      >
-        <Input placeholder="Facebook Link" size="large" />
-      </Form.Item>
-      <div className="flex justify-between">
-        <Button onClick={onPrev} className="text-blue-400">
-          Previous
-        </Button>
-        <Button type="primary" onClick={onFinish} className="bg-red-600 hover:bg-red-600 text-white">
-          Finish
-        </Button>
-      </div>
-    </Form>
+          <Form.Item
+            name="github"
+            label="GitHub Link"
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+          >
+            <Input placeholder="GitHub Link" size="large" />
+          </Form.Item>
+          <Form.Item
+            name="youtube"
+            label="YouTube Link"
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+          >
+            <Input placeholder="YouTube Link" size="large" />
+          </Form.Item>
+          <Form.Item
+            name="facebook"
+            label="Facebook Link"
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+          >
+            <Input placeholder="Facebook Link" size="large" />
+          </Form.Item>
+          <div className="flex justify-between">
+            <Button onClick={onPrev} className="text-blue-400">
+              Previous
+            </Button>
+            <Button type="primary" onClick={onFinish} className="bg-green-600 hover:bg-green-700 text-white">
+              Finish
+            </Button>
+          </div>
+        </Form>
       ),
     },
   ];
@@ -272,14 +273,6 @@ const SignUp: React.FC = () => {
         <footer className="text-center text-gray-600 mt-4">
           <p>© 2024 Edumy. All Rights Reserved.</p>
         </footer>
-      </div>
-
-      <div className="absolute top-4 right-4">
-        {current < steps.length - 1 && (
-          <Button type="text" onClick={skipStep} className="text-blue-600">
-            Skip
-          </Button>
-        )}
       </div>
     </div>
   );
