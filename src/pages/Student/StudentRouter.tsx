@@ -8,19 +8,18 @@ import {
   CourseDetailsPage,
   CoursePage,
   HomePage,
-  LessonStudent,
   SavePage,
   Setting,
   ShoppingCart,
-  TopInstructorPage,
+  TopInstructorPage
 } from 'pages';
 import PaymentSuccess from 'pages/PaymentSuccess';
+import StudentPage from 'pages/Student/StudentPage';
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
+import Certificate from './Certificate';
 import RouterLesson from './RouterLesson';
-import StudentPage from 'pages/Student/StudentPage';
-import Certificate from 'pages/Student/Certificate';
 export default function StudentRouter() {
   return (
     <div >
@@ -43,9 +42,9 @@ export default function StudentRouter() {
                     {/* <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[2]}><LessonStudent /></ProtectedRouter>} /> */}
                     <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={[2]}><RouterLesson /></ProtectedRouter>} />
                     <Route path={`save`} element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />
-                    <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={[2]}><Certificate /></ProtectedRouter>} />
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[2]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={[2]}><TopInstructorPage /></ProtectedRouter>} />
+                    <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={[2]}><Certificate /></ProtectedRouter>} />
                     </Route>
                </Routes>
 

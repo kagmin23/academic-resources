@@ -1,14 +1,16 @@
 
-import { Button, Card, Col, Menu, Row } from 'antd';
+import { Button, Card, Col, Menu, Pagination, Row } from 'antd';
 // import 'antd/dist/antd.css';
 import React, { useState } from 'react';
 // import './styles.css';
 import {
   ContainerOutlined,
   DesktopOutlined,
+  HeartOutlined,
   MailOutlined,
 
   PieChartOutlined,
+  ShoppingCartOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
 import { Drawer } from 'antd';
@@ -68,6 +70,58 @@ const courses: Course[] = [
     description: 'Description of Course 1',
     price: 50,
   },
+  {
+    id: 7,
+    image:'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+    title:'Course 7',
+    description:'Description of Course 1',
+    price: 50,
+  },
+  {
+    id: 8,
+    image:'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+    title:'Course 7',
+    description:'Description of Course 1',
+    price: 50,
+  },
+  {
+    id: 9,
+    image:'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+    title:'Course 7',
+    description:'Description of Course 1',
+    price: 50,
+  },
+  {
+    id: 10,
+    image:'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+    title:'Course 7',
+    description:'Description of Course 1',
+    price: 50,
+  },
+  {
+    id: 11,
+    image:'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+    title:'Course 7',
+    description:'Description of Course 1',
+    price: 50,
+  },
+  {
+    id: 12,
+    image:'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+    title:'Course 7',
+    description:'Description of Course 1',
+    price: 50,
+  },
+  {
+    id: 13,
+    image:'https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg',
+    title:'Course 7',
+    description:'Description of Course 1',
+    price: 50,
+  },
+  
+  
+  
 ];
 
 
@@ -121,6 +175,13 @@ const items: MenuItem[] = [
 
 
 const CoursePage: React.FC = () => {
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize= 6;
+
+const handlePageChange = (page: number) => {
+  setCurrentPage(page);
+};
   // MEnu
   
   const onClick: MenuProps['onClick'] = (e) => {
@@ -144,7 +205,7 @@ const CoursePage: React.FC = () => {
 
     <div className="mx-auto h-fit">
 
-      <Row gutter={[16, 16]} >
+      <Row gutter={[16,16]} >
       {/* Menu ở Màn hình md trở lên */}
       <Col xs={0} sm={0} md={6} lg={6} xl={6}>
           {/* Sidebar content */}
@@ -164,7 +225,7 @@ const CoursePage: React.FC = () => {
           mode="inline"
           items={items}
            theme="dark"
-          className='h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
+          className='w-2/3 h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
 
           />
          </div>
@@ -176,7 +237,7 @@ const CoursePage: React.FC = () => {
         </Col>
         
 
-        <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto'>
+        <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto -mx-10'>
 
         {/* Menu màn hình <md */}
         <Button type="primary" onClick={showDrawer} className='mb-4 md:hidden'>
@@ -189,7 +250,7 @@ const CoursePage: React.FC = () => {
         onClose={onClose}
 
         open={open}
-        bodyStyle={{ padding: 0, margin: 0 }} 
+        bodyStyle={{ padding: 0, margin: 0 }}
         
       >
         <Menu
@@ -205,23 +266,35 @@ const CoursePage: React.FC = () => {
           />
       </Drawer>
       {/* Content Course */}
-      <Link to={`course-details`}><Row gutter={[15, 15]} className='xl:px-1 ' >
-            {courses.map((course) => (
+
+      <Link to="/course-details"><Row gutter={[15, 15]} className='xl:px-1 ' >
+            {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
               <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8} >
                 <Card
                   hoverable
                   cover={<img alt={course.title} src={course.image} />}
                 >
                   <Card.Meta title={course.title} description={course.description} />
-                  <div className="flex items-center justify-between mt-4 text-xs font-bold">
+                  <div className="flex items-center justify-between mt-4 text-lg font-bold">
                     <span>{course.price}.000 VND</span>
-
+                    <div className='flex'>
+                    <Button className='p-3 mr-2 text-white bg-red-500'><HeartOutlined /></Button>
+                    <Button className='p-3 text-white bg-blue-500'><ShoppingCartOutlined /></Button>
+                    </div>
                   </div>
                 </Card>
                 
               </Col>
             ))}
-          </Row></Link>
+          </Row></Link> 
+          <Pagination
+  current={currentPage}
+  pageSize={pageSize}
+  total={courses.length}
+  onChange={handlePageChange}
+  className="flex justify-center mt-8"
+/>
+         
         </Col>
         
       </Row>

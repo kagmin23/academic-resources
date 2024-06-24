@@ -117,8 +117,8 @@
 //           allowFullScreen
 //           className="mb-4"
 //         ></iframe>
-//         <div className="text-lg font-bold mt-4">Thông tin khóa học:</div>
-//         <ul className="list-disc pl-4 mt-2">
+//         <div className="mt-4 text-lg font-bold">Thông tin khóa học:</div>
+//         <ul className="pl-4 mt-2 list-disc">
 //           {/* Other content */}
 //         </ul>
 //       </div>
@@ -150,19 +150,19 @@
 //   };
 
 //   return (
-//     <div className="flex flex-col lg:flex-row p-4">
-//       <div className="w-full lg:w-2/3 p-4">
+//     <div className="flex flex-col p-4 lg:flex-row">
+//       <div className="w-full p-4 lg:w-2/3">
 //         <Title level={2}>NodeJs Super</Title>
 //         <Text>Bởi: Du Thanh Dược</Text> <br />
 //         <Text>Cập nhật: 06/2024</Text>
 //         <div className="my-4">
 //           <div>
-//             <h1 className="text-2xl font-bold mb-4">{selectedLesson?.title}</h1>
+//             <h1 className="mb-4 text-2xl font-bold">{selectedLesson?.title}</h1>
 //             {selectedLesson && renderContent(selectedLesson)}
 //           </div>
 //         </div>
 //       </div>
-//       <div className="w-full lg:w-1/3 p-4 bg-gray-100">
+//       <div className="w-full p-4 bg-gray-100 lg:w-1/3">
 //         <Card>
 //           <Menu
 //             mode="inline"
@@ -206,9 +206,9 @@
 // };
 
 // export default LessonStudent;
+import { Typography } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Typography } from 'antd';
 import 'tailwindcss/tailwind.css';
 
 const { Title, Text } = Typography;
@@ -308,7 +308,6 @@ const chapters: Chapter[] = [
       }
     ]
   },
-  // Add more chapters and lessons here
 ];
 
 const LessonDetail: React.FC = () => {
@@ -333,8 +332,8 @@ const LessonDetail: React.FC = () => {
           allowFullScreen
           className="mb-6"
         ></iframe>
-        <div className="text-lg font-bold mt-4">Thông tin khóa học:</div>
-        <ul className="list-disc pl-4 mt-2">
+        <div className="mt-4 text-lg font-bold">Thông tin khóa học:</div>
+        <ul className="pl-4 mt-2 list-disc">
           {/* Other content */}
         </ul>
       </div>
@@ -348,7 +347,7 @@ const LessonDetail: React.FC = () => {
         
         <div className="my-4">
           <div>
-            <h1 className="text-2xl font-bold mb-4">{selectedLesson?.title}</h1>
+            <h1 className="mb-4 text-2xl font-bold">{selectedLesson?.title}</h1>
             {selectedLesson && renderContent(selectedLesson)}
           </div>
         </div>
