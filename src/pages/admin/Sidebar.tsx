@@ -86,7 +86,7 @@ const SidebarAdmin: React.FC = () => {
   return (
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#1F2937] shadow-lg`}>
       <div className="flex items-center justify-between p-4">
-        <Link to="/admin-page">
+        <Link to="/admin">
           <span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>
             ADMINI<span className="text-blue-500">STRATOR</span>
           </span>
