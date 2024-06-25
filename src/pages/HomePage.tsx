@@ -7,27 +7,27 @@ import './styles.css'; // Import the custom CSS file
 const Courses = [
   {
     title: "Course 1",
-    img: "https://media.licdn.com/dms/image/D4D12AQFvpv0FBeM8Ew/article-cover_image-shrink_720_1280/0/1700885047727?e=2147483647&v=beta&t=gKhQO6rfZq3p58Sa-GM9zFs5CgwZJqVyqPBcZtm2Pm0",
+    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
   },
   {
     title: "Course 2",
-    img: "https://media.licdn.com/dms/image/D4D12AQFc3mT14dY9hg/article-cover_image-shrink_720_1280/0/1711408267815?e=2147483647&v=beta&t=HjY5P1_eU4eY5HjbdubrEi5WC-e3CRaAUkCqCf3SNHM",
+    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
   },
   {
     title: "Course 3",
-    img: "https://media.licdn.com/dms/image/D4D12AQEWzo3Jn9T45A/article-cover_image-shrink_720_1280/0/1699138098059?e=2147483647&v=beta&t=mPHE7l2LY1WF1evOaWKldsg3ilnQWtUWSTahMpWnvGg",
+    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
   },
   {
     title: "Course 4",
-    img: "https://media.licdn.com/dms/image/D4D12AQEzdr9CEqQnQQ/article-cover_image-shrink_720_1280/0/1701126577885?e=2147483647&v=beta&t=IQxCJTYMact7JzHJKFdsGiIE0j-Vt-hlUMQA4_GJtpU",
+    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
   },
   {
     title: "Course 5",
-    img: "https://media.licdn.com/dms/image/D4D12AQHj6wiq5tpbAA/article-inline_image-shrink_1500_2232/0/1701126774921?e=1721865600&v=beta&t=HYaCCKDctqqeekdiERqAxu9SS72nnzZNX0cD28_2Ls4",
+    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
   },
   {
     title: "Course 6",
-    img: "https://media.licdn.com/dms/image/D4E12AQEw_AaFDPr3TA/article-cover_image-shrink_720_1280/0/1702893319300?e=2147483647&v=beta&t=o4sdtfjIw2j4Oc9RjZRfMJjMC2IFJLFT8e_MoMMAkMQ",
+    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
   },
 ];
 
@@ -150,38 +150,33 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </header>
-
+      
       <div id="content">
         <div className='flex items-center justify-center w-full '>
           <div className='w-full text-center'>
-            <ul className="mt-20 ml-4 text-4xl font-bold">Popular Courses</ul>
-            <Carousel
-              arrows
-              slidesToShow={3}
+            <ul className="sm:mt-20 ml-4 text-2xl sm:text-4xl font-bold">Popular Courses</ul>
+           <Carousel className=''
+             slidesToShow={3}
               autoplay
-              dotPosition='bottom'
-              prevArrow={<div className='flex flex-row'><CustomPrevArrow /></div>}
-              nextArrow={<div className='flex flex-row'><CustomNextArrow /></div>}
-            >
-              {Courses.map((course, index) => (
-                <div className='w-full h-full p-10' key={index}>
-                  <div className='flex mb-3 ml-3 sm:space-x-10'>
-                    <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
-                    <Link to={`course-details`}>
-                      <Button size='small' type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button>
-                    </Link>
-                  </div>
-                  <Link to={`course-details`}>
-                    <img className="rounded-xl h-80 w-96" src={course.img} alt="no image" />
+              dotPosition='bottom'>
+                 {Courses.map((course,index) =>(
+                  <div className='my-5 p-2 sm:my-10'>
+                     <Link to={`course-details`}>
+                  <img className="rounded-xl " src={course.img} alt="no image" />
                   </Link>
+                  <div className='flex space-x-8 sm:space-x-72'>
+                  <h1 className='ml-2 text-xl font-bold truncate  '>{course.title}</h1>
+                  </div>
                 </div>
-              ))}
-            </Carousel>
+                 ))}
+                 
+           </Carousel>
+            
           </div>
         </div>
 
         <Link to="/course">
-          <p className="text-center pt-2.5 text-xl">View More&nbsp;<ArrowRightOutlined /></p>
+          <p className="text-center pt-2.5 sm:text-xl">View More&nbsp;<ArrowRightOutlined /></p>
         </Link>
 
         <div className="body-homebox">
@@ -189,39 +184,34 @@ const HomePage: React.FC = () => {
             <img src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" className="" />
           </div>
           <div className="text-sm box text-box">
-            <p className="pt-10 mb-10">Limitless Learning, More</p>
+            <p className="pt-10 mb-5">Limitless Learning,More</p>
             <p className="mb-10">Possibilities</p>
-            <ul className="mb-10 text-lg underline">Answer A Few Questions For Your Top Picks</ul>
+            <ul className="mb-10  sm:text-lg underline">Answer A Few Questions For Your Top Picks</ul>
           </div>
         </div>
 
         <div className="box body-button">
-          <button className="text-white">Join for free <ArrowRightOutlined /></button>
+          <button className="text-white text-2xl ">Join for free <ArrowRightOutlined /></button>
         </div>
 
         <div className='flex items-center justify-center w-full'>
           <div className='w-full text-center'>
-            <ul className="mt-10 ml-4 text-4xl font-bold">New Courses</ul>
+            <ul className="mt-10 ml-4 text-2xl sm:text-4xl font-bold">New Courses</ul>
             <Carousel
-              arrows
               slidesToShow={3}
               autoplay
               dotPosition='bottom'
-              prevArrow={<div className='flex flex-row'><CustomPrevArrow /></div>}
-              nextArrow={<div className='flex flex-row'><CustomNextArrow /></div>}
+              
             >
               {NewCourses.map((course, index) => (
-                <div className='w-full h-full p-10' key={index}>
-                  <div className='flex mb-3 ml-3 sm:space-x-10'>
-                    <h1 className='text-sm font-bold sm:text-xl'>{course.title}</h1>
-                    <Link to={`course-details`}>
-                      <Button type="primary" className='p-5 text-lg float-end ml-9'>$$$</Button>
-                    </Link>
-                  </div>
-                  <Link to={`course-details`}>
-                    <img className="w-full rounded-xl" src={course.img} alt="no image" />
-                  </Link>
-                </div>
+                <div className='my-5 p-2 sm:my-10'>
+                <Link to={`course-details`}>
+             <img className="rounded-xl " src={course.img} alt="no image" />
+             </Link>
+             <div className='flex'>
+             <h1 className='ml-2 text-sm sm:text-xl sm:font-bold truncate'>{course.title}</h1>
+             </div>
+           </div>
               ))}
             </Carousel>
           </div>
@@ -236,8 +226,8 @@ const HomePage: React.FC = () => {
             <Col xs={24} sm={12} md={6} key={index} className="flex justify-center">
               <Card
                 bordered={false}
-                className="w-48 transition duration-300 ease-in-out hover:shadow-md"
-                cover={<img alt={category.title} src={category.img} className="object-contain h-32 p-3" />}
+                className="w-32 sm:w-48 h-32 sm:h-48 transition duration-300 ease-in-out hover:shadow-md"
+                cover={<img alt={category.title} src={category.img} className="object-contain h-20 sm:h-32 p-3" />}
               >
                 <div className="text-center">{category.title}</div>
               </Card>

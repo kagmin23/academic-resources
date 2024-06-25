@@ -29,6 +29,6 @@ const InstructorPage: React.FC = () => {
       </div>
     </div>
   );
-}
+};
 
 export default InstructorPage;

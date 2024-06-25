@@ -1,10 +1,11 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
-import SidebarStudent from 'pages/Student/SidebarStudent';
-import ChangepasswordStu from 'pages/Student/ChangePasswordStu';
 import AboutStudent from 'pages/Student/AboutStudent';
+import Certificate from 'pages/Student/Certificate';
+import ChangepasswordStu from 'pages/Student/ChangePasswordStu';
 import MyCourseStudent from 'pages/Student/MyCourseStudent';
 import ProfileStudent from 'pages/Student/ProfileStudent';
+import SidebarStudent from 'pages/Student/SidebarStudent';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 
 const StudentPage: React.FC = () => {
@@ -17,7 +18,7 @@ const StudentPage: React.FC = () => {
           <Route path={`course-student`} element={<MyCourseStudent />} />
           <Route path={`info-student`} element={<ProfileStudent />} />
           <Route path={`student-changepassword`} element={<ChangepasswordStu />} />
-          <Route path={`*`} element={<h1>404</h1>} />
+          <Route path={`certificate-student`} element={<Certificate/>} />
         </Routes>
       </div>
     </div>

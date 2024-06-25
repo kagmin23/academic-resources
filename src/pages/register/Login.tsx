@@ -1,6 +1,6 @@
 import { GoogleOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './stylesLogin.css';
 
@@ -8,12 +8,18 @@ const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const formRef = useRef<any>(null); // Ref for form instance
-
-  const users = [
+  const [users, setUsers] = useState([
     { email: "admin@gmail.com", password: "123", roleId: 1, role: "Admin" },
     { email: "user@gmail.com", password: "123", roleId: 2, role: "Student" },
     { email: "instructor@gmail.com", password: "123", roleId: 3, role: "Instructor" },
-  ];
+  ]);
+
+  useEffect(() => {
+    const storedUsers = localStorage.getItem('registeredUsers');
+    if (storedUsers) {
+      setUsers([...users, ...JSON.parse(storedUsers)]);
+    }
+  }, []);
 
   const handleLogin = (values: any) => {
     const { email, password } = values;
@@ -35,7 +41,7 @@ const Login: React.FC = () => {
           navigate('/admin');
           break;
         default:
-        navigate('/home');
+          navigate('/home');
       }
     } else {
       message.error('Invalid email or password');
