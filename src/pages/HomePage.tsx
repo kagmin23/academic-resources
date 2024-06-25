@@ -1,4 +1,4 @@
-import { ArrowRightOutlined, DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CaretLeftOutlined, CaretRightOutlined, DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Card, Carousel, Col, Input, Row } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -154,18 +154,23 @@ const HomePage: React.FC = () => {
       <div id="content">
         <div className='flex items-center justify-center w-full '>
           <div className='w-full text-center'>
-            <ul className="sm:mt-20 ml-4 text-2xl sm:text-4xl font-bold">Popular Courses</ul>
-           <Carousel className=''
+            <ul className="ml-4 text-2xl font-bold sm:mt-20 sm:text-4xl">Popular Courses</ul>
+           <Carousel
+             arrows
              slidesToShow={3}
               autoplay
-              dotPosition='bottom'>
+              dotPosition='bottom'
+              prevArrow={<div className='flex'><CustomPrevArrow/></div>}
+              nextArrow={<div className='flex'><CustomNextArrow/></div>}
+              >
+                
                  {Courses.map((course,index) =>(
-                  <div className='my-5 p-2 sm:my-10'>
+                  <div className='p-2 my-5 sm:my-10'>
                      <Link to={`course-details`}>
                   <img className="rounded-xl " src={course.img} alt="no image" />
                   </Link>
                   <div className='flex space-x-8 sm:space-x-72'>
-                  <h1 className='ml-2 text-xl font-bold truncate  '>{course.title}</h1>
+                  <h1 className='ml-2 text-xl font-bold truncate '>{course.title}</h1>
                   </div>
                 </div>
                  ))}
@@ -175,7 +180,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        <Link to="/course">
+        <Link to="/course-details">
           <p className="text-center pt-2.5 sm:text-xl">View More&nbsp;<ArrowRightOutlined /></p>
         </Link>
 
@@ -186,30 +191,32 @@ const HomePage: React.FC = () => {
           <div className="text-sm box text-box">
             <p className="pt-10 mb-5">Limitless Learning,More</p>
             <p className="mb-10">Possibilities</p>
-            <ul className="mb-10  sm:text-lg underline">Answer A Few Questions For Your Top Picks</ul>
+            <ul className="mb-10 underline sm:text-lg">Answer A Few Questions For Your Top Picks</ul>
           </div>
         </div>
 
         <div className="box body-button">
-          <button className="text-white text-2xl ">Join for free <ArrowRightOutlined /></button>
+          <button className="text-2xl text-white ">Join for free <ArrowRightOutlined /></button>
         </div>
 
         <div className='flex items-center justify-center w-full'>
           <div className='w-full text-center'>
-            <ul className="mt-10 ml-4 text-2xl sm:text-4xl font-bold">New Courses</ul>
+            <ul className="mt-10 ml-4 text-2xl font-bold sm:text-4xl">New Courses</ul>
             <Carousel
+            arrows
               slidesToShow={3}
               autoplay
               dotPosition='bottom'
-              
+              prevArrow={<div className='flex flex-row'><CustomPrevArrow /></div>}
+              nextArrow={<div className='flex flex-row'><CustomNextArrow /></div>}
             >
               {NewCourses.map((course, index) => (
-                <div className='my-5 p-2 sm:my-10'>
+                <div className='p-2 my-5 sm:my-10'>
                 <Link to={`course-details`}>
              <img className="rounded-xl " src={course.img} alt="no image" />
              </Link>
              <div className='flex'>
-             <h1 className='ml-2 text-sm sm:text-xl sm:font-bold truncate'>{course.title}</h1>
+             <h1 className='ml-2 text-sm truncate sm:text-xl sm:font-bold'>{course.title}</h1>
              </div>
            </div>
               ))}
@@ -226,8 +233,8 @@ const HomePage: React.FC = () => {
             <Col xs={24} sm={12} md={6} key={index} className="flex justify-center">
               <Card
                 bordered={false}
-                className="w-32 sm:w-48 h-32 sm:h-48 transition duration-300 ease-in-out hover:shadow-md"
-                cover={<img alt={category.title} src={category.img} className="object-contain h-20 sm:h-32 p-3" />}
+                className="w-32 h-32 transition duration-300 ease-in-out sm:w-48 sm:h-48 hover:shadow-md"
+                cover={<img alt={category.title} src={category.img} className="object-contain h-20 p-3 sm:h-32" />}
               >
                 <div className="text-center">{category.title}</div>
               </Card>
