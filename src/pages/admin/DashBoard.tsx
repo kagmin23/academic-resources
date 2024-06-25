@@ -6,22 +6,22 @@ import {
   UserOutlined
 } from '@ant-design/icons';
 import { Card, Col, DatePicker, Progress, Row, Space, Typography } from 'antd';
-import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
 import React, { useState } from 'react';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from 'recharts';
 import 'tailwindcss/tailwind.css';
+// import {
+//   BarChart,
+//   Bar,
+//   XAxis,
+//   YAxis,
+//   CartesianGrid,
+//   Tooltip,
+//   Legend,
+//   ResponsiveContainer,
+//   LineChart,
+//   Line
+// } from 'recharts';
+import dayjs from 'dayjs';
 
 const { Title } = Typography;
 const { RangePicker } = DatePicker;
@@ -122,7 +122,7 @@ const Dashboard: React.FC = () => {
           <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
 
             <Title level={3} className="mb-4 text-center">User and Course Statistics</Title>
-            <ResponsiveContainer width="100%" height={400}>
+            {/* <ResponsiveContainer width="100%" height={400}>
               <BarChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="name" />
@@ -134,7 +134,7 @@ const Dashboard: React.FC = () => {
                 <Bar dataKey="categories" fill="#ffc658" />
                 <Bar dataKey="reports" fill="#ff7300" />
               </BarChart>
-            </ResponsiveContainer>
+            </ResponsiveContainer> */}
           </Card>
         </Col>
         <Col xs={24} lg={8}>
@@ -150,7 +150,7 @@ const Dashboard: React.FC = () => {
             <Col span={24}>
               <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
                 <Title level={3} className="mb-4 text-center">Total Revenue</Title>
-                <ResponsiveContainer width="100%" height={200}>
+                {/* <ResponsiveContainer width="100%" height={200}>
                   <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
                     <CartesianGrid strokeDasharray="3 3" />
                     <XAxis dataKey="name" />
@@ -159,7 +159,7 @@ const Dashboard: React.FC = () => {
                     <Legend />
                     <Line type="monotone" dataKey="revenue" stroke="#8884d8" activeDot={{ r: 8 }} />
                   </LineChart>
-                </ResponsiveContainer>
+                </ResponsiveContainer> */}
               </Card>
             </Col>
           </Row>
