@@ -4,6 +4,7 @@ import { TinyColor } from '@ctrl/tinycolor';
 import { Button, Card, ConfigProvider } from 'antd';
 import React from 'react';
 import sp from '../assets/sp.jpg';
+import { Link } from 'react-router-dom';
 //Color Button
 const colors1 = ['#6253E1', '#04BEFE'];
 const getHoverColors = (colors: string[]) =>
@@ -107,9 +108,9 @@ export default function ShoppingCart() {
         },
       }} 
     >
-      <Button type="primary" size="large" className='w-full'>
+      <a href='buy-now'><Button type="primary" size="large" className='w-full'>
         Checkout Now
-      </Button>
+      </Button></a>
     </ConfigProvider>
 
             </Card>
