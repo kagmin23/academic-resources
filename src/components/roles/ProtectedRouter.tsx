@@ -16,12 +16,14 @@ const ProtectedRouter: React.FC<ProtectedRouteProps> = ({ allowedRoles, children
     try {
       const parsedUserData = JSON.parse(userData);
       userRole = parsedUserData.roleId;  // Kiểm tra key roleId trong userData
+      
     } catch (error) {
       console.error('Error parsing userData:', error);
     }
   }
 
   if (userRole === null || !allowedRoles.includes(userRole)) {
+    console.log("userRole:", userRole)
     return <Navigate to="/home" replace />;
   }
 

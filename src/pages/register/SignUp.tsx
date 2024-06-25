@@ -2,7 +2,7 @@ import { Button, Checkbox, Form, Input, Radio, Upload, notification } from 'antd
 import { RadioChangeEvent } from 'antd/lib';
 import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import type { UploadRequestOption } from 'rc-upload/lib/interface';
 
 const SignUp: React.FC = () => {
@@ -13,6 +13,7 @@ const SignUp: React.FC = () => {
   const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false, false, false, false]);
   const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
   const [uploadStatus, setUploadStatus] = useState<string>('uploading');
+  const navigate = useNavigate();
 
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
@@ -45,16 +46,21 @@ const SignUp: React.FC = () => {
       const updatedCompletedSteps = [...completedSteps];
       updatedCompletedSteps[current] = true;
       setCompletedSteps(updatedCompletedSteps);
-      const finalFormData = { ...formData, ...values };
+      const finalFormData = { ...formData, ...values, role: value.charAt(0).toUpperCase() + value.slice(1) };
       setFormData(finalFormData);
       console.log('Final Form Data:', finalFormData);
 
-      localStorage.setItem('formData', JSON.stringify(finalFormData));
+      // Save to localStorage
+      const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+      storedUsers.push(finalFormData);
+      localStorage.setItem('registeredUsers', JSON.stringify(storedUsers));
 
       notification.success({
         message: 'Success',
         description: 'You have signed up successfully!',
       });
+
+      navigate('/log-in');
     } catch (error) {
       console.log('Validation Failed:', error);
     }
