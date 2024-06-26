@@ -26,7 +26,7 @@ const SettingAdmin: React.FC = () => {
 
   const [email, setEmail] = useState<string>('ngoclnse@gmail.com');
   const [userName, setUserName] = useState<string>('lenhungock17hcm');
-  const [bio, setBio] = useState<string>('Chưa cập nhật');
+  const [bio, setBio] = useState<string>('Not Update');
   const [avatar, setAvatar] = useState<string>('https://files.fullstack.edu.vn/f8-prod/user_photos/379503/65826d8841a16.jpg');
   const [socialLinks, setSocialLinks] = useState<{ [key: string]: string }>({
     'GitHub': '',
@@ -124,11 +124,12 @@ const SettingAdmin: React.FC = () => {
               </div>
               <div className='p-4 border rounded-lg'>
                 <ProfileItem
-                  label="Giới thiệu"
+                  label="Bio"
                   value={bio}
-                  isOpen={itemStates['Giới thiệu']}
+                  isOpen={itemStates['Bio']}
                   onItemClick={handleItemClick}
                   onSave={handleBioSave}
+                  isTextArea
                 />
               </div>
               <div className='p-4 border rounded-lg'>
@@ -175,6 +176,7 @@ type ProfileItemProps = {
   onItemClick: (label: string) => void;
   onSave: (values: any) => void;
   isFileUpload?: boolean;
+  isTextArea?: boolean;
 };
 
 const ProfileItem: React.FC<ProfileItemProps> = ({
@@ -184,6 +186,7 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
   onItemClick,
   onSave,
   isFileUpload = false,
+  isTextArea = false,
 }) => {
   const [form] = Form.useForm();
 
@@ -192,11 +195,7 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
   };
 
   const onFinish = (values: any) => {
-    console.log('Received values of form: ', values);
-    notification.success({
-      message: 'Success',
-      description: `Updated ${label} successfully`,
-    });
+    handleSave(values);
   };
 
   return (
@@ -226,18 +225,26 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
       </div>
       {isOpen && (
         <div className="mt-4 space-y-4">
-          <Form form={form} name={`update${label.replace(' ', '')}`} onFinish={onFinish}>
+          <Form form={form} name={`update${label.replace(' ', '')}`} onFinish={onFinish} layout="vertical">
             {isFileUpload ? (
               <Form.Item
-                name="updateFile"
+                name="newAvatar"
                 label={`Update ${label}`}
                 rules={[{ required: true, message: `Please select an update ${label.toLowerCase()}!` }]}
               >
                 <Input type="file" accept="image/*" />
               </Form.Item>
+            ) : isTextArea ? (
+              <Form.Item
+                name={`new${label.replace(' ', '')}`}
+                label={`Update ${label}`}
+                rules={[{ required: true, message: `Please input your update ${label.toLowerCase()}!` }]}
+              >
+                <Input.TextArea rows={4} />
+              </Form.Item>
             ) : (
               <Form.Item
-                name={`update${label.replace(' ', '')}`}
+                name={`new${label.replace(' ', '')}`}
                 label={`Update ${label}`}
                 rules={[{ required: true, message: `Please input your update ${label.toLowerCase()}!` }]}
               >
@@ -245,9 +252,11 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
               </Form.Item>
             )}
             <Form.Item>
-              <Button type="primary" htmlType="submit">
-                Save
-              </Button>
+              <div className="flex justify-end">
+                <Button type="primary" htmlType="submit">
+                  Save
+                </Button>
+              </div>
             </Form.Item>
           </Form>
         </div>
