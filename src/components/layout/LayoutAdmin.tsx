@@ -34,10 +34,11 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
     <div className='mb-16'>
 
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
-        <div className='flex flex-row gap-5'>
-        <div className='h-10 w-10'><Image src='Logoacademic.png'></Image></div>
-        <h1 className="text-xl text-white ">Academic Resource</h1>
-        </div>
+        <Link to={``}>
+          <h1 className="text-xl text-white">
+            <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
+          </h1>
+        </Link>
         <div className="flex items-center gap-16">
           {/* <Search
             placeholder="Search courses"
