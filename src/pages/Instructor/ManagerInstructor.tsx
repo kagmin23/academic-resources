@@ -14,8 +14,9 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Switch } from 'antd';
 import { Select } from 'antd';
 import type { SelectProps } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
-
+const { confirm } = Modal;
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 const { TextArea } = Input;
@@ -238,6 +239,36 @@ const handleChange = (value: string) => {
     setFilteredDataSource(filteredData);
   };
 
+  //confirm
+  const showConfirm = (record: DataType) => {
+    confirm({
+      title: 'Do you want to delete these items?',
+      icon: <ExclamationCircleFilled />,
+      content: 'Some descriptions',
+      onOk() {
+        console.log('OK');
+        handleDelete(record);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+  // const handleConfirmDelete = (record: DataType) => {
+  //   confirm({
+  //     title: 'Do you want to delete these?',
+  //     icon: <ExclamationCircleFilled />,
+  //     content: 'Hành động này không thể hoàn tác',
+  //     okText: 'Xóa',
+  //     okType: 'danger',
+  //     cancelText: 'Hủy',
+  //     onOk() {
+  //       handleDelete(record);
+  //     },
+  //   });
+  // };
+
+
   const columns = [
     {
       title: 'Course',
@@ -266,7 +297,7 @@ const handleChange = (value: string) => {
       render: (text: string, record: DataType) => (
         <div style={{ textAlign: 'center' }}>
           <Button icon={<EditOutlined />} className="mr-2 text-white bg-blue-500" onClick={() => handleEdit(record)}></Button>
-          <Button icon={<DeleteOutlined />} className="mr-2 text-white bg-red-600" onClick={() => handleDelete(record)}></Button>
+          <Button icon={<DeleteOutlined />} className="mr-2 text-white bg-red-600"  onClick={() => showConfirm(record)}></Button>
           <Button icon={<EyeOutlined />} onClick={() => handleViewMore(record.key)}></Button>
         </div>
       ),

@@ -267,7 +267,7 @@ const handlePageChange = (page: number) => {
       </Drawer>
       {/* Content Course */}
 
-      <Link to="/course-details"><Row gutter={[15, 15]} className='xl:px-1 ' >
+      <Link to={`course-details`}><Row gutter={[15, 15]} className='xl:px-1 ' >
             {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
               <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8} >
                 <Card
@@ -279,7 +279,8 @@ const handlePageChange = (page: number) => {
                     <span>{course.price}.000 VND</span>
                     <div className='flex'>
                     <Button className='p-3 mr-2 text-white bg-red-500'><HeartOutlined /></Button>
-                    <Button className='p-3 text-white bg-blue-500'><ShoppingCartOutlined /></Button>
+                    <Link to={`/student/buy-now`}>
+                    <Button className='p-3 text-white bg-blue-500'><ShoppingCartOutlined /></Button></Link>
                     </div>
                   </div>
                 </Card>

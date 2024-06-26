@@ -118,8 +118,9 @@ const CourseDetail: React.FC = () => {
                             <p className="mt-2 text-lg">Last updated 1/2024</p>
                             <div className="mt-4 ">
                                 <Button type="primary" className="p-5 mr-2 text-lg font-semibold bg-red-600">Add to Cart</Button>
-                                <Link to={`buy-now`}><Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>Buy Now</Button></Link>
+                                <Link to={`/student/buy-now`}><Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>Buy Now</Button></Link>
                             </div>
+                            
                             <p className="mt-2 text-lg">30-Day Money-Back Guarantee</p>
                         </div>
                     </div>
