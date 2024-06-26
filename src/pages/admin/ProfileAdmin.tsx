@@ -3,6 +3,7 @@ import { Button, Form, Input, Typography, notification } from 'antd';
 import 'tailwindcss/tailwind.css';
 
 const { Text } = Typography;
+const { TextArea } = Input;
 
 interface FormValues {
   name: string;
@@ -16,7 +17,7 @@ const SettingAdmin: React.FC = () => {
   const [itemStates, setItemStates] = useState<{ [key: string]: boolean }>({
     'Email': false,
     'User Name': false,
-    'Giới thiệu': false,
+    'Bio': false,
     'Avatar': false,
     'GitHub': false,
     'Facebook': false,
@@ -59,7 +60,7 @@ const SettingAdmin: React.FC = () => {
 
   const handleBioSave = (values: any) => {
     setBio(values.newBio);
-    setItemStates({ ...itemStates, 'Giới thiệu': false });
+    setItemStates({ ...itemStates, 'Bio': false });
     notification.success({
       message: 'Success',
       description: 'Updated Bio successfully',
@@ -186,7 +187,6 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
   onItemClick,
   onSave,
   isFileUpload = false,
-  isTextArea = false,
 }) => {
   const [form] = Form.useForm();
 
@@ -234,21 +234,13 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
               >
                 <Input type="file" accept="image/*" />
               </Form.Item>
-            ) : isTextArea ? (
-              <Form.Item
-                name={`new${label.replace(' ', '')}`}
-                label={`Update ${label}`}
-                rules={[{ required: true, message: `Please input your update ${label.toLowerCase()}!` }]}
-              >
-                <Input.TextArea rows={4} />
-              </Form.Item>
             ) : (
               <Form.Item
                 name={`new${label.replace(' ', '')}`}
                 label={`Update ${label}`}
                 rules={[{ required: true, message: `Please input your update ${label.toLowerCase()}!` }]}
               >
-                <Input />
+                {label === 'Bio' ? <TextArea rows={4} /> : <Input />}
               </Form.Item>
             )}
             <Form.Item>
