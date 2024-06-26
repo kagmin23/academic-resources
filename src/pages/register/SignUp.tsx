@@ -83,8 +83,8 @@ const SignUp: React.FC = () => {
       content: (
         <Form form={form} name="signup" initialValues={{ remember: true }} className="space-y-4">
           <Form.Item
-            name="fullName"
-            rules={[{ required: true, message: 'Please input your full name!' }]}
+            name="userName"
+            rules={[{ required: true, message: 'Please input your username!' }]}
           >
             <Input placeholder="User Name" size="large" />
           </Form.Item>
@@ -92,14 +92,23 @@ const SignUp: React.FC = () => {
             name="email"
             rules={[
               { required: true, message: 'Please input your email address!' },
-              { type: 'email', message: 'Please enter a valid email address!' },
+              {
+                pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
+                message: 'Please enter a valid email address!',
+              },
             ]}
           >
             <Input placeholder="Email Address" size="large" />
           </Form.Item>
           <Form.Item
             name="password"
-            rules={[{ required: true, message: 'Please input your password!' }]}
+            rules={[
+              { required: true, message: 'Please input your password!' },
+              {
+                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                message: 'Your password must be from 8 to 16 characters long, must contain at least 1 uppercase character, 1 lowercase character, 1 numeric character and 1 special character',
+              },
+            ]}
           >
             <Input.Password placeholder="Password" size="large" />
           </Form.Item>
@@ -130,7 +139,7 @@ const SignUp: React.FC = () => {
       ),
     },
     {
-      title: 'Update Avatar',
+      title: 'Update',
       content: (
         <Form form={form} className="space-y-4">
           <Form.Item name="avatar">
@@ -140,61 +149,24 @@ const SignUp: React.FC = () => {
               </Button>
             </Upload>
           </Form.Item>
-          <div className="flex justify-between">
-            <Button onClick={onPrev} className="text-blue-400">
-              Previous
-            </Button>
-            <Button type="primary" onClick={onNext} className="text-white">
-              Next
-            </Button>
-          </div>
-        </Form>
-      ),
-    },
-    {
-      title: 'Update Bio',
-      content: (
-        <Form form={form} className="space-y-4">
+
           <Form.Item name="bio">
-            <Input.TextArea placeholder="Bio" size="large" rows={4} />
+            <Input.TextArea placeholder="Update bio" size="large" rows={4} />
           </Form.Item>
-          <div className="flex justify-between">
-            <Button onClick={onPrev} className="text-blue-400">
-              Previous
-            </Button>
-            <Button type="primary" onClick={onNext} className="hover:bg-red-600 text-white">
-              Next
-            </Button>
-          </div>
-        </Form>
-      ),
-    },
-    {
-      title: 'Update Phone',
-      content: (
-        <Form form={form} className="space-y-4">
+
           <Form.Item
             name="phone"
-            label="Phone Number"
-            rules={[{ required: true, message: 'Please input your phone number!' }]}
+            label="Phone"
+            labelCol={{ span: 6 }}
+            wrapperCol={{ span: 18 }}
+            rules={[
+              { required: true, message: 'Please input your phone number!' },
+              { pattern: /^\d+$/, message: 'Please enter a valid phone number!' },
+            ]}
           >
             <Input addonBefore={'+84 VN'} placeholder="Phone Number" size="large" />
           </Form.Item>
-          <div className="flex justify-between">
-            <Button onClick={onPrev} className="text-blue-400">
-              Previous
-            </Button>
-            <Button type="primary" onClick={onNext} className="hover:bg-red-600 text-white">
-              Next
-            </Button>
-          </div>
-        </Form>
-      ),
-    },
-    {
-      title: 'Optional Fields',
-      content: (
-        <Form form={form} className="space-y-4">
+
           <Form.Item
             name="github"
             label="GitHub Link"
@@ -219,6 +191,7 @@ const SignUp: React.FC = () => {
           >
             <Input placeholder="Facebook Link" size="large" />
           </Form.Item>
+
           <div className="flex justify-between">
             <Button onClick={onPrev} className="text-blue-400">
               Previous
@@ -227,6 +200,7 @@ const SignUp: React.FC = () => {
               Finish
             </Button>
           </div>
+          
         </Form>
       ),
     },
