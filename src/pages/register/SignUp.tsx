@@ -155,19 +155,6 @@ const SignUp: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            name="phone"
-            label="Phone"
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
-            rules={[
-              { required: true, message: 'Please input your phone number!' },
-              { pattern: /^\d+$/, message: 'Please enter a valid phone number!' },
-            ]}
-          >
-            <Input addonBefore={'+84 VN'} placeholder="Phone Number" size="large" />
-          </Form.Item>
-
-          <Form.Item
             name="github"
             label="GitHub Link"
             labelCol={{ span: 6 }}
