@@ -8,19 +8,18 @@ import {
   CourseDetailsPage,
   CoursePage,
   HomePage,
-  LessonStudent,
   SavePage,
   Setting,
   ShoppingCart,
-  TopInstructorPage,
+  TopInstructorPage
 } from 'pages';
 import PaymentSuccess from 'pages/PaymentSuccess';
+import StudentPage from 'pages/Student/StudentPage';
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
-import RouterLesson from './RouterLesson';
-import StudentPage from 'pages/Student/StudentPage';
 import Certificate from './Certificate';
+import RouterLesson from './RouterLesson';
 export default function StudentRouter() {
   return (
     <div >
@@ -30,7 +29,8 @@ export default function StudentRouter() {
                     <Route path={`/`} element={<HomePage />} />
                     <Route path={`blog`} element={<BlogPage />} />
                     <Route path={`about`} element={<About />} />
-                    <Route path={`course`}element={<ProtectedRouter allowedRoles={[2]}><CoursePage /></ProtectedRouter>} />
+                    <Route path={`course/`}element={<ProtectedRouter allowedRoles={[2]}><CoursePage /></ProtectedRouter>} />
+                    <Route path={`course/course-details`} element={<ProtectedRouter allowedRoles={[2]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`category`} element={<ProtectedRouter allowedRoles={[2]}><CategoryPage /></ProtectedRouter>} />
                     <Route path={`course-details`} element={<ProtectedRouter allowedRoles={[2]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={[2]}><ShoppingCart /></ProtectedRouter>} />
@@ -44,7 +44,7 @@ export default function StudentRouter() {
                     <Route path={`save`} element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[2]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={[2]}><TopInstructorPage /></ProtectedRouter>} />
-                    <Route path={`certificate`} element={<ProtectedRouter allowedRoles={[2]}><Certificate /></ProtectedRouter>} />
+                    <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={[2]}><Certificate /></ProtectedRouter>} />
                     </Route>
                </Routes>
 

@@ -1,6 +1,3 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Avatar, Menu, Typography } from "antd";
 import {
   ContainerOutlined,
   DeploymentUnitOutlined,
@@ -12,7 +9,10 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import { Avatar, Menu, Typography } from "antd";
 import 'antd/dist/reset.css';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
@@ -53,7 +53,7 @@ const SidebarStudent: React.FC = () => {
     {
       icon: ContainerOutlined,
       heading: 'Certificates',
-      href: "/student/profile-student/certificate",
+      href: "/student/profile-student/certificate-student",
     },
     {
       icon: ShoppingCartOutlined,

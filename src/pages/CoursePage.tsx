@@ -225,7 +225,7 @@ const handlePageChange = (page: number) => {
           mode="inline"
           items={items}
            theme="dark"
-          className='h-full w-2/3 p-2 overflow-y-auto lg:text-base xl:text-lg'
+          className='w-2/3 h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
 
           />
          </div>
@@ -250,7 +250,7 @@ const handlePageChange = (page: number) => {
         onClose={onClose}
 
         open={open}
-        bodyStyle={{ padding: 0, margin: 0 }} 
+        bodyStyle={{ padding: 0, margin: 0 }}
         
       >
         <Menu
@@ -267,7 +267,7 @@ const handlePageChange = (page: number) => {
       </Drawer>
       {/* Content Course */}
 
-      <Link to="/course-details"><Row gutter={[15, 15]} className='xl:px-1 ' >
+      <Link to={`course-details`}><Row gutter={[15, 15]} className='xl:px-1 ' >
             {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
               <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8} >
                 <Card
@@ -278,8 +278,9 @@ const handlePageChange = (page: number) => {
                   <div className="flex items-center justify-between mt-4 text-lg font-bold">
                     <span>{course.price}.000 VND</span>
                     <div className='flex'>
-                    <Button className='text-white bg-red-500 p-3 mr-2'><HeartOutlined /></Button>
-                    <Button className='bg-blue-500 text-white p-3'><ShoppingCartOutlined /></Button>
+                    <Button className='p-3 mr-2 text-white bg-red-500'><HeartOutlined /></Button>
+                    <Link to={`/student/buy-now`}>
+                    <Button className='p-3 text-white bg-blue-500'><ShoppingCartOutlined /></Button></Link>
                     </div>
                   </div>
                 </Card>
@@ -292,7 +293,7 @@ const handlePageChange = (page: number) => {
   pageSize={pageSize}
   total={courses.length}
   onChange={handlePageChange}
-  className="mt-8 flex justify-center"
+  className="flex justify-center mt-8"
 />
          
         </Col>

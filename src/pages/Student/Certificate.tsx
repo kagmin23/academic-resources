@@ -1,7 +1,6 @@
-import { FilterOutlined, HeartOutlined, HistoryOutlined, ReadOutlined, SearchOutlined, ShoppingCartOutlined } from '@ant-design/icons'
-import { Button, Card, Col, DatePicker, Input, Layout, Pagination, Row, Space } from 'antd'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom';
+import { DownloadOutlined, FilterOutlined, ReadOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Card, Col, DatePicker, Input, Layout, Pagination, Row, Space } from 'antd';
+import { useState } from 'react';
 
 interface Certificate {
     id: number;
@@ -108,7 +107,7 @@ const filteredCertificates = certifcate.filter((cert) =>
     const { RangePicker } = DatePicker;
   return (
    <Layout style={{ minHeight: '100vh' }}>
-     <div className="p-5  ">
+     <div className="p-5 ">
           <div className="py-5">
         <h1 className="text-lg font-bold float-start sm:text-2xl ">
           <ReadOutlined className="mr-2"></ReadOutlined> Your Certificates
@@ -137,9 +136,9 @@ const filteredCertificates = certifcate.filter((cert) =>
                   style={{maxWidth:350}}
                 >
                   <Card.Meta title={certifcate.title} className='text-ellipsis' />
-                  <div className="grid sm:flex justify-between mt-4 ">
+                  <div className="grid justify-between mt-4 sm:flex ">
                   <h1 className='text-sm'>Finish Date: {certifcate.finishDate}</h1>
-                    <Button size='small' className=' text-white bg-red-500  mt-2 sm:p-2 sm:mr-2'><HeartOutlined /></Button>
+                    <Button size='small' className='mt-2 text-white bg-blue-500 sm:p-2 sm:mr-2'><DownloadOutlined /></Button>
                   </div>
                 </Card>
                 
@@ -152,7 +151,7 @@ const filteredCertificates = certifcate.filter((cert) =>
   pageSize={pageSize}
   total={filteredCertificates.length}
   onChange={handlePageChange}
-  className="mt-8 flex justify-center"
+  className="flex justify-center mt-8"
 />
         </div>
      </div> 
