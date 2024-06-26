@@ -1,6 +1,18 @@
-import { ArrowRightOutlined, DownOutlined, FlagOutlined, HeartOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
-import { Button, Card, Carousel, Col, Input, Row } from 'antd';
-import React from 'react';
+import {
+  ArrowRightOutlined,
+  DotNetOutlined,
+  DownOutlined,
+  FlagOutlined,
+  HeartOutlined,
+  JavaOutlined,
+  LeftOutlined,
+  LinuxOutlined,
+  OpenAIOutlined,
+  RightOutlined,
+  SketchOutlined
+} from '@ant-design/icons';
+import { Button, Card, Carousel, Col, Row, message } from 'antd';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import './styles.css'; // Import the custom CSS file
 
@@ -8,32 +20,32 @@ const Courses = [
   {
     title: "Course 1",
     img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100000,
+    price:100,
   },
   {
     title: "Course 2",
     img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100000,
+    price:100,
   },
   {
     title: "Course 3",
     img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100000,
+    price:100,
   },
   {
     title: "Course 4",
     img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100000,
+    price:100,
   },
   {
     title: "Course 5",
     img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100000,
+    price:100,
   },
   {
     title: "Course 6",
     img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100000,
+    price:100,
   },
 ];
 
@@ -41,27 +53,27 @@ const NewCourses = [
   {
     title: "Course 1",
     img: "https://cursa.app/img/catimgs/information-technology.webp",
-    price:100000,
+    price:100,
   },
   {
     title: "Course 2",
     img: "https://cursa.app/img/catimgs/information-technology.webp",
-    price:100000,
+    price:100,
   },
   {
     title: "Course 3",
     img: "https://cursa.app/img/catimgs/information-technology.webp",
-    price:100000,
+    price:100,
   },
   {
     title: "Course 4",
     img: 'https://cursa.app/img/catimgs/information-technology.webp',
-    price:100000,
+    price:100,
   },
   {
     title: "Course 5",
     img: 'https://cursa.app/img/catimgs/information-technology.webp',
-    price:100000,
+    price:100,
   },
 ];
 
@@ -75,7 +87,7 @@ const Categories = [
     img: "https://play-lh.googleusercontent.com/rfWOJQVBHoAZ_B43v0ySFlLmJBLtksVGAxGaFRh2ex4nOmNQ86qzG4sYWV63IKrXlvI",
   },
   {
-    title: "Tailwind CSS",
+    title: "Tailwind",
     img: "https://ahmedkhald.com/static/media/tailwind.bf288b24c40bf937884e.png",
   },
   {
@@ -101,6 +113,8 @@ const Categories = [
 ];
 
 const HomePage: React.FC = () => {
+  const [email, setEmail] = useState('');
+
   const handleScroll = (e: React.MouseEvent) => {
     e.preventDefault();
     const targetId = e.currentTarget.getAttribute('href');
@@ -112,10 +126,37 @@ const HomePage: React.FC = () => {
     }
   };
 
+  const handleSubscribe = async () => {
+    if (!email) {
+      message.error('Please enter your email address');
+      return;
+    }
+
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+
+      if (response.ok) {
+        message.success('Subscription successful');
+        setEmail('');
+      } else {
+        message.error('Subscription failed');
+      }
+    } catch (error) {
+      console.error('Subscription error:', error);
+      message.error('An error occurred. Please try again later.');
+    }
+  };
+
   const CustomPrevArrow = (props: any) => (
     <button
       {...props}
-      className="absolute left-0 z-10 -inset-1  border-2 bg-slate-600 rounded-md    "
+      className="absolute left-0 z-10 border-2 rounded-md -inset-1 bg-slate-600"
     >
       <LeftOutlined className="text-lg text-white" />
     </button>
@@ -124,7 +165,7 @@ const HomePage: React.FC = () => {
   const CustomNextArrow = (props: any) => (
     <button
       {...props}
-      className="absolute right-0 z-10 -inset-1   border-2 bg-slate-600 rounded-md "
+      className="absolute right-0 z-10 border-2 rounded-md -inset-1 bg-slate-600"
     >
       <RightOutlined className="text-xl text-white" />
     </button>
@@ -148,7 +189,17 @@ const HomePage: React.FC = () => {
             href="#content"
             onClick={handleScroll}
           />
-          <div className="box-header" style={{ position: 'absolute', bottom: '70px', left: '50%', transform: 'translateX(-50%)', textAlign: 'center', color: 'black' }}>
+          <div
+            className="box-header"
+            style={{
+              position: 'absolute',
+              bottom: '70px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              textAlign: 'center',
+              color: 'black'
+            }}
+          >
             <ol className="text-black">100,000 Online Courses
               <li>Explore a variety of fresh topics</li>
             </ol>
@@ -161,82 +212,90 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </header>
-      
+
       <div id="content">
-        <div className='flex items-center justify-center w-full '>
+        <div className='flex items-center justify-center w-full'>
           <div className='w-full text-center'>
             <ul className="ml-4 text-2xl font-bold sm:mt-20 sm:text-4xl">Popular Courses</ul>
-           <Carousel
-             arrows
+            <Carousel
+              arrows
               autoplay
               dotPosition='bottom'
               className='px-6'
               slidesToShow={4}
-              prevArrow={<div ><CustomPrevArrow/></div>}
-              nextArrow={<div ><CustomNextArrow/></div>}
+              prevArrow={<div><CustomPrevArrow /></div>}
+              nextArrow={<div><CustomNextArrow /></div>}
               responsive={[
                 {
-                  breakpoint: 1280, 
+                  breakpoint: 1280,
                   settings: {
                     slidesToShow: 4,
                   }
                 },
                 {
-                  breakpoint: 1024, 
+                  breakpoint: 1024,
                   settings: {
-                    slidesToShow:3,
+                    slidesToShow: 3,
                   }
                 },
                 {
-                  breakpoint: 768, 
+                  breakpoint: 768,
                   settings: {
                     slidesToShow: 2,
                   }
                 }
               ]}
-              >
-                
-                 {Courses.map((course,index) =>(
-                  <div className='p-2 my-5 sm:my-10'>
+            >
+              {Courses.map((course, index) => (
+                <div className='p-2 my-5 sm:my-10' key={index}>
                   <Link to={`course-details`}>
-                  <img className="rounded-xl " src={course.img} alt="no image" />
+                    <img className="rounded-xl" src={course.img} alt="no image" />
                   </Link>
-                  <div className='flex '>
-                  <h1 className='text-xl font-bold truncate lg:text-2xl '>{course.title}</h1>
-                  </div>
-                  <div className='flex space-x-9 sm:space-x-24 md:space-x-32 lg:space-x-36  '>
-                  <p className=' lg:text-lg '>{course.price}VND</p>
                   <div className='flex'>
-                  <Button size='small' title='Save this course' className='p-2  bg-red-500 text-white'><HeartOutlined/></Button>
-                  <Button size='small' title='Report this course' className='p-2  bg-blue-500 text-white'><FlagOutlined/></Button>
+                    <h1 className='text-xl font-bold truncate lg:text-2xl'>{course.title}</h1>
                   </div>
+                  <div className='flex space-x-9 sm:space-x-24 md:space-x-32 lg:space-x-36'>
+                    <p className='lg:text-lg'>{course.price}.000 VND</p>
+                    <div className='flex'>
+                      <Button size='small' title='Save this course' className='p-2 text-white bg-red-500'><HeartOutlined /></Button>
+                      <Button size='small' title='Report this course' className='p-2 text-white bg-blue-500'><FlagOutlined /></Button>
+                    </div>
                   </div>
                 </div>
-                
-                 ))}
-                 
-           </Carousel>
-            
+              ))}
+            </Carousel>
           </div>
         </div>
 
         <Link to="/course-details">
-          <p className="text-center pt-2.5 sm:text-xl">View More&nbsp;<ArrowRightOutlined /></p>
+          <p className="text-center pt-2.5 sm:text-sm">View More&nbsp;<ArrowRightOutlined /></p>
         </Link>
 
         <div className="body-homebox">
           <div className="box image-box">
-            <img className='sm:-ml-8' src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" />
+            <img className='sm:-ml-7' src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" />
           </div>
-          <div className="font-bold sm:pt-20">
-            <p className="text-xl sm:text-3xl pt-5 box ">Limitless Learning,More</p>
-            <p className="text-xl sm:text-3xl box">Possibilities</p>
-            <ul className="mb-10 underline text-xl sm:text-3xl sm:mr-5 box ">Answer A Few Questions For Your Top Picks</ul>
+          <div className="sm:pt-10 sm:mr-20">
+            <div className="flex flex-col items-center pt-20 sm:pt-10">
+              <p className="text-xl font-bold text-center sm:text-3xl">Limitless Learning, More</p>
+              <p className="text-xl font-bold text-center sm:text-3xl">Possibilities</p>
+              <ul className="mt-5 mb-10 text-xl italic text-center text-blue-900 underline sm:text-2xl">
+                Answer A Few Questions For Your Top Picks
+              </ul>
+              <div className="flex flex-wrap justify-center gap-10 pb-5 text-2xl text-blue-900">
+                <SketchOutlined />
+                <OpenAIOutlined />
+                <LinuxOutlined />
+                <JavaOutlined />
+                <DotNetOutlined />
+                ...
+              </div>
+            </div>
           </div>
         </div>
 
-        <div className="box body-button">
-          <button className="text-2xl text-white ">Join for free <ArrowRightOutlined /></button>
+        <div className="box body-button sm:mb-2">
+          <button className="text-2xl text-white">Join for free <ArrowRightOutlined /></button>
         </div>
 
         <div className='flex items-center justify-center w-full'>
@@ -252,19 +311,19 @@ const HomePage: React.FC = () => {
               nextArrow={<div className='flex flex-row'><CustomNextArrow /></div>}
               responsive={[
                 {
-                  breakpoint: 1280, 
+                  breakpoint: 1280,
                   settings: {
                     slidesToShow: 4,
                   }
                 },
                 {
-                  breakpoint: 1024, 
+                  breakpoint: 1024,
                   settings: {
-                    slidesToShow:3,
+                    slidesToShow: 3,
                   }
                 },
                 {
-                  breakpoint: 768, 
+                  breakpoint: 768,
                   settings: {
                     slidesToShow: 2,
                   }
@@ -272,51 +331,78 @@ const HomePage: React.FC = () => {
               ]}
             >
               {NewCourses.map((course, index) => (
-                
-                <div className='p-2 my-5 sm:my-10'>
+                <div className='p-2 my-5 sm:my-10' key={index}>
                   <Link to={`course-details`}>
-             <img className="rounded-xl " src={course.img} alt="no image" />
-             </Link>
-             <div className='flex'>
-             <h1 className='text-xl truncate lg:text-2xl font-bold'>{course.title}</h1>
-             </div>
-             <div className='flex space-x-9 sm:space-x-24 md:space-x-32 lg:space-x-36  '>
-                  <p className=' lg:text-lg '>{course.price}VND</p>
+                    <img className="rounded-xl" src={course.img} alt="no image" />
+                  </Link>
                   <div className='flex'>
-                  <Button size='small' title='Save this course' className='p-2  bg-red-500 text-white'><HeartOutlined/></Button>
-                  <Button size='small' title='Report this course' className='p-2  bg-blue-500 text-white'><FlagOutlined/></Button>
+                    <h1 className='text-xl font-bold truncate lg:text-2xl'>{course.title}</h1>
                   </div>
+                  <div className='flex space-x-9 sm:space-x-24 md:space-x-32 lg:space-x-36'>
+                    <p className='lg:text-lg'>{course.price}.000 VND</p>
+                    <div className='flex'>
+                      <Button size='small' title='Save this course' className='p-2 text-white bg-red-500'><HeartOutlined /></Button>
+                      <Button size='small' title='Report this course' className='p-2 text-white bg-blue-500'><FlagOutlined /></Button>
+                    </div>
                   </div>
-           </div>
+                </div>
               ))}
             </Carousel>
           </div>
         </div>
+        <Link to="/course-details">
+          <p className="text-center pt-2.5 sm:text-sm">View More&nbsp;<ArrowRightOutlined /></p>
+        </Link>
 
         <div className="flex items-center justify-center h-24 mt-8 text-2xl font-bold">
-          Top Categories
-        </div>
+  Top Categories
+</div>
 
-        <Row gutter={[16, 16]} className="justify-center">
-          {Categories.map((category, index) => (
-            <Col xs={24} sm={12} md={6} key={index} className="flex justify-center">
-              <Card
-                bordered={false}
-                className="w-32 h-32 transition duration-300 ease-in-out sm:w-48 sm:h-48 hover:shadow-md"
-                cover={<img alt={category.title} src={category.img} className="object-contain h-20 p-3 sm:h-32" />}
-              >
-                <div className="text-center">{category.title}</div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+<Row gutter={[16, 16]} className="justify-center">
+  {Categories.map((category, index) => (
+    <Col 
+      xs={24}  // 1 item per row on extra small devices
+      sm={8}   // 3 items per row on small devices
+      md={6}   // 4 items per row on medium devices
+      lg={6}   // 4 items per row on large devices
+      xl={6}   // 4 items per row on extra-large devices
+      key={index} 
+      className="flex justify-center"
+    >
+      <Card
+        bordered={false}
+        className="w-32 h-32 transition duration-300 ease-in-out sm:w-48 sm:h-48 hover:shadow-md"
+        cover={
+          <img 
+            alt={category.title} 
+            src={category.img} 
+            className="object-contain h-20 p-3 sm:h-32" 
+          />
+        }
+      >
+        <div className="text-center">{category.title}</div>
+      </Card>
+    </Col>
+  ))}
+</Row>
 
-        <div className="p-8 bg-gray-100 contact-home">
-          <h1 className="text-2xl font-bold">Subscriber</h1>
-          <p>Receive weekly newsletter with educational materials, new courses, interesting posts, popular books and much more!</p>
+        <div className="bg-gray-100 contact-home">
+          <h1 className="text-xl font-bold sm:text-2xl">Subscribe</h1>
+          <p className="text-sm sm:text-base">Receive weekly newsletter with educational materials, new courses, interesting posts, popular books and much more!</p>
           <div className="flex flex-col mt-4 md:flex-row md:items-center">
-            <Input className="w-full mb-4 md:mb-0 md:mr-4" placeholder="Enter your email" />
-            <Button className="w-full md:w-auto" type="primary">Subscribe</Button>
+            <input
+              className="w-full p-2 mb-4 border border-gray-300 rounded md:mb-0 md:mr-4"
+              placeholder="Enter your email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+            <Button
+              className="w-full p-2 text-sm text-white bg-blue-600 rounded md:w-auto md:px-6 sm:text-base"
+              type="primary"
+              onClick={handleSubscribe}
+            >
+              Subscribe
+            </Button>
           </div>
         </div>
       </div>
