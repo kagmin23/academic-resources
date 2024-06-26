@@ -268,7 +268,7 @@ const HomePage: React.FC = () => {
         </div>
 
         <Link to="/course-details">
-          <p className="text-center pt-2.5 sm:text-xl">View More&nbsp;<ArrowRightOutlined /></p>
+          <p className="text-center pt-2.5 sm:text-sm">View More&nbsp;<ArrowRightOutlined /></p>
         </Link>
 
         <div className="body-homebox">
@@ -351,7 +351,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
         <Link to="/course-details">
-          <p className="text-center pt-2.5 sm:text-xl">View More&nbsp;<ArrowRightOutlined /></p>
+          <p className="text-center pt-2.5 sm:text-sm">View More&nbsp;<ArrowRightOutlined /></p>
         </Link>
 
         <div className="flex items-center justify-center h-24 mt-8 text-2xl font-bold">
