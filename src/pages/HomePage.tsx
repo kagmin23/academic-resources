@@ -115,7 +115,7 @@ const HomePage: React.FC = () => {
   const CustomPrevArrow = (props: any) => (
     <button
       {...props}
-      className="absolute left-0 z-10 -inset-1  border-blue-600 border-2 bg-blue-700 rounded-md    "
+      className="absolute left-0 z-10 -inset-1  border-2 bg-slate-600 rounded-md    "
     >
       <LeftOutlined className="text-lg text-white" />
     </button>
@@ -124,7 +124,7 @@ const HomePage: React.FC = () => {
   const CustomNextArrow = (props: any) => (
     <button
       {...props}
-      className="absolute right-0 z-10 -inset-1  border-blue-600 border-2 bg-blue-700 rounded-md "
+      className="absolute right-0 z-10 -inset-1   border-2 bg-slate-600 rounded-md "
     >
       <RightOutlined className="text-xl text-white" />
     </button>
@@ -197,9 +197,10 @@ const HomePage: React.FC = () => {
               >
                 
                  {Courses.map((course,index) =>(
-                  <Link to={`course-details`}>
                   <div className='p-2 my-5 sm:my-10'>
+                  <Link to={`course-details`}>
                   <img className="rounded-xl " src={course.img} alt="no image" />
+                  </Link>
                   <div className='flex '>
                   <h1 className='text-xl font-bold truncate lg:text-2xl '>{course.title}</h1>
                   </div>
@@ -211,7 +212,7 @@ const HomePage: React.FC = () => {
                   </div>
                   </div>
                 </div>
-                </Link>
+                
                  ))}
                  
            </Carousel>
@@ -271,9 +272,11 @@ const HomePage: React.FC = () => {
               ]}
             >
               {NewCourses.map((course, index) => (
-                <Link to={`course-details`}>
+                
                 <div className='p-2 my-5 sm:my-10'>
+                  <Link to={`course-details`}>
              <img className="rounded-xl " src={course.img} alt="no image" />
+             </Link>
              <div className='flex'>
              <h1 className='text-xl truncate lg:text-2xl font-bold'>{course.title}</h1>
              </div>
@@ -285,7 +288,6 @@ const HomePage: React.FC = () => {
                   </div>
                   </div>
            </div>
-           </Link>
               ))}
             </Carousel>
           </div>
