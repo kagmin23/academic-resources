@@ -1,4 +1,4 @@
-import { ArrowRightOutlined, DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, CaretLeftOutlined, CaretRightOutlined, DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Card, Carousel, Col, Input, Row } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -155,10 +155,15 @@ const HomePage: React.FC = () => {
         <div className='flex items-center justify-center w-full '>
           <div className='w-full text-center'>
             <ul className="ml-4 text-2xl font-bold sm:mt-20 sm:text-4xl">Popular Courses</ul>
-           <Carousel className=''
+           <Carousel
+             arrows
              slidesToShow={3}
               autoplay
-              dotPosition='bottom'>
+              dotPosition='bottom'
+              prevArrow={<div className='flex'><CustomPrevArrow/></div>}
+              nextArrow={<div className='flex'><CustomNextArrow/></div>}
+              >
+                
                  {Courses.map((course,index) =>(
                   <div className='p-2 my-5 sm:my-10'>
                      <Link to={`course-details`}>
@@ -198,10 +203,12 @@ const HomePage: React.FC = () => {
           <div className='w-full text-center'>
             <ul className="mt-10 ml-4 text-2xl font-bold sm:text-4xl">New Courses</ul>
             <Carousel
+            arrows
               slidesToShow={3}
               autoplay
               dotPosition='bottom'
-              
+              prevArrow={<div className='flex flex-row'><CustomPrevArrow /></div>}
+              nextArrow={<div className='flex flex-row'><CustomNextArrow /></div>}
             >
               {NewCourses.map((course, index) => (
                 <div className='p-2 my-5 sm:my-10'>
