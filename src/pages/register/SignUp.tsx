@@ -1,9 +1,9 @@
+import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Radio, Upload, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
-import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import type { UploadRequestOption } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import type { UploadRequestOption } from 'rc-upload/lib/interface';
 
 const SignUp: React.FC = () => {
   const [form] = Form.useForm();
@@ -131,7 +131,7 @@ const SignUp: React.FC = () => {
           </Form.Item>
           <Checkbox>Remember me</Checkbox>
           <div className="flex justify-between">
-            <Button type="primary" onClick={onNext} className="w-full h-12 bg-red-500 hover:bg-red-600 text-white">
+            <Button type="primary" onClick={onNext} className="w-full h-12 text-white bg-red-500 hover:bg-red-600">
               Next
             </Button>
           </div>
@@ -164,7 +164,7 @@ const SignUp: React.FC = () => {
               { pattern: /^\d+$/, message: 'Please enter a valid phone number!' },
             ]}
           >
-            <Input addonBefore={'+84 VN'} placeholder="Phone Number" size="large" />
+            <Input addonBefore={'+84 VN'} placeholder="Phone Number" size="middle" />
           </Form.Item>
 
           <Form.Item
@@ -173,7 +173,7 @@ const SignUp: React.FC = () => {
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
           >
-            <Input placeholder="GitHub Link" size="large" />
+            <Input placeholder="GitHub Link" size="middle" />
           </Form.Item>
           <Form.Item
             name="youtube"
@@ -181,7 +181,7 @@ const SignUp: React.FC = () => {
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
           >
-            <Input placeholder="YouTube Link" size="large" />
+            <Input placeholder="YouTube Link" size="middle" />
           </Form.Item>
           <Form.Item
             name="facebook"
@@ -189,14 +189,14 @@ const SignUp: React.FC = () => {
             labelCol={{ span: 6 }}
             wrapperCol={{ span: 18 }}
           >
-            <Input placeholder="Facebook Link" size="large" />
+            <Input placeholder="Facebook Link" size="middle" />
           </Form.Item>
 
           <div className="flex justify-between">
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Button type="primary" onClick={onFinish} className="bg-green-600 hover:bg-green-700 text-white">
+            <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
               Finish
             </Button>
           </div>
@@ -212,10 +212,10 @@ const SignUp: React.FC = () => {
 
       <div className="relative z-10 flex flex-col justify-center w-full max-w-md p-8 space-y-3 shadow-2xl bg-teal-50 rounded-xl lg:ml-auto lg:mr-16">
         <div className="flex justify-center">
-          <img src="mainLogoAcademic.png" alt="Edumy" className="w-32 h-32" />
+          <img src="mainLogoAcademic.png" alt="Academic" className="w-32 h-32" />
         </div>
 
-        <h2 className="text-3xl font-bold text-center">Welcome to Edumy</h2>
+        <h2 className="text-3xl font-bold text-center">Welcome to Academic</h2>
         <p className="italic text-center text-gray-600">Sign Up and Start Learning!</p>
 
         {showRadioGroup && (
@@ -227,7 +227,7 @@ const SignUp: React.FC = () => {
 
         <div className="steps-content">{steps[current].content}</div>
 
-        <div className="flex justify-center space-x-2 mt-4">
+        <div className="flex justify-center mt-4 space-x-2">
           {steps.map((_, index) => (
             <div
               key={index}
@@ -242,7 +242,7 @@ const SignUp: React.FC = () => {
           ))}
         </div>
 
-        <div className="text-center text-gray-600 mt-4">
+        <div className="mt-4 text-center text-gray-600">
           <p>By signing up, you agree to our <a href="#" className="text-blue-600">Terms of Use</a> and <a href="#" className="text-blue-600">Privacy Policy</a>.</p>
         </div>
 
@@ -250,8 +250,8 @@ const SignUp: React.FC = () => {
           <p>Already have an account? <Link to="/log-in" className="text-blue-600">Login</Link></p>
         </div>
 
-        <footer className="text-center text-gray-600 mt-4">
-          <p>© 2024 Edumy. All Rights Reserved.</p>
+        <footer className="mt-4 text-center text-gray-600">
+          <p>© 2024 Academic. All Rights Reserved.</p>
         </footer>
       </div>
     </div>

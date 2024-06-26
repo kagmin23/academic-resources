@@ -58,7 +58,7 @@ const Login: React.FC = () => {
       <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 background-transition"></div>
       <div className="relative z-10 flex flex-col justify-center w-full max-w-md p-8 space-y-5 shadow-2xl bg-teal-50 rounded-xl lg:ml-auto lg:mr-16">
         <div className="flex justify-center">
-          <img src="mainLogoAcademic.png" alt="Edumy" className="w-32 h-32" />
+          <img src="mainLogoAcademic.png" alt="Academic" className="w-32 h-32" />
         </div>
         <h2 className="text-3xl font-bold text-center">Welcome Back</h2>
         <p className="italic text-center text-gray-600">Login To Your Academic Account!</p>
