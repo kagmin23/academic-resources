@@ -85,7 +85,7 @@ code {
 
 .body-homebox {
   width: 100%;
-  height: 430px;
+  height: 455px;
   background-color: rgb(232, 232, 232);
   margin-top: 50px;
   display: flex;
@@ -97,6 +97,7 @@ code {
   display: flex;
   justify-content: center;
   align-items: center;
+ ;
 }
 
 .image-box {
