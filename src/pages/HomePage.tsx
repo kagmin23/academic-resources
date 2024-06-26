@@ -87,7 +87,7 @@ const Categories = [
     img: "https://play-lh.googleusercontent.com/rfWOJQVBHoAZ_B43v0ySFlLmJBLtksVGAxGaFRh2ex4nOmNQ86qzG4sYWV63IKrXlvI",
   },
   {
-    title: "Tailwind CSS",
+    title: "Tailwind",
     img: "https://ahmedkhald.com/static/media/tailwind.bf288b24c40bf937884e.png",
   },
   {
@@ -355,22 +355,36 @@ const HomePage: React.FC = () => {
         </Link>
 
         <div className="flex items-center justify-center h-24 mt-8 text-2xl font-bold">
-          Top Categories
-        </div>
+  Top Categories
+</div>
 
-        <Row gutter={[16, 16]} className="justify-center">
-          {Categories.map((category, index) => (
-            <Col xs={24} sm={12} md={6} key={index} className="flex justify-center">
-              <Card
-                bordered={false}
-                className="w-32 h-32 transition duration-300 ease-in-out sm:w-48 sm:h-48 hover:shadow-md"
-                cover={<img alt={category.title} src={category.img} className="object-contain h-20 p-3 sm:h-32" />}
-              >
-                <div className="text-center">{category.title}</div>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+<Row gutter={[16, 16]} className="justify-center">
+  {Categories.map((category, index) => (
+    <Col 
+      xs={24}  // 1 item per row on extra small devices
+      sm={8}   // 3 items per row on small devices
+      md={6}   // 4 items per row on medium devices
+      lg={6}   // 4 items per row on large devices
+      xl={6}   // 4 items per row on extra-large devices
+      key={index} 
+      className="flex justify-center"
+    >
+      <Card
+        bordered={false}
+        className="w-32 h-32 transition duration-300 ease-in-out sm:w-48 sm:h-48 hover:shadow-md"
+        cover={
+          <img 
+            alt={category.title} 
+            src={category.img} 
+            className="object-contain h-20 p-3 sm:h-32" 
+          />
+        }
+      >
+        <div className="text-center">{category.title}</div>
+      </Card>
+    </Col>
+  ))}
+</Row>
 
         <div className="bg-gray-100 contact-home">
           <h1 className="text-xl font-bold sm:text-2xl">Subscribe</h1>
