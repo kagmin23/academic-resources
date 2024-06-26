@@ -1,4 +1,4 @@
-import { ArrowRightOutlined, CaretLeftOutlined, CaretRightOutlined, DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { ArrowRightOutlined, DownOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import { Button, Card, Carousel, Col, Input, Row } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
@@ -157,11 +157,12 @@ const HomePage: React.FC = () => {
             <ul className="ml-4 text-2xl font-bold sm:mt-20 sm:text-4xl">Popular Courses</ul>
            <Carousel
              arrows
-             slidesToShow={3}
+             slidesToShow={4}
               autoplay
               dotPosition='bottom'
-              prevArrow={<div className='flex'><CustomPrevArrow/></div>}
-              nextArrow={<div className='flex'><CustomNextArrow/></div>}
+              className='px-6'
+              prevArrow={<div style={{color:'red'}}><CustomPrevArrow/></div>}
+              nextArrow={<div className=''><CustomNextArrow/></div>}
               >
                 
                  {Courses.map((course,index) =>(
@@ -169,8 +170,14 @@ const HomePage: React.FC = () => {
                      <Link to={`course-details`}>
                   <img className="rounded-xl " src={course.img} alt="no image" />
                   </Link>
-                  <div className='flex space-x-8 sm:space-x-72'>
-                  <h1 className='ml-2 text-xl font-bold truncate '>{course.title}</h1>
+                  <div className='flex space-x-8 sm:space-x-60'>
+                  <h1 className='text-xl font-bold truncate '>{course.title}</h1>
+
+                  </div>
+                  <div className='flex'>
+                  <p>$$$</p>
+                  <Button></Button>
+
                   </div>
                 </div>
                  ))}
