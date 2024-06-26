@@ -1,243 +1,391 @@
 import {
   DeleteOutlined,
-  DownCircleOutlined,
   EditOutlined,
-  PlusOutlined,
-  ReadOutlined,
-  SearchOutlined
+  EyeOutlined,
+  PlusCircleOutlined,
+  SearchOutlined,
+  PlayCircleOutlined,
+  UploadOutlined
 } from '@ant-design/icons';
-import { Button, Divider, Form, Input, Layout, List, Modal, Table, Tabs, Typography, Upload } from "antd";
+
+import { Button, Col, Form, Input, Layout, Modal, Row, Table, Tag, Upload  } from 'antd';
+import Title from 'antd/lib/typography/Title';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useState } from 'react';
-import { UploadOutlined } from '@ant-design/icons';
+import type { SelectProps, UploadProps } from 'antd';
+import { ExclamationCircleFilled } from '@ant-design/icons';
 
-const { Header, Content, Footer } = Layout;
-const { Text } = Typography;
-const { TabPane } = Tabs;
+const { confirm } = Modal;
+const { Header, Content } = Layout;
 
 interface DataType {
   key: string;
-  image: string;
-  created_at: string;
-  description?: string;
-  instructor?: string;
   name_course: string;
+  created_at: string;
+  description: string;
+  instructor: string;
+  name_sessions: string;
+  name_lessons: string;
+  list_category: list_category[];
 }
 
-interface SessionType {
+interface list_category {
   id: number;
-  key: string;
-  title: string;
-  duration: string;
-  lessons: LessonType[];
-}
-
-interface LessonType {
-  id: number;
-  key: string;
-  title: string;
-  duration: string;
-  videoUrl?: string;
+  category: string;
 }
 
 const initialDataSource: DataType[] = [
-  { key: '1', image: 'https://via.placeholder.com/50', created_at: '2024-01-01', name_course: 'Course name 1' },
-  { key: '2', image: 'https://via.placeholder.com/50', created_at: '2024-01-02', name_course: 'Course name 2' },
-  { key: '3', image: 'https://via.placeholder.com/50', created_at: '2024-01-03', name_course: 'Course name 3' },
+  {
+    key: '1',
+    name_course: 'Cách học tập tốt',
+    created_at: '2024-01-01',
+    instructor: 'John Doe',
+    name_lessons: 'lesson 1',
+    list_category: [
+      { id: 1, category: 'Programming' },
+      { id: 2, category: 'Web Design' },
+      { id: 3, category: 'Typescript' }
+    ],
+    name_sessions: "session 1",
+    description: 'To have an overview of the IT industry - Web programming, you should watch the videos in this course first. What will you learn? -Basic knowledge, foundations of the IT industry Basic models and architecture when deploying applications. Core concepts and terms when deploying applications. Understand more about how the internet and computers work'
+  },
+  {
+    key: '2',
+    name_course: 'Item 2',
+    created_at: '2024-01-02',
+    instructor: 'Jane Smith',
+    name_lessons: 'lesson 2',
+    name_sessions: 'session 2',
+    list_category: [
+      { id: 4, category: 'HTML' },
+      { id: 5, category: 'JavaScript' },
+    ],
+    description: 'This course focuses on HTML, JavaScript, and web design techniques to develop beautiful and professional websites.'
+  },
+  {
+    key: '3',
+    name_course: 'Item 3',
+    created_at: '2024-01-03',
+    instructor: 'Michael Brown',
+    name_lessons: 'lesson 3',
+    name_sessions: 'lesson 3',
+    list_category: [
+      { id: 6, category: 'Electrical Engineering' },
+      { id: 7, category: 'Mechanical' },
+      { id: 8, category: 'Construction Engineering' }
+    ],
+    description: 'Students will learn electrical and mechanical engineering, an important foundation for technical careers.',
+  },
+  {
+    key: '4',
+    name_course: 'Item 4',
+    created_at: '2024-01-04',
+    instructor: 'Chris Lee',
+    name_lessons: 'lesson 4',
+    list_category: [
+      { id: 9, category: 'Communication skills' },
+      { id: 10, category: 'Problem solving skills' },
+      { id: 11, category: 'Presentation skills' }
+    ],
+    name_sessions: 'lesson 4',
+    description: 'This course focuses on how to solve problems in daily work, helping you become an effective employee and solve challenges well.'
+  },
+  {
+    key: '5',
+    name_course: 'Item 5',
+    created_at: '2024-01-05',
+    instructor: 'Anna Johnson',
+    name_lessons: 'lesson 5',
+    list_category: [
+      { id: 9, category: 'Communication skills' },
+      { id: 10, category: 'Problem solving skills' },
+      { id: 11, category: 'Presentation skills' }
+    ],
+    description: 'Learners will practice communication, problem solving and presentation skills, important skills in the modern work environment.',
+    name_sessions: 'lesson 5',
+  },
+  {
+    key: '6',
+    name_course: 'Item 6',
+    created_at: '2024-01-06',
+    instructor: 'David Wilson',
+    name_lessons: 'lesson 6',
+    list_category: [
+      { id: 9, category: 'Communication skills' },
+      { id: 10, category: 'Problem solving skills' },
+      { id: 11, category: 'Presentation skills' }
+    ],
+    name_sessions: 'lesson 6',
+    description: 'This course provides basic knowledge of web programming and application architecture, helping you gain a deeper understanding of how the internet and computers work.'
+  },
 ];
 
-const initialSessions: SessionType[] = [
-  { id: 1, key: '1', title: 'Session 1', duration: '30 minutes', lessons: [] },
-  { id: 2, key: '2', title: 'Session 2', duration: '45 minutes', lessons: [] },
-  { id: 3, key: '3', title: 'Session 3', duration: '60 minutes', lessons: [] },
-];
+const ManagerLessonInstructor: React.FC = () => {
+  const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
+  const [filteredDataSource, setFilteredDataSource] = useState<DataType[]>(initialDataSource);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState<DataType | null>(null);
+  const [form] = Form.useForm();
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+  const [isVideoModalVisible, setIsVideoModalVisible] = useState(false);
+  const [videoUrl, setVideoUrl] = useState<string>('');
 
-const ManagerCourseInstructor: React.FC = () => {
-  const [dataSource] = useState<DataType[]>(initialDataSource);
-  const [sessions, setSessions] = useState<SessionType[]>(initialSessions);
-  const [lessonModalVisible, setLessonModalVisible] = useState(false);
-  const [lessonForm] = Form.useForm();
-  const [currentSession, setCurrentSession] = useState<SessionType | null>(null);
-  const [currentLesson, setCurrentLesson] = useState<LessonType | null>(null);
-  const [addLessonSessionKey, setAddLessonSessionKey] = useState<string | null>(null);
-  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const categoryOptions = [
+    { id: 1, category: 'Programming' },
+    { id: 2, category: 'Web Design' },
+    { id: 3, category: 'Typescript' },
+    { id: 4, category: 'HTML' },
+    { id: 5, category: 'JavaScript' },
+    { id: 6, category: 'Electrical Engineering' },
+    { id: 7, category: 'Mechanical' },
+    { id: 8, category: 'Construction Engineering' },
+    { id: 9, category: 'Communication skills' },
+    { id: 10, category: 'Problem solving skills' },
+    { id: 11, category: 'Presentation skills' },
+  ];
 
-  const handleViewLessons = (record: DataType) => {
-    const session = sessions.find(session => session.key === record.key);
-    if (session) {
-      setCurrentSession(session);
-    }
+  const options: SelectProps['options'] = categoryOptions.map(category => ({
+    value: category.id.toString(),
+    label: category.category,
+  }));
+
+  const handleChange = (value: string) => {
+    console.log(`selected ${value}`);
   };
 
-  const handleLessonAdd = (sessionKey: string) => {
-    setAddLessonSessionKey(sessionKey);
-    setCurrentLesson(null);
-    lessonForm.resetFields();
-    setLessonModalVisible(true);
+  const handleAddNewLesson = () => {
+    setIsEditMode(false);
+    setIsModalVisible(true);
+    form.resetFields();
   };
 
-  const handleLessonEdit = (lesson: LessonType) => {
-    setCurrentLesson(lesson);
-    lessonForm.setFieldsValue(lesson);
-    setLessonModalVisible(true);
+  const handleEdit = (record: DataType) => {
+    setIsEditMode(true);
+    setCurrentRecord(record);
+    setIsModalVisible(true);
+    form.setFieldsValue(record);
   };
 
-  const handleLessonSave = () => {
-    lessonForm
+  const handleViewMore = (key: string) => {
+    setExpandedKeys(prevKeys =>
+      prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]
+    );
+  };
+
+  const handleDelete = (record: DataType) => {
+    const newDataSource = dataSource.filter(item => item.key !== record.key);
+    setDataSource(newDataSource);
+    setFilteredDataSource(newDataSource);
+  };
+
+  const handleSave = () => {
+    form
       .validateFields()
       .then(values => {
-        const { title, duration } = values;
-        const videoUrl = videoFile ? URL.createObjectURL(videoFile) : undefined;
-
-        lessonForm.resetFields();
-        setVideoFile(null); // Reset the video file state
-
-        const session = sessions.find(session => session.key === addLessonSessionKey);
-        if (session) {
-          if (currentLesson) {
-            const updatedLesson = { ...currentLesson, title, duration, videoUrl };
-            const updatedLessons = session.lessons.map(lesson =>
-              lesson.key === currentLesson.key ? updatedLesson : lesson
-            );
-            const updatedSession = { ...session, lessons: updatedLessons };
-            const updatedSessions = sessions.map(s =>
-              s.key === session.key ? updatedSession : s
-            );
-            setSessions(updatedSessions);
-          } else {
-            const newLesson: LessonType = {
-              id: session.lessons.length + 1,
-              key: `lesson-${session.key}-${session.lessons.length + 1}`,
-              title,
-              duration,
-              videoUrl
-            };
-            const updatedSession = { ...session, lessons: [...session.lessons, newLesson] };
-            const updatedSessions = sessions.map(s =>
-              s.key === session.key ? updatedSession : s
-            );
-            setSessions(updatedSessions);
-          }
+        form.resetFields();
+        if (isEditMode && currentRecord) {
+          const newDataSource = dataSource.map(item =>
+            item.key === currentRecord.key ? { ...item, ...values } : item
+          );
+          setDataSource(newDataSource);
+          setFilteredDataSource(newDataSource);
+        } else {
+          const newRecord = {
+            ...values,
+            key: (dataSource.length + 1).toString(),
+            created_at: new Date().toISOString().split('T')[0],
+          };
+          setDataSource([...dataSource, newRecord]);
+          setFilteredDataSource([...dataSource, newRecord]);
         }
-        saveSessionsToLocalStorage([...sessions]);
-        setLessonModalVisible(false);
+        setIsModalVisible(false);
       })
       .catch(info => {
         console.log('Validate Failed:', info);
       });
   };
 
-  const handleLessonDelete = (lesson: LessonType) => {
-    const session = sessions.find(session => session.lessons.some(l => l.key === lesson.key));
-    if (session) {
-      const updatedLessons = session.lessons.filter(l => l.key !== lesson.key);
-      const updatedSession = { ...session, lessons: updatedLessons };
-      const updatedSessions = sessions.map(s =>
-        s.key === session.key ? updatedSession : s
-      );
-      setSessions(updatedSessions);
-      saveSessionsToLocalStorage(updatedSessions);
+  const handleSearch = (value: string) => {
+    const filteredData = dataSource.filter(item =>
+      item.name_course.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredDataSource(filteredData);
+  };
+
+  const showConfirm = (record: DataType) => {
+    confirm({
+      title: 'Do you Want to delete these items?',
+      icon: <ExclamationCircleFilled />,
+      content: 'Some descriptions',
+      onOk() {
+        console.log('OK');
+        handleDelete(record);
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
+  };
+
+  const handlePreviewCourse = (videoUrl: string) => {
+    setVideoUrl(videoUrl);
+    setIsVideoModalVisible(true);
+  };
+
+  const uploadProps: UploadProps = {
+    beforeUpload: file => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        const url = e.target?.result as string;
+        form.setFieldsValue({ video_url: url });
+      };
+      reader.readAsDataURL(file);
+      return false;
     }
   };
 
-  const saveSessionsToLocalStorage = (sessions: SessionType[]) => {
-    localStorage.setItem('sessions', JSON.stringify(sessions));
-  };
 
-  const handleFileChange = (info: any) => {
-    if (info.file.status === 'done') {
-      setVideoFile(info.file.originFileObj);
-    }
-  };
+  const columns = [
+
+    {
+      title: 'Lesson Name',
+      dataIndex: 'name_lessons',
+      key: 'name_lessons',
+    },
+    {
+      title: 'Session Name',
+      dataIndex: 'name_sessions',
+      key: 'name_sessions',
+    },
+    {
+      title: 'Course Name',
+      dataIndex: 'name_course',
+      key: 'name_course',
+    },
+    {
+      title: 'Created At',
+      dataIndex: 'created_at',
+      key: 'created_at',
+    },
+    {
+      title: 'Actions',
+      key: 'actions',
+      align: 'center' as AlignType,
+      render: (text: string, record: DataType) => (
+        <div style={{ textAlign: 'center' }}>
+          <Button icon={<EditOutlined />} className="mr-2 text-white bg-blue-500" onClick={() => handleEdit(record)}></Button>
+          <Button icon={<DeleteOutlined />} className="mr-2 text-white bg-red-600" onClick={() => showConfirm(record)}></Button>
+          <Button icon={<EyeOutlined />} onClick={() => handleViewMore(record.key)}></Button>
+        </div>
+      ),
+    },
+  ];
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header className="p-0 bg-white">
-        <div className="flex items-center justify-end gap-4 p-4 bg-[#939fb1]">
-          <Input placeholder="Search..." prefix={<SearchOutlined />} style={{ width: 300 }} />
-        </div>
-      </Header>
-      <Content className="m-4">
-        <Table
-          dataSource={dataSource}
-          columns={[
-            { title: 'Course', dataIndex: 'image', key: 'image', render: (text: string) => <img src={text} alt="item" className="w-12 h-12" /> },
-            { title: 'Course Name', dataIndex: 'name_course', key: 'name_course' },
-            { title: 'Created At', dataIndex: 'created_at', key: 'created_at' },
-            {
-              title: 'Actions',
-              key: 'actions',
-              align: 'center' as AlignType,
-              render: (text: string, record: DataType) => (
-                <Button icon={<DownCircleOutlined />} onClick={() => handleViewLessons(record)} />
+    <Layout style={{ height: '100vh' }}>
+      <Layout className="site-layout">
+        <Header className="p-0 bg-white">
+          <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
+            <Input
+              placeholder="Search..."
+              prefix={<SearchOutlined />}
+              onChange={e => handleSearch(e.target.value)}
+              style={{ width: 300 }}
+            />
+            <div className="h-6 lg:mx-4 border-r"></div>
+            <Button className="font-bold text-white bg-red-500" onClick={handleAddNewLesson}>
+              <PlusCircleOutlined />
+              Add New Lesson
+            </Button>
+          </div>
+        </Header>
+        <Content className="my-4 mx-4 xl:mx-6 overflow-y-auto">
+          <Table
+            pagination={{ pageSize: 6 }}
+            dataSource={filteredDataSource}
+            columns={columns}
+            expandable={{
+              expandedRowKeys: expandedKeys,
+              onExpand: (expanded, record) => handleViewMore(record.key),
+              expandedRowRender: (record: DataType) => (
+                <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
+                  <Row gutter={16}>
+                    <Col span={8}>
+                      <div className="relative">
+                        <a onClick={() => handlePreviewCourse('your-video-url.mp4')} className="block">
+                          <img src="https://img.youtube.com/vi/hqBjda_bf3I/maxresdefault.jpg" alt="" className="w-full p-2" />
+                          <div className="absolute inset-0 flex flex-col items-center justify-center ">
+                            <PlayCircleOutlined className="text-4xl text-white" />
+                          </div>
+                        </a>
+                      </div>
+                    </Col>
+                    <Col span={16}>
+                      <Row gutter={16} className='mb-5'>
+                        <Col span={24}>
+                          <Title level={5}>Category:</Title>
+                          <p>{record.list_category?.map(category => <Tag color="geekblue" key={category.id}>{category.category}</Tag>) || '-'}</p>
+                        </Col>
+                      </Row>
+                      <Row gutter={16} className='mb-5'>
+                        <Col span={24}>
+                          <Title level={5}>Description:</Title>
+                          <p>{record.description || '-'}</p>
+                        </Col>
+                      </Row>
+                    </Col>
+                  </Row>
+                </div>
               ),
-            },
-          ]}
-          expandable={{
-            expandedRowRender: (record: DataType) => (
-              <Tabs defaultActiveKey="1" centered>
-                <TabPane tab="Lessons" key="1">
-                  <List
-                    size="small"
-                    dataSource={sessions.find(s => s.key === record.key)?.lessons}
-                    renderItem={(lesson: LessonType) => (
-                      <List.Item
-                        actions={[
-                          <Button icon={<EditOutlined />} onClick={() => handleLessonEdit(lesson)} />,
-                          <Button icon={<DeleteOutlined />} onClick={() => handleLessonDelete(lesson)} />,
-                        ]}
-                      >
-                        <List.Item.Meta
-                          avatar={<ReadOutlined />}
-                          title={lesson.title}
-                          description={lesson.duration}
-                        />
-                        {lesson.videoUrl && (
-                          <video width="200" controls>
-                            <source src={lesson.videoUrl} type="video/mp4" />
-                            Your browser does not support the video tag.
-                          </video>
-                        )}
-                      </List.Item>
-                    )}
-                  />
-                  <Divider />
-                  <div className="text-center">
-                    <Button type="primary" onClick={() => handleLessonAdd(record.key)}>
-                      <PlusOutlined /> Add Lesson
-                    </Button>
-                  </div>
-                </TabPane>
-              </Tabs>
-            ),
-            rowExpandable: (record: DataType) => true,
-          }}
-          rowKey="key"
-        />
-      </Content>
-      <Footer style={{ textAlign: 'center' }}>Academic Resources ©2024 Created by Group 4</Footer>
+              expandIcon: () => null,
+            }}
+            rowKey="key"
+          />
+        </Content>
+      </Layout>
+
       <Modal
-        title={currentLesson ? "Edit Lesson" : "Add Lesson"}
-        visible={lessonModalVisible}
-        onCancel={() => setLessonModalVisible(false)}
-        onOk={handleLessonSave}
+        width={'50%'}
+        title={isEditMode ? "Edit Lesson" : "Add New Lesson"}
+        visible={isModalVisible}
+        onOk={handleSave}
+        onCancel={() => setIsModalVisible(false)}
       >
-        <Form form={lessonForm} layout="vertical">
-          <Form.Item name="title" label="Title" rules={[{ required: true, message: 'Please input the title of lesson!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="duration" label="Duration" rules={[{ required: true, message: 'Please input the duration of lesson!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="video" label="Upload Video" valuePropName="fileList" getValueFromEvent={(e) => e.fileList}>
-            <Upload beforeUpload={() => false} onChange={handleFileChange}>
-              <Button icon={<UploadOutlined />}>Click to upload</Button>
+        <Form form={form} layout="vertical">
+        <Form.Item
+            name="upload"
+            label="Upload Video"
+            valuePropName="fileList"
+            getValueFromEvent={e => e.fileList}
+          >
+            <Upload {...uploadProps} maxCount={1}>
+              <Button><UploadOutlined />Click to Upload</Button>
             </Upload>
           </Form.Item>
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: 'Please input the description!' }]}
+          >
+            <Input.TextArea rows={4} />
+          </Form.Item>
+          
         </Form>
+      </Modal>
+
+      <Modal
+        title="Lesson Preview"
+        visible={isVideoModalVisible}
+        onCancel={() => setIsVideoModalVisible(false)}
+        footer={null}
+      >
+        <video width="100%" controls>
+          <source src={videoUrl} type="video/mp4" />
+        </video>
       </Modal>
     </Layout>
   );
 };
 
-export default ManagerCourseInstructor;
+export default ManagerLessonInstructor;
