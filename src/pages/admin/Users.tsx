@@ -113,8 +113,9 @@ const UsersAdmin: React.FC = () => {
   };
 
   const filteredData = data.filter((item) => {
-    if (filteredRole === undefined) return true;
-    return item.role.toLowerCase() === filteredRole.toLowerCase();
+    const matchesRole = filteredRole ? item.role.toLowerCase() === filteredRole.toLowerCase() : true;
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesRole && matchesSearch;
   });
 
   const columns: ColumnsType<Item> = [
@@ -164,6 +165,7 @@ const UsersAdmin: React.FC = () => {
             value={searchTerm}
             onChange={handleSearchChange}
             className="w-1/2"
+            onSearch={value => setSearchTerm(value)}
           />
           <Select
             placeholder="Filter by Role"
