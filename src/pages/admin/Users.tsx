@@ -27,7 +27,6 @@ const initialData: Item[] = [
 const UsersAdmin: React.FC = () => {
   const [data, setData] = useState<Item[]>(initialData);
   const [editingItem, setEditingItem] = useState<Partial<Item>>({});
-  const [newItem, setNewItem] = useState<Partial<Item>>({});
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [filteredRole, setFilteredRole] = useState<string | undefined>(undefined);
@@ -38,18 +37,28 @@ const UsersAdmin: React.FC = () => {
 
   const handleAdd = () => {
     if (
-      newItem.name &&
-      newItem.gender &&
-      newItem.dateofbirth &&
-      newItem.email &&
-      newItem.phone &&
-      newItem.role
+      editingItem.name &&
+      editingItem.gender &&
+      editingItem.dateofbirth &&
+      editingItem.email &&
+      editingItem.phone &&
+      editingItem.role
     ) {
-      const newData = [...data, { id: data.length + 1, status: true, ...newItem } as Item];
-      setData(newData);
-      setNewItem({});
+      if (editingItem.id) {
+        // Update existing user
+        const updatedData = data.map((item) =>
+          item.id === editingItem.id ? { ...item, ...editingItem } as Item : item
+        );
+        setData(updatedData);
+        message.success("User updated successfully");
+      } else {
+        // Add new user
+        const newData = [...data, { id: data.length + 1, status: true, ...editingItem } as Item];
+        setData(newData);
+        message.success("User added successfully");
+      }
+      setEditingItem({});
       setModalOpen(false);
-      message.success("User added successfully");
     } else {
       message.error("Please fill in all fields");
     }
@@ -58,15 +67,6 @@ const UsersAdmin: React.FC = () => {
   const handleEdit = (item: Item) => {
     setEditingItem(item);
     setModalOpen(true);
-  };
-
-  const handleUpdate = () => {
-    const updatedData = data.map((item) =>
-      item.id === editingItem.id ? { ...item, ...editingItem } as Item : item
-    );
-    setData(updatedData);
-    setEditingItem({});
-    setModalOpen(false);
   };
 
   const handleDelete = () => {
@@ -113,8 +113,9 @@ const UsersAdmin: React.FC = () => {
   };
 
   const filteredData = data.filter((item) => {
-    if (filteredRole === undefined) return true;
-    return item.role.toLowerCase() === filteredRole.toLowerCase();
+    const matchesRole = filteredRole ? item.role.toLowerCase() === filteredRole.toLowerCase() : true;
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesRole && matchesSearch;
   });
 
   const columns: ColumnsType<Item> = [
@@ -164,6 +165,7 @@ const UsersAdmin: React.FC = () => {
             value={searchTerm}
             onChange={handleSearchChange}
             className="w-1/2"
+            onSearch={value => setSearchTerm(value)}
           />
           <Select
             placeholder="Filter by Role"
@@ -178,7 +180,7 @@ const UsersAdmin: React.FC = () => {
         </div>
         <div className="mb-4">
           <Button type="primary" onClick={() => {
-            setNewItem({
+            setEditingItem({
               name: '',
               gender: '',
               dateofbirth: moment(),
@@ -194,7 +196,12 @@ const UsersAdmin: React.FC = () => {
         </div>
         <Table dataSource={filteredData} columns={columns} rowKey="id" />
 
-        <Modal title="Edit User" visible={isModalOpen} onOk={handleUpdate} onCancel={() => setModalOpen(false)}>
+        <Modal
+          title={editingItem.id ? "Edit User" : "Add New User"}
+          visible={isModalOpen}
+          onOk={handleAdd}
+          onCancel={() => setModalOpen(false)}
+        >
           <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
             <Form.Item label="Name">
               <Input
@@ -227,102 +234,45 @@ const UsersAdmin: React.FC = () => {
               />
             </Form.Item>
             <Form.Item label="Role">
-              <Input
+              <Select
                 value={editingItem.role}
-                onChange={(e) => setEditingItem({ ...editingItem, role: e.target.value })}
-                disabled
-              />
+                onChange={(value) => setEditingItem({ ...editingItem, role: value })}
+                disabled={!!editingItem.id}  // Disable the role field if editing an existing user
+              >
+                <Option value="admin">Admin</Option>
+                <Option value="student">Student</Option>
+                <Option value="instructor">Instructor</Option>
+              </Select>
             </Form.Item>
             <Form.Item label="Status">
               <Switch
                 checked={editingItem.status}
                 onChange={(checked) => setEditingItem({ ...editingItem, status: checked })}
-             
-                />
-                </Form.Item>
-              </Form>
-            </Modal>
-    
-            <Modal
-              title="Confirm Delete"
-              visible={deleteConfirmVisible}
-              onOk={handleDelete}
-              onCancel={() => setDeleteConfirmVisible(false)}
-            >
-              <p>Are you sure you want to delete this user?</p>
-            </Modal>
-    
-            <Modal
-              title="Confirm Lock Status"
-              visible={lockConfirmVisible}
-              onOk={handleLockStatus}
-              onCancel={() => setLockConfirmVisible(false)}
-            >
-              <p>Are you sure you want to lock this user?</p>
-            </Modal>
-    
-            <Modal
-              title="Add New User"
-              visible={isModalOpen}
-              onOk={handleAdd}
-              onCancel={() => {
-                setModalOpen(false);
-                setNewItem({});
-              }}
-            >
-              <Form labelCol={{ span: 8 }} wrapperCol={{ span: 16 }}>
-                <Form.Item label="Name">
-                  <Input
-                    value={newItem.name}
-                    onChange={(e) => setNewItem({ ...newItem, name: e.target.value })}
-                  />
-                </Form.Item>
-                <Form.Item label="Gender">
-                  <Input
-                    value={newItem.gender}
-                    onChange={(e) => setNewItem({ ...newItem, gender: e.target.value })}
-                  />
-                </Form.Item>
-                <Form.Item label="Date Of Birth">
-                  <DatePicker
-                    value={moment(newItem.dateofbirth)}
-                    onChange={(date) => setNewItem({ ...newItem, dateofbirth: date })}
-                  />
-                </Form.Item>
-                <Form.Item label="Phone">
-                  <Input
-                    value={newItem.phone}
-                    onChange={(e) => setNewItem({ ...newItem, phone: e.target.value })}
-                  />
-                </Form.Item>
-                <Form.Item label="Email">
-                  <Input
-                    value={newItem.email}
-                    onChange={(e) => setNewItem({ ...newItem, email: e.target.value })}
-                  />
-                </Form.Item>
-                <Form.Item label="Role">
-                  <Select
-                    value={newItem.role}
-                    onChange={(value) => setNewItem({ ...newItem, role: value })}
-                  >
-                    <Option value="admin">Admin</Option>
-                    <Option value="student">Student</Option>
-                    <Option value="instructor">Instructor</Option>
-                  </Select>
-                </Form.Item>
-                <Form.Item label="Status">
-                  <Switch
-                    checked={newItem.status}
-                    onChange={(checked) => setNewItem({ ...newItem, status: checked })}
-                  />
-                </Form.Item>
-              </Form>
-            </Modal>
-          </Content>
-        </Layout>
-      );
-    };
-    
-    export default UsersAdmin;
-    
+              />
+            </Form.Item>
+          </Form>
+        </Modal>
+
+        <Modal
+          title="Confirm Delete"
+          visible={deleteConfirmVisible}
+          onOk={handleDelete}
+          onCancel={() => setDeleteConfirmVisible(false)}
+        >
+          <p>Are you sure you want to delete this user?</p>
+        </Modal>
+
+        <Modal
+          title="Confirm Lock Status"
+          visible={lockConfirmVisible}
+          onOk={handleLockStatus}
+          onCancel={() => setLockConfirmVisible(false)}
+        >
+          <p>Are you sure you want to lock this user?</p>
+        </Modal>
+      </Content>
+    </Layout>
+  );
+};
+
+export default UsersAdmin;
