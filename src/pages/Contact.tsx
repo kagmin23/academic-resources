@@ -1,4 +1,4 @@
-import { FundProjectionScreenOutlined, MessageOutlined, QuestionCircleOutlined, SettingOutlined } from '@ant-design/icons';
+import { MessageOutlined, QuestionCircleOutlined, SettingOutlined, StarOutlined } from '@ant-design/icons';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
 import LinkedInIcon from '@mui/icons-material/LinkedIn';
@@ -16,7 +16,7 @@ export default function Contact() {
                 <div className='flex justify-between mx-auto '>
                     <div className='flex flex-col items-center justify-center w-1/5 px-5 py-8 shadow-lg cursor-pointer bg-slate-50 hover:scale-110'>
                     <Avatar className='bg-blue-700 ' size={{ xs: 50, sm: 50, md: 65, lg: 65, xl: 65, xxl: 65 }} icon={<QuestionCircleOutlined />} />
-                    <p className='h-10 mt-3 font-semibold text-center md:text-xl sm:text-lg'>Help Center</p>
+                    <p className='h-10 mt-3 font-semibold text-center md:text-xl sm:text-lg'>About Us</p>
 
                     </div>
                     <div className='flex flex-col items-center justify-center w-1/5 px-5 py-8 shadow-lg cursor-pointer bg-slate-50 hover:scale-110'>
@@ -25,13 +25,13 @@ export default function Contact() {
 
                     </div>
                     <div className='flex flex-col items-center justify-center w-1/5 px-5 py-8 shadow-lg cursor-pointer bg-slate-50 hover:scale-110'>
-                    <Avatar className='bg-blue-700' size={{ xs: 50, sm: 50, md: 65, lg: 65, xl: 65, xxl: 65 }} icon={<FundProjectionScreenOutlined />} />
-                    <p className='h-10 mt-3 font-semibold text-center md:text-xl sm:text-lg'>Careers</p>
+                    <Avatar className='bg-blue-700' size={{ xs: 50, sm: 50, md: 65, lg: 65, xl: 65, xxl: 65 }} icon={<StarOutlined />} />
+                    <p className='h-10 mt-3 font-semibold text-center md:text-xl sm:text-lg'>Rakings</p>
 
                     </div>
                     <div className='flex flex-col items-center justify-center w-1/5 px-5 py-8 shadow-lg cursor-pointer bg-slate-50 hover:scale-110'>
                     <Avatar className='bg-blue-700' size={{ xs: 50, sm: 50, md: 65, lg: 65, xl: 65, xxl: 65 }} icon={<SettingOutlined />} />
-                    <p className='h-10 mt-3 font-semibold text-center md:text-xl sm:text-lg'>Developer Area</p>
+                    <p className='h-10 mt-3 font-semibold text-center md:text-xl sm:text-lg'>Help Center</p>
 
                     </div>
 

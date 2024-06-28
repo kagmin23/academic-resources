@@ -267,7 +267,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        <Link to="/course-details">
+        <Link to="/course">
           <p className="text-center pt-2.5 sm:text-sm">View More&nbsp;<ArrowRightOutlined /></p>
         </Link>
 
