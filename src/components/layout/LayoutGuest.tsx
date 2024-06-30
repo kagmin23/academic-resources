@@ -32,9 +32,10 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
   return (
     <Layout className="min-h-screen">
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
-        <Link to="/">
-          <h1 className="text-xl text-white">
-            <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
+        <Link to="/" className="flex items-center mr-20">
+          <BookOutlined className="text-xl text-white" />
+          <h1 className="hidden ml-3 text-xl text-white md:block">
+            Academic - Resources
           </h1>
         </Link>
         <div className="flex items-center gap-12">
@@ -43,24 +44,27 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-
-        <div className="flex items-center space-x-4 text-xl text-white">
-        <Link to="/log-in">
-                  <BellOutlined  />
-                  </Link>
-              </div>
           <div className="flex items-center space-x-4 text-xl text-white">
-              <Link to="/log-in">
-                <ShoppingCartOutlined className="text-xl" />
-              </Link>
-        </div>
-        <div className="flex gap-2">
-          <Link to="/log-in">
-            <Button className="w-full mt-4 text-xs bg-green-300">Sign in<LoginOutlined /></Button>
-          </Link>
-          <Link to="/sign-up">
-            <Button className="w-full mt-4 text-xs text-white bg-red-500">Sign up<LoginOutlined /></Button>
-          </Link>
+            <Link to="/log-in">
+              <BellOutlined />
+            </Link>
+          </div>
+          <div className="flex items-center space-x-4 text-xl text-white">
+            <Link to="/log-in">
+              <ShoppingCartOutlined className="text-xl" />
+            </Link>
+          </div>
+          <div className="flex gap-2">
+            <Link to="/log-in">
+              <Button className="w-full mt-4 text-xs bg-green-300">
+                Sign in<LoginOutlined />
+              </Button>
+            </Link>
+            <Link to="/sign-up">
+              <Button className="w-full mt-4 text-xs text-white bg-red-500">
+                Sign up<LoginOutlined />
+              </Button>
+            </Link>
           </div>
           {/* <Link to="/log-in">
             <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
@@ -68,6 +72,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
         </div>
       </Header>
+
       <div className="pt-16">
         <div className="fixed left-0 right-0 z-50 hidden top-18 md:flex md:items-center md:gap-5">
           <Menu

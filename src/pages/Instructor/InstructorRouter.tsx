@@ -1,5 +1,6 @@
 import {
   About,
+  AddBlog,
   BlogPage,
   BuyNow,
   CategoryPage,
@@ -14,12 +15,12 @@ import {
   TopInstructorPage
 } from 'pages';
 import PaymentSuccess from 'pages/PaymentSuccess';
+import RouterLesson from 'pages/Student/RouterLesson';
 import { Route, Routes } from 'react-router-dom';
 import LayoutInstructor from '../../components/layout/LayoutInstructor';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import InstructorPage from './InstructorPage';
-import RouterLesson from 'pages/Student/RouterLesson';
 export default function InstructorRouter() {
   return (
     <div >
@@ -39,6 +40,7 @@ export default function InstructorRouter() {
          <Route path={`contact`} element={<ProtectedRouter allowedRoles={[3]}><Contact /></ProtectedRouter>} />
          <Route path={`report`} element={<ProtectedRouter allowedRoles={[3]}><Report /></ProtectedRouter>} />
          <Route path={`setting`} element={<ProtectedRouter allowedRoles={[3]}><Setting /></ProtectedRouter>} />
+         <Route path={`add-blog`} element={<ProtectedRouter allowedRoles={[3]}><AddBlog /></ProtectedRouter>} />
          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[3]}><LessonStudent /></ProtectedRouter>} />
          {/* <Route path={`lesson-student/:id`} element={<ProtectedRouter allowedRoles={[3]}><LessonStudent /></ProtectedRouter>} /> */}
          <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={[3]}><RouterLesson /></ProtectedRouter>} />

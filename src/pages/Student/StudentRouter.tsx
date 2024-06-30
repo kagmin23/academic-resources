@@ -1,6 +1,7 @@
 import LayoutStudent from 'components/layout/LayoutStudent';
 import {
   About,
+  AddBlog,
   BlogPage,
   BuyNow,
   CategoryPage,
@@ -39,6 +40,7 @@ export default function StudentRouter() {
                     <Route path={`contact`} element={<ProtectedRouter allowedRoles={[2]}><Contact /></ProtectedRouter>} />
                     <Route path={`report`} element={<ProtectedRouter allowedRoles={[2]}><Report /></ProtectedRouter>} />
                     <Route path={`setting`} element={<ProtectedRouter allowedRoles={[2]}><Setting /></ProtectedRouter>} />
+                    <Route path={`add-blog`} element={<ProtectedRouter allowedRoles={[2]}><AddBlog /></ProtectedRouter>} />
                     {/* <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[2]}><LessonStudent /></ProtectedRouter>} /> */}
                     <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={[2]}><RouterLesson /></ProtectedRouter>} />
                     <Route path={`save`} element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />

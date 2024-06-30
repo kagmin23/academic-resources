@@ -1,9 +1,9 @@
 import { BookOutlined } from '@ant-design/icons';
-import { Image, Input, Layout } from 'antd';
+import { Input, Layout } from 'antd';
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
-import '../../assets/Logoacademic.png'
+import '../../assets/Logoacademic.png';
 
 const { Header, Content } = Layout;
 
@@ -34,10 +34,11 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
     <div className='mb-16'>
 
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
-        <Link to={``}>
-          <h1 className="text-xl text-white">
-            <BookOutlined />&nbsp;&nbsp;&nbsp;Academic - Resources
-          </h1>
+      <Link to={``} className="flex items-center mr-20">
+                <BookOutlined className="text-xl text-white" />
+                <h1 className="hidden ml-3 text-xl text-white md:block">
+                  Academic - Resources
+                </h1>
         </Link>
         <div className="flex items-center gap-16">
           {/* <Search

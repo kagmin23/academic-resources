@@ -1,14 +1,47 @@
-import { ArrowRightOutlined, FacebookOutlined, SearchOutlined, TwitterOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Input, Layout, Pagination } from 'antd';
-import React from 'react';
+import { ArrowRightOutlined, PlusCircleFilled, SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Layout, Pagination } from 'antd';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const { Content, Sider } = Layout;
 
 const BlogPage: React.FC = () => {
+
+    const [ searchTerm, setSearchTerm ] = useState<string>('')
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchTerm(event.target.value);
+    }
+
     return (
         <Layout className="min-h-screen bg-gray-100">
-            <Layout className="container flex flex-col lg:flex-row mx-auto py-8 px-4 space-y-8 lg:space-y-0 lg:space-x-8">
+            <Layout className="container flex flex-col px-4 py-8 mx-auto space-y-8 lg:flex-row lg:space-y-0 lg:space-x-8">
                 <Content className="flex-1 space-y-8">
+
+                <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] px-2 py-2">
+                        <div className="w-full md:w-1/3">
+                            <Input
+                                className=""
+                                placeholder="Search"
+                                prefix={<SearchOutlined />}
+                                onChange={handleSearchChange}
+                                value={searchTerm}
+                            />
+                        </div>
+                        
+                        <Link to={"/add-blog"}>
+                            <div className="w-full md:w-auto">
+                                <Button className="w-full px-4 py-2 text-white bg-red-500 md:w-auto md:px-6 md:py-3 group hover:text-blue-500">
+                                    <PlusCircleFilled className="text-white group-hover:text-blue-500" />
+                                    <span className="hidden md:inline-block group-hover:text-blue-500">Add New Blog</span>
+                                </Button>
+                            </div>
+                        </Link>
+
+
+                    </div>
+
+                
                     <section className="flex flex-col p-4 bg-white rounded shadow md:flex-row">
                         <a href="/detail-blog" className="flex-shrink-0 block mb-4 md:mb-0">
                             <img src="https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg" className="object-cover w-full h-64 rounded md:w-64" alt="Blog 1" />

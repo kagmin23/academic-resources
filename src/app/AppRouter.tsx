@@ -5,6 +5,7 @@ import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-d
 
 import {
   About,
+  AddBlog,
   BlogPage,
   Contact,
   CourseDetailsPage,
@@ -39,6 +40,7 @@ const AppRouter: React.FC = () => (
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path={`search`} element={<SearchPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/add-blog/*" element={<AddBlog />} />
           <Route path={`course-details`} element={<CourseDetailsPage />} />
           <Route path="/detail-blog" element={<DetailBlogPage />} />
           <Route path="/course" element={<CoursePage />} />
