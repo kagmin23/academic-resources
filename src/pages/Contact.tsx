@@ -1,12 +1,12 @@
 import { MessageOutlined, QuestionCircleOutlined, SettingOutlined, StarOutlined } from '@ant-design/icons';
 import FacebookIcon from '@mui/icons-material/Facebook';
 import FmdGoodOutlinedIcon from '@mui/icons-material/FmdGoodOutlined';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import InstagramIcon from '@mui/icons-material/Instagram';
 import MailOutlineIcon from '@mui/icons-material/MailOutline';
 import PhoneIcon from '@mui/icons-material/Phone';
-import XIcon from '@mui/icons-material/X';
 import YouTubeIcon from '@mui/icons-material/YouTube';
-import { blue, purple, red } from '@mui/material/colors';
+import { blue, red } from '@mui/material/colors';
 import { Avatar } from 'antd';
 export default function Contact() {
   return (
@@ -71,10 +71,10 @@ export default function Contact() {
                         <div className='flex-1 text-sm text-gray-600'>0123456789</div>
                      </div>
                      <div className='mt-10 '>
-                        <XIcon  className='mr-4 cursor-pointer' />
+                        <InstagramIcon className='mr-4 cursor-pointer' fontSize="large" sx={{ color: red[300] }}/>
                         <FacebookIcon className='mr-4 cursor-pointer' fontSize="large" sx={{ color: blue[900] }}/>
                         <YouTubeIcon  className='mr-4 cursor-pointer' fontSize="large" sx={{ color: red[800] }}/>
-                        <LinkedInIcon className='mr-4 cursor-pointer' fontSize="large" sx={{ color: purple[800] }}/>
+                        <GitHubIcon className='mr-4 cursor-pointer' fontSize="large" />
                      
                      </div>
 </div>
