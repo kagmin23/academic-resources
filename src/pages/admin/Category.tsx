@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from 'react';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -9,7 +10,8 @@ import { Button, Col, Form, Input, Layout, Modal, Row, Table, Typography } from 
 import TextArea from 'antd/es/input/TextArea';
 import Title from 'antd/lib/typography/Title';
 import { AlignType } from 'rc-table/lib/interface';
-import React, { useEffect, useState } from 'react';
+import { createCategory } from 'services/categoryApiService';
+
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -76,18 +78,23 @@ const CategoryAdmin: React.FC = () => {
   const handleUpdate = () => {
     form
       .validateFields()
-      .then(values => {
+      .then(async values => {
         if (editingRecord) {
           const updatedDataSource = dataSource.map(item =>
             item.key === editingRecord.key ? { ...item, ...values } : item
           );
           setDataSource(updatedDataSource);
         } else {
-          const newRecord: DataType = {
-            key: (dataSource.length + 1).toString(),
-            ...values,
-          };
-          setDataSource([...dataSource, newRecord]);
+          try {
+            const newCategory = await createCategory(values);
+            const newRecord: DataType = {
+              key: (dataSource.length + 1).toString(),
+              ...newCategory,
+            };
+            setDataSource([...dataSource, newRecord]);
+          } catch (error) {
+            console.error('Failed to create category:', error);
+          }
         }
         setIsModalVisible(false);
       })
@@ -150,28 +157,25 @@ const CategoryAdmin: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Layout className="site-layout">
-      <Header className="p-0 bg-white">
-      <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pr-4 pl-4">
-
+        <Header className="p-0 bg-white">
+          <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pr-4 pl-4">
             <div className="w-full md:w-1/3">
-            <Input
-              placeholder="Search"
-              prefix={<SearchOutlined />}
-              onChange={handleSearchChange}
-              className="w-full h-10 text-lg border-2 border-gray-300 border-solid rounded"
-              value={searchTerm}
-            />
+              <Input
+                placeholder="Search"
+                prefix={<SearchOutlined />}
+                onChange={handleSearchChange}
+                className="w-full h-10 text-lg border-2 border-gray-300 border-solid rounded"
+                value={searchTerm}
+              />
+            </div>
+            <Button
+              className="font-bold text-white bg-red-500"
+              onClick={handleAddNew}
+            >
+              <PlusCircleOutlined />
+              Add New Category
+            </Button>
           </div>
-
-          <Button
-                className="font-bold text-white bg-red-500"
-                onClick={handleAddNew}
-              >
-                <PlusCircleOutlined />
-                Add New Category
-              </Button>
-          </div>
-
         </Header>
         <Content className="m-4">
           <div className="p-4 bg-white">
@@ -223,7 +227,7 @@ const CategoryAdmin: React.FC = () => {
       >
         <Form
           form={form}
-          initialValues={editingRecord || { image: '', title: '', description:'' }}
+          initialValues={editingRecord || { image: '', title: '', description: '' }}
         >
           <Form.Item
             name="image"
@@ -240,7 +244,7 @@ const CategoryAdmin: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="Description"
+            name="description"
             label="Description"
             rules={[{ required: true, message: 'Please input the description!' }]}
           >

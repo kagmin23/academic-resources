@@ -1,9 +1,13 @@
+// UsersAdmin.tsx
+
+import React, { useState } from 'react';
 import { PlusCircleOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import moment, { Moment } from "moment";
-import React, { useState } from "react";
+import { changeUserStatus, deleteUser } from 'services/userApiService';
+
 
 const { Option } = Select;
 
@@ -69,13 +73,19 @@ const UsersAdmin: React.FC = () => {
     setModalOpen(true);
   };
 
-  const handleDelete = () => {
-    if (deleteItemId) {
-      const updatedData = data.filter((item) => item.id !== deleteItemId);
-      setData(updatedData);
-      setDeleteItemId(undefined);
-      setDeleteConfirmVisible(false);
-      message.success("User deleted successfully");
+  const handleDelete = async () => {
+    try {
+      if (deleteItemId) {
+        await deleteUser(deleteItemId);
+        const updatedData = data.filter((item) => item.id !== deleteItemId);
+        setData(updatedData);
+        setDeleteItemId(undefined);
+        setDeleteConfirmVisible(false);
+        message.success("User deleted successfully");
+      }
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      message.error("Failed to delete user. Please try again later.");
     }
   };
 
@@ -87,16 +97,21 @@ const UsersAdmin: React.FC = () => {
     setFilteredRole(value);
   };
 
-  const handleStatusChange = (checked: boolean, item: Item) => {
-    if (!checked) {
-      setLockItemId(item.id);
-      setLockConfirmVisible(true);
-    } else {
-      const updatedData = data.map((dataItem) =>
-        dataItem.id === item.id ? { ...dataItem, status: checked } : dataItem
-      );
-      setData(updatedData);
-      message.success(`User status ${checked ? 'activated' : 'deactivated'} successfully`);
+  const handleStatusChange = async (checked: boolean, item: Item) => {
+    try {
+      const response = await changeUserStatus(String(item.id), checked);
+      if (response) {
+        const updatedData = data.map((dataItem) =>
+          dataItem.id === item.id ? { ...dataItem, status: checked } : dataItem
+        );
+        setData(updatedData);
+        message.success(`User status ${checked ? 'activated' : 'deactivated'} successfully`);
+      } else {
+        message.error("Failed to update user status");
+      }
+    } catch (error) {
+      console.error('Failed to change user status:', error);
+      message.error("Failed to update user status. Please try again later.");
     }
   };
 
