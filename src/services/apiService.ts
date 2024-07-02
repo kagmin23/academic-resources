@@ -21,3 +21,15 @@ export const addItem = async (item: { name: string; description: string }) => {
     throw error;
   }
 };
+export const getUserDetail = async (id: string | number) => {
+  try {
+    const response = await axios.get(`${API_URL}/api/users/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user detail', error);
+    throw error;
+  }
+};
+
+
+
