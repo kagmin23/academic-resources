@@ -18,5 +18,3 @@ export { default as SearchPage } from './SearchPage';
 export { default as Setting } from './Setting';
 export { default as ShoppingCart } from './ShoppingCart';
 export { default as TopInstructorPage } from './TopInstructorPage';
-
-const host_main = 'https://api-ojt-hcm24-react06-group04.vercel.app/';

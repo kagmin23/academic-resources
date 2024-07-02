@@ -1,99 +1,74 @@
-import Login from 'pages/register/Login';
-import SignUp from 'pages/register/SignUp';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { AuthProvider, useAuth } from '../context/AuthContext'; // Adjust path as per your file structure
+import InstructorRouter from '../pages/Instructor/InstructorRouter'; // Adjust path as per your file structure
 
-import {
-  About,
-  AddBlog,
-  BlogPage,
-  Contact,
-  CourseDetailsPage,
-  CoursePage,
-  DetailBlogPage,
-  HomePage,
-  TopInstructorPage
-} from 'pages';
-
-import { SearchPage } from 'pages';
-
-import { AuthProvider } from 'context/AuthContext';
-import InstructorRouter from 'pages/Instructor/InstructorRouter';
-import AdminPage from 'pages/admin/AdminPage';
-import ForgotPassword from 'pages/register/ForgotPassword';
+import ForgotPassword from '../pages/register/ForgotPassword'; // Adjust path as per your file structure
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
-import StudentRouter from '../pages/Student/StudentRouter';
+import StudentRouter from '../pages/Student/StudentRouter'; // Adjust path as per your file structure
+import { getCurrentUser } from '../services/loginApiService'; // Adjust path as per your file structure
+import { HomePage } from '../pages'; // Adjust path as per your file structure
+import Login from 'pages/register/Login';
+import SignUp from 'pages/register/SignUp';
+import AdminPage from 'pages/admin/AdminPage';
 
+const AppRouter: React.FC = () => {
+  const { login, role } = useAuth();
+  const [loading, setLoading] = useState(true);
 
-const AppRouter: React.FC = () => (
-  <AuthProvider>
-    <Router>
-      <Routes>
-        {/* Layout for Guest */}
-        <Route path={`/`} element={<LayoutGuest />}>
-          <Route index element={<Navigate to={`/home`} />} />
-          <Route path={`/home`} element={<HomePage />} />
-          <Route path={`/home/course-details`} element={<CourseDetailsPage/>} />
+  useEffect(() => {
+    async function fetchCurrentUser() {
+      try {
+        const user = await getCurrentUser();
+        login(); // Update authentication state after successful login
+        // Optionally set role if needed: setRole(user.role);
+      } catch (error) {
+        console.error('Failed to fetch current user:', error);
+        // Handle error, e.g., redirect to login or show error message
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchCurrentUser();
+  }, [login]);
+
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <AuthProvider>
+      <Router>
+        <Routes>
+          {/* Layout for Guest */}
+          <Route path="/" element={<LayoutGuest />}>
+            <Route index element={<Navigate to="/home" />} />
+            <Route path="/home" element={<HomePage />} />
+            {/* Other public routes */}
+          </Route>
+
+          {/* Layout for Students */}
+          <Route path="/student/*" element={<ProtectedRouter allowedRoles={['student']}><StudentRouter /></ProtectedRouter>} />
+
+          {/* Layout for Instructors */}
+          <Route path="/instructor/*" element={<ProtectedRouter allowedRoles={['instructor']}><InstructorRouter /></ProtectedRouter>} />
+
+          {/* Layout for Admin */}
+          <Route path="/admin/*" element={<ProtectedRouter allowedRoles={['admin']}><AdminPage /></ProtectedRouter>} />
+
+          {/* Login and other public routes */}
           <Route path="/log-in" element={<Login />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path={`search`} element={<SearchPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/add-blog/*" element={<AddBlog />} />
-          <Route path={`course-details`} element={<CourseDetailsPage />} />
-          <Route path="/detail-blog" element={<DetailBlogPage />} />
-          <Route path="/course" element={<CoursePage />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/contact" element={<Contact />} />
-          <Route path="/top-instructor" element={<TopInstructorPage />} />
-        </Route>
 
-        {/* Layout for Students */}
-       
-        <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><StudentRouter /></ProtectedRouter>}/>
-        <Route path="/instructor/*"  element={<ProtectedRouter allowedRoles={[3]}><InstructorRouter /></ProtectedRouter>}/>
-        <Route path="/admin/*"  element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>}/>
-
-
-        {/* <Route path={``} element={<ProtectedRouter allowedRoles={[2]}><UserRouter /></ProtectedRouter>} /> */}
-        {/* <Route path={``} element={<HomePage />} />
-          <Route path={`blog`} element={<BlogPage />} />
-          <Route path={`about`} element={<About />} />
-
-          <Route path={`course`}element={<ProtectedRouter allowedRoles={[2]}><CoursePage /></ProtectedRouter>} />
-          <Route path={`category`} element={<ProtectedRouter allowedRoles={[2]}><CategoryPage /></ProtectedRouter>} />
-          <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={[2]}><ShoppingCart /></ProtectedRouter>} />
-          <Route path={`profile-student`} element={<ProtectedRouter allowedRoles={[2]}><ProfileStudent /></ProtectedRouter>} />
-          <Route path={`buy-now`} element={<ProtectedRouter allowedRoles={[2]}><BuyNow /></ProtectedRouter>} />
-          <Route path={`contact`} element={<ProtectedRouter allowedRoles={[2]}><Contact /></ProtectedRouter>} />
-          <Route path={`report`} element={<ProtectedRouter allowedRoles={[2]}><Report /></ProtectedRouter>} />
-          <Route path={`setting`} element={<ProtectedRouter allowedRoles={[2]}><Setting /></ProtectedRouter>} />
-          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={[2]}><LessonStudent /></ProtectedRouter>} />
-          <Route path={`save`} element={<ProtectedRouter allowedRoles={[2]}><SavePage /></ProtectedRouter>} />
-          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={[2]}><PaymentSuccess /></ProtectedRouter>} /> */}
-        {/* </Route> */}
-          {/* <Route path="/home" element={<HomePage />} /> */}
-
-        {/* <Route path="/admin/*" element={<LayoutAdmin />}> */}
-          {/* <Route path="home" element={<HomePage />} /> */}
-           {/* <Route path={``} element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
-
-          </Route>  */}
-
-          {/* <Route path="/instructor/*" element={<LayoutInstructor />}> */}
-          {/* <Route path="admin-page/*" element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>} />
-          <Route path="profile-instructor/*" element={<ProtectedRouter allowedRoles={[3]}><ProfileInstructor /></ProtectedRouter>} /> */}
-
-          {/* <Route path={`instructor-page`} element={<ProtectedRouter allowedRoles={[3]}><InstructorPage /></ProtectedRouter>} /> */}
-
-          {/* </Route> */}
-          
-
-      </Routes>
-
-    </Router>
-  </AuthProvider>
-);
+          {/* Handle 404 */}
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
+      </Router>
+    </AuthProvider>
+  );
+};
 
 export default AppRouter;

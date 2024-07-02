@@ -1,35 +1,31 @@
-import React, { ReactNode, createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 
 interface AuthContextType {
   isLoggedIn: boolean;
   login: () => void;
   logout: () => void;
-  role: string; // Thêm trường role vào AuthContextType
+  role: string; // Adjust according to your role structure
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [role, setRole] = useState(''); // Khởi tạo state cho vai trò
+  const [role, setRole] = useState('');
 
   const login = () => {
     setIsLoggedIn(true);
-    // Set role khi đăng nhập thành công (đây chỉ là một ví dụ, bạn có thể cần lấy vai trò từ API hoặc từ localStorage)
-    setRole('student'); // Thay 'student' bằng vai trò tương ứng
+    // Optionally set role when login (e.g., from user data)
+    // setRole(user.role); // Uncomment if setting role here
   };
 
   const logout = () => {
     setIsLoggedIn(false);
-    setRole(''); // Đăng xuất thì reset vai trò
-  };
-
-  const useRole = (): string => {
-    return role;
+    setRole('');
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, login, logout, role }}> {/* Thêm role vào giá trị của Context */}
+    <AuthContext.Provider value={{ isLoggedIn, login, logout, role }}>
       {children}
     </AuthContext.Provider>
   );

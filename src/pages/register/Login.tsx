@@ -1,49 +1,52 @@
-import { GoogleOutlined } from '@ant-design/icons';
+import React from 'react';
 import { Button, Form, Input, message } from 'antd';
-import React, { useEffect, useRef, useState } from 'react';
+import { GoogleOutlined } from '@ant-design/icons';
 import { Link, useNavigate } from 'react-router-dom';
-import './stylesLogin.css';
+import { useAuth } from 'context/AuthContext';
+import { loginUser } from 'services/loginApiService';
+
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const formRef = useRef<any>(null); // Ref for form instance
-  const [users, setUsers] = useState([
-    { email: "admin@gmail.com", password: "123", roleId: 1, role: "Admin" ,id:1 },
-    { email: "user@gmail.com", password: "123", roleId: 2, role: "Student", id:2 },
-    { email: "instructor@gmail.com", password: "123", roleId: 3, role: "Instructor",id:3 },
-  ]);
+  const { login } = useAuth();
 
-  useEffect(() => {
-    const storedUsers = localStorage.getItem('registeredUsers');
-    if (storedUsers) {
-      setUsers([...users, ...JSON.parse(storedUsers)]);
-    }
-  }, []);
-
-  const handleLogin = (values: any) => {
+  const handleLogin = async (values: any) => {
     const { email, password } = values;
-    const user = users.find(user => user.email === email && user.password === password);
-    if (user) {
-      message.success(`Welcome, ${user.role}!`);
-      localStorage.setItem('userData', JSON.stringify(user));
-      switch (user.role) {
-        case 'Guest':
-          navigate('/guest');
-          break;
-        case 'Student':
-          navigate('/student');
-          break;
-        case 'Instructor':
-          navigate('/instructor');
-          break;
-        case 'Admin':
-          navigate('/admin');
-          break;
-        default:
-          navigate('/home');
+    try {
+      const response = await loginUser(email, password);
+
+      if (response.success && response.data.token) {
+        localStorage.setItem('token', response.data.token);
+
+        // Save user data to localStorage
+        const user = {
+          email: email,
+          role: response.data.role, // Assuming the response contains role information
+
+        };
+        localStorage.setItem('userData', JSON.stringify(user));
+
+        login(); // Update authentication state after successful login
+
+        // Navigate based on user role
+        switch (response.data.role) {
+          case 'student':
+            navigate('/student');
+            break;
+          case 'instructor':
+            navigate('/instructor');
+            break;
+          case 'admin':
+            navigate('/admin');
+            break;
+          default:
+            navigate('/home');
+        }
+      } else {
+        message.error('Login failed. Please try again.');
       }
-    } else {
+    } catch (error) {
       message.error('Invalid email or password');
     }
   };
