@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 import LayoutStudent from '../components/layout/LayoutStudent';
 import { useRole } from '../context/AuthContext'; // Import useRole từ AuthContext
 import LayoutGuest from './layout/LayoutGuest';
-import { Roles } from './roles/role';
+import { role } from './roles/role';
 
 interface RequireAuthProps {
   allowedRoles: string[];
@@ -11,15 +11,15 @@ interface RequireAuthProps {
 }
 
 const RequireAuth: React.FC<RequireAuthProps> = ({ allowedRoles, children }) => {
-  const role = useRole(); // Sử dụng useRole từ AuthContext
+  const roles = useRole(); // Sử dụng useRole từ AuthContext
 
-  if (!allowedRoles.includes(role)) {
+  if (!allowedRoles.includes(roles)) {
     return <Navigate to="/log-in" />;
   }
 
   let Layout;
-  switch (role) {
-    case Roles.Student:
+  switch (roles) {
+    case role.Student:
       Layout = LayoutStudent;
       break;
     default:

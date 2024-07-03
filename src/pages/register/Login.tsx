@@ -1,49 +1,46 @@
 import { GoogleOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
+import axios from 'axios';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { HOST_MAIN } from 'services/api';
 import './stylesLogin.css';
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const formRef = useRef<any>(null); // Ref for form instance
-  const [users, setUsers] = useState([
-    { email: "admin@gmail.com", password: "123", roleId: 1, role: "Admin" },
-    { email: "user@gmail.com", password: "123", roleId: 2, role: "Student" },
-    { email: "instructor@gmail.com", password: "123", roleId: 3, role: "Instructor" },
-  ]);
+  const formRef = useRef<any>(null);
+  const [users, setUsers] = useState([]); // Initialize as empty array
 
   useEffect(() => {
     const storedUsers = localStorage.getItem('registeredUsers');
     if (storedUsers) {
-      setUsers([...users, ...JSON.parse(storedUsers)]);
+      setUsers(JSON.parse(storedUsers));
     }
   }, []);
 
-  const handleLogin = (values: any) => {
+  const handleLogin = async (values: any) => {
     const { email, password } = values;
-    const user = users.find(user => user.email === email && user.password === password);
-    if (user) {
+    try {
+      const response = await axios.post(`${HOST_MAIN}/api/auth`, { email, password });
+      const user = response.data; // Assuming API returns user data with roleId
       message.success(`Welcome, ${user.role}!`);
       localStorage.setItem('userData', JSON.stringify(user));
-      switch (user.role) {
-        case 'Guest':
-          navigate('/guest');
+      switch (user.roleId) {
+        case 1: // Admin
+          navigate('/admin');
           break;
-        case 'Student':
+        case 2: // Student
           navigate('/student');
           break;
-        case 'Instructor':
+        case 3: // Instructor
           navigate('/instructor');
-          break;
-        case 'Admin':
-          navigate('/admin');
           break;
         default:
           navigate('/home');
       }
-    } else {
+    } catch (error) {
+      console.error('Login error:', error);
       message.error('Invalid email or password');
     }
   };

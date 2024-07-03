@@ -42,46 +42,6 @@ const initialDataSource: DataType[] = [
     created_at: '2024-02-01',
     instructor: 'Instructor 2',
   },
-  {
-    key: '3',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 3',
-    status: false,
-    description: 'Description for Item 3',
-    price: 300,
-    created_at: '2024-03-01',
-    instructor: 'Instructor 3',
-  },
-  {
-    key: '4',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 4',
-    status: true,
-    description: 'Description for Item 4',
-    price: 400,
-    created_at: '2024-04-01',
-    instructor: 'Instructor 4',
-  },
-  {
-    key: '5',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 5',
-    status: false,
-    description: 'Description for Item 5',
-    price: 500,
-    created_at: '2024-05-01',
-    instructor: 'Instructor 5',
-  },
-  {
-    key: '6',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 6',
-    status: true,
-    description: 'Description for Item 6',
-    price: 600,
-    created_at: '2024-06-01',
-    instructor: 'Instructor 6',
-  },
 ];
 
 const CourseAdmin: React.FC = () => {
@@ -170,7 +130,7 @@ const CourseAdmin: React.FC = () => {
               placeholder="Search"
               prefix={<SearchOutlined />}
               onChange={handleSearchChange}
-              className="w-full h-10 text-lg border-2 border-gray-300 border-solid rounded"
+              className="items-center w-full h-8 text-lg border-2 border-gray-300 border-solid rounded"
               value={searchTerm}
             />
           </div>

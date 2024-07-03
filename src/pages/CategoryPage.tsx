@@ -22,26 +22,7 @@ const dataSource: DataType[] = [
     image: 'https://via.placeholder.com/50',
     title: 'Item 2',
   },
-  {
-    key: '3',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 3',
-  },
-  {
-    key: '4',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 4',
-  },
-  {
-    key: '5',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 5',
-  },
-  {
-    key: '6',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 6',
-  },
+
 ];
 
 const columns = [

@@ -1,1 +1,0 @@
-export const host_main = "https://api-ojt-hcm24-react06-group04.vercel.app/";
