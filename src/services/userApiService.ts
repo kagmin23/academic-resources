@@ -1,6 +1,5 @@
 import { apiRequest } from "services/apiService";
 
-
 export const deleteUser = async (userId: number) => {
   try {
     const response = await apiRequest(`api/users/${userId}`, {

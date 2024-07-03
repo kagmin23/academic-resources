@@ -1,6 +1,5 @@
 import { apiRequest } from "services/apiService";
 
-
 export const loginUser = async (email: string, password: string) => {
   try {
     const response = await apiRequest('api/auth', {
