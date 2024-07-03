@@ -1,7 +1,4 @@
-
-
 import { apiRequest } from "services/apiService";
-
 
 export const createCategory = async (categoryData: any) => {
   return apiRequest('api/category', {
