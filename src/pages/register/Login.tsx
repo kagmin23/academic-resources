@@ -1,44 +1,76 @@
 import { GoogleOutlined } from '@ant-design/icons';
 import { Button, Form, Input, message } from 'antd';
-import axios from 'axios';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { HOST_MAIN } from 'services/api';
+import { loginUser } from 'services/loginApiService';
 import './stylesLogin.css';
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const formRef = useRef<any>(null);
-  const [users, setUsers] = useState([]); // Initialize as empty array
+  const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    const storedUsers = localStorage.getItem('registeredUsers');
-    if (storedUsers) {
-      setUsers(JSON.parse(storedUsers));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const storedUsers = localStorage.getItem('registeredUsers');
+  //   if (storedUsers) {
+  //     setUsers(JSON.parse(storedUsers));
+  //   }
+  // },[]);
 
-  const handleLogin = async (values: any) => {
-    const { email, password } = values;
+    // Fetch data using the token after component mounts
+  //   const fetchData = async () => {
+  //     const token = getToken();
+  //     if (token) {
+  //       try {
+  //         const response = await axios.get(`${HOST_MAIN}/api/auth`, {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         });
+  //         console.log('Data:', response.data);
+  //       } catch (error) {
+  //         console.error('Fetch error:', error);
+  //       }
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, 
+
+  const handleLogin = async (values: {email: string, password: string}) => {
     try {
-      const response = await axios.post(`${HOST_MAIN}/api/auth`, { email, password });
-      const user = response.data; // Assuming API returns user data with roleId
-      message.success(`Welcome, ${user.role}!`);
-      localStorage.setItem('userData', JSON.stringify(user));
-      switch (user.roleId) {
-        case 1: // Admin
+      // const response = await axios.post(`${HOST_MAIN}/api/auth`, { email, password });
+      // const { token, user } = response.data; // Assuming API returns user data with roleId and token
+      // message.success(`Welcome, ${user.role}!`);
+      // localStorage.setItem('userData', JSON.stringify(user));
+      // localStorage.setItem('token', token); // Save the token in local storage
+      await loginUser(values.email, values.password);
+      const storeUser: any = localStorage.getItem("user")
+
+      if (!storeUser) {
+        console.log("Failed to get data local");
+      }
+
+      const user = JSON.parse(storeUser);
+      console.log(user);
+      console.log(user.data.role);
+      if (user && user.data) {
+      switch (user.data.role) {
+        case "admin": // Admin
           navigate('/admin');
           break;
-        case 2: // Student
+        case "student": // Student
           navigate('/student');
           break;
-        case 3: // Instructor
+        case "instructor": // Instructor
           navigate('/instructor');
           break;
         default:
           navigate('/home');
       }
+    }
+
     } catch (error) {
       console.error('Login error:', error);
       message.error('Invalid email or password');

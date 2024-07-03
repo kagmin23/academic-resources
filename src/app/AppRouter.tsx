@@ -51,9 +51,9 @@ const AppRouter: React.FC = () => (
 
         {/* Layout for Students */}
        
-        <Route path="/student/*"  element={<ProtectedRouter allowedRoles={[2]}><StudentRouter /></ProtectedRouter>}/>
-        <Route path="/instructor/*"  element={<ProtectedRouter allowedRoles={[3]}><InstructorRouter /></ProtectedRouter>}/>
-        <Route path="/admin/*"  element={<ProtectedRouter allowedRoles={[1]}><AdminPage /></ProtectedRouter>}/>
+        <Route path="/student/*"  element={<ProtectedRouter allowedRoles={["student"]}><StudentRouter /></ProtectedRouter>}/>
+        <Route path="/instructor/*"  element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorRouter /></ProtectedRouter>}/>
+        <Route path="/admin/*"  element={<ProtectedRouter allowedRoles={["admin"]}><AdminPage /></ProtectedRouter>}/>
 
 
         {/* <Route path={``} element={<ProtectedRouter allowedRoles={[2]}><UserRouter /></ProtectedRouter>} /> */}
