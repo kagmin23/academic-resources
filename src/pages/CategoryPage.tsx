@@ -70,7 +70,7 @@ const CategoryPage: React.FC = () => {
       <Sider collapsible collapsed={collapsed} onCollapse={toggleCollapsed}>
         {!collapsed && (
           <div className="flex items-center justify-center mt-4 mb-4">
-            <p className="text-lg text-3xl font-semibold text-white">Category</p>
+            <p className="text-lg font-semibold text-white">Category</p>
           </div>
         )}
         <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
