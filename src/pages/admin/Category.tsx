@@ -1,4 +1,3 @@
-import React, { useEffect, useState } from 'react';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -9,15 +8,17 @@ import {
 import { Button, Col, Form, Input, Layout, Modal, Row, Table, Typography } from 'antd';
 import TextArea from 'antd/es/input/TextArea';
 import Title from 'antd/lib/typography/Title';
+import axios from 'axios';
 import { AlignType } from 'rc-table/lib/interface';
-import { createCategory } from 'services/categoryApiService';
-
+import React, { useEffect, useState } from 'react';
+import { HOST_MAIN } from 'services/apiService';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
+const { confirm } = Modal;
 
 interface DataType {
-  key: string;
+  id: number;
   image: string;
   title: string;
   description?: string;
@@ -27,14 +28,7 @@ interface DataType {
 
 const getInitialDataSource = (): DataType[] => {
   const savedData = localStorage.getItem('categoryData');
-  return savedData ? JSON.parse(savedData) : [
-    { key: '1', image: 'https://via.placeholder.com/50', title: 'Item 1', description: 'abc' },
-    { key: '2', image: 'https://via.placeholder.com/50', title: 'Item 2', description: 'def' },
-    { key: '3', image: 'https://via.placeholder.com/50', title: 'Item 3', description: 'xyz' },
-    { key: '4', image: 'https://via.placeholder.com/50', title: 'Item 4', description: 'kml' },
-    { key: '5', image: 'https://via.placeholder.com/50', title: 'Item 5', description: 'iop' },
-    { key: '6', image: 'https://via.placeholder.com/50', title: 'Item 6', description: 'ert' },
-  ];
+  return savedData ? JSON.parse(savedData) : [];
 };
 
 const CategoryAdmin: React.FC = () => {
@@ -63,9 +57,9 @@ const CategoryAdmin: React.FC = () => {
     form.resetFields();
   };
 
-  const handleViewMore = (key: string) => {
+  const handleViewMore = (id: number) => {
     setExpandedKeys(prevKeys =>
-      prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]
+      prevKeys.includes(id.toString()) ? prevKeys.filter(k => k !== id.toString()) : [...prevKeys, id.toString()]
     );
   };
 
@@ -78,23 +72,18 @@ const CategoryAdmin: React.FC = () => {
   const handleUpdate = () => {
     form
       .validateFields()
-      .then(async values => {
+      .then(values => {
         if (editingRecord) {
           const updatedDataSource = dataSource.map(item =>
-            item.key === editingRecord.key ? { ...item, ...values } : item
+            item.id === editingRecord.id ? { ...item, ...values } : item
           );
           setDataSource(updatedDataSource);
         } else {
-          try {
-            const newCategory = await createCategory(values);
-            const newRecord: DataType = {
-              key: (dataSource.length + 1).toString(),
-              ...newCategory,
-            };
-            setDataSource([...dataSource, newRecord]);
-          } catch (error) {
-            console.error('Failed to create category:', error);
-          }
+          const newRecord: DataType = {
+            id: dataSource.length + 1, // Tạo id mới khi thêm mới bản ghi
+            ...values,
+          };
+          setDataSource([...dataSource, newRecord]);
         }
         setIsModalVisible(false);
       })
@@ -102,11 +91,33 @@ const CategoryAdmin: React.FC = () => {
         console.log('Validate Failed:', info);
       });
   };
-
-  const handleDelete = (key: string) => {
-    const updatedDataSource = dataSource.filter(item => item.key !== key);
-    setDataSource(updatedDataSource);
+  
+  
+  const showDeleteConfirm = (id: number) => {
+    confirm({
+      title: 'Are you sure you want to delete this category?',
+      content: 'This action cannot be undone.',
+      okText: 'Yes',
+      okType: 'danger',
+      cancelText: 'No',
+      onOk() {
+        axios.delete(`${HOST_MAIN}/api/category/${id}`)
+          .then(() => {
+            const updatedDataSource = dataSource.filter(item => item.id !== id);
+            setDataSource(updatedDataSource);
+          })
+          .catch(error => {
+            console.error('There was an error deleting the category!', error);
+          });
+      },
+      onCancel() {
+        console.log('Cancel');
+      },
+    });
   };
+  
+  
+  
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
@@ -120,6 +131,7 @@ const CategoryAdmin: React.FC = () => {
       render: (text: string) => <img src={text} alt="item" className="w-12 h-12" />,
     },
     {
+
       title: 'Title',
       dataIndex: 'title',
       key: 'title',
@@ -143,11 +155,11 @@ const CategoryAdmin: React.FC = () => {
           <Button
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
-            onClick={() => handleDelete(record.key)}
+            onClick={() => showDeleteConfirm(record.id)}
           ></Button>
           <Button
             icon={<EyeOutlined />}
-            onClick={() => handleViewMore(record.key)}
+            onClick={() => handleViewMore(record.id)}
           ></Button>
         </div>
       ),
@@ -164,7 +176,7 @@ const CategoryAdmin: React.FC = () => {
                 placeholder="Search"
                 prefix={<SearchOutlined />}
                 onChange={handleSearchChange}
-                className="w-full h-10 text-lg border-2 border-gray-300 border-solid rounded"
+                className="items-center w-full h-8 text-sm border-2 border-gray-300 border-solid rounded"
                 value={searchTerm}
               />
             </div>
@@ -184,7 +196,7 @@ const CategoryAdmin: React.FC = () => {
               columns={columns}
               expandable={{
                 expandedRowKeys: expandedKeys,
-                onExpand: (expanded, record) => handleViewMore(record.key),
+                onExpand: (expanded, record) => handleViewMore(record.id),
                 expandedRowRender: (record: DataType) => (
                   <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
                     <Row gutter={16}>
@@ -210,7 +222,7 @@ const CategoryAdmin: React.FC = () => {
                 ),
                 expandIcon: () => null,
               }}
-              rowKey="key"
+              rowKey="id"
             />
           </div>
         </Content>
@@ -218,7 +230,6 @@ const CategoryAdmin: React.FC = () => {
           Academic_Resources ©2024 Created by Group 4
         </Footer>
       </Layout>
-
       <Modal
         title={editingRecord ? 'Edit Category' : 'Add New Category'}
         visible={isModalVisible}

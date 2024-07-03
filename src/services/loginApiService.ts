@@ -1,39 +1,67 @@
-import { apiRequest } from "services/apiService";
+import axios from "axios";
+import { HOST_MAIN } from "services/apiService";
+
+interface User {
+  email: string;
+  password: string;
+  name: string;
+  role: string;
+  image: string;
+  status: boolean;
+}
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    const response = await apiRequest('api/auth', {
-      method: 'POST',
-      body: JSON.stringify({ email, password }),
-      headers: {
-                'Content-Type': 'application/json'
+    console.log("Attempting to log in with email:", email);
+    
+    // Attempt to login and retrieve token
+    const response = await axios.post(
+      `${HOST_MAIN}/api/auth`,
+      { email, password },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    });
+    );
 
-    return response; // Assuming the API returns a success message or data with a token
+    console.log("Login response:", response);
+
+    const token =
+        response.data.token ||
+        response.data.accessToken ||
+        response.data.data?.token;
+    console.log(token);
+
+    if (token) {
+      console.log("Login Success. Token received:", token);
+      localStorage.setItem("token", token);
+      
+      // Use token to get user data
+      const userResponse = await axios.get(`${HOST_MAIN}/api/auth`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log("User data response:", userResponse);
+
+      const userData = userResponse.data;
+      console.log("User data received:", userData);
+
+      if (userData) {
+        localStorage.setItem("user", JSON.stringify(userData));
+        return userData; // Return user data for further use if needed
+      } else {
+        console.error("Failed to get user data");
+        throw new Error("Failed to get user data");
+      }
+    } else {
+      console.error("Error: Token not received");
+      throw new Error("Error: Token not received");
+    }
   } catch (error) {
     console.error('Failed to login:', error);
     throw error;
   }
 };
-
-
-export const getCurrentUser = async () => {
-    try {
-      const response = await apiRequest('api/auth', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`, // Assuming token is stored in localStorage
-        }
-      });
-  
-      if (response.success) {
-        return response.data; // Return user data if API call is successful
-      } else {
-        throw new Error('Failed to fetch current user');
-      }
-    } catch (error) {
-      console.error('Failed to fetch current user:', error);
-      throw error;
-    }
-  };

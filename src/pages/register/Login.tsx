@@ -1,52 +1,78 @@
-import React from 'react';
-import { Button, Form, Input, message } from 'antd';
 import { GoogleOutlined } from '@ant-design/icons';
+import { Button, Form, Input, message } from 'antd';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from 'context/AuthContext';
 import { loginUser } from 'services/loginApiService';
-
+import './stylesLogin.css';
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const formRef = useRef<any>(null);
+  const [users, setUsers] = useState([]);
 
-  const handleLogin = async (values: any) => {
-    const { email, password } = values;
+  // useEffect(() => {
+  //   const storedUsers = localStorage.getItem('registeredUsers');
+  //   if (storedUsers) {
+  //     setUsers(JSON.parse(storedUsers));
+  //   }
+  // },[]);
+
+    // Fetch data using the token after component mounts
+  //   const fetchData = async () => {
+  //     const token = getToken();
+  //     if (token) {
+  //       try {
+  //         const response = await axios.get(`${HOST_MAIN}/api/auth`, {
+  //           headers: {
+  //             Authorization: `Bearer ${token}`,
+  //           },
+  //         });
+  //         console.log('Data:', response.data);
+  //       } catch (error) {
+  //         console.error('Fetch error:', error);
+  //       }
+  //     }
+  //   };
+
+  //   fetchData();
+  // }, 
+
+  const handleLogin = async (values: {email: string, password: string}) => {
     try {
-      const response = await loginUser(email, password);
+      // const response = await axios.post(`${HOST_MAIN}/api/auth`, { email, password });
+      // const { token, user } = response.data; // Assuming API returns user data with roleId and token
+      // message.success(`Welcome, ${user.role}!`);
+      // localStorage.setItem('userData', JSON.stringify(user));
+      // localStorage.setItem('token', token); // Save the token in local storage
+      await loginUser(values.email, values.password);
+      const storeUser: any = localStorage.getItem("user")
 
-      if (response.success && response.data.token) {
-        localStorage.setItem('token', response.data.token);
-
-        // Save user data to localStorage
-        const user = {
-          email: email,
-          role: response.data.role, // Assuming the response contains role information
-
-        };
-        localStorage.setItem('userData', JSON.stringify(user));
-
-        login(); // Update authentication state after successful login
-
-        // Navigate based on user role
-        switch (response.data.role) {
-          case 'student':
-            navigate('/student');
-            break;
-          case 'instructor':
-            navigate('/instructor');
-            break;
-          case 'admin':
-            navigate('/admin');
-            break;
-          default:
-            navigate('/home');
-        }
-      } else {
-        message.error('Login failed. Please try again.');
+      if (!storeUser) {
+        console.log("Failed to get data local");
       }
+
+      const user = JSON.parse(storeUser);
+      console.log(user);
+      console.log(user.data.role);
+      if (user && user.data) {
+      switch (user.data.role) {
+        case "admin": // Admin
+          navigate('/admin');
+          break;
+        case "student": // Student
+          navigate('/student');
+          break;
+        case "instructor": // Instructor
+          navigate('/instructor');
+          break;
+        default:
+          navigate('/home');
+      }
+    }
+
     } catch (error) {
+      console.error('Login error:', error);
       message.error('Invalid email or password');
     }
   };

@@ -1,27 +1,25 @@
-// RequireAuth.tsx
-
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import LayoutStudent from '../components/layout/LayoutStudent';
-import LayoutGuest from '../components/layout/LayoutGuest';
-import { useRole } from '../context/AuthContext'; // Import useRole from AuthContext
-import { Roles } from '../components/roles/role'; // Adjust according to your role structure
+import { useRole } from '../context/AuthContext'; // Import useRole từ AuthContext
+import LayoutGuest from './layout/LayoutGuest';
+import { role } from './roles/role';
 
 interface RequireAuthProps {
-  allowedRoles: Roles[]; // Adjust according to your role structure
+  allowedRoles: string[];
   children: React.ReactNode;
 }
 
 const RequireAuth: React.FC<RequireAuthProps> = ({ allowedRoles, children }) => {
-  const role = useRole(); // Use useRole hook from AuthContext
+  const roles = useRole(); // Sử dụng useRole từ AuthContext
 
-  if (!allowedRoles.includes(role as Roles)) {
+  if (!allowedRoles.includes(roles)) {
     return <Navigate to="/log-in" />;
   }
 
   let Layout;
-  switch (role) {
-    case Roles.student:
+  switch (roles) {
+    case role.Student:
       Layout = LayoutStudent;
       break;
     default:

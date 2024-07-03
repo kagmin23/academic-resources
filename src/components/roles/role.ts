@@ -1,7 +1,7 @@
-export enum Roles {
-    student = 'student',
-    instructor = 'instructor',
-    guest = 'guest',
-    admin = 'admin',
+export enum role {
+    Student = 'Student',
+    Instructor = 'Instructor',
+    Guest = 'Guest',
+    Admin = 'Admin',
   }
   
