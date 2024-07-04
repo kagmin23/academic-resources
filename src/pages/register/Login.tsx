@@ -1,9 +1,9 @@
 import { GoogleOAuthProvider } from '@react-oauth/google';
 import { Button, Form, Input, message } from 'antd';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from 'services/loginApiService';
-import GoogleLogin from './GoogleLogin';
+import GoogleLogin from '../../services/googleApiLogin';
 import './stylesLogin.css';
 
 const clientId = '1079476190023-esoodjheb0blodtroofvlo4dba3of03k.apps.googleusercontent.com';
@@ -12,14 +12,17 @@ const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const formRef = useRef<any>(null);
+  const [loading, setLoading] = useState(false); // State to manage loading state
 
   const handleLogin = async (values: { email: string, password: string }) => {
+    setLoading(true); // Start loading state
     try {
       await loginUser(values.email, values.password);
       const storeUser: any = localStorage.getItem('user');
 
       if (!storeUser) {
         console.log('Failed to get data local');
+        setLoading(false); // Stop loading state
         return;
       }
 
@@ -44,6 +47,8 @@ const Login: React.FC = () => {
     } catch (error) {
       console.error('Login error:', error);
       message.error('Invalid email or password');
+    } finally {
+      setLoading(false); // Stop loading state after login attempt
     }
   };
 
@@ -55,6 +60,14 @@ const Login: React.FC = () => {
   return (
     <GoogleOAuthProvider clientId={clientId}>
       <div className="relative flex items-center justify-center min-h-screen bg-gray-100">
+        {loading && (
+          <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
+            <div className="flex items-center text-white">
+              <svg className="w-5 h-5 mr-3 animate-spin" viewBox="0 0 24 24"></svg>
+              <span>Loading...</span>
+            </div>
+          </div>
+        )}
         <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 background-transition"></div>
         <div className="relative z-10 flex flex-col justify-center w-full max-w-md p-8 space-y-5 shadow-2xl bg-teal-50 rounded-xl lg:ml-auto lg:mr-16">
           <div className="flex justify-center">
@@ -92,7 +105,7 @@ const Login: React.FC = () => {
               </label>
               <Link to="/forgot-password" className="text-blue-600">Forgot Password?</Link>
             </div>
-            <Button type="primary" htmlType="submit" className="w-full h-10 bg-red-500 hover:bg-blue-600">
+            <Button type="primary" htmlType="submit" className="w-full h-10 bg-red-500 hover:bg-blue-600" loading={loading}>
               Login
             </Button>
             <div>

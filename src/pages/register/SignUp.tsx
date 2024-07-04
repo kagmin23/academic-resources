@@ -60,7 +60,7 @@ const SignUp: React.FC = () => {
         description: 'You have signed up successfully!',
       });
 
-      navigate('/log-in');
+      navigate('/verify-email/:token');
     } catch (error) {
       console.log('Validation Failed:', error);
     }
@@ -183,9 +183,9 @@ const SignUp: React.FC = () => {
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
+            <Link to="/verify-email/:token"><Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
               Finish
-            </Button>
+            </Button></Link>
           </div>
           
         </Form>

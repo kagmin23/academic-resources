@@ -18,3 +18,5 @@ export { default as SearchPage } from './SearchPage';
 export { default as Setting } from './Setting';
 export { default as ShoppingCart } from './ShoppingCart';
 export { default as TopInstructorPage } from './TopInstructorPage';
+export { default as VerityToken } from './VerityToken';
+
