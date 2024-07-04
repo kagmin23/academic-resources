@@ -13,6 +13,7 @@ import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { HOST_MAIN } from 'services/apiService';
 
+
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 const { confirm } = Modal;
