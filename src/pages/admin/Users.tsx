@@ -1,9 +1,10 @@
-import { PlusCircleOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import moment, { Moment } from "moment";
 import React, { useState } from "react";
+import { deleteUsers } from "services/AdminsApi/deleteUsersApiService";
 
 const { Option } = Select;
 
@@ -45,14 +46,12 @@ const UsersAdmin: React.FC = () => {
       editingItem.role
     ) {
       if (editingItem.id) {
-        // Update existing user
         const updatedData = data.map((item) =>
           item.id === editingItem.id ? { ...item, ...editingItem } as Item : item
         );
         setData(updatedData);
         message.success("User updated successfully");
       } else {
-        // Add new user
         const newData = [...data, { id: data.length + 1, status: true, ...editingItem } as Item];
         setData(newData);
         message.success("User added successfully");
@@ -69,13 +68,19 @@ const UsersAdmin: React.FC = () => {
     setModalOpen(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (deleteItemId) {
-      const updatedData = data.filter((item) => item.id !== deleteItemId);
-      setData(updatedData);
-      setDeleteItemId(undefined);
-      setDeleteConfirmVisible(false);
-      message.success("User deleted successfully");
+      try {
+        await deleteUsers(deleteItemId);
+        const updatedData = data.filter((item) => item.id !== deleteItemId);
+        setData(updatedData);
+        message.success("User deleted successfully");
+      } catch (error) {
+        message.error("Error deleting user");
+      } finally {
+        setDeleteItemId(undefined);
+        setDeleteConfirmVisible(false);
+      }
     }
   };
 
@@ -148,8 +153,8 @@ const UsersAdmin: React.FC = () => {
       key: 'actions',
       render: (_, item) => (
         <>
-          <Button type="primary" onClick={() => handleEdit(item)} className="mr-2">Edit</Button>
-          <Button type="primary" danger onClick={() => { setDeleteItemId(item.id); setDeleteConfirmVisible(true); }}>Delete</Button>
+          <Button type="primary" icon={<EditOutlined />} onClick={() => handleEdit(item)} className="mr-2"></Button>
+          <Button type="primary" icon={<DeleteOutlined />} danger onClick={() => { setDeleteItemId(item.id); setDeleteConfirmVisible(true); }}></Button>
         </>
       ),
     },
