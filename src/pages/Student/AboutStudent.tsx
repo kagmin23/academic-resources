@@ -254,161 +254,114 @@
 // };
 
 // export default ProfileStudent;
-import { CalendarOutlined, CaretRightOutlined, FacebookOutlined, FileDoneOutlined, FileTextOutlined, LinkedinOutlined, LogoutOutlined, MailOutlined, ManOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined, WomanOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography } from 'antd';
-import React, { useState } from 'react';
-
-const { Content } = Layout;
-const { Title, Text } = Typography;
-const { TabPane } = Tabs;
-
-
-const aboutData = {
-  avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
-  name: 'David Doe',
-  email: 'davidd09@gmail.com',
-  dob: 'January 1, 2003',
-  gender: 'Female',
-  courseCreatedDate: 'January 15, 2023',
-  facebook: 'https://www.facebook.com/vu.hanthien.545',
-  linkedin: 'https://linkedin.com/in/david34',
-};
-
-const ProfileStudent: React.FC = () => {
-
-
-  return (
-    <Layout style={{ minHeight: '100vh' }}>
-      
-      <Layout className="site-layout">
-        <Content>
-          {/* {showAbout ? ( */}
-            <Card style={{  maxHeight: 350, overflow: 'auto', margin: 20 }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                  <Avatar size={64} src={aboutData.avatarSrc} />
-                  <Title level={4} style={{ marginLeft: 16 }}>{aboutData.name}</Title>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <MailOutlined style={{ marginRight: 8 }} />
-                  <Text>Email: {aboutData.email}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <CalendarOutlined style={{ marginRight: 8 }} />
-                  <Text>Date Of Birth: {aboutData.dob}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  {aboutData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
-                  <Text>Gender: {aboutData.gender}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">
-                    <FacebookOutlined style={{ marginRight: 8 }} />
-                    Facebook
-                  </a>
-                </div>
-                <div>
-                  <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">
-                    <LinkedinOutlined style={{ marginRight: 8 }} />
-                    LinkedIn
-                  </a>
-                </div>
-              </div>
-            </Card>
-          
-        </Content>
-      </Layout>
-    </Layout>
-  );
-};
-
-export default ProfileStudent;
-
 // import { CalendarOutlined, CaretRightOutlined, FacebookOutlined, FileDoneOutlined, FileTextOutlined, LinkedinOutlined, LogoutOutlined, MailOutlined, ManOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined, WomanOutlined } from '@ant-design/icons';
 // import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography } from 'antd';
 // import React, { useState, useEffect } from 'react';
-// import { getUserDetail } from '../../services/apiService';
 
+// import { getUser} from 'services/userApiService';
 // const { Content } = Layout;
 // const { Title, Text } = Typography;
 // const { TabPane } = Tabs;
 
-// const ProfileStudent: React.FC = () => {
-//   const [userData, setUserData] = useState({
-//     avatar: '',
-//     name: '',
-//     email: '',
-//     dob: '',
-//     // gender: '',
-//     // courseCreatedDate: '',
-//     // facebook: '',
-//     // linkedin: '',
-//   });
 
+// interface UserData {
+//   avatar: string;
+//   name: string;
+//   email: string;
+//   dob: string; // Assuming dob is a string representation of date
+//   description: string;
+//   // Add more fields as per your actual API response
+// }
+// const aboutData = {
+  
+//   facebook: 'https://www.facebook.com/vu.hanthien.545',
+//   linkedin: 'https://linkedin.com/in/david34',
+// };
+
+// const ProfileStudent: React.FC = () => {
+//   const [userData, setUserData] = useState<UserData | null>(null);
 //   useEffect(() => {
 //     const fetchUserData = async () => {
 //       try {
-//         const data = await getUserDetail(2); // Thay 1 bằng ID người dùng thực tế
-//         setUserData({
-//           avatar: data.avatarSrc || 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
-//           name: data.name,
-//           email: data.email,
-//           dob: data.dob,
-//           // gender: data.gender,
-//           // courseCreatedDate: data.courseCreatedDate,
-//           // facebook: data.facebook,
-//           // linkedin: data.linkedin,
-//         });
+//         const userId ='6682f8cdb0b35670c6b1fd98'
+//         const response = await getUser(userId); 
+//         setUserData(response.data);
 //       } catch (error) {
-//         console.error('Error fetching user detail', error);
+//         console.error('Failed to fetch user data:', error);
 //       }
 //     };
 
 //     fetchUserData();
 //   }, []);
+//   // if (!userData) {
+//   //   return <div>User ko ton tai</div>;
+//   // }
+//   // useEffect(() => {
+//   //   const fetchUserData = async () => {
+//   //     try {
+//   //       const userId = localStorage.getItem('id'); // Lấy userId từ localStorage
+//   //       if (userId) {
+//   //         const response = await getUser(userId);
+//   //         setUserData(response.data);
+//   //       } else {
+//   //         console.error('User ID is not available');
+//   //       }
+//   //     } catch (error) {
+//   //       console.error('Failed to fetch user data:', error);
+//   //     }
+//   //   };
+
+//   //   fetchUserData();
+//   // }, []);
+  
+
+
+//   if (!userData) {
+//     return <div>Loading...</div>;
+//   }
 
 //   return (
 //     <Layout style={{ minHeight: '100vh' }}>
+      
 //       <Layout className="site-layout">
 //         <Content>
-//           <Card style={{ maxHeight: 350, overflow: 'auto', margin: 20 }}>
-//             <div style={{ display: 'flex', flexDirection: 'column' }}>
-//               <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-//                 <Avatar size={64} src={userData.avatar} />
-//                 <Title level={4} style={{ marginLeft: 16 }}>{userData.name}</Title>
+         
+//             <Card style={{  maxHeight: 350, overflow: 'auto', margin: 20 }}>
+//               <div style={{ display: 'flex', flexDirection: 'column' }}>
+//                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+//                 <Avatar size={64} src={userData.avatar || 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp'} />
+//                   <Title level={4} style={{ marginLeft: 16 }}>{userData.name}</Title>
+//                 </div>
+//                 <div style={{ marginBottom: 8 }}>
+//                   <MailOutlined style={{ marginRight: 8 }} />
+//                   <Text>Email: {userData.email}</Text>
+//                 </div>
+//                 <div style={{ marginBottom: 8 }}>
+//                   <CalendarOutlined style={{ marginRight: 8 }} />
+//                   <Text>Date Of Birth: {new Date(userData.dob).toLocaleDateString()}</Text>
+//                 </div>
+//                 {/* <div style={{ marginBottom: 8 }}>
+//                   {userData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
+//                   <Text>Gender: {userData.gender}</Text>
+//                 </div> */}
+//                 <div style={{ marginBottom: 8 }}>
+//                   <Text>Bio: {userData.description}</Text>
+//                 </div>
+//                 <div style={{ marginBottom: 8 }}>
+//                   <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">
+//                     <FacebookOutlined style={{ marginRight: 8 }} />
+//                     Facebook
+//                   </a>
+//                 </div>
+//                 <div>
+//                   <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">
+//                     <LinkedinOutlined style={{ marginRight: 8 }} />
+//                     LinkedIn
+//                   </a>
+//                 </div>
 //               </div>
-//               <div style={{ marginBottom: 8 }}>
-//                 <MailOutlined style={{ marginRight: 8 }} />
-//                 <Text>Email: {userData.email}</Text>
-//               </div>
-//               <div style={{ marginBottom: 8 }}>
-//                 <CalendarOutlined style={{ marginRight: 8 }} />
-//                 <Text>Date Of Birth: {userData.dob}</Text>
-//               </div>
-//               {/* <div style={{ marginBottom: 8 }}>
-//                 {userData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
-//                 <Text>Gender: {userData.gender}</Text>
-//               </div> */}
-//               {/* <div style={{ marginBottom: 8 }}>
-//                 <Text>Course Created Date: {userData.courseCreatedDate}</Text>
-//               </div>
-//               <div style={{ marginBottom: 8 }}>
-//                 <a href={userData.facebook} target="_blank" rel="noopener noreferrer">
-//                   <FacebookOutlined style={{ marginRight: 8 }} />
-//                   Facebook
-//                 </a>
-//               </div>
-//               <div>
-//                 <a href={userData.linkedin} target="_blank" rel="noopener noreferrer">
-//                   <LinkedinOutlined style={{ marginRight: 8 }} />
-//                   LinkedIn
-//                 </a>
-//               </div> */}
-//             </div>
-//           </Card>
+//             </Card>
+          
 //         </Content>
 //       </Layout>
 //     </Layout>
@@ -416,3 +369,84 @@ export default ProfileStudent;
 // };
 
 // export default ProfileStudent;
+
+import React, { useState, useEffect } from 'react';
+import { Avatar, Card, Layout, Typography } from 'antd';
+import { CalendarOutlined, FacebookOutlined, LinkedinOutlined, MailOutlined } from '@ant-design/icons';
+import { getUser } from 'services/userApiService';
+
+const { Content } = Layout;
+const { Title, Text } = Typography;
+
+const aboutData = {
+  facebook: 'https://www.facebook.com/vu.hanthien.545',
+  linkedin: 'https://linkedin.com/in/david34',
+};
+
+const ProfileStudent: React.FC = () => {
+  const [userData, setUserData] = useState<any>(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userId = localStorage.getItem('id'); // Retrieve userId from localStorage
+        if (userId) {
+          const response = await getUser(userId); // Assuming getUser makes an API call to fetch user data by ID
+          setUserData(response.data); // Set the fetched user data into state
+        } else {
+          console.error('User ID is not available');
+        }
+      } catch (error) {
+        console.error('Failed to fetch user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  if (!userData) {
+    return <div>Loading...</div>; // Display a loading state while data is being fetched
+  }
+
+  return (
+    <Layout style={{ minHeight: '100vh' }}>
+      <Layout className="site-layout">
+        <Content>
+          <Card style={{ maxHeight: 350, overflow: 'auto', margin: 20 }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
+                <Avatar size={64} src={userData.avatar || 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp'} />
+                <Title level={4} style={{ marginLeft: 16 }}>{userData.name}</Title>
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <MailOutlined style={{ marginRight: 8 }} />
+                <Text>Email: {userData.email}</Text>
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <CalendarOutlined style={{ marginRight: 8 }} />
+                <Text>Date Of Birth: {new Date(userData.dob).toLocaleDateString()}</Text>
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <Text>Bio: {userData.description}</Text>
+              </div>
+              <div style={{ marginBottom: 8 }}>
+                <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">
+                  <FacebookOutlined style={{ marginRight: 8 }} />
+                  Facebook
+                </a>
+              </div>
+              <div>
+                <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">
+                  <LinkedinOutlined style={{ marginRight: 8 }} />
+                  LinkedIn
+                </a>
+              </div>
+            </div>
+          </Card>
+        </Content>
+      </Layout>
+    </Layout>
+  );
+};
+
+export default ProfileStudent;
