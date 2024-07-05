@@ -60,7 +60,7 @@ const SignUp: React.FC = () => {
         description: 'You have signed up successfully!',
       });
 
-      navigate('/verify-email/:token');
+      navigate('/verify-email');
     } catch (error) {
       console.log('Validation Failed:', error);
     }

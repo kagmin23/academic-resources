@@ -1,35 +1,51 @@
 import { Button, Form, Input, Typography, notification } from 'antd';
+import axios, { AxiosError } from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { HOST_MAIN } from 'services/apiService';
 import '../assets/mainLogoAcademic.png';
 
 const { Title } = Typography;
+
+interface ErrorResponse {
+  message: string;
+}
 
 const VerifyToken: React.FC = () => {
   const [registeredEmail, setRegisteredEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
   const [emailSent, setEmailSent] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [form] = Form.useForm(); // Get the form instance here
   const navigate = useNavigate();
 
-  const sendEmailVerification = async () => {
-    // Simulate email sending process
+  const sendEmailVerification = async (email: string) => {
+    setLoading(true);
     try {
-      // Here you would typically send an email with a verification code to the user's email address
-      await new Promise((resolve) => setTimeout(resolve, 2000)); // Simulate delay
+      const response = await axios.post(`${HOST_MAIN}/api/auth/verify-email`, { email });
       setEmailSent(true);
       notification.success({
         message: 'Email Sent',
-        description: 'An email with the verification code has been sent to your email address.',
+        description: response.data.message || 'An email with the verification code has been sent to your email address.',
       });
-      // In a real application, setRegisteredEmail would be set to the registered email during signup
-      // For demonstration purpose, I'm setting it statically
-      setRegisteredEmail('example@gmail.com');
-    } catch (error) {
-      console.log('Failed to send email:', error);
-      notification.error({
-        message: 'Error',
-        description: 'Failed to send verification email. Please try again later.',
-      });
+      setRegisteredEmail(email);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError<ErrorResponse>;
+        console.log('Failed to send email:', axiosError);
+        notification.error({
+          message: 'Error',
+          description: axiosError.response?.data?.message || 'Failed to send verification email. Please try again later.',
+        });
+      } else {
+        console.error('Unexpected error:', error);
+        notification.error({
+          message: 'Error',
+          description: 'An unexpected error occurred. Please try again later.',
+        });
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -63,7 +79,7 @@ const VerifyToken: React.FC = () => {
           Verify Your Email
         </Title>
 
-        <Form onFinish={onFinish} className="space-y-4">
+        <Form form={form} onFinish={onFinish} className="space-y-4">
           {!emailSent ? (
             <div>
               <Form.Item
@@ -83,8 +99,12 @@ const VerifyToken: React.FC = () => {
               </Form.Item>
               <Button
                 type="primary"
-                onClick={sendEmailVerification}
+                onClick={() => {
+                  const email = form.getFieldValue('email');
+                  sendEmailVerification(email);
+                }}
                 className="w-full h-12 text-white bg-red-500 hover:bg-red-600"
+                loading={loading}
               >
                 Send Verification Email
               </Button>
