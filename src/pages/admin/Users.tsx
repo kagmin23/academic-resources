@@ -1,11 +1,13 @@
-import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message } from "antd";
-import { Content } from "antd/es/layout/layout";
-import { ColumnsType } from "antd/es/table";
-import moment, { Moment } from "moment";
-import React, { useState } from "react";
-import { deleteUsers } from "services/AdminsApi/deleteUsersApiService";
+// UsersAdmin.tsx
+import React, { useState } from 'react';
+import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message } from 'antd';
+import { PlusCircleOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import moment, { Moment } from 'moment';
+import { ColumnsType } from 'antd/es/table';
+import { addUser } from '../../services/AdminsApi/addUserApiService';
+import { deleteUsers } from 'services/AdminsApi/deleteUsersApiService'; // Adjusted import
 
+const { Content } = Layout;
 const { Option } = Select;
 
 interface Item {
@@ -36,7 +38,7 @@ const UsersAdmin: React.FC = () => {
   const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
   const [lockItemId, setLockItemId] = useState<number | undefined>();
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (
       editingItem.name &&
       editingItem.gender &&
@@ -52,14 +54,21 @@ const UsersAdmin: React.FC = () => {
         setData(updatedData);
         message.success("User updated successfully");
       } else {
-        const newData = [...data, { id: data.length + 1, status: true, ...editingItem } as Item];
-        setData(newData);
-        message.success("User added successfully");
+        try {
+          const response = await addUser(editingItem);
+          const newUser = response.data; // Assuming the API returns the newly created user
+          const newData = [...data, newUser];
+          setData(newData);
+          message.success('User added successfully');
+        } catch (error) {
+          message.error('Failed to add user');
+        } finally {
+          setEditingItem({});
+          setModalOpen(false);
+        }
       }
-      setEditingItem({});
-      setModalOpen(false);
     } else {
-      message.error("Please fill in all fields");
+      message.error('Please fill in all fields');
     }
   };
 
@@ -71,7 +80,7 @@ const UsersAdmin: React.FC = () => {
   const handleDelete = async () => {
     if (deleteItemId) {
       try {
-        await deleteUsers(deleteItemId);
+        await deleteUsers(deleteItemId); // Use the deleteUsers function here
         const updatedData = data.filter((item) => item.id !== deleteItemId);
         setData(updatedData);
         message.success("User deleted successfully");
@@ -140,7 +149,7 @@ const UsersAdmin: React.FC = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status, item) => (
+      render: (status: boolean, item: Item) => (
         <Switch
           checked={status}
           onChange={(checked) => handleStatusChange(checked, item)}
