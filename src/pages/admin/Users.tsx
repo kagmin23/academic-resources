@@ -58,12 +58,12 @@ const UsersAdmin: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, []); 
 
-  const handleAdd = async () => {
+  const handleAdd = async () => { 
     if (
       editingItem.name &&
-      editingItem.dob &&
+      editingItem.dob && 
       editingItem.email &&
       editingItem.phone_number &&
       editingItem.role
@@ -100,7 +100,8 @@ const UsersAdmin: React.FC = () => {
               editingItem.name,
               editingItem.password,
               editingItem.email,
-              editingItem.role
+              editingItem.role,
+              editingItem.phone_number,
             );
             if (response.success) {
               const newData = [...data, { _id: data.length + 1, status: true, ...editingItem } as Item];
