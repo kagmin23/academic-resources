@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, ContainerOutlined, DeploymentUnitOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, ReadOutlined, SafetyOutlined, SettingOutlined, SwapOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, ContainerOutlined, DeploymentUnitOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, ReadOutlined, SafetyOutlined, SettingOutlined, SwapOutlined, UserOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -26,7 +26,20 @@ const SidebarAdmin: React.FC = () => {
     {
       icon: UserSwitchOutlined,
       heading: "Users",
-      href: '/admin/user'
+      href: '/admin/user',
+      children: [
+        {
+          icon: UserSwitchOutlined,
+          heading: "Users",
+          href: '/admin/user',
+        },
+        {
+          icon: UsergroupAddOutlined,
+          heading: "Approve Instructor",
+          href: "/admin/approve-instructor"
+        },
+
+      ]
     },
     {
       icon: ContainerOutlined,

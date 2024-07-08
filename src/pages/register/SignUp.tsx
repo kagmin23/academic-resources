@@ -28,7 +28,6 @@ const SignUp: React.FC = () => {
       setFormData({ ...formData, ...values });
       setCurrent(current + 1);
 
-      // Hide radio group when moving to next step after Sign Up
       if (current === 0) {
         setShowRadioGroup(false);
       }
