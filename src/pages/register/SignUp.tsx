@@ -4,6 +4,7 @@ import { RadioChangeEvent } from 'antd/lib';
 import type { UploadRequestOption } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { registerUser } from '../../services/registerApiService';
 
 const SignUp: React.FC = () => {
   const [form] = Form.useForm();
@@ -50,10 +51,9 @@ const SignUp: React.FC = () => {
       setFormData(finalFormData);
       console.log('Final Form Data:', finalFormData);
 
-      // Save to localStorage
-      const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-      storedUsers.push(finalFormData);
-      localStorage.setItem('registeredUsers', JSON.stringify(storedUsers));
+      // Call registerUser API
+      const response = await registerUser(finalFormData);
+      console.log('Registration successful:', response);
 
       notification.success({
         message: 'Success',
@@ -62,7 +62,11 @@ const SignUp: React.FC = () => {
 
       navigate('/log-in');
     } catch (error) {
-      console.log('Validation Failed:', error);
+      console.error('Registration error:', error);
+      notification.error({
+        message: 'Registration Error',
+        description: 'There was an error during the registration process. Please try again.',
+      });
     }
   };
 
