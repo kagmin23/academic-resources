@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { Button, Form, Input, Typography, notification } from 'antd';
+import React, { useState } from 'react';
 import 'tailwindcss/tailwind.css';
 
 const { Text } = Typography;
@@ -134,7 +134,7 @@ const SettingInstructor: React.FC = () => {
               <div className='p-4 border rounded-lg'>
                 <ProfileItem
                   label="Avatar"
-                  value={<img className="h-16 w-16 rounded-full" src={avatar} alt="avatar" />}
+                  value={<img className="w-16 h-16 rounded-full" src={avatar} alt="avatar" />}
                   isOpen={itemStates['Avatar']}
                   onItemClick={handleItemClick}
                   onSave={handleAvatarChange}
@@ -201,12 +201,12 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
 
   return (
     <div>
-      <div className="flex justify-between items-center cursor-pointer" onClick={() => onItemClick(label)}>
+      <div className="flex items-center justify-between cursor-pointer" onClick={() => onItemClick(label)}>
         <div>
           <h4 className="text-lg font-medium">{label}</h4>
           <Text className="text-gray-800">{value}</Text>
         </div>
-        <button className="text-gray-500">
+        <Button className="text-gray-500">
           <svg
             aria-hidden="true"
             focusable="false"
@@ -222,7 +222,7 @@ const ProfileItem: React.FC<ProfileItemProps> = ({
               d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"
             ></path>
           </svg>
-        </button>
+        </Button>
       </div>
       {isOpen && (
         <div className="mt-4 space-y-4">

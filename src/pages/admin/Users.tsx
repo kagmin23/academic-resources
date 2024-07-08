@@ -3,12 +3,12 @@ import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, 
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import moment, { Moment } from "moment";
-import React, { useState, useEffect } from "react";
-import { changeStatus } from "services/AdminsApi/changeStatusApiService";
-import { getUsers } from "services/AdminsApi/getUserApiService";
+import React, { useEffect, useState } from "react";
 import { changeUserRole } from "services/AdminsApi/changeRoleApiService";
-import { deleteUser } from "services/AdminsApi/deleteUserApiService";
+import { changeStatus } from "services/AdminsApi/changeStatusApiService";
 import { createUser } from "services/AdminsApi/createUserApiService";
+import { deleteUser } from "services/AdminsApi/deleteUserApiService";
+import { getUsers } from "services/AdminsApi/getUserApiService";
 import { getUserDetail } from "services/AdminsApi/getUserDetailApiService";
 import { updateUser } from "services/AdminsApi/updateUserApiService";
 
@@ -34,7 +34,7 @@ const UsersAdmin: React.FC = () => {
   const [editingItem, setEditingItem] = useState<Partial<Item>>({});
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredRole, setFilteredRole] = useState<string | undefined>(undefined);
+  const [filteredRole, setFilteredRole] = useState<string>("all");
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState<boolean>(false);
   const [deleteItemId, setDeleteItemId] = useState<string | undefined>();
   const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
@@ -211,7 +211,7 @@ const UsersAdmin: React.FC = () => {
   };
 
   const filteredData = data.filter((item) => {
-    const matchesRole = filteredRole ? item.role.toLowerCase() === filteredRole.toLowerCase() : true;
+    const matchesRole = filteredRole === "all" || item.role.toLowerCase() === filteredRole.toLowerCase();
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesRole && matchesSearch;
   });
@@ -259,10 +259,10 @@ const UsersAdmin: React.FC = () => {
       title: 'Actions',
       key: 'actions',
       render: (_, item) => (
-        <>
-          <Button type="primary" icon={<EditOutlined />} onClick={() => handleEdit(item)} className="mr-2"></Button>
-          <Button type="primary" icon={<DeleteOutlined />} danger onClick={() => { setDeleteItemId(item._id); setDeleteConfirmVisible(true); }}></Button>
-        </>
+        <div className="flex flex-row ">
+          <Button size="small" type="primary" icon={<EditOutlined />} onClick={() => handleEdit(item)} className="mr-2"></Button>
+          <Button size="small" type="primary" icon={<DeleteOutlined />} danger onClick={() => { setDeleteItemId(item._id); setDeleteConfirmVisible(true); }}></Button>
+        </div>
       ),
     },
   ];
@@ -276,16 +276,17 @@ const UsersAdmin: React.FC = () => {
             placeholder="Search"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-1/2"
+            className="w-1/3"
             onSearch={value => setSearchTerm(value)}
           />
           <Select
             placeholder="Filter by Role"
-           
+
             value={filteredRole}
             onChange={handleRoleFilterChange}
-            className="w-1/4"
+            className="w-1/6"
           >
+            <Option value="all">All</Option>
             <Option value="admin">Admin</Option>
             <Option value="student">Student</Option>
             <Option value="instructor">Instructor</Option>
@@ -295,7 +296,7 @@ const UsersAdmin: React.FC = () => {
             icon={<PlusCircleOutlined />}
             onClick={() => setModalOpen(true)}
           >
-            Add User
+            Add New User
           </Button>
         </div>
 

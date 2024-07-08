@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HOST_MAIN } from './apiService'; // Đảm bảo import HOST_MAIN từ file config của bạn
+import { HOST_MAIN } from './apiService';
 
 interface RegisterData {
   email: string;
@@ -12,10 +12,9 @@ interface RegisterData {
 
 export const registerUser = async (userData: RegisterData) => {
   try {
-    // Gọi API đăng ký người dùng
     const response = await axios.post(`${HOST_MAIN}/api/users`, userData, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
     });
 

@@ -28,7 +28,6 @@ const SignUp: React.FC = () => {
       setFormData({ ...formData, ...values });
       setCurrent(current + 1);
 
-      // Hide radio group when moving to next step after Sign Up
       if (current === 0) {
         setShowRadioGroup(false);
       }
@@ -60,7 +59,7 @@ const SignUp: React.FC = () => {
         description: 'You have signed up successfully!',
       });
 
-      navigate('/log-in');
+      navigate('/verify-email');
     } catch (error) {
       console.error('Registration error:', error);
       notification.error({
@@ -187,9 +186,9 @@ const SignUp: React.FC = () => {
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
+            <Link to="/verify-email/:token"><Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
               Finish
-            </Button>
+            </Button></Link>
           </div>
           
         </Form>
