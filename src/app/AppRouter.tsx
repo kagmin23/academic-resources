@@ -12,7 +12,8 @@ import {
   CoursePage,
   DetailBlogPage,
   HomePage,
-  TopInstructorPage
+  TopInstructorPage,
+  VerityToken
 } from 'pages';
 
 import { SearchPage } from 'pages';
@@ -47,6 +48,7 @@ const AppRouter: React.FC = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/top-instructor" element={<TopInstructorPage />} />
+          <Route path="/verify-email" element={<VerityToken />} />
         </Route>
 
         {/* Layout for Students */}
