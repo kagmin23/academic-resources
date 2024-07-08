@@ -35,7 +35,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
   return (
     <Layout className="min-h-screen">
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
-          <Link to={``} className="flex items-center mr-20">
+          <Link to={``} className="flex items-center">
                     <BookOutlined className="text-xl text-white" />
                     <h1 className="hidden ml-3 text-xl text-white md:block">
                       Academic - Resources
