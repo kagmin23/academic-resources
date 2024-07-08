@@ -1,43 +1,61 @@
-import { Button, Form } from "antd";
-import { useState } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
+import axios from 'axios';
 
-// Khai báo state để lưu trữ trạng thái xác thực của reCAPTCHA
-const [captchaVerified, setCaptchaVerified] = useState<boolean>(false);
+const api_key: string = "YOUR_API_KEY";
+const site_key: string = "6Le-wvkSAAAAAPBMRTvw0Q4Muexq9bi0DJwx_mJ-";
+const site_url: string = "https://www.google.com/recaptcha/api2/demo";
 
-// Hàm xử lý sự kiện khi reCAPTCHA được xác nhận
-const onCaptchaChange = (value: string | null) => {
-  if (value) {
-    setCaptchaVerified(true);
+interface TaskPayload {
+  clientKey: string;
+  task: {
+    type: string;
+    websiteKey: string;
+    websiteURL: string;
+  };
+}
+
+interface TaskResponse {
+  taskId: string;
+}
+
+async function capsolver() {
+  const payload: TaskPayload = {
+    clientKey: api_key,
+    task: {
+      type: 'ReCaptchaV2TaskProxyLess',
+      websiteKey: site_key,
+      websiteURL: site_url
+    }
+  };
+
+  try {
+    const res = await axios.post<TaskResponse>("https://api.capsolver.com/createTask", payload);
+    const task_id = res.data.taskId;
+    if (!task_id) {
+      console.log("Failed to create task:", res.data);
+      return;
+    }
+    console.log("Got taskId:", task_id);
+
+    while (true) {
+      await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for 1 second
+
+      const getResultPayload = { clientKey: api_key, taskId: task_id };
+      const resp = await axios.post<any>("https://api.capsolver.com/getTaskResult", getResultPayload);
+      const status = resp.data.status;
+
+      if (status === "ready") {
+        return resp.data.solution.gRecaptchaResponse;
+      }
+      if (status === "failed" || resp.data.errorId) {
+        console.log("Solve failed! response:", resp.data);
+        return;
+      }
+    }
+  } catch (error) {
+    console.error("Error:", error);
   }
-};
+}
 
-// Khai báo form từ Ant Design
-const [form] = Form.useForm();
-
-const onNext = () => {
-  // Logic xử lý khi nhấn nút Next
-};
-
-// Trong form của bạn
-<Form form={form} name="signup" initialValues={{ remember: true }} className="space-y-4">
-  {/* Các trường khác trong form */}
-  
-  {/* Thêm Google reCAPTCHA */}
-  <Form.Item>
-    <ReCAPTCHA
-      sitekey="YOUR_SITE_KEY"
-      onChange={onCaptchaChange}
-    />
-  </Form.Item>
-  
-  {/* Nút đăng ký chỉ được kích hoạt khi reCAPTCHA đã được xác thực */}
-  <Button
-    type="primary"
-    onClick={onNext}
-    disabled={!captchaVerified} // Disable nếu chưa xác thực reCAPTCHA
-    className="w-full h-12 text-white bg-red-500 hover:bg-red-600"
-  >
-    Next
-  </Button>
-</Form>
+capsolver().then(token => {
+  console.log(token);
+});
