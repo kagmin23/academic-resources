@@ -1,14 +1,13 @@
 // UsersAdmin.tsx
-
 import React, { useState } from 'react';
-import { PlusCircleOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message } from "antd";
-import { Content } from "antd/es/layout/layout";
-import { ColumnsType } from "antd/es/table";
-import moment, { Moment } from "moment";
-import { changeUserStatus, deleteUser } from 'services/userApiService';
+import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message } from 'antd';
+import { PlusCircleOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import moment, { Moment } from 'moment';
+import { ColumnsType } from 'antd/es/table';
+import { addUser } from '../../services/AdminsApi/addUserApiService';
+import { deleteUsers } from 'services/AdminsApi/deleteUsersApiService'; // Adjusted import
 
-
+const { Content } = Layout;
 const { Option } = Select;
 
 interface Item {
@@ -39,7 +38,7 @@ const UsersAdmin: React.FC = () => {
   const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
   const [lockItemId, setLockItemId] = useState<number | undefined>();
 
-  const handleAdd = () => {
+  const handleAdd = async () => {
     if (
       editingItem.name &&
       editingItem.gender &&
@@ -49,22 +48,27 @@ const UsersAdmin: React.FC = () => {
       editingItem.role
     ) {
       if (editingItem.id) {
-        // Update existing user
         const updatedData = data.map((item) =>
           item.id === editingItem.id ? { ...item, ...editingItem } as Item : item
         );
         setData(updatedData);
         message.success("User updated successfully");
       } else {
-        // Add new user
-        const newData = [...data, { id: data.length + 1, status: true, ...editingItem } as Item];
-        setData(newData);
-        message.success("User added successfully");
+        try {
+          const response = await addUser(editingItem);
+          const newUser = response.data; // Assuming the API returns the newly created user
+          const newData = [...data, newUser];
+          setData(newData);
+          message.success('User added successfully');
+        } catch (error) {
+          message.error('Failed to add user');
+        } finally {
+          setEditingItem({});
+          setModalOpen(false);
+        }
       }
-      setEditingItem({});
-      setModalOpen(false);
     } else {
-      message.error("Please fill in all fields");
+      message.error('Please fill in all fields');
     }
   };
 
@@ -74,18 +78,18 @@ const UsersAdmin: React.FC = () => {
   };
 
   const handleDelete = async () => {
-    try {
-      if (deleteItemId) {
-        await deleteUser(deleteItemId);
+    if (deleteItemId) {
+      try {
+        await deleteUsers(deleteItemId); // Use the deleteUsers function here
         const updatedData = data.filter((item) => item.id !== deleteItemId);
         setData(updatedData);
+        message.success("User deleted successfully");
+      } catch (error) {
+        message.error("Error deleting user");
+      } finally {
         setDeleteItemId(undefined);
         setDeleteConfirmVisible(false);
-        message.success("User deleted successfully");
       }
-    } catch (error) {
-      console.error('Failed to delete user:', error);
-      message.error("Failed to delete user. Please try again later.");
     }
   };
 
@@ -97,21 +101,16 @@ const UsersAdmin: React.FC = () => {
     setFilteredRole(value);
   };
 
-  const handleStatusChange = async (checked: boolean, item: Item) => {
-    try {
-      const response = await changeUserStatus(String(item.id), checked);
-      if (response) {
-        const updatedData = data.map((dataItem) =>
-          dataItem.id === item.id ? { ...dataItem, status: checked } : dataItem
-        );
-        setData(updatedData);
-        message.success(`User status ${checked ? 'activated' : 'deactivated'} successfully`);
-      } else {
-        message.error("Failed to update user status");
-      }
-    } catch (error) {
-      console.error('Failed to change user status:', error);
-      message.error("Failed to update user status. Please try again later.");
+  const handleStatusChange = (checked: boolean, item: Item) => {
+    if (!checked) {
+      setLockItemId(item.id);
+      setLockConfirmVisible(true);
+    } else {
+      const updatedData = data.map((dataItem) =>
+        dataItem.id === item.id ? { ...dataItem, status: checked } : dataItem
+      );
+      setData(updatedData);
+      message.success(`User status ${checked ? 'activated' : 'deactivated'} successfully`);
     }
   };
 
@@ -150,7 +149,7 @@ const UsersAdmin: React.FC = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status, item) => (
+      render: (status: boolean, item: Item) => (
         <Switch
           checked={status}
           onChange={(checked) => handleStatusChange(checked, item)}
@@ -163,8 +162,8 @@ const UsersAdmin: React.FC = () => {
       key: 'actions',
       render: (_, item) => (
         <>
-          <Button type="primary" onClick={() => handleEdit(item)} className="mr-2">Edit</Button>
-          <Button type="primary" danger onClick={() => { setDeleteItemId(item.id); setDeleteConfirmVisible(true); }}>Delete</Button>
+          <Button type="primary" icon={<EditOutlined />} onClick={() => handleEdit(item)} className="mr-2"></Button>
+          <Button type="primary" icon={<DeleteOutlined />} danger onClick={() => { setDeleteItemId(item.id); setDeleteConfirmVisible(true); }}></Button>
         </>
       ),
     },
