@@ -15,6 +15,8 @@ import { Switch } from 'antd';
 import { Select } from 'antd';
 import type { SelectProps } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
+import { getCourses, updateCourse, deleteCourse, createCourse } from 'services/Instructor/CourseService';
+
 
 const { confirm } = Modal;
 const { Header, Content, Footer } = Layout;
