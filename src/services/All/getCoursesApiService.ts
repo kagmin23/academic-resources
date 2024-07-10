@@ -1,6 +1,6 @@
 import { apiRequest } from 'services/apiService';
 
-export const getCourses = async (courseId: string) => {
+export const getCourse = async (courseId: string) => {
     const token = localStorage.getItem('token');
   
     return apiRequest(`/api/course/${courseId}`, {
