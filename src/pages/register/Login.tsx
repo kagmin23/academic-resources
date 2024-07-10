@@ -30,13 +30,13 @@ const Login: React.FC = () => {
       console.log(user.data.role);
       if (user && user.data) {
         switch (user.data.role) {
-          case 'admin': // Admin
+          case 'admin':
             navigate('/admin');
             break;
-          case 'student': // Student
+          case 'student':
             navigate('/student');
             break;
-          case 'instructor': // Instructor
+          case 'instructor':
             navigate('/instructor');
             break;
           default:
@@ -47,13 +47,9 @@ const Login: React.FC = () => {
       console.error('Login error:', error);
       message.error('Invalid email or password');
     } finally {
-      setLoading(false); // Stop loading state after login attempt
+      setLoading(false);
     }
   };
-
-  // const onSuccess = async (credentialResponse: Credential) => {
-    
-  // }
 
   const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
     try {

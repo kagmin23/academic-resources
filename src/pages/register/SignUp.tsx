@@ -5,7 +5,8 @@ import { RadioChangeEvent } from 'antd/lib';
 import type { UploadRequestOption } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCurrentLogin, loginViaGoogle } from 'services/googleApiLogin';
+import { getCurrentLogin } from 'services/googleApiLogin';
+import { registerViaGoogle } from 'services/registerGoogleApiService';
 import { registerUser } from '../../services/registerApiService';
 
 const SignUp: React.FC = () => {
@@ -50,17 +51,17 @@ const SignUp: React.FC = () => {
       setCompletedSteps(updatedCompletedSteps);
       const finalFormData = { ...formData, ...values, role: value.charAt(0).toUpperCase() + value.slice(1) };
       setFormData(finalFormData);
+      
+      localStorage.setItem("user", JSON.stringify(finalFormData));
       console.log('Final Form Data:', finalFormData);
-
-      // Call registerUser API
+  
       const response = await registerUser(finalFormData);
       console.log('Registration successful:', response);
-
       notification.success({
         message: 'Success',
         description: 'You have signed up successfully!',
       });
-
+  
       navigate('/verify-email');
     } catch (error) {
       console.error('Registration error:', error);
@@ -70,6 +71,9 @@ const SignUp: React.FC = () => {
       });
     }
   };
+  
+  
+  
 
   const customUpload = (options: UploadRequestOption<any>) => {
     const { file, onSuccess } = options;
@@ -82,7 +86,7 @@ const SignUp: React.FC = () => {
     };
   };
 
-  const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
+  const handleRegisterGoogle = async (credentialResponse: CredentialResponse) => {
     try {
       const { credential } = credentialResponse;
       console.log(credential);
@@ -90,20 +94,20 @@ const SignUp: React.FC = () => {
         throw new Error("Google credential is missing");
       }
 
-      const token = await loginViaGoogle(credential);
+      const token = await registerViaGoogle(credential);
       if (token) {
         const user = await getCurrentLogin(token);
         if (user?.data) {
           sessionStorage.setItem("user", JSON.stringify(user));
           notification.success({
-            message: "Login Successful",
+            message: "Register Successful",
           });
           navigate("/student");
         }
       }
     } catch (error: any) {
       notification.error({
-        message: "Login via Google Failed!",
+        message: "Register via Google Failed!",
         description: error.message || "Your Google Account isn't registered!",
       });
     }
@@ -171,7 +175,7 @@ const SignUp: React.FC = () => {
               Next
             </Button>
           </div>
-          <GoogleLogin onSuccess={handleGoogleLogin} onError={onError} />
+          <GoogleLogin onSuccess={handleRegisterGoogle} onError={onError} />
 
         </Form>
       ),
@@ -221,7 +225,7 @@ const SignUp: React.FC = () => {
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Link to="/verify-email/:token"><Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
+            <Link to="/verify-email"><Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
               Finish
             </Button></Link>
           </div>
