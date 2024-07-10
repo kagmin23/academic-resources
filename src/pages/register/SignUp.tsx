@@ -1,9 +1,12 @@
 import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { Button, Checkbox, Form, Input, Radio, Upload, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import type { UploadRequestOption } from 'rc-upload/lib/interface';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { getCurrentLogin } from 'services/googleApiLogin';
+import { registerViaGoogle } from 'services/registerGoogleApiService';
 import { registerUser } from '../../services/registerApiService';
 
 const SignUp: React.FC = () => {
@@ -48,17 +51,17 @@ const SignUp: React.FC = () => {
       setCompletedSteps(updatedCompletedSteps);
       const finalFormData = { ...formData, ...values, role: value.charAt(0).toUpperCase() + value.slice(1) };
       setFormData(finalFormData);
+      
+      localStorage.setItem("user", JSON.stringify(finalFormData));
       console.log('Final Form Data:', finalFormData);
-
-      // Call registerUser API
+  
       const response = await registerUser(finalFormData);
       console.log('Registration successful:', response);
-
       notification.success({
         message: 'Success',
         description: 'You have signed up successfully!',
       });
-
+  
       navigate('/verify-email');
     } catch (error) {
       console.error('Registration error:', error);
@@ -68,6 +71,9 @@ const SignUp: React.FC = () => {
       });
     }
   };
+  
+  
+  
 
   const customUpload = (options: UploadRequestOption<any>) => {
     const { file, onSuccess } = options;
@@ -80,16 +86,47 @@ const SignUp: React.FC = () => {
     };
   };
 
+  const handleRegisterGoogle = async (credentialResponse: CredentialResponse) => {
+    try {
+      const { credential } = credentialResponse;
+      console.log(credential);
+      if (!credential) {
+        throw new Error("Google credential is missing");
+      }
+
+      const token = await registerViaGoogle(credential);
+      if (token) {
+        const user = await getCurrentLogin(token);
+        if (user?.data) {
+          sessionStorage.setItem("user", JSON.stringify(user));
+          notification.success({
+            message: "Register Successful",
+          });
+          navigate("/student");
+        }
+      }
+    } catch (error: any) {
+      notification.error({
+        message: "Register via Google Failed!",
+        description: error.message || "Your Google Account isn't registered!",
+      });
+    }
+  };
+
+  const onError = () => {
+    console.error()
+  }
+
   const steps = [
     {
       title: 'Sign Up',
       content: (
-        <Form form={form} name="signup" initialValues={{ remember: true }} className="space-y-4">
+        <Form form={form} name="signup" initialValues={{ remember: true }} className="space-y-2">
           <Form.Item
             name="userName"
             rules={[{ required: true, message: 'Please input your username!' }]}
           >
-            <Input placeholder="User Name" size="large" />
+            <Input placeholder="User Name" size="middle" />
           </Form.Item>
           <Form.Item
             name="email"
@@ -101,7 +138,7 @@ const SignUp: React.FC = () => {
               },
             ]}
           >
-            <Input placeholder="Email Address" size="large" />
+            <Input placeholder="Email Address" size="middle" />
           </Form.Item>
           <Form.Item
             name="password"
@@ -113,7 +150,7 @@ const SignUp: React.FC = () => {
               },
             ]}
           >
-            <Input.Password placeholder="Password" size="large" />
+            <Input.Password placeholder="Password" size="middle" />
           </Form.Item>
           <Form.Item
             name="confirmPassword"
@@ -130,7 +167,7 @@ const SignUp: React.FC = () => {
               }),
             ]}
           >
-            <Input.Password placeholder="Confirm Password" size="large" />
+            <Input.Password placeholder="Confirm Password" size="middle" />
           </Form.Item>
           <Checkbox>Remember me</Checkbox>
           <div className="flex justify-between">
@@ -138,6 +175,8 @@ const SignUp: React.FC = () => {
               Next
             </Button>
           </div>
+          <GoogleLogin onSuccess={handleRegisterGoogle} onError={onError} />
+
         </Form>
       ),
     },
@@ -186,7 +225,7 @@ const SignUp: React.FC = () => {
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Link to="/verify-email/:token"><Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
+            <Link to="/verify-email"><Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
               Finish
             </Button></Link>
           </div>

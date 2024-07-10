@@ -11,12 +11,12 @@ interface User {
   data: string;
 }
 
-export const loginViaGoogle = async (
+export const registerViaGoogle = async (
   credential: string,
 ): Promise<string> => {
   try {
     const res = await axios.post(
-      `${HOST_MAIN}/api/auth/google`,
+      `${HOST_MAIN}/api/users/google`,
       { google_id: credential },
       {
         headers: {
@@ -32,7 +32,7 @@ export const loginViaGoogle = async (
       localStorage.setItem("token", token);
       return token;
     } else {
-      throw new Error("Invalid Google login response!");
+      throw new Error("Invalid Google register response!");
     }
   } catch (error: any) {
     throw new Error(error.message);

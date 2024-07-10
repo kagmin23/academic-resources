@@ -1,12 +1,11 @@
-import { GoogleOAuthProvider } from '@react-oauth/google';
-import { Button, Form, Input, message } from 'antd';
+import { Button, Form, Input, message, notification } from 'antd';
 import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from 'services/loginApiService';
-import GoogleLogin from '../../services/googleApiLogin';
+// import GoogleLogin from '../../services/googleApiLogin';
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
+import { getCurrentLogin, loginViaGoogle } from 'services/googleApiLogin';
 import './stylesLogin.css';
-
-const clientId = '1079476190023-esoodjheb0blodtroofvlo4dba3of03k.apps.googleusercontent.com';
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
@@ -31,13 +30,13 @@ const Login: React.FC = () => {
       console.log(user.data.role);
       if (user && user.data) {
         switch (user.data.role) {
-          case 'admin': // Admin
+          case 'admin':
             navigate('/admin');
             break;
-          case 'student': // Student
+          case 'student':
             navigate('/student');
             break;
-          case 'instructor': // Instructor
+          case 'instructor':
             navigate('/instructor');
             break;
           default:
@@ -48,7 +47,34 @@ const Login: React.FC = () => {
       console.error('Login error:', error);
       message.error('Invalid email or password');
     } finally {
-      setLoading(false); // Stop loading state after login attempt
+      setLoading(false);
+    }
+  };
+
+  const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
+    try {
+      const { credential } = credentialResponse;
+      console.log(credential);
+      if (!credential) {
+        throw new Error("Google credential is missing");
+      }
+
+      const token = await loginViaGoogle(credential);
+      if (token) {
+        const user = await getCurrentLogin(token);
+        if (user?.data) {
+          sessionStorage.setItem("user", JSON.stringify(user));
+          notification.success({
+            message: "Login Successful",
+          });
+          navigate("/student");
+        }
+      }
+    } catch (error: any) {
+      notification.error({
+        message: "Login via Google Failed!",
+        description: error.message || "Your Google Account isn't registered!",
+      });
     }
   };
 
@@ -57,8 +83,11 @@ const Login: React.FC = () => {
     message.error('Failed to Login! Please check your information.');
   };
 
+  const onError = () => {
+    console.error()
+  }
+
   return (
-    <GoogleOAuthProvider clientId={clientId}>
       <div className="relative flex items-center justify-center min-h-screen bg-gray-100">
         {loading && (
           <div className="fixed top-0 left-0 z-50 flex items-center justify-center w-full h-full bg-black bg-opacity-50">
@@ -108,9 +137,9 @@ const Login: React.FC = () => {
             <Button type="primary" htmlType="submit" className="w-full h-10 bg-red-500 hover:bg-blue-600" loading={loading}>
               Login
             </Button>
-            <div>
-              <GoogleLogin />
-            </div>
+
+            <GoogleLogin onSuccess={handleGoogleLogin} onError={onError} />
+            
           </Form>
           <div className="flex justify-between">
             <p className="text-gray-600">Don't have an account? <Link to="/sign-up" className="text-blue-600">Sign Up</Link></p>
@@ -120,7 +149,6 @@ const Login: React.FC = () => {
           </footer>
         </div>
       </div>
-    </GoogleOAuthProvider>
   );
 };
 
