@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Input, Button, notification } from 'antd';
-import { getCurrentUser } from 'services/AdminsApi/getCurrentUserApiService';
+import { getCurrentUser } from 'services/AdminsApi/UserService';
 import { changeUserPassword } from 'services/All/changePasswordApiService';
 
 
