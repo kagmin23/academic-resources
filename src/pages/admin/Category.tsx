@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Layout, Modal, Table, Typography, notification } from 'antd';
+import { Button, Input, Layout, Modal, Table, Typography, Form, notification } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { AlignType } from 'rc-table/lib/interface';
-import { getCategories } from 'services/AdminsApi/getCategoriesApiService';
-import { deleteCategory } from 'services/AdminsApi/deleteCategoryApiService';
-import { getCategoryDetail } from 'services/AdminsApi/getCategoryDetailApiService';
+import { getCategories, getCategoryDetail, deleteCategory, createCategory } from 'services/AdminsApi/CategoryService';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -22,9 +20,13 @@ interface DataType {
 const CategoryAdmin: React.FC = () => {
   const [dataSource, setDataSource] = useState<DataType[]>([]);
   const [filteredDataSource, setFilteredDataSource] = useState<DataType[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isAddEditModalVisible, setIsAddEditModalVisible] = useState(false);
+  const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
+  const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
+  const [deleteId, setDeleteId] = useState<string | null>(null);
   const [modalData, setModalData] = useState<DataType | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [form] = Form.useForm();
 
   useEffect(() => {
     fetchData();
@@ -45,39 +47,78 @@ const CategoryAdmin: React.FC = () => {
   };
 
   const handleAddNew = () => {
-    setIsModalVisible(true);
+    setIsAddEditModalVisible(true);
     setModalData(null);
+    form.resetFields();
   };
 
-  const handleSave = (record: DataType) => {
-    setIsModalVisible(true);
+  const handleEdit = (record: DataType) => {
+    setIsAddEditModalVisible(true);
     setModalData(record);
+    form.setFieldsValue({
+      name: record.name,
+      description: record.description,
+    });
   };
 
-  const handleUpdate = () => {
-    // Implement update logic here
-    setIsModalVisible(false);
+  const handleCreateOrUpdateCategory = async (values: { name: string; description: string }) => {
+    try {
+      if (modalData) {
+        // Handle update logic here
+      } else {
+        await createCategory(values.name, values.description);
+      }
+      fetchData();
+      notification.success({
+        message: 'Success',
+        description: `Category ${modalData ? 'updated' : 'created'} successfully.`,
+      });
+      setIsAddEditModalVisible(false);
+      form.resetFields();
+    } catch (error) {
+      console.error(`Error ${modalData ? 'updating' : 'creating'} category:`, error);
+      notification.error({
+        message: 'Error',
+        description: `Failed to ${modalData ? 'update' : 'create'} category.`,
+      });
+    }
   };
 
-  const handleCreateCategory = async (values: { name: string; description: string }) => {
-    // Implement create category logic here
-    setIsModalVisible(false);
-  };
-
-  const handleDeleteCategory = (id: string) => {
-    // Implement delete category logic here
+  const handleDeleteCategory = async () => {
+    try {
+      if (deleteId) {
+        await deleteCategory(deleteId);
+        fetchData();
+        notification.success({
+          message: 'Success',
+          description: 'Category deleted successfully.',
+        });
+        setIsDeleteConfirmVisible(false);
+        setDeleteId(null);
+      }
+    } catch (error) {
+      console.error('Error deleting category:', error);
+      notification.error({
+        message: 'Error',
+        description: 'Failed to delete category.',
+      });
+    }
   };
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
+    const filtered = dataSource.filter(item =>
+      item.name.toLowerCase().includes(event.target.value.toLowerCase())
+    );
+    setFilteredDataSource(filtered);
   };
 
   const handleViewDetails = async (id: string) => {
     try {
       const response = await getCategoryDetail(id);
       const categoryDetail = response.data;
-      setModalData(categoryDetail); // Set category detail data to show in modal
-      setIsModalVisible(true);
+      setModalData(categoryDetail);
+      setIsDetailModalVisible(true);
     } catch (error) {
       console.error('Error fetching category detail:', error);
       notification.error({
@@ -87,9 +128,25 @@ const CategoryAdmin: React.FC = () => {
     }
   };
 
-  const handleCloseModal = () => {
-    setIsModalVisible(false);
+  const handleCloseAddEditModal = () => {
+    setIsAddEditModalVisible(false);
     setModalData(null);
+    form.resetFields();
+  };
+
+  const handleCloseDetailModal = () => {
+    setIsDetailModalVisible(false);
+    setModalData(null);
+  };
+
+  const handleOpenDeleteConfirm = (id: string) => {
+    setIsDeleteConfirmVisible(true);
+    setDeleteId(id);
+  };
+
+  const handleCloseDeleteConfirm = () => {
+    setIsDeleteConfirmVisible(false);
+    setDeleteId(null);
   };
 
   const columns = [
@@ -112,12 +169,12 @@ const CategoryAdmin: React.FC = () => {
           <Button
             icon={<EditOutlined />}
             className="mr-2 text-white bg-blue-500"
-            onClick={() => handleSave(record)}
+            onClick={() => handleEdit(record)}
           ></Button>
           <Button
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
-            onClick={() => handleDeleteCategory(record._id)}
+            onClick={() => handleOpenDeleteConfirm(record._id)}
           ></Button>
           <Button
             icon={<EyeOutlined />}
@@ -162,28 +219,64 @@ const CategoryAdmin: React.FC = () => {
       <Footer style={{ textAlign: 'center' }}>
         Academic_Resources ©2024 Created by Group 4
       </Footer>
+      <Modal
+        title={modalData ? "Edit Category" : "Add New Category"}
+        visible={isAddEditModalVisible}
+        onCancel={handleCloseAddEditModal}
+        footer={[
+          <Button key="close" onClick={handleCloseAddEditModal}>
+            Close
+          </Button>,
+          <Button key="save" type="primary" onClick={() => form.submit()}>
+            {modalData ? 'Save' : 'Add'}
+          </Button>,
+        ]}
+      >
+        <Form form={form} layout="vertical" onFinish={handleCreateOrUpdateCategory}>
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: 'Please input the category name!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item name="description" label="Description">
+            <Input.TextArea />
+          </Form.Item>
+        </Form>
+      </Modal>
+      <Modal
+        title="Delete Confirmation"
+        visible={isDeleteConfirmVisible}
+        onOk={handleDeleteCategory}
+        onCancel={handleCloseDeleteConfirm}
+        okText="Yes"
+        cancelText="No"
+      >
+        <Text>Are you sure you want to delete this category?</Text>
+      </Modal>
       {modalData && (
         <Modal
           title="Category Detail"
-          visible={isModalVisible}
-          onCancel={handleCloseModal}
+          visible={isDetailModalVisible}
+          onCancel={handleCloseDetailModal}
           footer={[
-            <Button key="close" onClick={handleCloseModal}>
+            <Button key="close" onClick={handleCloseDetailModal}>
               Close
             </Button>,
           ]}
         >
-          <Typography.Text strong>ID: </Typography.Text>
-          <Typography.Text>{modalData._id}</Typography.Text>
+          <Text strong>ID: </Text>
+          <Text>{modalData._id}</Text>
           <br />
-          <Typography.Text strong>Name: </Typography.Text>
-          <Typography.Text>{modalData.name}</Typography.Text>
+          <Text strong>Name: </Text>
+          <Text>{modalData.name}</Text>
           <br />
-          <Typography.Text strong>Description: </Typography.Text>
-          <Typography.Text>{modalData.description}</Typography.Text>
+          <Text strong>Description: </Text>
+          <Text>{modalData.description}</Text>
           <br />
-          <Typography.Text strong>Created At: </Typography.Text>
-          <Typography.Text>{modalData.created_at}</Typography.Text>
+          <Text strong>Created At: </Text>
+          <Text>{modalData.created_at}</Text>
         </Modal>
       )}
     </Layout>

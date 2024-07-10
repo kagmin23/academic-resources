@@ -9,8 +9,8 @@ import { changeStatus } from "services/AdminsApi/changeStatusApiService";
 import { createUser } from "services/AdminsApi/createUserApiService";
 import { deleteUser } from "services/AdminsApi/deleteUserApiService";
 import { getUsers } from "services/AdminsApi/getUserApiService";
-import { getUserDetail } from "services/AdminsApi/getUserDetailApiService";
-import { updateUser } from "services/AdminsApi/updateUserApiService";
+import { getUserDetail } from "services/All/getUserDetailApiService";
+import { updateUser } from "services/All/updateUserApiService";
 
 const { Option } = Select;
 
