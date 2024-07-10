@@ -6,11 +6,10 @@ import moment, { Moment } from "moment";
 import React, { useEffect, useState } from "react";
 import { changeUserRole } from "services/AdminsApi/changeRoleApiService";
 import { changeStatus } from "services/AdminsApi/changeStatusApiService";
-import { createUser } from "services/AdminsApi/createUserApiService";
-import { deleteUser } from "services/AdminsApi/deleteUserApiService";
+import { createUser, deleteUser } from "services/AdminsApi/UserService";
 import { getUsers } from "services/AdminsApi/getUserApiService";
-import { getUserDetail } from "services/AdminsApi/getUserDetailApiService";
-import { updateUser } from "services/AdminsApi/updateUserApiService";
+import { getUserDetail } from "services/All/getUserDetailApiService";
+import { updateUser } from "services/All/updateUserApiService";
 
 const { Option } = Select;
 
@@ -58,12 +57,12 @@ const UsersAdmin: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, []); 
 
-  const handleAdd = async () => {
+  const handleAdd = async () => { 
     if (
       editingItem.name &&
-      editingItem.dob &&
+      editingItem.dob && 
       editingItem.email &&
       editingItem.phone_number &&
       editingItem.role
@@ -100,7 +99,8 @@ const UsersAdmin: React.FC = () => {
               editingItem.name,
               editingItem.password,
               editingItem.email,
-              editingItem.role
+              editingItem.role,
+              editingItem.phone_number,
             );
             if (response.success) {
               const newData = [...data, { _id: data.length + 1, status: true, ...editingItem } as Item];

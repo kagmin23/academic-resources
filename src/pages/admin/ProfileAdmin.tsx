@@ -1,7 +1,7 @@
 import { Button, Form, Input, Typography, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
-import { getCurrentUser } from 'services/AdminsApi/getCurrentUserApiService';
+import { getCurrentUser } from 'services/AdminsApi/UserService';
 
 const { Text } = Typography;
 const { TextArea } = Input;
