@@ -13,7 +13,6 @@ import {
   DetailBlogPage,
   HomePage,
   SavePage,
-  TopInstructorPage
   TopInstructorPage,
   VerityToken
 } from 'pages';
@@ -21,14 +20,14 @@ import {
 import { SearchPage } from 'pages';
 
 import { AuthProvider } from 'context/AuthContext';
+import AllInstructor from 'pages/AllInstructor';
 import InstructorRouter from 'pages/Instructor/InstructorRouter';
+import InstructorDetail from 'pages/InstructorDetail';
 import AdminPage from 'pages/admin/AdminPage';
 import ForgotPassword from 'pages/register/ForgotPassword';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import StudentRouter from '../pages/Student/StudentRouter';
-import InstructorDetail from 'pages/InstructorDetail';
-import AllInstructor from 'pages/AllInstructor';
 
 
 const AppRouter: React.FC = () => (
