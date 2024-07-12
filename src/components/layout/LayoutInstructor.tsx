@@ -1,4 +1,4 @@
-import { BellOutlined, BookOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined, SettingOutlined } from '@ant-design/icons';
+import { BellOutlined, BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Badge, Button, Drawer, Input, Layout, Menu, Dropdown, Avatar } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
@@ -80,7 +80,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             </div>
           </Badge>
           <Dropdown overlay={profileMenu} trigger={['click']}>
-            <Avatar icon={<UserOutlined />} className="text-4xl text-white" style={{ width: 48, height: 48 }} />
+            <Avatar src="https://devo.vn/wp-content/uploads/2023/01/meo-khoc-cute.jpg" className="text-4xl text-white" style={{ width: 35, height: 35 }} />
           </Dropdown>
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
         </div>
