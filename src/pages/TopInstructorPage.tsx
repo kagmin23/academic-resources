@@ -11,6 +11,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Image, Input, Menu } from "antd";
 import React from "react";
+import { Link } from "react-router-dom";
 
 interface DataType {
   key: string;
@@ -54,113 +55,62 @@ const dataSource: DataType[] = [
     name: "Jonh Doe",
     description: "Word press and plugin tutor",
   },
+  {
+    key: "6",
+    image:
+      "https://www.shutterstock.com/image-vector/standing-business-man-teacher-wearing-260nw-510075547.jpg",
+    name: "Jonh Doe",
+    description: "Word press and plugin tutor",
+  }
 ];
 
 const InstructorPage: React.FC = () => {
   return (
-    <div className="flex bg-zinc-300">
-      <div className="w-3/12 h-auto bg-white ">
-        <div className="pb-5 mb-10 border-b-2">
-          <Menu defaultSelectedKeys={["1"]} mode="inline">
+    <div className="flex">
+        <div className="pb-5 mb-10 w-64  ">
+          <Menu   mode="inline" theme="dark" className="h-svh p-2 lg:text-base xl:text-lg w-full">
             <Menu.Item key="1" icon={<UsergroupAddOutlined />}>
-              Instructor
+            <Link to={`/all-instructor`}>
+             All Instructor
+             </Link>
             </Menu.Item>
-            {/* <Menu.Item key="1" icon={<DesktopOutlined />}>
-              Live Streams
-            </Menu.Item> */}
-            <Menu.Item key="1" icon={<PicLeftOutlined />}>
+            <Menu.Item key="2" icon={<PicLeftOutlined />}>
               Categories
             </Menu.Item>
-            <Menu.Item key="1" icon={<HeartOutlined />}>
+            <Menu.Item key="3" icon={<HeartOutlined />}>
+            <Link to={`/save`}>
               Saved
+            </Link>
             </Menu.Item>
           </Menu>
         </div>
-        <div>
-          <p className="mb-5 font-thin text-center"> SUPCRIPTIONS +</p>
-          <div className="pb-5">
-          <div className="flex py-1 space-x-10 border hover:bg-slate-300 border-y-1">
-            <Image width="30px" height="30px" preview={false} className="object-fill ml-3 rounded-full " src="https://www.foodallergy.org/sites/default/files/styles/635x460/public/2020-06/shutterstock_1375976735.jpg?h=45a22253&itok=6rPqSQOO"> </Image>
-            <h4 className="font-bold"> John Doe </h4>
-            <CheckOutlined className="text-red-500"/>
-          </div>
-          <div className="flex py-1 space-x-10 border hover:bg-slate-300 border-y-1">
-            <Image width="30px" height="30px" preview={false} className="object-fill ml-3 rounded-full " src="https://www.foodallergy.org/sites/default/files/styles/635x460/public/2020-06/shutterstock_1375976735.jpg?h=45a22253&itok=6rPqSQOO"> </Image>
-            <h4 className="font-bold"> John Doe </h4>
-            <CheckOutlined className="text-red-500"/>
-          </div>
-          <div className="flex py-1 space-x-10 border hover:bg-slate-300 border-y-1">
-            <Image width="30px" height="30px" preview={false} className="object-fill ml-3 rounded-full " src="https://www.foodallergy.org/sites/default/files/styles/635x460/public/2020-06/shutterstock_1375976735.jpg?h=45a22253&itok=6rPqSQOO"> </Image>
-            <h4 className="font-bold"> John Doe </h4>
-            <CheckOutlined className="text-red-500"/>
-          </div>
-
-          {/* <div className="items-center justify-center">
-            <h4 className="items-center justify-center font-bold "> + </h4>
-          </div> */}
-
-           </div>
-
-          {/* <Menu  defaultSelectedKeys={["1"]} mode="inline">
-            <Menu.Item key="1" icon={<SettingOutlined />}>
-             Setting
-            </Menu.Item>
-            <Menu.Item key="1" icon={<QuestionCircleFilled />}>
-              Help
-            </Menu.Item>
-            <Menu.Item key="1" icon={<HistoryOutlined/>}>
-              Report History
-            </Menu.Item>
-            <Menu.Item key="1" icon={<FormOutlined/>}>
-              Send Feedback
-            </Menu.Item>
-          </Menu> */}
+        
+      <div className="items-center ml-3 sm:mx-20">
+        <div className="text-center mb-8 ">
+          <h1 className="w-full sm:text-4xl text-xl font-bold">Top Rakings</h1>
         </div>
-      </div>
-      <div className="items-center p-10">
-        <div className="flex flex-row gap-5 mb-8 ">
-
-          <h1 className="w-full text-2xl font-bold">Top Rakings</h1>
-          <div className="md:w-1/3">
-          <Search
-            placeholder="Search..."
-            enterButton={<SearchOutlined></SearchOutlined>}
-            size="middle"
-          />
-          </div>
-        </div>
-        <div className="flex flex-wrap">
+        <div className="flex flex-wrap justify-center  gap-2">
           {dataSource.map((data) => (
-            <div className="p-5 m-5 text-center bg-white border w-80 h-80 hover:scale-105">
+            
+            <div className="py-2 sm:m-5 text-center border-black rounded-sm  bg-slate-200 border md:w-1/2 lg:w-2/5 xl:w-1/4  hover:scale-105">
+              <Link to={`/instructor-detail`}>
             <Image
+                preview = {false}
                 width="80px"
                 height="80px"
                 className="object-fill rounded-full"
                 src={data.image}
               ></Image>
-              <h1 className="text-3xl font-bold">
+              <h1 className="sm:text-3xl font-bold">
                 {data.name} <CheckCircleOutlined className="text-blue-600" />
               </h1>
-              <h4 className="mb-2">{data.description}</h4>
-              <div className="mb-2">
-                <button className="hover:scale-110 hover:text-red-600 ">
-                  {" "}
-                  <YoutubeOutlined className="mr-2 text-3xl " />
-                </button>
-                <button className="hover:scale-110 hover:text-blue-600">
-                  {" "}
-                  <FacebookOutlined className="mr-2 text-3xl " />
-                </button>
-                <button className="hover:scale-110 hover:text-blue-400">
-                  {" "}
-                  <TwitterOutlined className="mr-2 text-3xl " />
-                </button>
-              </div>
+              <h4 className="my-5 h-16">{data.description}</h4>
               <div>
                 <p>1M students</p>
                 <p> 3 courses</p>
               </div>
-              <div><Button className="text-white bg-red-500">Subcriber</Button></div>
+              </Link>
+              <div><Button className="text-white bg-red-500">Subcribe</Button></div>
             </div>
           ))}
         </div>
