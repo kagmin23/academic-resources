@@ -6,13 +6,15 @@ import LayoutAdmin from '../../components/layout/LayoutAdmin';
 import Category from './Category';
 import Content from './Course';
 import NewCourse from './NewCourse';
+import ProfileAdmin from './ProfileAdmin';
 import Report from './Report';
 import Sidebar from './Sidebar';
 import TransactionHistory from './TransactionHistory';
-import ProfileAdmin from './ProfileAdmin';
 
-import Users from './Users';
 import ChangepasswordAd from 'pages/admin/ChangePasswordAd';
+import ApproveInstructor from './ApproveInstructor';
+import Users from './Users';
+
 const AdminPage: React.FC = () => {
   return (
     <div>
@@ -24,6 +26,7 @@ const AdminPage: React.FC = () => {
         <Route path={`/`} element={<Dashboard />} />
         <Route path={`dashboard`} element={<Dashboard />} />
           <Route path={`user`} element={<Users />} />
+          <Route path={`approve-instructor`} element={<ApproveInstructor />} />
           <Route path={`course`} element={<Content />} />
           <Route path={`approve-courses`} element={<NewCourse/>}/>
           <Route path={`category`} element={<Category />} />

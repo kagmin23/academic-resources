@@ -108,7 +108,7 @@ export default function ShoppingCart() {
         },
       }} 
     >
-      <a href='buy-now'><Button type="primary" size="large" className='w-full'>
+      <a href=''><Button type="primary" size="large" className='w-full'>
         Checkout Now
       </Button></a>
     </ConfigProvider>
