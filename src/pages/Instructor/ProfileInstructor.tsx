@@ -1,12 +1,9 @@
-import { CalendarOutlined, CaretRightOutlined, FacebookOutlined, FileDoneOutlined, FileTextOutlined, LinkedinOutlined, LogoutOutlined, MailOutlined, ManOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined, WomanOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography } from 'antd';
-import SubMenu from 'antd/es/menu/SubMenu';
+import { UserOutlined } from '@ant-design/icons';
+import { Avatar, Card, Col, Image, Layout, Menu, Row, Typography } from 'antd';
 import React, { useState } from 'react';
-import Setting from '../Setting';
 
 const { Content, Sider } = Layout;
-const { Title, Text } = Typography;
-const { TabPane } = Tabs;
+const { Text } = Typography;
 
 const coursesData = [
   {
@@ -43,257 +40,74 @@ const coursesData = [
     instructor: 'ChiLTQ',
     lessons: '20 Lessons',
     price: 'Free',
-    status: '0',
-  },
-  {
-    key: '5',
-    image: 'https://i.ytimg.com/vi/wGdNAFWe2c8/maxresdefault.jpg',
-    name: 'Design',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
-    status: '1',
-  },
-  {
-    key: '6',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/11/Gregor_an_image_of_a_womans_head_in_a_virtual_field_with_a_devi_c1ac4ecb-0c36-464c-b282-06798fc663af-800x600.png',
-    name: 'AI',
-    instructor: 'HieuTQ10',
-    lessons: '9 Lessons',
-    price: '13$',
-    status: '0',
-  },
-  {
-    key: '7',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/06/about-us-new-1-800x600.jpg',
-    name: 'Softskill',
-    instructor: 'TrungTM',
-    lessons: '3 Lessons',
-    price: '10$',
-    status: '0',
-  },
-  {
-    key: '8',
-    image: 'https://i.ytimg.com/vi/wGdNAFWe2c8/maxresdefault.jpg',
-    name: 'Design',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
-    status: '1',
-  },
-  {
-    key: '9',
-    image: 'https://i.ytimg.com/vi/wGdNAFWe2c8/maxresdefault.jpg',
-    name: 'Design',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
-    status: '1',
-  },
-  {
-    key: '10',
-    image: 'https://i.ytimg.com/vi/wGdNAFWe2c8/maxresdefault.jpg',
-    name: 'Design',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
     status: '1',
   },
 ];
 
-const aboutData = {
-  avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
-  name: 'David Doe',
-  email: 'davidd09@gmail.com',
-  dob: 'January 1, 2003',
-  gender: 'Female',
-  courseCreatedDate: 'January 15, 2023',
-  facebook: 'https://www.facebook.com/vu.hanthien.545',
-  linkedin: 'https://linkedin.com/in/david34',
-};
+const ProfileInstructor = () => {
+  const [selectedMenu, setSelectedMenu] = useState('1');
 
-const ProfileInstructor: React.FC = () => {
-  const [filteredCourses, setFilteredCourses] = useState(coursesData);
-  const [showAbout, setShowAbout] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
-
-  const displayAboutInfo = () => {
-    setShowAbout(true);
-    setShowSettings(false);
+  const handleMenuClick = (e: { key: string }) => {
+    setSelectedMenu(e.key);
   };
 
-  const displaySettings = () => {
-    setShowAbout(false);
-    setShowSettings(true);
-  };
-
-  const filterCoursesByStatus = (status: string) => {
-    setShowAbout(false);
-    setShowSettings(false);
-    if (status === 'all') {
-      setFilteredCourses(coursesData);
-    } else {
-      const filtered = coursesData.filter(course => course.status === status);
-      setFilteredCourses(filtered);
+  const renderContent = () => {
+    switch (selectedMenu) {
+      case '1':
+        return (
+          <div>
+            <Row gutter={[16, 16]}>
+              {coursesData.map(course => (
+                <Col key={course.key} xs={24} sm={12} md={8} lg={6}>
+                  <Card
+                    hoverable
+                    cover={<Image alt="example" src={course.image} />}
+                  >
+                    <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
+                    <Text>{course.lessons}</Text>
+                    <br />
+                    <Text>{course.price}</Text>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </div>
+        );
+      default:
+        return null;
     }
   };
 
-  const onCollapse = (collapsed: boolean) => {
-    setCollapsed(collapsed);
-  };
-
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
-        <div className="flex items-center justify-center my-6">
-          <Avatar size={70} src={aboutData.avatarSrc} icon={<UserOutlined />} />
-        </div>
-        <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
-            <Menu.Item key="1" icon={<FileTextOutlined />} onClick={displayAboutInfo}>
-              DashBoard
-            </Menu.Item>
-            <SubMenu key="sub1" icon={<FileTextOutlined />} title="Manager">
-              <Menu.Item key="2" onClick={() => filterCoursesByStatus('all')}>
-                Manager Courses
-              </Menu.Item>
-              <Menu.Item key="3">
-                Manager Certificates
-              </Menu.Item>
-            </SubMenu>
-            <Menu.Item key="4" icon={<ShoppingCartOutlined />}>
-              Orders
-            </Menu.Item>
-            <Menu.Item key="5" icon={<FileDoneOutlined />}>
-              Assignments
-            </Menu.Item>
-            <Menu.Item key="6" icon={<SettingOutlined />} onClick={displaySettings}>
-              Settings
-            </Menu.Item>
-            <Menu.Item key="7" icon={<LogoutOutlined />}>
-              Logout
+    <Layout className="min-h-screen">
+      <Layout>
+        <Sider width={200} className="site-layout-background">
+          <Menu
+            mode="inline"
+            selectedKeys={[selectedMenu]}
+            onClick={handleMenuClick}
+            style={{ height: '100%', borderRight: 0 }}
+          >
+            <Menu.Item key="1" icon={<UserOutlined />}>
+              Profile
             </Menu.Item>
           </Menu>
-      </Sider>
-      <Layout className="site-layout">
-        <Content>
-          {showAbout ? (
-            <Card style={{ maxWidth: 500, maxHeight: 350, overflow: 'auto', margin: 20 }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                  <Avatar size={64} src={aboutData.avatarSrc} />
-                  <Title level={4} style={{ marginLeft: 16 }}>{aboutData.name}</Title>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <MailOutlined style={{ marginRight: 8 }} />
-                  <Text>Email: {aboutData.email}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <CalendarOutlined style={{ marginRight: 8 }} />
-                  <Text>Date Of Birth: {aboutData.dob}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  {aboutData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
-                  <Text>Gender: {aboutData.gender}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">
-                    <FacebookOutlined style={{ marginRight: 8 }} />
-                    Facebook
-                  </a>
-                </div>
-                <div>
-                  <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">
-                    <LinkedinOutlined style={{ marginRight: 8 }} />
-                    LinkedIn
-                  </a>
-                </div>
-              </div>
-            </Card>
-          ) : showSettings ? (
-            <Setting />
-          ) : (
-            <div style={{ padding: 20 }}>
-              <Tabs defaultActiveKey="all" onChange={filterCoursesByStatus}>
-                <TabPane tab="All" key="all">
-                  <Row gutter={[16, 16]}>
-                    {filteredCourses.map(course => (
-                      <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
-                        <Card
-                          cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
-                          actions={[
-                            <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
-                              Start Learning
-                            </Button>,
-                          ]}
-                        >
-                          <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
-                          <Text>{course.lessons}</Text>
-                          <br />
-                          <Text style={{ color: 'blue' }}>{course.price}</Text>
-                        </Card>
-                      </Col>
-                    ))}
-                  </Row>
-                </TabPane>
-                <TabPane tab="Published" key="1">
-                  <Row gutter={[16, 16]}>
-                    {filteredCourses
-                      .filter(course => course.status === '1')
-                      .map(course => (
-                        <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
-                          <Card
-                            cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
-                            actions={[
-                              <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
-                                Start Learning
-                              </Button>,
-                            ]}
-                          >
-                            <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
-                            <Text>{course.lessons}</Text>
-                            <br />
-                            <Text style={{ color: 'blue' }}>{course.price}</Text>
-                          </Card>
-                        </Col>
-                      ))}
-                  </Row>
-                </TabPane>
-               
-                <TabPane tab="Pending" key="0">
-                  <Row gutter={[16, 16]}>
-                    {filteredCourses
-                      .filter(course => course.status === '0')
-                      .map(course => (
-                        <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
-                          <Card
-                            cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
-                            actions={[
-                              <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
-                                Start Learning
-                              </Button>,
-                            ]}
-                          >
-                            <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
-                            <Text>{course.lessons}</Text>
-                            <br />
-                            <Text style={{ color: 'blue' }}>{course.price}</Text>
-                          </Card>
-                        </Col>
-                      ))}
-                  </Row>
-                </TabPane>
-              </Tabs>
-            </div>
-          )}
-        </Content>
+        </Sider>
+        <Layout style={{ padding: '0 24px 24px' }}>
+          <Content
+            className="site-layout-background"
+            style={{
+              padding: 24,
+              margin: 0,
+              minHeight: 280,
+            }}
+          >
+            {renderContent()}
+          </Content>
+        </Layout>
       </Layout>
     </Layout>
   );
-  };
-  
-  export default ProfileInstructor;
-  
+};
+
+export default ProfileInstructor;
