@@ -12,6 +12,8 @@ import {
   CoursePage,
   DetailBlogPage,
   HomePage,
+  SavePage,
+  TopInstructorPage
   TopInstructorPage,
   VerityToken
 } from 'pages';
@@ -25,6 +27,8 @@ import ForgotPassword from 'pages/register/ForgotPassword';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import StudentRouter from '../pages/Student/StudentRouter';
+import InstructorDetail from 'pages/InstructorDetail';
+import AllInstructor from 'pages/AllInstructor';
 
 
 const AppRouter: React.FC = () => (
@@ -37,6 +41,7 @@ const AppRouter: React.FC = () => (
           <Route path={`/home`} element={<HomePage />} />
           <Route path={`/home/course-details`} element={<CourseDetailsPage/>} />
           <Route path="/log-in" element={<Login />} />
+          <Route path="/instructor-detail" element={<InstructorDetail />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path={`search`} element={<SearchPage />} />
@@ -48,6 +53,8 @@ const AppRouter: React.FC = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/top-instructor" element={<TopInstructorPage />} />
+          <Route path="/save" element={<SavePage />} />
+          <Route path="/all-instructor" element={<AllInstructor />} />
           <Route path="/verify-email" element={<VerityToken />} />
         </Route>
 
