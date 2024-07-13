@@ -7,7 +7,7 @@ export const createCourse = async (name: string, description: string) => {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     data: {
       name,
@@ -23,7 +23,7 @@ export const getCourses = async (keyword: string, pageNum: number, pageSize: num
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
       data: {
         searchCondition: {
@@ -44,7 +44,7 @@ export const getCourses = async (keyword: string, pageNum: number, pageSize: num
     return apiRequest(`/api/course/${courseId}`, {
       method: 'PUT',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   };
@@ -55,7 +55,7 @@ export const getCourses = async (keyword: string, pageNum: number, pageSize: num
     return apiRequest(`/api/course/${courseId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,
       },
     });
   };
@@ -72,7 +72,7 @@ export const changeStatus = async (course_id: string, status: boolean) => {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      Authorization: `Bearer ${token}`,
     },
     data: { course_id, status },
   });
