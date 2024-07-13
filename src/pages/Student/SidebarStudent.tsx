@@ -65,28 +65,7 @@ const SidebarStudent: React.FC = () => {
       heading: 'Assignments',
       href: "/student/profile-student/*",
     },
-    {
-      icon: SettingOutlined,
-      heading: 'Setting',
-      href: "/student/profile-student/",
-      children: [
-        {
-          icon: UserOutlined,
-          heading: 'Personal Info',
-          href: "/student/profile-student/info-student"
-        },
-        {
-          icon: SafetyOutlined,
-          heading: 'Change Password',
-          href: "/student/profile-student/student-changepassword"
-        },
-      ]
-    },
-    {
-      icon: LogoutOutlined,
-      heading: 'Logout',
-      href: "/"
-    },
+   
   ];
 
   return (
