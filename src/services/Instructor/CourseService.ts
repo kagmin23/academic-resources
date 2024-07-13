@@ -61,7 +61,7 @@ export const getCourses = async (keyword: string, pageNum: number, pageSize: num
   };
 
 
-export const changeStatus = async (user_id: string, status: boolean) => {
+export const changeStatus = async (course_id: string, status: boolean) => {
   const token = localStorage.getItem('token');
   
   if (!token) {
@@ -74,7 +74,7 @@ export const changeStatus = async (user_id: string, status: boolean) => {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
     },
-    data: { user_id, status },
+    data: { course_id, status },
   });
 };
 

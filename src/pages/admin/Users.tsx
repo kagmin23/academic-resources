@@ -16,7 +16,6 @@ const { Option } = Select;
 interface Item {
   _id: string;
   name: string;
-  gender: string;
   dob: Moment;
   email: string;
   password:string;
