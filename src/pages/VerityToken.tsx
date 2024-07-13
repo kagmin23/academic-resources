@@ -1,5 +1,5 @@
 import { Button, Form, Input, Typography, notification } from 'antd';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { HOST_MAIN } from 'services/apiService';
@@ -12,57 +12,30 @@ interface ErrorResponse {
 }
 
 const VerifyToken: React.FC = () => {
-  const [registeredEmail, setRegisteredEmail] = useState('');
   const [verificationCode, setVerificationCode] = useState('');
-  const [emailSent, setEmailSent] = useState(false);
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm(); // Get the form instance here
   const navigate = useNavigate();
 
-  const sendEmailVerification = async (email: string) => {
+  const onFinish = async (values: any) => {
     setLoading(true);
     try {
-      const response = await axios.post(`${HOST_MAIN}/api/auth/verify-email`, { email });
-      setEmailSent(true);
-      notification.success({
-        message: 'Email Sent',
-        description: response.data.message || 'An email with the verification code has been sent to your email address.',
+      const response = await axios.post(`${HOST_MAIN}/api/auth/verify-token`, {
+        token: values.token,
       });
-      setRegisteredEmail(email);
-    } catch (error: unknown) {
-      if (axios.isAxiosError(error)) {
-        const axiosError = error as AxiosError<ErrorResponse>;
-        console.log('Failed to send email:', axiosError);
-        notification.error({
-          message: 'Error',
-          description: axiosError.response?.data?.message || 'Failed to send verification email. Please try again later.',
-        });
-      } else {
-        console.error('Unexpected error:', error);
-        notification.error({
-          message: 'Error',
-          description: 'An unexpected error occurred. Please try again later.',
-        });
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  const onFinish = (values: any) => {
-    // Validate email and verification code
-    if (values.email === registeredEmail && values.verificationCode === '123456') {
-      // Here you would typically validate against a real verification code sent to the user
       notification.success({
         message: 'Verification Successful',
-        description: 'Your email has been verified successfully!',
+        description: response.data.message || 'Your email has been verified successfully!',
       });
-      navigate('/log-in'); // Redirect to login page after successful verification
-    } else {
+      navigate('/log-in');
+    } catch (error: unknown) {
       notification.error({
         message: 'Verification Failed',
-        description: 'Invalid email or verification code. Please try again.',
+        description: (error as ErrorResponse).message || 'Invalid verification code. Please try again.',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -80,56 +53,24 @@ const VerifyToken: React.FC = () => {
         </Title>
 
         <Form form={form} onFinish={onFinish} className="space-y-4">
-          {!emailSent ? (
-            <div>
-              <Form.Item
-                name="email"
-                rules={[
-                  { required: true, message: 'Please input your email!' },
-                  {
-                    pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
-                    message: 'Please enter a valid email address!',
-                  },
-                ]}
-              >
-                <Input
-                  placeholder="Re-enter your registration email to authenticate"
-                  size="large"
-                />
-              </Form.Item>
-              <Button
-                type="primary"
-                onClick={() => {
-                  const email = form.getFieldValue('email');
-                  sendEmailVerification(email);
-                }}
-                className="w-full h-12 text-white bg-red-500 hover:bg-red-600"
-                loading={loading}
-              >
-                Send Verification Email
-              </Button>
-            </div>
-          ) : (
-            <div>
-              <Form.Item
-                name="verificationCode"
-                rules={[{ required: true, message: 'Please input the verification code!' }]}
-              >
-                <Input
-                  placeholder="Verification Code"
-                  size="large"
-                  onChange={(e) => setVerificationCode(e.target.value)}
-                />
-              </Form.Item>
-              <Button
-                type="primary"
-                htmlType="submit"
-                className="w-full h-12 text-white bg-green-600 hover:bg-green-700"
-              >
-                Verify
-              </Button>
-            </div>
-          )}
+          <Form.Item
+            name="token"
+            rules={[{ required: true, message: 'Please input the verification code!' }]}
+          >
+            <Input
+              placeholder="Verification Code"
+              size="large"
+              onChange={(e) => setVerificationCode(e.target.value)}
+            />
+          </Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            className="w-full h-12 text-white bg-green-600 hover:bg-green-700"
+            loading={loading}
+          >
+            Verify
+          </Button>
         </Form>
 
         <div className="mt-4 text-center text-gray-600">

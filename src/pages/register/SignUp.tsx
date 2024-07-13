@@ -49,20 +49,22 @@ const SignUp: React.FC = () => {
       const updatedCompletedSteps = [...completedSteps];
       updatedCompletedSteps[current] = true;
       setCompletedSteps(updatedCompletedSteps);
-      const finalFormData = { ...formData, ...values, role: value.charAt(0).toUpperCase() + value.slice(1) };
+      const finalFormData = { ...formData, ...values, role: value};
+      console.log("final", finalFormData);
+
       setFormData(finalFormData);
       
       localStorage.setItem("user", JSON.stringify(finalFormData));
       console.log('Final Form Data:', finalFormData);
   
       const response = await registerUser(finalFormData);
-      console.log('Registration successful:', response);
-      notification.success({
-        message: 'Success',
-        description: 'You have signed up successfully!',
-      });
-  
+        console.log('Registration successful:', response);
+        notification.success({
+          message: 'Success',
+          description: 'You have signed up successfully!',
+        });
       navigate('/verify-email');
+      
     } catch (error) {
       console.error('Registration error:', error);
       notification.error({
@@ -122,8 +124,16 @@ const SignUp: React.FC = () => {
       title: 'Sign Up',
       content: (
         <Form form={form} name="signup" initialValues={{ remember: true }} className="space-y-2">
+          {/* <Form.Item
+            name="role"
+            initialValue={"student"}
+            hidden
+          >
+            <Input value={"student"}/>
+          </Form.Item> */}
+
           <Form.Item
-            name="userName"
+            name="name"
             rules={[{ required: true, message: 'Please input your username!' }]}
           >
             <Input placeholder="User Name" size="middle" />

@@ -1,6 +1,15 @@
 import { apiRequest } from 'services/apiService';
 
-export const createCourse = async (name: string, description: string) => {
+export const createCourse = async (courseData: {
+  name: string,
+  category_id: string,
+  description: string,
+  content: string,
+  video_url: string,
+  image_url: string,
+  price: number,
+  discount: number
+}) => {
   const token = localStorage.getItem('token');
 
   return apiRequest('/api/course', {
@@ -9,12 +18,10 @@ export const createCourse = async (name: string, description: string) => {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${token}`,
     },
-    data: {
-      name,
-      description,
-    },
+    data: courseData,
   });
 };
+
 
 export const getCourses = async (keyword: string, pageNum: number, pageSize: number) => {
     const token = localStorage.getItem('token');

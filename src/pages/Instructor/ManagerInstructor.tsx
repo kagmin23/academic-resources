@@ -18,12 +18,13 @@ import {
   Select,
   Switch,
   Table,
-  Typography
+  Typography,
+  message
 } from "antd";
-import Title from "antd/lib/typography/Title";
 import { AlignType } from "rc-table/lib/interface";
 import React, { useEffect, useState } from "react";
 import { getCategories } from "services/AdminsApi/categoryApiService";
+import { createCourse } from "services/Instructor/courseApiService";
 
 const { confirm } = Modal;
 const { Header, Content, Footer } = Layout;
@@ -48,7 +49,7 @@ interface Course {
 }
 
 interface Category {
-  id: string;
+  _id: string;
   name: string;
 }
 
@@ -69,15 +70,11 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await getCategories("", 1, 10);  // Adjust the parameters as necessary
+      const response = await getCategories("", 1, 10);
       console.log('Categories Response:', response);
-      if (Array.isArray(response.data)) {
-        setCategories(response.data);
-        console.log('Categories Set:', response.data);
-      } else {
-        console.error('Response data is not an array', response.data);
-        setCategories([]);
-      }
+      setCategories(response.data.pageData);
+        console.log("category: ", categories);
+        console.log('Categories Set:', response.data.pageData);
     } catch (error) {
       console.error("Failed to fetch categories", error);
       setCategories([]);
@@ -122,32 +119,54 @@ const ManagerCourseInstructor: React.FC = () => {
     setFilteredDataSource(newDataSource);
   };
 
-  const handleSave = () => {
-    form
-      .validateFields()
-      .then((values) => {
-        form.resetFields();
-        if (isEditMode && currentRecord) {
-          const newDataSource = dataSource.map((item) =>
-            item._id === currentRecord._id ? { ...item, ...values } : item
-          );
-          setDataSource(newDataSource);
-          setFilteredDataSource(newDataSource);
-        } else {
-          const newRecord = {
-            ...values,
-            key: (dataSource.length + 1).toString(),
-            created_at: new Date().toISOString().split("T")[0],
-          };
-          setDataSource([...dataSource, newRecord]);
-          setFilteredDataSource([...dataSource, newRecord]);
-        }
-        setIsModalVisible(false);
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
-      });
-  };
+const handleSave = () => {
+  form.validateFields()
+    .then((values) => {
+      if (typeof values.price === 'string') {
+        values.price = parseFloat(values.price);
+      }
+      if (typeof values.discount === 'string') {
+          values.discount = parseFloat(values.discount);
+      }
+      form.resetFields();
+      if (isEditMode && currentRecord) {
+        const newDataSource = dataSource.map((item) =>
+          item._id === currentRecord._id ? { ...item, ...values } : item
+        );
+        setDataSource(newDataSource);
+        setFilteredDataSource(newDataSource);
+        message.success('Course updated successfully');
+      } 
+      
+      else {
+        createCourse(values)
+          .then((response) => {
+            console.log("values", values)
+            const newRecord = {
+              ...response.data,
+              key: (dataSource.length + 1).toString(),
+              created_at: new Date().toISOString().split("T")[0],
+            };
+            setDataSource([...dataSource, newRecord]);
+            setFilteredDataSource([...dataSource, newRecord]);
+            message.success('Course created successfully');
+          })
+          .catch((error) => {
+            console.error("Failed to create course", error);
+            message.error('Failed to create course');
+          });
+      }
+      setIsModalVisible(false);
+    })
+    .catch((info) => {
+      console.log("Validate Failed:", info);
+      message.error('Validation failed');
+    });
+};
+
+  
+  
+  
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter((item) =>
@@ -188,8 +207,8 @@ const ManagerCourseInstructor: React.FC = () => {
     },
     {
       title: "Course Name",
-      dataIndex: "name_course",
-      key: "name_course",
+      dataIndex: "name",
+      key: "name",
     },
     {
       title: "Created At",
@@ -223,6 +242,8 @@ const ManagerCourseInstructor: React.FC = () => {
     },
   ];
 
+  
+
   return (
     <Layout style={{ height: "100vh" }}>
       <Layout className="site-layout">
@@ -245,7 +266,7 @@ const ManagerCourseInstructor: React.FC = () => {
           </div>
         </Header>
         <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
-          <Table
+        <Table
             pagination={{ pageSize: 6 }}
             dataSource={filteredDataSource}
             columns={columns}
@@ -263,24 +284,48 @@ const ManagerCourseInstructor: React.FC = () => {
                 >
                   <Row gutter={16} className="mb-5">
                     <Col span={22}>
-                      <Title level={5} className="">
+                      <Typography.Title level={5}>
                         Description:
-                      </Title>
-
+                      </Typography.Title>
                       <p>{record.description || "-"}</p>
                     </Col>
                   </Row>
 
-                  <Row                    gutter={16}
-                    align="middle"
-                    style={{ display: "flex", justifyContent: "space-between" }}
-                  >
+                  <Row gutter={16} align="middle">
                     <Col span={8}>
-                      <Text strong className="mr-2">
+                      <Typography.Text strong>
                         Price:
-                      </Text>
+                      </Typography.Text>
+                    </Col>
+                    <Col span={8}>
+                      <Typography.Text strong>
+                        Discount:
+                      </Typography.Text>
                     </Col>
                   </Row>
+
+                  <Form layout="vertical">
+                    <Row gutter={16}>
+                      <Col span={8}>
+                        <Form.Item
+                          name="price"
+                          label="Price"
+                          initialValue={record.price}
+                        >
+                          <Input disabled />
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="discount"
+                          label="Discount"
+                          rules={[{ required: true, message: 'Please input the discount!' }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
                 </div>
               ),
               expandIcon: () => null,
@@ -299,7 +344,7 @@ const ManagerCourseInstructor: React.FC = () => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="name_course"
+            name="name"
             label="Name Course"
             rules={[
               { required: true, message: "Please input the name course!" },
@@ -315,7 +360,7 @@ const ManagerCourseInstructor: React.FC = () => {
           >
             <Select placeholder="Select a category">
               {categories.map((category) => (
-                <Select.Option key={category.id} value={category.id}>
+                <Select.Option key={category._id} value={category._id}>
                   {category.name}
                 </Select.Option>
               ))}
@@ -332,11 +377,17 @@ const ManagerCourseInstructor: React.FC = () => {
             <TextArea rows={4} />
           </Form.Item>
 
-          <Form.Item name="video_url" label="Video URL">
+          <Form.Item name="video_url"
+            label="Video URL"
+            rules={[{ required: true, message: 'Please input the video url!' }]}
+                  >
             <Input />
           </Form.Item>
 
-          <Form.Item name="image_url" label="Image URL">
+          <Form.Item name="image_url"
+            label="Image URL"
+            rules={[{ required: true, message: 'Please input the image url!' }]}
+          >
             <Input />
           </Form.Item>
 
@@ -361,15 +412,30 @@ const ManagerCourseInstructor: React.FC = () => {
             />
           </Form.Item>
 
-          <Form.Item label="Sell Course">
-            <Switch checked={isSellChecked} onChange={onChangesell} />
-          </Form.Item>
-
-          {isSellChecked && (
-            <Form.Item name="price" label="Price">
-              <Input type="number" />
+          <Form.Item label="How do you want sell this course?">
+              <Switch checked={isSellChecked} onChange={onChangesell} />
+              <p className="mt-2 italic text-blue-500">(Otherwise, this course will be FREE)</p>
             </Form.Item>
-          )}
+
+            {isSellChecked && (
+              <div>
+                <Form.Item
+                  name="price"
+                  label="Price"
+                  rules={[{ required: true, message: 'Please input the price!' }]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+
+                <Form.Item
+                  name="discount"
+                  label="Discount"
+                  rules={[{ required: true, message: 'Please input the discount!' }]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+              </div>
+            )}
         </Form>
       </Modal>
     </Layout>

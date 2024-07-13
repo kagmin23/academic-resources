@@ -6,8 +6,11 @@ interface RegisterData {
   password: string;
   name: string;
   role: string;
+  avatar: string;
   image: string;
   status: boolean;
+  phone_number: string
+
 }
 
 export const registerUser = async (userData: RegisterData) => {
@@ -20,47 +23,27 @@ export const registerUser = async (userData: RegisterData) => {
 
     console.log('Registration response:', response);
 
-    const token = response.data.token || response.data.accessToken || response.data.data?.token;
-    console.log('Token:', token);
-
-    if (token) {
-      console.log('Registration Success. Token received:', token);
-      localStorage.setItem('token', token);
-      
-      // Sử dụng token để lấy dữ liệu người dùng
-      const userResponse = await axios.get(`${HOST_MAIN}/api/users`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      console.log('User data response:', userResponse);
-
-      const userData = userResponse.data;
-      console.log('User data received:', userData);
-
       if (userData) {
+        console.log("userData", userData)
+
         localStorage.setItem('user', JSON.stringify(userData));
         return userData; // Trả về dữ liệu người dùng nếu cần thiết
       } else {
         console.error('Failed to get user data');
         throw new Error('Failed to get user data');
       }
-    } else {
-      console.error('Error: Token not received');
-      throw new Error('Error: Token not received');
-    }
-  } catch (error) {
-    console.error('Registration error:', error);
 
-    let errorMessage = 'There was an error during the registration process. Please try again.';
-    if (axios.isAxiosError(error) && error.response?.data?.message) {
-      errorMessage = error.response.data.message;
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
-    }
-    console.error('Error message:', errorMessage);
+      } catch (error) {
+        console.error('Registration error:', error);
 
-    throw error;
+        let errorMessage = 'There was an error during the registration process. Please try again.';
+        if (axios.isAxiosError(error) && error.response?.data?.message) {
+          errorMessage = error.response.data.message;
+        } else if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        console.error('Error message:', errorMessage);
+
+        throw error;
   }
 };
