@@ -8,6 +8,7 @@ interface User {
   role: string;
   image: string;
   status: boolean;
+  phone_number: string
 }
 
 export const loginUser = async (email: string, password: string) => {

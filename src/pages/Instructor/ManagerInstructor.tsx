@@ -1,184 +1,96 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleFilled,
   EyeOutlined,
   PlusCircleOutlined,
-  SearchOutlined,
-  StarFilled 
-} from '@ant-design/icons';
-
-import { Button, Col, Form, Input, Layout, Modal, Row, Table, Typography ,Tag} from 'antd';
-import Title from 'antd/lib/typography/Title';
-import { AlignType } from 'rc-table/lib/interface';
-import React, { useEffect, useRef, useState } from 'react';
-import { Switch } from 'antd';
-import { Select } from 'antd';
-import type { SelectProps } from 'antd';
-import { ExclamationCircleFilled } from '@ant-design/icons';
+  SearchOutlined
+} from "@ant-design/icons";
+import { Editor } from '@tinymce/tinymce-react';
+import {
+  Button,
+  Col,
+  Form,
+  Input,
+  Layout,
+  Modal,
+  Row,
+  Select,
+  Switch,
+  Table,
+  Typography,
+  message
+} from "antd";
+import { AlignType } from "rc-table/lib/interface";
+import React, { useEffect, useState } from "react";
+import { getCategories } from "services/AdminsApi/categoryApiService";
+import { createCourse } from "services/Instructor/courseApiService";
 
 const { confirm } = Modal;
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 const { TextArea } = Input;
-interface DataType {
-  key: string;
-  image: string;
-  name_course: string;
-  created_at: string;
+
+interface Course {
+  _id: string;
+  name: string;
+  category_id: string;
+  user_id: string;
   description: string;
-  rate?: string;
-  price?: number;
-  sell:boolean;
-  number_sessions:number;
-  list_category: list_category[];
-
-}
-interface list_category {
-  id: number;
-  category:string;
-  
+  content: string;
+  status: string;
+  video_url: string;
+  image_url: string;
+  price: number;
+  discount: number;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
 }
 
-const initialDataSource: DataType[] = [
-    {
-      key: '1',
-      image: 'https://via.placeholder.com/50',
-      name_course: 'Cách học tập tốt',
-      created_at: '2024-01-01',
-      sell: true,
-      list_category: [
-        { id: 1, category: 'Programming' },
-        { id: 2, category: 'Web Design' },
-        { id: 3, category: 'Typescript' }
-      ],
-      
-      price: 350.000,
-      number_sessions:10,
-      rate: '4.5',
-      description: 'To have an overview of the IT industry - Web programming, you should watch the videos in this course first. What will you learn? -Basic knowledge, foundations of the IT industry Basic models and architecture when deploying applications. Core concepts and terms when deploying applications. Understand more about how the internet and computers work'
-    },
-  
-  
-  {
-    key: '2',
-    image: 'https://via.placeholder.com/50',
-    name_course: 'Item 2',
-    created_at: '2024-01-02',
-    sell:false,
-    number_sessions:10,
-    list_category: [
-      { id: 4, category: 'HTML' },
-      { id: 5, category: 'Javascrip' },
-      
-    ],
-    description:'This course focuses on HTML, JavaScript, and web design techniques to develop beautiful and professional websites.'
-  },
-  {
-    key: '3',
-    image: 'https://via.placeholder.com/50',
-    name_course: 'Item 3',
-    created_at: '2024-01-03',
-    sell:true,
-    list_category: [
-      { id: 6, category: 'Electrical Engineering' },
-      { id: 7, category: 'Mechanical' },
-      { id: 8, category: 'Construction Engineering' }
-    ],
-    description:'Students will learn electrical and mechanical engineering, an important foundation for technical careers.',
-    price:350.000,
-    number_sessions:10,
-  },
-  {
-    key: '4',
-    image: 'https://via.placeholder.com/50',
-    name_course: 'Item 4',
-    created_at: '2024-01-04',
-    sell:true,
-    list_category: [
-      { id: 9, category: 'Communication skills' },
-      { id: 10, category: 'Problem solving skills'},
-      { id: 11, category: 'Presentation skills'}
-    ],
-    price:350.000,
-    number_sessions:10,
-    description:'This course focuses on how to solve problems in daily work, helping you become an effective employee and solve challenges well.'
-  },
-  {
-    key: '5',
-    image: 'https://via.placeholder.com/50',
-    name_course: 'Item 5',
-    created_at: '2024-01-05',
-    sell:false,
-    list_category: [
-      { id: 9, category: 'Communication skills' },
-      { id: 10, category: 'Problem solving skills'},
-      { id: 11, category: 'Presentation skills'}
-    ],
-    description:'Learners will practice communication, problem solving and presentation skills, important skills in the modern work environment.',
-    
-    number_sessions:10,
-  },
-  {
-    key: '6',
-    image: 'https://via.placeholder.com/50',
-    name_course: 'Item 6',
-    created_at: '2024-01-06',
-    sell:true,
-    list_category: [
-      { id: 9, category: 'Communication skills' },
-      { id: 10, category: 'Problem solving skills'},
-      { id: 11, category: 'Presentation skills'}
-    ],
-    price:250.000,
-    number_sessions:10,
-    description:'This course provides basic knowledge of web programming and application architecture, helping you gain a deeper understanding of how the internet and computers work.'
-  },
-];
+interface Category {
+  _id: string;
+  name: string;
+}
 
 const ManagerCourseInstructor: React.FC = () => {
-  const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
-  const [filteredDataSource, setFilteredDataSource] = useState<DataType[]>(initialDataSource);
+  const [dataSource, setDataSource] = useState<Course[]>([]);
+  const [filteredDataSource, setFilteredDataSource] = useState<Course[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<DataType | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<Course | null>(null);
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isSellChecked, setIsSellChecked] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
-  // Xử lý sự kiện khi thay đổi trạng thái 'sell'
-  const onChangesell = (checked: boolean) => {
-    setIsSellChecked(checked);
-    if (!checked) {
-      form.setFieldsValue({ price: undefined }); // Reset giá khi không bán
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories("", 1, 10);
+      console.log('Categories Response:', response);
+      setCategories(response.data.pageData);
+        console.log("category: ", categories);
+        console.log('Categories Set:', response.data.pageData);
+    } catch (error) {
+      console.error("Failed to fetch categories", error);
+      setCategories([]);
     }
   };
 
+  const onChangesell = (checked: boolean) => {
+    setIsSellChecked(checked);
+    if (!checked) {
+      form.setFieldsValue({ price: undefined });
+    }
+  };
 
-  // category:
-  const categoryOptions = [
-    { id: 1, category: 'Programming' },
-    { id: 2, category: 'Web Design' },
-    { id: 3, category: 'Typescript' },
-    { id: 4, category: 'HTML' },
-    { id: 5, category: 'JavaScript' },
-    { id: 6, category: 'Electrical Engineering' },
-    { id: 7, category: 'Mechanical' },
-    { id: 8, category: 'Construction Engineering' },
-    { id: 9, category: 'Communication skills' },
-    { id: 10, category: 'Problem solving skills' },
-    { id: 11, category: 'Presentation skills' },
-  ];
-  
-  const options: SelectProps['options'] = categoryOptions.map(category => ({
-    value: category.id.toString(),
-    label: category.category,
-  }));
-
-const handleChange = (value: string) => {
-  console.log(`selected ${value}`);
-};
-
+  const handleEditorChange = (content: any, editor: any) => {
+    console.log("Content was updated:", content);
+  };
 
   const handleAddNewCourse = () => {
     setIsEditMode(false);
@@ -186,7 +98,7 @@ const handleChange = (value: string) => {
     form.resetFields();
   };
 
-  const handleEdit = (record: DataType) => {
+  const handleEdit = (record: Course) => {
     setIsEditMode(true);
     setCurrentRecord(record);
     setIsModalVisible(true);
@@ -194,186 +106,226 @@ const handleChange = (value: string) => {
   };
 
   const handleViewMore = (key: string) => {
-    setExpandedKeys(prevKeys =>
-      prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]
+    setExpandedKeys((prevKeys) =>
+      prevKeys.includes(key)
+        ? prevKeys.filter((k) => k !== key)
+        : [...prevKeys, key]
     );
   };
 
-  const handleDelete = (record: DataType) => {
-    const newDataSource = dataSource.filter(item => item.key !== record.key);
+  const handleDelete = (record: Course) => {
+    const newDataSource = dataSource.filter((item) => item._id !== record._id);
     setDataSource(newDataSource);
     setFilteredDataSource(newDataSource);
   };
 
-  const handleSave = () => {
-    form
-      .validateFields()
-      .then(values => {
-        form.resetFields();
-        if (isEditMode && currentRecord) {
-          const newDataSource = dataSource.map(item =>
-            item.key === currentRecord.key ? { ...item, ...values } : item
-          );
-          setDataSource(newDataSource);
-          setFilteredDataSource(newDataSource);
-        } else {
-          const newRecord = {
-            ...values,
-            key: (dataSource.length + 1).toString(),
-            created_at: new Date().toISOString().split('T')[0],
-          };
-          setDataSource([...dataSource, newRecord]);
-          setFilteredDataSource([...dataSource, newRecord]);
-        }
-        setIsModalVisible(false);
-      })
-      .catch(info => {
-        console.log('Validate Failed:', info);
-      });
-  };
+const handleSave = () => {
+  form.validateFields()
+    .then((values) => {
+      if (typeof values.price === 'string') {
+        values.price = parseFloat(values.price);
+      }
+      if (typeof values.discount === 'string') {
+          values.discount = parseFloat(values.discount);
+      }
+      form.resetFields();
+      if (isEditMode && currentRecord) {
+        const newDataSource = dataSource.map((item) =>
+          item._id === currentRecord._id ? { ...item, ...values } : item
+        );
+        setDataSource(newDataSource);
+        setFilteredDataSource(newDataSource);
+        message.success('Course updated successfully');
+      } 
+      
+      else {
+        createCourse(values)
+          .then((response) => {
+            console.log("values", values)
+            const newRecord = {
+              ...response.data,
+              key: (dataSource.length + 1).toString(),
+              created_at: new Date().toISOString().split("T")[0],
+            };
+            setDataSource([...dataSource, newRecord]);
+            setFilteredDataSource([...dataSource, newRecord]);
+            message.success('Course created successfully');
+          })
+          .catch((error) => {
+            console.error("Failed to create course", error);
+            message.error('Failed to create course');
+          });
+      }
+      setIsModalVisible(false);
+    })
+    .catch((info) => {
+      console.log("Validate Failed:", info);
+      message.error('Validation failed');
+    });
+};
+
+  
+  
+  
 
   const handleSearch = (value: string) => {
-    const filteredData = dataSource.filter(item =>
-      item.name_course.toLowerCase().includes(value.toLowerCase())
+    const filteredData = dataSource.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredDataSource(filteredData);
   };
 
-  //confirm
-  const showConfirm = (record: DataType) => {
+  const showConfirm = (record: Course) => {
     confirm({
-      title: 'Do you want to delete these items?',
+      title: "Do you want to delete these items?",
       icon: <ExclamationCircleFilled />,
-      content: 'Some descriptions',
+      content: "Some descriptions",
       onOk() {
-        console.log('OK');
+        console.log("OK");
         handleDelete(record);
       },
       onCancel() {
-        console.log('Cancel');
+        console.log("Cancel");
       },
     });
   };
-  // const handleConfirmDelete = (record: DataType) => {
-  //   confirm({
-  //     title: 'Do you want to delete these?',
-  //     icon: <ExclamationCircleFilled />,
-  //     content: 'Hành động này không thể hoàn tác',
-  //     okText: 'Xóa',
-  //     okType: 'danger',
-  //     cancelText: 'Hủy',
-  //     onOk() {
-  //       handleDelete(record);
-  //     },
-  //   });
-  // };
-
 
   const columns = [
     {
-      title: 'Course',
-      dataIndex: 'image',
-      key: 'image',
-      // render: (text: string) => <img src={text} alt="item" className="w-20 h-15" />,
+      title: "Course",
+      dataIndex: "image",
+      key: "image",
       render: (text: string) => (
         <div className="w-24 h-12">
-          <img src={text} alt="item" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        </div>),
+          <img
+            src={text}
+            alt="item"
+            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+          />
+        </div>
+      ),
     },
     {
-      title: 'Course Name',
-      dataIndex: 'name_course',
-      key: ' name_course',
+      title: "Course Name",
+      dataIndex: "name",
+      key: "name",
     },
     {
-      title: 'Created At',
-      dataIndex: 'created_at',
-      key: 'created_at',
+      title: "Created At",
+      dataIndex: "created_at",
+      key: "created_at",
     },
     {
-      title: 'Actions',
-      key: 'actions',
-      align: 'center' as AlignType,
-      render: (text: string, record: DataType) => (
-        <div style={{ textAlign: 'center' }}>
-          <Button icon={<EditOutlined />} className="mr-2 text-white bg-blue-500" onClick={() => handleEdit(record)}></Button>
-          <Button icon={<DeleteOutlined />} className="mr-2 text-white bg-red-600"  onClick={() => showConfirm(record)}></Button>
-          <Button icon={<EyeOutlined />} onClick={() => handleViewMore(record.key)}></Button>
+      title: "Actions",
+      key: "actions",
+      align: "center" as AlignType,
+      render: (text: string, record: Course) => (
+        <div style={{ textAlign: "center" }}>
+          <Button
+            icon={<EditOutlined />}
+            className="mr-2 text-white bg-blue-500"
+            onClick={() => handleEdit(record)}
+          ></Button>
+
+          <Button
+            icon={<DeleteOutlined />}
+            className="mr-2 text-white bg-red-600"
+            onClick={() => showConfirm(record)}
+          ></Button>
+          
+          <Button
+            icon={<EyeOutlined />}
+            onClick={() => handleViewMore(record._id)}
+          ></Button>
         </div>
       ),
     },
   ];
 
+  
+
   return (
-    <Layout style={{ height: '100vh'}}>
+    <Layout style={{ height: "100vh" }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
           <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
             <Input
               placeholder="Search..."
               prefix={<SearchOutlined />}
-              onChange={e => handleSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
               style={{ width: 300 }}
             />
-            <div className="h-6 lg:mx-4 border-r"></div>
-            <Button className="font-bold text-white bg-red-500" onClick={handleAddNewCourse}>
+            <div className="h-6 border-r lg:mx-4"></div>
+            <Button
+              className="font-bold text-white bg-red-500"
+              onClick={handleAddNewCourse}
+            >
               <PlusCircleOutlined />
               Add New Course
             </Button>
           </div>
         </Header>
-        <Content className="my-4 mx-4 xl:mx-6 overflow-y-auto">
-          <Table
-          pagination={{ pageSize: 6 }}
+        <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
+        <Table
+            pagination={{ pageSize: 6 }}
             dataSource={filteredDataSource}
             columns={columns}
             expandable={{
               expandedRowKeys: expandedKeys,
-              onExpand: (expanded, record) => handleViewMore(record.key),
-              expandedRowRender: (record: DataType) => (
-                <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
-                  <Row gutter={16} className='mb-5'>
-                    
+              onExpand: (expanded, record) => handleViewMore(record._id),
+              expandedRowRender: (record: Course) => (
+                <div
+                  style={{
+                    padding: "10px 20px",
+                    backgroundColor: "#f9f9f9",
+                    borderRadius: "4px",
+                    marginLeft: "25px",
+                  }}
+                >
+                  <Row gutter={16} className="mb-5">
                     <Col span={22}>
-                      <Title level={5} className=''>Description:</Title>
-                      
-                      <p>{record.description || '-'}</p>
+                      <Typography.Title level={5}>
+                        Description:
+                      </Typography.Title>
+                      <p>{record.description || "-"}</p>
                     </Col>
                   </Row>
-                  <Row gutter={16} className='mb-5'>
-                    
-                  <Col span={22}>
-                  <Title level={5} className=''>Category:</Title>
-                      {/* <p>{record.list_category?.map(category => category.category).join(', ') || '-'}</p> */}
-                       <p>
-                      {record.list_category?.map(category => <Tag color="geekblue">{category.category}</Tag>) || '-'}</p>
 
-                  </Col>
-
-                  </Row>
-
-                  <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Row gutter={16} align="middle">
                     <Col span={8}>
-                      <Text strong className='mr-2'>Number of sessions:</Text>
-                      {record.number_sessions || '-'}
-                    </Col>
-                    <Col span={8} >
-                      <Text strong className='mr-2'>Rate:</Text>
-                      {record.rate || '-'} <StarFilled style={{ color: '#FFE200' }} />
-
+                      <Typography.Text strong>
+                        Price:
+                      </Typography.Text>
                     </Col>
                     <Col span={8}>
-                      <Text strong className='mr-2'>Price:</Text>
-                      {record.sell ? (record.price ? `${record.price.toLocaleString('vi-VN')}.000 VND` : '-') : <Text strong style={{ color: '#1890ff' }}>Free Course</Text>}
+                      <Typography.Text strong>
+                        Discount:
+                      </Typography.Text>
                     </Col>
-
-                    {/* <Col span={8}>
-                      <Text strong className='mr-2'>Price:</Text>
-                      <p>${record.price || '-'}</p>
-                      {record.price ? `${record.price.toLocaleString('vi-VN')}.000 VND` : '-'}
-
-                    </Col> */}
                   </Row>
+
+                  <Form layout="vertical">
+                    <Row gutter={16}>
+                      <Col span={8}>
+                        <Form.Item
+                          name="price"
+                          label="Price"
+                          initialValue={record.price}
+                        >
+                          <Input disabled />
+                        </Form.Item>
+                      </Col>
+                      <Col span={8}>
+                        <Form.Item
+                          name="discount"
+                          label="Discount"
+                          rules={[{ required: true, message: 'Please input the discount!' }]}
+                        >
+                          <Input />
+                        </Form.Item>
+                      </Col>
+                    </Row>
+                  </Form>
                 </div>
               ),
               expandIcon: () => null,
@@ -381,11 +333,10 @@ const handleChange = (value: string) => {
             rowKey="key"
           />
         </Content>
-        
       </Layout>
 
       <Modal
-        width={'50%'}
+        width={"50%"}
         title={isEditMode ? "Edit Course" : "Add New Course"}
         visible={isModalVisible}
         onOk={handleSave}
@@ -393,67 +344,98 @@ const handleChange = (value: string) => {
       >
         <Form form={form} layout="vertical">
           <Form.Item
-            name="image"
-            label="Image URL"
-            rules={[{ required: true, message: 'Please input the image URL!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="name_course"
+            name="name"
             label="Name Course"
-            rules={[{ required: true, message: 'Please input the name course!' }]}
+            rules={[
+              { required: true, message: "Please input the name course!" },
+            ]}
           >
             <Input />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description Course:"
-            rules={[{ required: true, message: 'Please input the description course!' }]}
-          >
-           <TextArea
-      
-      placeholder="Description"
-      style={{ height: 120, resize: 'none' }}
-           />
           </Form.Item>
 
-          
           <Form.Item
-      name="sell"
-      label="Do you want sell this course?"
-      valuePropName="checked"
-    >
-      <Switch onChange={onChangesell} />
-    </Form.Item>
-    {isSellChecked && (
-      <Form.Item
-        name="price"
-        label="Price:"
-        rules={[{ required: true, message: 'Please input price course!' }]}
-      >
-        <Input type="number" />
-      </Form.Item>
-    )}
-    <Form.Item>
-      {!isSellChecked && (
-        <Text strong style={{ color: '#1890ff' }}>Free course</Text>
-      )}
-    </Form.Item>
-    {/* Category */}
-    {/* <Form.Item
-            name="list_category"
-            label="Category:"
-            rules={[{ required: true, message: 'Please input the name course!' }]}
+            name="category_id"
+            label="Category"
+            rules={[{ required: true, message: "Please select a category!" }]}
           >
-            <Select
-    mode="tags"
-    style={{ width: '100%' }}
-    placeholder="Tags Mode"
-    onChange={handleChange}
-    options={options}
-  />
-          </Form.Item> */}
+            <Select placeholder="Select a category">
+              {categories.map((category) => (
+                <Select.Option key={category._id} value={category._id}>
+                  {category.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[
+              { required: true, message: "Please input the description!" },
+            ]}
+          >
+            <TextArea rows={4} />
+          </Form.Item>
+
+          <Form.Item name="video_url"
+            label="Video URL"
+            rules={[{ required: true, message: 'Please input the video url!' }]}
+                  >
+            <Input />
+          </Form.Item>
+
+          <Form.Item name="image_url"
+            label="Image URL"
+            rules={[{ required: true, message: 'Please input the image url!' }]}
+          >
+            <Input />
+          </Form.Item>
+
+          <Form.Item label="Content">
+            <Editor
+              apiKey="your-api-key"
+              initialValue="<p>This is the initial content of the editor</p>"
+              init={{
+                height: 200,
+                menubar: false,
+                plugins: [
+                  "advlist autolink lists link image charmap print preview anchor",
+                  "searchreplace visualblocks code fullscreen",
+                  "insertdatetime media table paste code help wordcount",
+                ],
+                toolbar:
+                  "undo redo | formatselect | bold italic backcolor | \
+                  alignleft aligncenter alignright alignjustify | \
+                  bullist numlist outdent indent | removeformat | help",
+              }}
+              onEditorChange={handleEditorChange}
+            />
+          </Form.Item>
+
+          <Form.Item label="How do you want sell this course?">
+              <Switch checked={isSellChecked} onChange={onChangesell} />
+              <p className="mt-2 italic text-blue-500">(Otherwise, this course will be FREE)</p>
+            </Form.Item>
+
+            {isSellChecked && (
+              <div>
+                <Form.Item
+                  name="price"
+                  label="Price"
+                  rules={[{ required: true, message: 'Please input the price!' }]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+
+                <Form.Item
+                  name="discount"
+                  label="Discount"
+                  rules={[{ required: true, message: 'Please input the discount!' }]}
+                >
+                  <Input type="number" />
+                </Form.Item>
+              </div>
+            )}
         </Form>
       </Modal>
     </Layout>
@@ -461,6 +443,4 @@ const handleChange = (value: string) => {
 };
 
 export default ManagerCourseInstructor;
-
-
 

@@ -19,7 +19,7 @@ const RequireAuth: React.FC<RequireAuthProps> = ({ allowedRoles, children }) => 
 
   let Layout;
   switch (roles) {
-    case role.Student:
+    case role.student:
       Layout = LayoutStudent;
       break;
     default:

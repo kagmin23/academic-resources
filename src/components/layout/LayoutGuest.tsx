@@ -1,4 +1,4 @@
-import { BellOutlined, BookOutlined, LoginOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { BellOutlined, BookOutlined, LoginOutlined, LogoutOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
@@ -30,8 +30,8 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
   };
 
   return (
-    <Layout className="min-h-screen">
-      <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
+    <Layout className="min-h-screen ">
+      <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800 ">
         <Link to="/" className="flex items-center mr-20">
           <BookOutlined className="text-xl text-white" />
           <h1 className="hidden ml-3 text-xl text-white md:block">
@@ -49,6 +49,13 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
               <BellOutlined />
             </Link>
           </div>
+
+          <div className="flex items-center space-x-4 text-xl text-white">
+              <Link to="/log-in">
+                <MailOutlined className="text-xl" />
+              </Link>
+              </div>
+
           <div className="flex items-center space-x-4 text-xl text-white">
             <Link to="/log-in">
               <ShoppingCartOutlined className="text-xl" />
@@ -62,7 +69,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             </Link>
             <Link to="/sign-up">
               <Button className="w-full mt-4 text-xs text-white bg-red-500">
-                Sign up<LoginOutlined />
+                Sign up<LogoutOutlined />
               </Button>
             </Link>
           </div>
@@ -80,7 +87,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             mode="horizontal"
             selectedKeys={selectedKeys}
             onClick={handleMenuClick}
-            className="flex-grow gap-5 md:flex md:justify-end"
+            className="flex-grow gap-5 md:flex md:justify-end shadow-custom-gray"
           >
             <Menu.Item key="1" className="mx-2">
               <Link to="/">Home</Link>

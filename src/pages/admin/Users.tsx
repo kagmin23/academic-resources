@@ -3,21 +3,19 @@ import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, 
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import moment, { Moment } from "moment";
-import React, { useState, useEffect } from "react";
-import { changeStatus } from "services/AdminsApi/changeStatusApiService";
-import { getUsers } from "services/AdminsApi/getUserApiService";
+import React, { useEffect, useState } from "react";
 import { changeUserRole } from "services/AdminsApi/changeRoleApiService";
-import { deleteUser } from "services/AdminsApi/deleteUserApiService";
-import { createUser } from "services/AdminsApi/createUserApiService";
-import { getUserDetail } from "services/AdminsApi/getUserDetailApiService";
-import { updateUser } from "services/AdminsApi/updateUserApiService";
+import { changeStatus } from "services/AdminsApi/changeStatusApiService";
+import { createUser, deleteUser } from "services/AdminsApi/UserService";
+import { getUsers } from "services/AdminsApi/getUserApiService";
+import { getUserDetail } from "services/All/getUserDetailApiService";
+import { updateUser } from "services/All/updateUserApiService";
 
 const { Option } = Select;
 
 interface Item {
   _id: string;
   name: string;
-  gender: string;
   dob: Moment;
   email: string;
   password:string;
@@ -34,7 +32,7 @@ const UsersAdmin: React.FC = () => {
   const [editingItem, setEditingItem] = useState<Partial<Item>>({});
   const [isModalOpen, setModalOpen] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [filteredRole, setFilteredRole] = useState<string | undefined>(undefined);
+  const [filteredRole, setFilteredRole] = useState<string>("all");
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState<boolean>(false);
   const [deleteItemId, setDeleteItemId] = useState<string | undefined>();
   const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
@@ -58,12 +56,12 @@ const UsersAdmin: React.FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, []); 
 
-  const handleAdd = async () => {
+  const handleAdd = async () => { 
     if (
       editingItem.name &&
-      editingItem.dob &&
+      editingItem.dob && 
       editingItem.email &&
       editingItem.phone_number &&
       editingItem.role
@@ -100,7 +98,8 @@ const UsersAdmin: React.FC = () => {
               editingItem.name,
               editingItem.password,
               editingItem.email,
-              editingItem.role
+              editingItem.role,
+              editingItem.phone_number,
             );
             if (response.success) {
               const newData = [...data, { _id: data.length + 1, status: true, ...editingItem } as Item];
@@ -210,7 +209,7 @@ const UsersAdmin: React.FC = () => {
   };
 
   const filteredData = data.filter((item) => {
-    const matchesRole = filteredRole ? item.role.toLowerCase() === filteredRole.toLowerCase() : true;
+    const matchesRole = filteredRole === "all" || item.role.toLowerCase() === filteredRole.toLowerCase();
     const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesRole && matchesSearch;
   });
@@ -258,10 +257,10 @@ const UsersAdmin: React.FC = () => {
       title: 'Actions',
       key: 'actions',
       render: (_, item) => (
-        <>
-          <Button type="primary" icon={<EditOutlined />} onClick={() => handleEdit(item)} className="mr-2"></Button>
-          <Button type="primary" icon={<DeleteOutlined />} danger onClick={() => { setDeleteItemId(item._id); setDeleteConfirmVisible(true); }}></Button>
-        </>
+        <div className="flex flex-row ">
+          <Button size="small" type="primary" icon={<EditOutlined />} onClick={() => handleEdit(item)} className="mr-2"></Button>
+          <Button size="small" type="primary" icon={<DeleteOutlined />} danger onClick={() => { setDeleteItemId(item._id); setDeleteConfirmVisible(true); }}></Button>
+        </div>
       ),
     },
   ];
@@ -275,16 +274,17 @@ const UsersAdmin: React.FC = () => {
             placeholder="Search"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-1/2"
+            className="w-1/3"
             onSearch={value => setSearchTerm(value)}
           />
           <Select
             placeholder="Filter by Role"
-           
+
             value={filteredRole}
             onChange={handleRoleFilterChange}
-            className="w-1/4"
+            className="w-1/6"
           >
+            <Option value="all">All</Option>
             <Option value="admin">Admin</Option>
             <Option value="student">Student</Option>
             <Option value="instructor">Instructor</Option>
@@ -294,7 +294,7 @@ const UsersAdmin: React.FC = () => {
             icon={<PlusCircleOutlined />}
             onClick={() => setModalOpen(true)}
           >
-            Add User
+            Add New User
           </Button>
         </div>
 

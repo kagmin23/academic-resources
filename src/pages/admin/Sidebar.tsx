@@ -1,8 +1,9 @@
-import { CheckCircleOutlined, ContainerOutlined, DeploymentUnitOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, ReadOutlined, SafetyOutlined, SettingOutlined, SwapOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, ContainerOutlined, DeploymentUnitOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, ReadOutlined, SafetyOutlined, SettingOutlined, SwapOutlined, UserOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 
 interface SidebarDataType {
   icon: React.ElementType;
@@ -25,7 +26,20 @@ const SidebarAdmin: React.FC = () => {
     {
       icon: UserSwitchOutlined,
       heading: "Users",
-      href: '/admin/user'
+      href: '/admin/user',
+      children: [
+        {
+          icon: UserSwitchOutlined,
+          heading: "Users",
+          href: '/admin/user',
+        },
+        {
+          icon: UsergroupAddOutlined,
+          heading: "Approve Instructor",
+          href: "/admin/approve-instructor"
+        },
+
+      ]
     },
     {
       icon: ContainerOutlined,
@@ -59,29 +73,21 @@ const SidebarAdmin: React.FC = () => {
       heading: 'Transaction History',
       href: "/admin/transaction-history"
     },
-    {
-      icon: SettingOutlined,
-      heading: 'Setting',
-      href: "/admin",
-      children: [
-        {
-          icon: UserOutlined ,
-          heading: 'Personal Info',
-          href: "/admin/info-admin"
-        },
-        {
-          icon: SafetyOutlined,
-          heading: 'Change Password',
-          href: "/admin/admin-changepassword"
-        },
-      ]
-    },
-    {
-      icon: LogoutOutlined,
-      heading: 'Logout',
-      href: "/"
-    },
+   
   ];
+
+  // const handleLogout = async () => {
+  //   try {
+  //     const resultLogout = await logoutApiService();
+  //     if (resultLogout.success) {
+  //       console.log("Logout Successfully");
+  //     } else {
+  //       console.error("Log-out failed", error);
+  //     }
+  //   } catch (error) {
+  //       console.error("Log-out failed", error);
+  //   }
+  // }
 
   return (
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#1F2937] shadow-lg`}>
@@ -128,6 +134,7 @@ const SidebarAdmin: React.FC = () => {
             );
           }
         })}
+
         <Menu.Item icon={<DeploymentUnitOutlined />}>
           {expanded && 'By Academic'}
         </Menu.Item>

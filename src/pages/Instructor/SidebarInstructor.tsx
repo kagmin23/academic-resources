@@ -1,8 +1,14 @@
-import { ContainerOutlined, DeploymentUnitOutlined, LogoutOutlined, PieChartOutlined, SafetyOutlined, SwapOutlined, TrophyOutlined, UserOutlined, UserSwitchOutlined } from "@ant-design/icons";
-import { Button, Menu } from "antd";
-import 'antd/dist/reset.css';
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button, Menu } from "antd";
+import {
+  ContainerOutlined,
+  DeploymentUnitOutlined,
+  PieChartOutlined,
+  TrophyOutlined,
+  UserOutlined,
+  UserSwitchOutlined,
+} from "@ant-design/icons";
 
 interface SidebarDataType {
   icon: React.ElementType;
@@ -20,67 +26,49 @@ const SidebarAdmin: React.FC = () => {
     {
       icon: PieChartOutlined,
       heading: "Dashboard",
-      href: '/instructor/profile-instructor'
+      href: "/instructor/profile-instructor",
     },
     {
       icon: ContainerOutlined,
-      heading: 'Manager Content',
+      heading: "Manager Content",
       href: "/instructor/profile-instructor/",
       children: [
         {
           icon: ContainerOutlined,
           heading: "Manager Course",
-          href: '/instructor/profile-instructor/manager-instructor-course'
+          href: "/instructor/profile-instructor/manager-instructor-course",
         },
         {
           icon: ContainerOutlined,
           heading: "Manager Session",
-          href: '/instructor/profile-instructor/manager-instructor-session'
+          href: "/instructor/profile-instructor/manager-instructor-session",
         },
         {
           icon: ContainerOutlined,
           heading: "Manager Lesson",
-          href: '/instructor/profile-instructor/manager-instructor-lesson'
+          href: "/instructor/profile-instructor/manager-instructor-lesson",
         },
         {
-          icon: TrophyOutlined ,
+          icon: TrophyOutlined,
           heading: "Manager Certificate",
-          href: '/instructor/profile-instructor/manager-instructor-certificate'
+          href: "/instructor/profile-instructor/manager-instructor-certificate",
         },
-      ]
-    },
-    {
-      icon: ContainerOutlined,
-      heading: 'Setting',
-      href: "/instructor/profile-instructor/",
-      children: [
-        {
-          icon: UserOutlined ,
-          heading: 'Personal Info',
-          href: "/instructor/profile-instructor/instructor-setting"
-        },
-        {
-          icon: SafetyOutlined,
-          heading: 'Change Password',
-          href: "/instructor/profile-instructor/instructor-changepassword"
-        },
-      ]
-    },
-    {
-      icon: LogoutOutlined,
-      heading: 'Logout',
-      href: "/"
+      ],
     },
   ];
+
+  const toggleDrawer = () => {
+    setExpanded(!expanded);
+  };
 
   return (
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-full bg-[#1F2937] shadow-lg`}>
       <div className="flex items-center justify-between p-4">
-          <UserSwitchOutlined className="text-white"/>
-          <span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>
+        <UserSwitchOutlined className="text-white" />
+        <span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>
           YOUR<span className="text-blue-500">&nbsp;&nbsp;PROFILE</span>
-          </span>
-        <Button className="text-white" type="text" icon={<SwapOutlined />} onClick={() => setExpanded(!expanded)} />
+        </span>
+        <Button className="text-white" type="text" icon={<UserSwitchOutlined />} onClick={toggleDrawer} />
       </div>
 
       <Menu mode="inline" selectedKeys={[selected.toString()]} className="h-full py-3 bg-[#D6E0FF]">
@@ -110,7 +98,7 @@ const SidebarAdmin: React.FC = () => {
                 setSelected(index);
                 navigate(item.href);
               }}
-              style={item.heading === "Logout" ? { backgroundColor: '#FF1D1D', color: 'white', marginTop: '30px' } : { marginTop: '0px' }}
+              style={{ marginTop: '0px' }}
             >
               {expanded && item.heading}
             </Menu.Item>

@@ -11,10 +11,11 @@ import {
   MailOutlined,
 
   PieChartOutlined,
+  SearchOutlined,
   ShoppingCartOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Drawer } from 'antd';
+import { Drawer,Input } from 'antd';
 import { Link } from 'react-router-dom';
 
 
@@ -27,6 +28,7 @@ interface Course {
   price: number;
 }
 
+const { Search } = Input;
 
 const courses: Course[] = [
   {
@@ -268,7 +270,13 @@ const handlePageChange = (page: number) => {
           />
       </Drawer>
       {/* Content Course */}
-
+      <div className="md:w-1/3 mb-10">
+          <Search
+            placeholder="Search..."
+            enterButton={<SearchOutlined></SearchOutlined>}
+            size="middle"
+          />
+          </div>
       <Link to={`/course-details`}>
         <Row gutter={[15, 15]} className='xl:px-1 ' >
             {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
