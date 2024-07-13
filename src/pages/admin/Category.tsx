@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Input, Layout, Modal, Table, Typography, Form, notification } from 'antd';
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Layout, Modal, Table, Typography, notification } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
-import { getCategories, getCategoryDetail, deleteCategory, createCategory } from 'services/AdminsApi/CategoryService';
+import React, { useEffect, useState } from 'react';
+import { createCategory, deleteCategory, getCategories, getCategoryDetail, updateCategory } from 'services/AdminsApi/categoryApiService';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -64,8 +64,10 @@ const CategoryAdmin: React.FC = () => {
   const handleCreateOrUpdateCategory = async (values: { name: string; description: string }) => {
     try {
       if (modalData) {
-        // Handle update logic here
+        // Đây là logic cập nhật danh mục
+        await updateCategory(modalData._id, values.name, values.description);
       } else {
+        // Đây là logic tạo mới danh mục
         await createCategory(values.name, values.description);
       }
       fetchData();
@@ -83,6 +85,7 @@ const CategoryAdmin: React.FC = () => {
       });
     }
   };
+  
 
   const handleDeleteCategory = async () => {
     try {
@@ -220,31 +223,32 @@ const CategoryAdmin: React.FC = () => {
         Academic_Resources ©2024 Created by Group 4
       </Footer>
       <Modal
-        title={modalData ? "Edit Category" : "Add New Category"}
-        visible={isAddEditModalVisible}
-        onCancel={handleCloseAddEditModal}
-        footer={[
-          <Button key="close" onClick={handleCloseAddEditModal}>
-            Close
-          </Button>,
-          <Button key="save" type="primary" onClick={() => form.submit()}>
-            {modalData ? 'Save' : 'Add'}
-          </Button>,
-        ]}
-      >
-        <Form form={form} layout="vertical" onFinish={handleCreateOrUpdateCategory}>
-          <Form.Item
-            name="name"
-            label="Name"
-            rules={[{ required: true, message: 'Please input the category name!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item name="description" label="Description">
-            <Input.TextArea />
-          </Form.Item>
-        </Form>
-      </Modal>
+          title={modalData ? "Edit Category" : "Add New Category"}
+          visible={isAddEditModalVisible}
+          onCancel={handleCloseAddEditModal}
+          footer={[
+            <Button key="close" onClick={handleCloseAddEditModal}>
+              Close
+            </Button>,
+            <Button key="save" type="primary" onClick={() => form.submit()}>
+              {modalData ? 'Save' : 'Add'}
+            </Button>,
+          ]}
+        >
+          <Form form={form} layout="vertical" onFinish={handleCreateOrUpdateCategory}>
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: 'Please input the category name!' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item name="description" label="Description">
+              <Input.TextArea />
+            </Form.Item>
+          </Form>
+        </Modal>
+
       <Modal
         title="Delete Confirmation"
         visible={isDeleteConfirmVisible}

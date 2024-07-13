@@ -16,6 +16,22 @@ export const createCategory = async (name: string, description: string) => {
   });
 };
 
+export const updateCategory = async (categoryId: string, name: string, description: string) => {
+  const token = localStorage.getItem('token');
+
+  return apiRequest(`/api/category/${categoryId}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    data: {
+      name,
+      description,
+    },
+  });
+};
+
 export const getCategories = async (keyword: string, pageNum: number, pageSize: number) => {
     const token = localStorage.getItem('token');
   

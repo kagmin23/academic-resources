@@ -1,12 +1,12 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleFilled,
   EyeOutlined,
   PlusCircleOutlined,
-  SearchOutlined,
-  StarFilled,
+  SearchOutlined
 } from "@ant-design/icons";
-import { Editor } from "@tinymce/tinymce-react";
+import { Editor } from '@tinymce/tinymce-react';
 import {
   Button,
   Col,
@@ -15,184 +15,84 @@ import {
   Layout,
   Modal,
   Row,
+  Select,
+  Switch,
   Table,
-  Typography,
-  Tag,
+  Typography
 } from "antd";
 import Title from "antd/lib/typography/Title";
 import { AlignType } from "rc-table/lib/interface";
-import React, { useEffect, useRef, useState } from "react";
-import { Switch } from "antd";
-import { Select } from "antd";
-import type { SelectProps } from "antd";
-import { ExclamationCircleFilled } from "@ant-design/icons";
-import FormItem from "antd/es/form/FormItem";
+import React, { useEffect, useState } from "react";
+import { getCategories } from "services/AdminsApi/categoryApiService";
 
 const { confirm } = Modal;
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 const { TextArea } = Input;
-interface DataType {
-  key: string;
-  image: string;
-  name_course: string;
-  created_at: string;
+
+interface Course {
+  _id: string;
+  name: string;
+  category_id: string;
+  user_id: string;
   description: string;
-  rate?: string;
-  price?: number;
-  sell: boolean;
-  number_sessions: number;
-  list_category: list_category[];
+  content: string;
+  status: string;
+  video_url: string;
+  image_url: string;
+  price: number;
+  discount: number;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
 }
-interface list_category {
-  id: number;
-  category: string;
+
+interface Category {
+  id: string;
+  name: string;
 }
-
-const initialDataSource: DataType[] = [
-  {
-    key: "1",
-    image: "https://via.placeholder.com/50",
-    name_course: "Cách học tập tốt",
-    created_at: "2024-01-01",
-    sell: true,
-    list_category: [
-      { id: 1, category: "Programming" },
-      { id: 2, category: "Web Design" },
-      { id: 3, category: "Typescript" },
-    ],
-
-    price: 350.0,
-    number_sessions: 10,
-    rate: "4.5",
-    description:
-      "To have an overview of the IT industry - Web programming, you should watch the videos in this course first. What will you learn? -Basic knowledge, foundations of the IT industry Basic models and architecture when deploying applications. Core concepts and terms when deploying applications. Understand more about how the internet and computers work",
-  },
-
-  {
-    key: "2",
-    image: "https://via.placeholder.com/50",
-    name_course: "Item 2",
-    created_at: "2024-01-02",
-    sell: false,
-    number_sessions: 10,
-    list_category: [
-      { id: 4, category: "HTML" },
-      { id: 5, category: "Javascrip" },
-    ],
-    description:
-      "This course focuses on HTML, JavaScript, and web design techniques to develop beautiful and professional websites.",
-  },
-  {
-    key: "3",
-    image: "https://via.placeholder.com/50",
-    name_course: "Item 3",
-    created_at: "2024-01-03",
-    sell: true,
-    list_category: [
-      { id: 6, category: "Electrical Engineering" },
-      { id: 7, category: "Mechanical" },
-      { id: 8, category: "Construction Engineering" },
-    ],
-    description:
-      "Students will learn electrical and mechanical engineering, an important foundation for technical careers.",
-    price: 350.0,
-    number_sessions: 10,
-  },
-  {
-    key: "4",
-    image: "https://via.placeholder.com/50",
-    name_course: "Item 4",
-    created_at: "2024-01-04",
-    sell: true,
-    list_category: [
-      { id: 9, category: "Communication skills" },
-      { id: 10, category: "Problem solving skills" },
-      { id: 11, category: "Presentation skills" },
-    ],
-    price: 350.0,
-    number_sessions: 10,
-    description:
-      "This course focuses on how to solve problems in daily work, helping you become an effective employee and solve challenges well.",
-  },
-  {
-    key: "5",
-    image: "https://via.placeholder.com/50",
-    name_course: "Item 5",
-    created_at: "2024-01-05",
-    sell: false,
-    list_category: [
-      { id: 9, category: "Communication skills" },
-      { id: 10, category: "Problem solving skills" },
-      { id: 11, category: "Presentation skills" },
-    ],
-    description:
-      "Learners will practice communication, problem solving and presentation skills, important skills in the modern work environment.",
-
-    number_sessions: 10,
-  },
-  {
-    key: "6",
-    image: "https://via.placeholder.com/50",
-    name_course: "Item 6",
-    created_at: "2024-01-06",
-    sell: true,
-    list_category: [
-      { id: 9, category: "Communication skills" },
-      { id: 10, category: "Problem solving skills" },
-      { id: 11, category: "Presentation skills" },
-    ],
-    price: 250.0,
-    number_sessions: 10,
-    description:
-      "This course provides basic knowledge of web programming and application architecture, helping you gain a deeper understanding of how the internet and computers work.",
-  },
-];
 
 const ManagerCourseInstructor: React.FC = () => {
-  const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
-  const [filteredDataSource, setFilteredDataSource] =
-    useState<DataType[]>(initialDataSource);
+  const [dataSource, setDataSource] = useState<Course[]>([]);
+  const [filteredDataSource, setFilteredDataSource] = useState<Course[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<DataType | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<Course | null>(null);
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isSellChecked, setIsSellChecked] = useState(false);
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  // Xử lý sự kiện khi thay đổi trạng thái 'sell'
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const response = await getCategories("", 1, 10);  // Adjust the parameters as necessary
+      console.log('Categories Response:', response);
+      if (Array.isArray(response.data)) {
+        setCategories(response.data);
+        console.log('Categories Set:', response.data);
+      } else {
+        console.error('Response data is not an array', response.data);
+        setCategories([]);
+      }
+    } catch (error) {
+      console.error("Failed to fetch categories", error);
+      setCategories([]);
+    }
+  };
+
   const onChangesell = (checked: boolean) => {
     setIsSellChecked(checked);
     if (!checked) {
-      form.setFieldsValue({ price: undefined }); // Reset giá khi không bán
+      form.setFieldsValue({ price: undefined });
     }
   };
+
   const handleEditorChange = (content: any, editor: any) => {
     console.log("Content was updated:", content);
-  };
-
-  // category:
-  const categoryOptions = [
-    { id: 1, category: "Programming" },
-    { id: 2, category: "Web Design" },
-    { id: 3, category: "Typescript" },
-    { id: 4, category: "HTML" },
-    { id: 5, category: "JavaScript" },
-    { id: 6, category: "Electrical Engineering" },
-    { id: 7, category: "Mechanical" },
-    { id: 8, category: "Construction Engineering" },
-    { id: 9, category: "Communication skills" },
-    { id: 10, category: "Problem solving skills" },
-    { id: 11, category: "Presentation skills" },
-  ];
-
-  const options: SelectProps["options"] = categoryOptions.map((category) => ({
-    value: category.id.toString(),
-    label: category.category,
-  }));
-
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
   };
 
   const handleAddNewCourse = () => {
@@ -201,7 +101,7 @@ const ManagerCourseInstructor: React.FC = () => {
     form.resetFields();
   };
 
-  const handleEdit = (record: DataType) => {
+  const handleEdit = (record: Course) => {
     setIsEditMode(true);
     setCurrentRecord(record);
     setIsModalVisible(true);
@@ -216,8 +116,8 @@ const ManagerCourseInstructor: React.FC = () => {
     );
   };
 
-  const handleDelete = (record: DataType) => {
-    const newDataSource = dataSource.filter((item) => item.key !== record.key);
+  const handleDelete = (record: Course) => {
+    const newDataSource = dataSource.filter((item) => item._id !== record._id);
     setDataSource(newDataSource);
     setFilteredDataSource(newDataSource);
   };
@@ -229,7 +129,7 @@ const ManagerCourseInstructor: React.FC = () => {
         form.resetFields();
         if (isEditMode && currentRecord) {
           const newDataSource = dataSource.map((item) =>
-            item.key === currentRecord.key ? { ...item, ...values } : item
+            item._id === currentRecord._id ? { ...item, ...values } : item
           );
           setDataSource(newDataSource);
           setFilteredDataSource(newDataSource);
@@ -251,13 +151,12 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter((item) =>
-      item.name_course.toLowerCase().includes(value.toLowerCase())
+      item.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredDataSource(filteredData);
   };
 
-  //confirm
-  const showConfirm = (record: DataType) => {
+  const showConfirm = (record: Course) => {
     confirm({
       title: "Do you want to delete these items?",
       icon: <ExclamationCircleFilled />,
@@ -271,26 +170,12 @@ const ManagerCourseInstructor: React.FC = () => {
       },
     });
   };
-  // const handleConfirmDelete = (record: DataType) => {
-  //   confirm({
-  //     title: 'Do you want to delete these?',
-  //     icon: <ExclamationCircleFilled />,
-  //     content: 'Hành động này không thể hoàn tác',
-  //     okText: 'Xóa',
-  //     okType: 'danger',
-  //     cancelText: 'Hủy',
-  //     onOk() {
-  //       handleDelete(record);
-  //     },
-  //   });
-  // };
 
   const columns = [
     {
       title: "Course",
       dataIndex: "image",
       key: "image",
-      // render: (text: string) => <img src={text} alt="item" className="w-20 h-15" />,
       render: (text: string) => (
         <div className="w-24 h-12">
           <img
@@ -304,7 +189,7 @@ const ManagerCourseInstructor: React.FC = () => {
     {
       title: "Course Name",
       dataIndex: "name_course",
-      key: " name_course",
+      key: "name_course",
     },
     {
       title: "Created At",
@@ -315,21 +200,23 @@ const ManagerCourseInstructor: React.FC = () => {
       title: "Actions",
       key: "actions",
       align: "center" as AlignType,
-      render: (text: string, record: DataType) => (
+      render: (text: string, record: Course) => (
         <div style={{ textAlign: "center" }}>
           <Button
             icon={<EditOutlined />}
             className="mr-2 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
           ></Button>
+
           <Button
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
             onClick={() => showConfirm(record)}
           ></Button>
+          
           <Button
             icon={<EyeOutlined />}
-            onClick={() => handleViewMore(record.key)}
+            onClick={() => handleViewMore(record._id)}
           ></Button>
         </div>
       ),
@@ -347,7 +234,7 @@ const ManagerCourseInstructor: React.FC = () => {
               onChange={(e) => handleSearch(e.target.value)}
               style={{ width: 300 }}
             />
-            <div className="h-6 lg:mx-4 border-r"></div>
+            <div className="h-6 border-r lg:mx-4"></div>
             <Button
               className="font-bold text-white bg-red-500"
               onClick={handleAddNewCourse}
@@ -357,15 +244,15 @@ const ManagerCourseInstructor: React.FC = () => {
             </Button>
           </div>
         </Header>
-        <Content className="my-4 mx-4 xl:mx-6 overflow-y-auto">
+        <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
           <Table
             pagination={{ pageSize: 6 }}
             dataSource={filteredDataSource}
             columns={columns}
             expandable={{
               expandedRowKeys: expandedKeys,
-              onExpand: (expanded, record) => handleViewMore(record.key),
-              expandedRowRender: (record: DataType) => (
+              onExpand: (expanded, record) => handleViewMore(record._id),
+              expandedRowRender: (record: Course) => (
                 <div
                   style={{
                     padding: "10px 20px",
@@ -383,61 +270,16 @@ const ManagerCourseInstructor: React.FC = () => {
                       <p>{record.description || "-"}</p>
                     </Col>
                   </Row>
-                  <Row gutter={16} className="mb-5">
-                    <Col span={22}>
-                      <Title level={5} className="">
-                        Category:
-                      </Title>
-                      {/* <p>{record.list_category?.map(category => category.category).join(', ') || '-'}</p> */}
-                      <p>
-                        {record.list_category?.map((category) => (
-                          <Tag color="geekblue">{category.category}</Tag>
-                        )) || "-"}
-                      </p>
-                    </Col>
-                  </Row>
 
-                  <Row
-                    gutter={16}
+                  <Row                    gutter={16}
                     align="middle"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Col span={8}>
                       <Text strong className="mr-2">
-                        Number of sessions:
-                      </Text>
-                      {record.number_sessions || "-"}
-                    </Col>
-                    <Col span={8}>
-                      <Text strong className="mr-2">
-                        Rate:
-                      </Text>
-                      {record.rate || "-"}{" "}
-                      <StarFilled style={{ color: "#FFE200" }} />
-                    </Col>
-                    <Col span={8}>
-                      <Text strong className="mr-2">
                         Price:
                       </Text>
-                      {record.sell ? (
-                        record.price ? (
-                          `${record.price.toLocaleString("vi-VN")}.000 VND`
-                        ) : (
-                          "-"
-                        )
-                      ) : (
-                        <Text strong style={{ color: "#1890ff" }}>
-                          Free Course
-                        </Text>
-                      )}
                     </Col>
-
-                    {/* <Col span={8}>
-                      <Text strong className='mr-2'>Price:</Text>
-                      <p>${record.price || '-'}</p>
-                      {record.price ? `${record.price.toLocaleString('vi-VN')}.000 VND` : '-'}
-
-                    </Col> */}
                   </Row>
                 </div>
               ),
@@ -463,156 +305,71 @@ const ManagerCourseInstructor: React.FC = () => {
               { required: true, message: "Please input the name course!" },
             ]}
           >
-            <Editor
-              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
-              init={{
-                skin: "snow",
-                icons: "thin",
-                placeholder: "Course name",
-
-                height: 200,
-                menubar: true,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen textcolor ",
-                  "insertdatetime media table paste code help wordcount",
-                ],
-                textcolor_rows: "4",
-
-                toolbar:
-                  "undo redo | styleselect | fontsizeselect| code | bold italic | alignleft aligncenter alignright alignjustify | outdent indent ",
-              }}
-              onEditorChange={handleEditorChange}
-            ></Editor>
-          </Form.Item>
-
-          <Form.Item
-            name="category_id"
-            label="Course category"
-            rules={[
-              { required: true, message: "Please input the name course!" },
-            ]}
-          >
-            <Select showSearch>
-              <Select.Option value="C++">C++</Select.Option>
-              <Select.Option value="java">JAVA</Select.Option>
-              <Select.Option value="C#">C#</Select.Option>
-              <Select.Option value="provjpdanchoi">PRO vjp dan choi</Select.Option>
-            </Select>
-          </Form.Item>
-          <Form.Item
-            name="description"
-            label="Description Course:"
-            rules={[
-              {
-                required: true,
-                message: "Please input the description course!",
-              },
-            ]}
-          >
-            <Editor
-              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
-              init={{
-                skin: "snow",
-                icons: "thin",
-                placeholder: "Description here",
-                border: 2,
-                height: 200,
-                menubar: true,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen textcolor ",
-                  "insertdatetime media table paste code help wordcount",
-                ],
-                textcolor_rows: "10",
-
-                toolbar:
-                  "undo redo | styleselect | fontsizeselect| code | bold italic | alignleft aligncenter alignright alignjustify | outdent indent ",
-              }}
-              onEditorChange={handleEditorChange}
-            ></Editor>
-          </Form.Item>
-
-          <Form.Item
-            name="content"
-            label="Course content:"
-            rules={[
-              {
-                required: true,
-                message: "Please input course content!",
-              },
-            ]}
-          >
-            <Editor
-              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
-              init={{
-                skin: "snow",
-                icons: "thin",
-                placeholder: "Course content",
-                border: 2,
-                height: 200,
-                menubar: true,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen textcolor ",
-                  "insertdatetime media table paste code help wordcount",
-                ],
-                textcolor_rows: "10",
-
-                toolbar:
-                  "undo redo | styleselect | fontsizeselect| code | bold italic | alignleft aligncenter alignright alignjustify | outdent indent ",
-              }}
-              onEditorChange={handleEditorChange}
-            ></Editor>
-          </Form.Item>
-
-          <Form.Item
-            name="image"
-            label="Image URL"
-            rules={[{ required: true, message: "Please input the image URL!" }]}
-          >
             <Input />
           </Form.Item>
 
           <Form.Item
-            name="sell"
-            label="How do you want sell this course?"
-            valuePropName="checked"
+            name="category_id"
+            label="Category"
+            rules={[{ required: true, message: "Please select a category!" }]}
           >
-            <Switch onChange={onChangesell} />
+            <Select placeholder="Select a category">
+              {categories.map((category) => (
+                <Select.Option key={category.id} value={category.id}>
+                  {category.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
+
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[
+              { required: true, message: "Please input the description!" },
+            ]}
+          >
+            <TextArea rows={4} />
+          </Form.Item>
+
+          <Form.Item name="video_url" label="Video URL">
+            <Input />
+          </Form.Item>
+
+          <Form.Item name="image_url" label="Image URL">
+            <Input />
+          </Form.Item>
+
+          <Form.Item label="Content">
+            <Editor
+              apiKey="your-api-key"
+              initialValue="<p>This is the initial content of the editor</p>"
+              init={{
+                height: 200,
+                menubar: false,
+                plugins: [
+                  "advlist autolink lists link image charmap print preview anchor",
+                  "searchreplace visualblocks code fullscreen",
+                  "insertdatetime media table paste code help wordcount",
+                ],
+                toolbar:
+                  "undo redo | formatselect | bold italic backcolor | \
+                  alignleft aligncenter alignright alignjustify | \
+                  bullist numlist outdent indent | removeformat | help",
+              }}
+              onEditorChange={handleEditorChange}
+            />
+          </Form.Item>
+
+          <Form.Item label="Sell Course">
+            <Switch checked={isSellChecked} onChange={onChangesell} />
+          </Form.Item>
+
           {isSellChecked && (
-            <Form.Item
-              name="price"
-              label="Price:"
-              rules={[
-                { required: true, message: "Please input price course!" },
-              ]}
-            >
+            <Form.Item name="price" label="Price">
               <Input type="number" />
             </Form.Item>
           )}
-          <Form.Item>
-            {!isSellChecked && (
-              <Text strong style={{ color: "#1890ff" }}>
-                Free course
-              </Text>
-            )}
-          </Form.Item>
-          {/* Category */}
-          {/* <Form.Item
-            name="list_category"
-            label="Category:"
-            rules={[{ required: true, message: 'Please input the name course!' }]}
-          >
-            <Select
-    mode="tags"
-    style={{ width: '100%' }}
-    placeholder="Tags Mode"
-    onChange={handleChange}
-    options={options}
-  />
-          </Form.Item> */}
         </Form>
       </Modal>
     </Layout>
@@ -620,3 +377,4 @@ const ManagerCourseInstructor: React.FC = () => {
 };
 
 export default ManagerCourseInstructor;
+
