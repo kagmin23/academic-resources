@@ -2,182 +2,175 @@ import {
   DeleteOutlined,
   DownCircleOutlined,
   EditOutlined,
-  ExclamationCircleOutlined // Added for confirmation modal
-  ,
-
-
-
-
-
-
+  ExclamationCircleOutlined,
   PlusOutlined,
   ReadOutlined,
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Divider, Form, Input, Layout, List, Modal, Table, Tabs, Typography } from "antd";
+import { Button, Divider, Form, Input, Layout, List, Modal, Table, Tabs, Typography, message } from "antd";
 import { AlignType } from 'rc-table/lib/interface';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { getCourses } from 'services/All/getCoursesApiService';
+import { createSession, updateSession, deleteSession, getSessions } from 'services/Instructor/sessionApiService';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 const { TabPane } = Tabs;
-const { confirm } = Modal; // Destructure confirm for Antd Modal
+const { confirm } = Modal;
 
-interface DataType {
-  key: string;
-  image: string;
-  created_at: string;
-  description?: string;
-  instructor?: string;
-  name_course: string;
+interface Session {
+  _id: string;
+  name: string;
+  user_id: string;
+  course_id: string;
+  description: string;
+  position_order: number;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
 }
 
-interface SessionType {
-  id: number;
-  key: string;
-  title: string;
-  duration: string;
-  preview?: boolean;
+interface Course {
+  _id: string;
+  name: string;
 }
 
-const sessionsData: SessionType[] = [
-  { id: 1, key: '1', title: 'Getting Started', duration: '30 minutes', preview: true },
-  { id: 2, key: '2', title: 'Content Management', duration: '30 minutes' },
-  { id: 3, key: '3', title: 'Course Download', duration: '30 minutes' },
-  { id: 4, key: '4', title: 'Course Download 02', duration: '30 minutes' },
-  { id: 5, key: '5', title: 'Contextualising Sustainability for a Changing World', duration: '10 minutes' },
-];
-
-const initialDataSource: DataType[] = [
-  {
-    key: '1',
-    image: 'https://via.placeholder.com/50',
-    created_at: '2024-01-01',
-    name_course: 'Course name'
-  },
-  {
-    key: '2',
-    image: 'https://via.placeholder.com/50',
-    created_at: '2024-01-02',
-    name_course: 'Course name'
-  },
-  {
-    key: '3',
-    image: 'https://via.placeholder.com/50',
-    name_course: 'Course name',
-    created_at: '2024-01-03',
-  },
-  {
-    key: '4',
-    image: 'https://via.placeholder.com/50',
-    created_at: '2024-01-04',
-    name_course: 'Course name'
-  },
-  {
-    key: '5',
-    image: 'https://via.placeholder.com/50',
-    created_at: '2024-01-05',
-    name_course: 'Course name'
-  },
-  {
-    key: '6',
-    image: 'https://via.placeholder.com/50',
-    created_at: '2024-01-06',
-    name_course: 'Course name'
-  },
-];
-
-const ManagerCourseInstructor: React.FC = () => {
-  const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
-  const [filteredDataSource, setFilteredDataSource] = useState<DataType[]>(initialDataSource);
-  const [sessions, setSessions] = useState<SessionType[]>(sessionsData);
+const ManagerSessionInstructor: React.FC = () => {
+  const [dataSource, setDataSource] = useState<Session[]>([]);
+  const [filteredDataSource, setFilteredDataSource] = useState<Session[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [sessionModalVisible, setSessionModalVisible] = useState(false);
   const [sessionForm] = Form.useForm();
-  const [currentSession, setCurrentSession] = useState<SessionType | null>(null);
-  const [insertIndex, setInsertIndex] = useState<number | null>(null);
-  const [sessionToDelete, setSessionToDelete] = useState<SessionType | null>(null); // State to track session to delete
+  const [currentSession, setCurrentSession] = useState<Session | null>(null);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [sessions, setSessions] = useState<Session[]>([]);
+
+  useEffect(() => {
+    fetchCourses();
+    fetchSessions("", 1, 10);
+  }, []);
+
+  const fetchCourses = async () => {
+    try {
+      const response = await getCourses("", 1, 10);
+      console.log('Courses Response:', response);
+      setCourses(response.data.pageData);
+    } catch (error) {
+      console.error("Failed to fetch courses", error);
+      setCourses([]);
+    }
+  };
+
+  const fetchSessions = async (keyword: string, pageNum: number, pageSize: number) => {
+    try {
+      const response = await getSessions(keyword, pageNum, pageSize);
+      console.log('Sessions Response:', response);
+      setSessions(response.data.pageData);
+      setDataSource(response.data.pageData); 
+      setFilteredDataSource(response.data.pageData); 
+    } catch (error) {
+      console.error("Failed to fetch sessions", error);
+      setSessions([]);
+      setDataSource([]);
+      setFilteredDataSource([]);
+    }
+  };
+
+  const handleAddNewSession = () => {
+    setIsEditMode(false);
+    setSessionModalVisible(true);
+    sessionForm.resetFields();
+  };
+
+  const handleEditSession = (session: Session) => {
+    setIsEditMode(true);
+    setCurrentSession(session);
+    setSessionModalVisible(true);
+    sessionForm.setFieldsValue(session);
+  };
 
   const handleViewMore = (key: string) => {
-    setExpandedKeys(prevKeys =>
-      prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]
+    setExpandedKeys((prevKeys) =>
+      prevKeys.includes(key)
+        ? prevKeys.filter((k) => k !== key)
+        : [...prevKeys, key]
     );
   };
 
+  const handleDeleteSession = (session: Session) => {
+    deleteSession(session._id)
+      .then(() => {
+        const newDataSource = dataSource.filter((item) => item._id !== session._id);
+        setDataSource(newDataSource);
+        setFilteredDataSource(newDataSource);
+        message.success('Session deleted successfully');
+      })
+      .catch((error) => {
+        console.error("Failed to delete session", error);
+        message.error('Failed to delete session');
+      });
+  };
+
+  const handleSessionSave = () => {
+    sessionForm.validateFields()
+      .then((values) => {
+        if (isEditMode && currentSession) {
+          updateSession(currentSession._id, values)
+            .then((response) => {
+              const updatedSession = response;
+              const newDataSource = dataSource.map((item) =>
+                item._id === updatedSession._id ? updatedSession : item
+              );
+              setDataSource(newDataSource);
+              setFilteredDataSource(newDataSource);
+              message.success('Session updated successfully');
+            })
+            .catch((error) => {
+              console.error("Failed to update session", error);
+              message.error('Failed to update session');
+            });
+        } else {
+          createSession(values)
+            .then((response) => {
+              const newSession = response;
+              setDataSource([...dataSource, newSession]);
+              setFilteredDataSource([...dataSource, newSession]);
+              message.success('Session created successfully');
+            })
+            .catch((error) => {
+              console.error("Failed to create session", error);
+              message.error('Failed to create session');
+            });
+        }
+        setSessionModalVisible(false);
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+        message.error('Validation failed');
+      });
+  };
+
   const handleSearch = (value: string) => {
-    const filteredData = dataSource.filter(item =>
-      item.name_course.toLowerCase().includes(value.toLowerCase())
+    const filteredData = dataSource.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredDataSource(filteredData);
   };
 
-  const showDeleteConfirm = (session: SessionType) => {
-    setSessionToDelete(session); // Set session to delete
+  const showDeleteConfirm = (session: Session) => {
     confirm({
-      title: 'Are you sure you want to delete this session?',
+      title: "Do you want to delete this session?",
       icon: <ExclamationCircleOutlined />,
-      content: `Session: ${session.title}`,
-      okText: 'Yes',
-      okType: 'danger',
-      cancelText: 'No',
+      content: "This action cannot be undone",
       onOk() {
-        handleSessionDelete(session); // Proceed with deletion
+        handleDeleteSession(session);
       },
       onCancel() {
-        setSessionToDelete(null); // Reset session to delete if canceled
+        console.log("Cancel");
       },
     });
-  };
-
-  const handleSessionSave = () => {
-    sessionForm
-      .validateFields()
-      .then(values => {
-        sessionForm.resetFields();
-        if (currentSession) {
-          const newSessions = sessions.map(session =>
-            session.key === currentSession.key ? { ...session, ...values } : session
-          );
-          setSessions(newSessions);
-        } else {
-          const newSession = {
-            ...values,
-            id: sessions.length + 1,
-            key: `lesson${sessions.length + 1}`,
-          };
-          if (insertIndex !== null) {
-            const newSessions = [...sessions];
-            newSessions.splice(insertIndex, 0, newSession);
-            setSessions(newSessions);
-            setInsertIndex(null);
-          } else {
-            setSessions([...sessions, newSession]);
-          }
-        }
-        setSessionModalVisible(false);
-      })
-      .catch(info => {
-        console.log('Validate Failed:', info);
-      });
-  };
-
-  const handleSessionEdit = (session: SessionType) => {
-    setCurrentSession(session);
-    sessionForm.setFieldsValue(session);
-    setSessionModalVisible(true);
-  };
-
-  const handleSessionDelete = (session: SessionType) => {
-    const newSessions = sessions.filter(item => item.key !== session.key);
-    setSessions(newSessions);
-    setSessionToDelete(null); // Reset session to delete after deletion
-  };
-
-  const handleAddSessionAfter = (index: number) => {
-    setInsertIndex(index + 1);
-    setCurrentSession(null);
-    setSessionModalVisible(true);
   };
 
   return (
@@ -200,14 +193,22 @@ const ManagerCourseInstructor: React.FC = () => {
             columns={[
               {
                 title: 'Course',
-                dataIndex: 'image',
-                key: 'image',
-                render: (text: string) => <img src={text} alt="item" className="w-12 h-12" />,
+                dataIndex: 'course_id',
+                key: 'course_id',
+                render: (courseId: string) => {
+                  const course = courses.find(course => course._id === courseId);
+                  return course ? (
+                    <div className="flex items-center">
+                      {/* <img src={course.image} alt="Course" className="w-12 h-12" /> */}
+                      <span className="ml-2">{course.name}</span>
+                    </div>
+                  ) : null;
+                },
               },
               {
                 title: 'Course Name',
-                dataIndex: 'name_course',
-                key: 'name_course',
+                dataIndex: 'name',
+                key: 'name',
               },
               {
                 title: 'Created At',
@@ -218,17 +219,18 @@ const ManagerCourseInstructor: React.FC = () => {
                 title: 'Actions',
                 key: 'actions',
                 align: 'center' as AlignType,
-                render: (text: string, record: DataType) => (
+                render: (text: string, record: Session) => (
                   <div style={{ textAlign: 'center' }}>
-                    <Button icon={<DownCircleOutlined />} onClick={() => handleViewMore(record.key)}></Button>
+                    <Button icon={<DownCircleOutlined />} onClick={() => handleViewMore(record._id)}></Button>
                   </div>
                 ),
               },
             ]}
+            
             expandable={{
               expandedRowKeys: expandedKeys,
-              onExpand: (expanded, record) => handleViewMore(record.key),
-              expandedRowRender: (record: DataType) => (
+              onExpand: (expanded, record) => handleViewMore(record._id),
+              expandedRowRender: (record: Session) => (
                 <div style={{ paddingBottom: "10px", backgroundColor: 'white', borderRadius: '4px' }}>
                   <Tabs centered>
                     <TabPane tab={<span style={{ fontSize: '16px' }}>List of course sessions:</span>} key="1" className='w-full'>
@@ -236,23 +238,23 @@ const ManagerCourseInstructor: React.FC = () => {
                         className='px-2'
                         size="small"
                         dataSource={sessions}
-                        renderItem={(session, index) => (
+                        renderItem={(session) => (
                           <List.Item actions={[
-                            <Button icon={<PlusOutlined />} className="mr-2 text-white bg-green-600" onClick={() => handleAddSessionAfter(index)}></Button>,
-                            <Button icon={<EditOutlined />} className="mr-2 text-white bg-blue-500" onClick={() => handleSessionEdit(session)}></Button>,
+                            <Button icon={<PlusOutlined />} className="mr-2 text-white bg-green-600" onClick={() => handleAddNewSession()}></Button>,
+                            <Button icon={<EditOutlined />} className="mr-2 text-white bg-blue-500" onClick={() => handleEditSession(session)}></Button>,
                             <Button icon={<DeleteOutlined />} className="mr-2 text-white bg-red-600" onClick={() => showDeleteConfirm(session)}></Button>,
                           ]}>
                             <List.Item.Meta
                               avatar={<ReadOutlined />}
-                              title={session.title}
-                              description={session.duration}
+                              title={session.name}
+                              description={session.description}
                             />
                           </List.Item>
                         )}
                       />
                       <Divider className='p-0 m-0' />
                       <div className='flex justify-center w-full pr-5 my-5'>
-                        <Button type="dashed" className='text-base text-blue-700' onClick={() => handleAddSessionAfter(sessions.length - 1)}> <PlusOutlined /> Add New Session</Button>
+                        <Button type="dashed" className='text-base text-blue-700' onClick={() => handleAddNewSession()}> <PlusOutlined /> Add New Session</Button>
                       </div>
                     </TabPane>
                   </Tabs>
@@ -279,16 +281,16 @@ const ManagerCourseInstructor: React.FC = () => {
       >
         <Form form={sessionForm} layout="vertical">
           <Form.Item
-            name="title"
-            label="Title"
-            rules={[{ required: true, message: 'Please enter the session title!' }]}
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: 'Please enter the session name!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
-            name="duration"
-            label="Duration"
-            rules={[{ required: true, message: 'Please enter the session duration!' }]}
+            name="description"
+            label="Description"
+            rules={[{ required: true, message: 'Please enter the session description!' }]}
           >
             <Input />
           </Form.Item>
@@ -298,4 +300,4 @@ const ManagerCourseInstructor: React.FC = () => {
   );
 };
 
-export default ManagerCourseInstructor;
+export default ManagerSessionInstructor;
