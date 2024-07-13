@@ -56,7 +56,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
     <Menu style={{ width: 200 }}>
       <Menu.SubMenu key="setting" title="Setting" icon={<SettingOutlined />}>
         <Menu.Item key="1" icon={<UserOutlined />}>
-          <Link to="/admin/info-admin">Personal Info</Link>
+          <Link to="/admin/info-admin">Personal Infomation</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<SafetyOutlined />}>
           <Link to="/admin/admin-changepassword">Change Password</Link>
