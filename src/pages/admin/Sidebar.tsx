@@ -73,28 +73,7 @@ const SidebarAdmin: React.FC = () => {
       heading: 'Transaction History',
       href: "/admin/transaction-history"
     },
-    {
-      icon: SettingOutlined,
-      heading: 'Setting',
-      href: "/admin",
-      children: [
-        {
-          icon: UserOutlined ,
-          heading: 'Personal Info',
-          href: "/admin/info-admin"
-        },
-        {
-          icon: SafetyOutlined,
-          heading: 'Change Password',
-          href: "/admin/admin-changepassword"
-        },
-      ]
-    },
-    {
-      icon: LogoutOutlined,
-      heading: 'Logout',
-      href: "/log-in"
-    },
+   
   ];
 
   // const handleLogout = async () => {
