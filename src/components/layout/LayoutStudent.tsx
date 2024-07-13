@@ -1,5 +1,6 @@
-import { BellOutlined, BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
+import { BellOutlined, BookOutlined, LogoutOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Badge, Button, Drawer, Input, Layout, Menu, Dropdown, Avatar } from 'antd';
+
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -63,13 +64,24 @@ const LayoutStudent: React.FC = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
+          
           <Badge count={notificationCountBell} offset={[3, 1]}>
+                <div className="flex items-center space-x-4 text-xl text-white">
+                <Link to={'#'}>
+                  <BellOutlined  />
+                  </Link>
+              </div>
+            </Badge>
+
             <div className="flex items-center space-x-4 text-xl text-white">
-              <BellOutlined />
-            </div>
-          </Badge>
-          <Badge count={notificationCountCart} offset={[5, 5]}>
-            <div className="flex items-center space-x-4 text-xl text-white">
+              <Link to={'#'}>
+                <MailOutlined className="text-xl" />
+              </Link>
+              </div>
+
+            <Badge count={notificationCountCart} offset={[5, 5]} >
+
+              <div className="flex items-center space-x-4 text-xl text-white">
               <Link to={`shopping-cart`}>
                 <ShoppingCartOutlined className="text-xl" />
               </Link>
