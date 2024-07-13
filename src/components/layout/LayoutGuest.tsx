@@ -1,4 +1,4 @@
-import { BellOutlined, BookOutlined, LoginOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { BellOutlined, BookOutlined, LoginOutlined, LogoutOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
@@ -49,6 +49,13 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
               <BellOutlined />
             </Link>
           </div>
+
+          <div className="flex items-center space-x-4 text-xl text-white">
+              <Link to="/log-in">
+                <MailOutlined className="text-xl" />
+              </Link>
+              </div>
+
           <div className="flex items-center space-x-4 text-xl text-white">
             <Link to="/log-in">
               <ShoppingCartOutlined className="text-xl" />
