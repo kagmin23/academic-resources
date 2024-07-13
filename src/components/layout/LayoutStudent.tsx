@@ -49,7 +49,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             className="hidden ml-4 w-72 md:block md:w-96"
           />
           
-          <Badge count={notificationCountBell} offset={[3, 1]}>
+          <Badge count={notificationCountBell} offset={[2, 5]}>
                 <div className="flex items-center space-x-4 text-xl text-white">
                 <Link to={'#'}>
                   <BellOutlined  />
@@ -57,11 +57,13 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
               </div>
             </Badge>
 
+            <Badge count={notificationCountCart} offset={[5, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">
-              <Link to={'#'}>
+              <Link to={`#`}>
                 <MailOutlined className="text-xl" />
               </Link>
-              </div>
+            </div>
+          </Badge>
 
             <Badge count={notificationCountCart} offset={[5, 5]} >
             <div className="flex items-center space-x-4 text-xl text-white">

@@ -1,5 +1,5 @@
-import { BellOutlined, BookOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { Badge, Button, Drawer, Input, Layout, Menu, Dropdown, Avatar } from 'antd';
+import { BellOutlined, BookOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -72,6 +72,15 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
               <BellOutlined />
             </div>
           </Badge>
+
+          <Badge count={notificationCountCart} offset={[2, 5]}>
+            <div className="flex items-center space-x-4 text-xl text-white">
+              <Link to={`#`}>
+                <MailOutlined className="text-xl" />
+              </Link>
+            </div>
+          </Badge>
+
           <Badge count={notificationCountCart} offset={[5, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">
               <Link to={`shopping-cart`}>
