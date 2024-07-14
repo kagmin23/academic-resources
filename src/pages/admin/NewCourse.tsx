@@ -1,10 +1,9 @@
 import {
-  CheckOutlined,
-  CloseOutlined,
   ReconciliationOutlined,
   SearchOutlined
 } from '@ant-design/icons';
 import { Button, Col, Input, Layout, Modal, Row, Table, Typography } from 'antd';
+import { Course } from 'models/types';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useState } from 'react';
 // import debounce from 'lodash/debounce';
@@ -12,58 +11,9 @@ import React, { useState } from 'react';
 const { Header, Content, Footer } = Layout;
 const { Title, Text } = Typography;
 
-interface DataType {
-  key: string;
-  image: string;
-  title: string;
-  status: boolean;
-  description: string;
-  price: number;
-  created_at: string;
-  instructor: string;
-  category: string;
-  lesson: number;
-  date:string;
-  refused: boolean;
-}
-
-const initialDataSource: DataType[] = [
-  {
-    key: '1',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 1',
-    status: false,
-    description:
-      'Description for Item 1, Description for Item 1,Description for Item 1 ,Description for Item 1 ,Description for Item 1,Description for Item 1,Description for Item 1 ',
-    price: 100,
-    created_at: '2024-01-01',
-    instructor: 'Instructor 1 ',
-    category: 'English, Math, History',
-    lesson: 10,
-    date:'10/06/2024',
-    refused: false,
-
-  },
-  {
-    key: '2',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 2',
-    status: true,
-    description: 'Description for Item 2',
-    price: 200,
-    created_at: '2024-02-01',
-    instructor: 'Instructor 2',
-    category: 'English, Math, History',
-    lesson: 12,
-    date:'10/06/2024',
-    refused: false,
-
-  },
-];
-
 const NewCourseAdmin: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
+  const [dataSource, setDataSource] = useState<Course[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [refusedKey, setRefusedKey] = useState<string | null>(null);
@@ -82,7 +32,7 @@ const NewCourseAdmin: React.FC = () => {
     if (refusedKey) {
       setDataSource(prevDataSource =>
         prevDataSource.map(item =>
-          item.key === refusedKey ? { ...item, refused: true } : item
+          item._id === refusedKey ? { ...item, refused: true } : item
         )
       );
     }
@@ -99,9 +49,9 @@ const NewCourseAdmin: React.FC = () => {
   };
 
   const filteredDataSource = dataSource.filter(item =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.instructor.toLowerCase().includes(searchTerm.toLowerCase())
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchTerm.toLowerCase())
+    // item.instructor.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const columns = [
@@ -120,14 +70,15 @@ const NewCourseAdmin: React.FC = () => {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
+      render: (date: Date) => new Date(date).toLocaleDateString(), // Convert date to string
     },
     {
       title: 'Detail Course',
       key: 'detail',
       align: 'center' as AlignType,
-      render: (text: string, record: DataType) => (
+      render: (text: string, record: Course) => (
         <div style={{ textAlign: 'center' }}>
-          <Button icon={<ReconciliationOutlined />} onClick={() => handleViewMore(record.key)}></Button>
+          <Button icon={<ReconciliationOutlined />} onClick={() => handleViewMore(record._id)}></Button>
         </div>
       ),
     },
@@ -135,26 +86,27 @@ const NewCourseAdmin: React.FC = () => {
       title: 'Course Approval',
       dataIndex: 'created_at',
       key: 'action',
-      render: (text: string, record: DataType) => (
-        record.refused ? (
-          <div>
-            <button className="px-4 py-2 font-bold text-white bg-gray-500 rounded" disabled>
-              Refused approval
-            </button>
-          </div>
-        ) : (
-          <div>
-            <Button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
-              <CheckOutlined />
-            </Button>
-            <Button onClick={() => showModal(record.key)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
-              <CloseOutlined />
-            </Button>
-          </div>
-        )
-      ),
+      // render: (text: string, record: Course) => (
+      //   record.refused ? (
+      //     <div>
+      //       <button className="px-4 py-2 font-bold text-white bg-gray-500 rounded" disabled>
+      //         Refused approval
+      //       </button>
+      //     </div>
+      //   ) : (
+      //     <div>
+      //       <Button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
+      //         <CheckOutlined />
+      //       </Button>
+      //       <Button onClick={() => showModal(record._id)} className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+      //         <CloseOutlined />
+      //       </Button>
+      //     </div>
+      //   )
+      // ),
     },
   ];
+  
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
@@ -179,8 +131,8 @@ const NewCourseAdmin: React.FC = () => {
               columns={columns}
               expandable={{
                 expandedRowKeys: expandedKeys,
-                onExpand: (expanded, record) => handleViewMore(record.key),
-                expandedRowRender: (record: DataType) => (
+                onExpand: (expanded, record) => handleViewMore(record._id),
+                expandedRowRender: (record: Course) => (
                   <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
                     <Row gutter={16}>
                       <Col span={24}>
@@ -196,27 +148,27 @@ const NewCourseAdmin: React.FC = () => {
                       <Col span={1}></Col>
                       <Col span={10}>
                         <Text strong>Category:</Text>
-                        <p>{record.category}</p>
+                        <p>{record.category_id}</p>
                       </Col>
                     </Row>
                     <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between', marginTop: '20px' }}>
-                      <Col span={5}>
+                      {/* <Col span={5}>
                         <Text strong>Instructor:</Text>
                         <p>{record.instructor}</p>
-                      </Col>
+                      </Col> */}
                       <Col span={5}>
                         <Text strong>Number of Lessons:</Text>
-                        <p>{record.lesson} lessons</p>
+                        <p>{record.lesson_count} lessons</p>
                       </Col>
                       <Col span={4}>
                         <Text strong>Price:</Text>
                         <p>{record.price},000,00VNĐ</p>
                       </Col>
                       
-                      <Col span={5}>
+                      {/* <Col span={5}>
                         <Text strong>Create Date:</Text>
-                        <p>{record.date}</p>
-                      </Col>
+                        <p>{record.created_at}</p>
+                      </Col> */}
                       <Col span={5}>
                         <button className="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700">
                           Preview Course

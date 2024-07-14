@@ -1,14 +1,13 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Menu } from "antd";
 import {
   ContainerOutlined,
   DeploymentUnitOutlined,
   PieChartOutlined,
   TrophyOutlined,
-  UserOutlined,
-  UserSwitchOutlined,
+  UserSwitchOutlined
 } from "@ant-design/icons";
+import { Button, Menu } from "antd";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarDataType {
   icon: React.ElementType;

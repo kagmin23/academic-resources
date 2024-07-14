@@ -23,32 +23,9 @@ interface DataType {
   instructor: string;
 }
 
-const initialDataSource: DataType[] = [
-  {
-    key: '1',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 1',
-    status: false,
-    description: 'Description for Item 1 ',
-    price: 100,
-    created_at: '2024-01-01',
-    instructor: 'Instructor 1 ',
-  },
-  {
-    key: '2',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 2',
-    status: true,
-    description: 'Description for Item 2',
-    price: 200,
-    created_at: '2024-02-01',
-    instructor: 'Instructor 2',
-  },
-];
-
 const CourseAdmin: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
+  const [dataSource, setDataSource] = useState<DataType[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
   const handleSave = (record: DataType) => {
@@ -208,7 +185,7 @@ const CourseAdmin: React.FC = () => {
         width={800}
       >
         <h1 className="mb-5">Log Status</h1>
-        <div className="flex space-x-5  mb-5">
+        <div className="flex mb-5 space-x-5">
           <Button className='bg-teal-600'>All log</Button>
           <Select className="w-40">
           <Select.Option value="New">New</Select.Option>

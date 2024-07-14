@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { Editor } from '@tinymce/tinymce-react';
 import {
   Button,
   Col,
@@ -13,12 +14,12 @@ import {
   Typography,
   message,
 } from "antd";
-import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import { Editor } from '@tinymce/tinymce-react';
 import { AlignType } from "rc-table/lib/interface";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getCategories } from "services/AdminsApi/categoryApiService";
-import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
 import { getCourses } from "services/All/getCoursesApiService";
+import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -248,20 +249,20 @@ const ManagerCourseInstructor: React.FC = () => {
             className="mr-2 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
           >
-            Edit
+            
           </Button>
           <Button
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
             onClick={() => showConfirm(record)}
           >
-            Delete
+            
           </Button>
           <Button
             icon={<EyeOutlined />}
             onClick={() => handleViewMore(record._id)}
           >
-            View
+            
           </Button>
         </div>
       ),
@@ -325,9 +326,13 @@ const ManagerCourseInstructor: React.FC = () => {
                       Discount:
                     </Typography.Text>
                   </Col>
-                  <Col span={8}> 
-                  <Button onClick={showLogModal}>View Log</Button>
-                  </Col>
+                  
+                  <div>
+                    
+                    <Button onClick={showLogModal}>View Log</Button>
+                    <Link to={`view-session`}><Button>View Session</Button></Link>
+
+                  </div>
                 </Row>
 
                 <Modal
@@ -337,8 +342,8 @@ const ManagerCourseInstructor: React.FC = () => {
         width={800}
       >
         <h1 className="mb-5">Log Status</h1>
-        <div className="flex space-x-5  mb-5">
-          <Button className="bg-teal-600 text-white">All log</Button>
+        <div className="flex mb-5 space-x-5">
+          <Button className="text-white bg-teal-600">All log</Button>
           <Select className="w-40">
           <Select.Option value="New">New</Select.Option>
           <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
