@@ -1,12 +1,4 @@
-import {
-  DeleteOutlined,
-  EditOutlined,
-  ExclamationCircleFilled,
-  EyeOutlined,
-  PlusCircleOutlined,
-  SearchOutlined
-} from "@ant-design/icons";
-import { Editor } from '@tinymce/tinymce-react';
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Col,
@@ -19,15 +11,17 @@ import {
   Switch,
   Table,
   Typography,
-  message
+  message,
 } from "antd";
+import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { Editor } from '@tinymce/tinymce-react';
 import { AlignType } from "rc-table/lib/interface";
-import React, { useEffect, useState } from "react";
 import { getCategories } from "services/AdminsApi/categoryApiService";
-import { createCourse } from "services/Instructor/courseApiService";
+import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
+import { getCourses } from "services/All/getCoursesApiService";
 
 const { confirm } = Modal;
-const { Header, Content, Footer } = Layout;
+const { Header, Content } = Layout;
 const { Text } = Typography;
 const { TextArea } = Input;
 
@@ -66,18 +60,29 @@ const ManagerCourseInstructor: React.FC = () => {
 
   useEffect(() => {
     fetchCategories();
+    fetchCourses();
   }, []);
 
   const fetchCategories = async () => {
     try {
       const response = await getCategories("", 1, 10);
-      console.log('Categories Response:', response);
       setCategories(response.data.pageData);
-        console.log("category: ", categories);
-        console.log('Categories Set:', response.data.pageData);
     } catch (error) {
       console.error("Failed to fetch categories", error);
       setCategories([]);
+    }
+  };
+
+  const fetchCourses = async () => {
+    try {
+      const response = await getCourses('', 1, 10); 
+      setDataSource(response.data.pageData);
+      setFilteredDataSource(response.data.pageData);
+    } catch (error) {
+      console.error('Failed to fetch courses', error);
+      setDataSource([]);
+      setFilteredDataSource([]);
+      message.error('Failed to fetch courses');
     }
   };
 
@@ -117,55 +122,64 @@ const ManagerCourseInstructor: React.FC = () => {
     const newDataSource = dataSource.filter((item) => item._id !== record._id);
     setDataSource(newDataSource);
     setFilteredDataSource(newDataSource);
+    deleteCourse(record._id)
+      .then(() => {
+        message.success('Course deleted successfully');
+      })
+      .catch((error) => {
+        console.error("Failed to delete course", error);
+        message.error('Failed to delete course');
+      });
   };
 
-const handleSave = () => {
-  form.validateFields()
-    .then((values) => {
-      if (typeof values.price === 'string') {
-        values.price = parseFloat(values.price);
-      }
-      if (typeof values.discount === 'string') {
+  const handleSave = () => {
+    form.validateFields()
+      .then((values) => {
+        if (typeof values.price === 'string') {
+          values.price = parseFloat(values.price);
+        }
+        if (typeof values.discount === 'string') {
           values.discount = parseFloat(values.discount);
-      }
-      form.resetFields();
-      if (isEditMode && currentRecord) {
-        const newDataSource = dataSource.map((item) =>
-          item._id === currentRecord._id ? { ...item, ...values } : item
-        );
-        setDataSource(newDataSource);
-        setFilteredDataSource(newDataSource);
-        message.success('Course updated successfully');
-      } 
-      
-      else {
-        createCourse(values)
-          .then((response) => {
-            console.log("values", values)
-            const newRecord = {
-              ...response.data,
-              key: (dataSource.length + 1).toString(),
-              created_at: new Date().toISOString().split("T")[0],
-            };
-            setDataSource([...dataSource, newRecord]);
-            setFilteredDataSource([...dataSource, newRecord]);
-            message.success('Course created successfully');
-          })
-          .catch((error) => {
-            console.error("Failed to create course", error);
-            message.error('Failed to create course');
-          });
-      }
-      setIsModalVisible(false);
-    })
-    .catch((info) => {
-      console.log("Validate Failed:", info);
-      message.error('Validation failed');
-    });
-};
-
-  
-  
+        }
+        form.resetFields();
+        if (isEditMode && currentRecord) {
+          updateCourse(currentRecord._id, values)
+            .then(() => {
+              const newDataSource = dataSource.map((item) =>
+                item._id === currentRecord._id ? { ...item, ...values } : item
+              );
+              setDataSource(newDataSource);
+              setFilteredDataSource(newDataSource);
+              message.success('Course updated successfully');
+            })
+            .catch((error) => {
+              console.error("Failed to update course", error);
+              message.error('Failed to update course');
+            });
+        } else {
+          createCourse(values)
+            .then((response) => {
+              const newRecord = {
+                ...response.data,
+                key: response.data._id,
+                created_at: new Date().toISOString().split("T")[0],
+              };
+              setDataSource([newRecord, ...dataSource]);
+              setFilteredDataSource([newRecord, ...dataSource]);
+              message.success('Course created successfully');
+            })
+            .catch((error) => {
+              console.error("Failed to create course", error);
+              message.error('Failed to create course');
+            });
+        }
+        setIsModalVisible(false);
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+        message.error('Validation failed');
+      });
+  };
   
 
   const handleSearch = (value: string) => {
@@ -177,11 +191,10 @@ const handleSave = () => {
 
   const showConfirm = (record: Course) => {
     confirm({
-      title: "Do you want to delete these items?",
+      title: "Do you want to delete this course?",
       icon: <ExclamationCircleFilled />,
-      content: "Some descriptions",
+      content: "This action cannot be undone.",
       onOk() {
-        console.log("OK");
         handleDelete(record);
       },
       onCancel() {
@@ -191,20 +204,6 @@ const handleSave = () => {
   };
 
   const columns = [
-    {
-      title: "Course",
-      dataIndex: "image",
-      key: "image",
-      render: (text: string) => (
-        <div className="w-24 h-12">
-          <img
-            src={text}
-            alt="item"
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
-          />
-        </div>
-      ),
-    },
     {
       title: "Course Name",
       dataIndex: "name",
@@ -225,115 +224,116 @@ const handleSave = () => {
             icon={<EditOutlined />}
             className="mr-2 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
-          ></Button>
-
+          >
+            Edit
+          </Button>
           <Button
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
             onClick={() => showConfirm(record)}
-          ></Button>
-          
+          >
+            Delete
+          </Button>
           <Button
             icon={<EyeOutlined />}
             onClick={() => handleViewMore(record._id)}
-          ></Button>
+          >
+            View
+          </Button>
         </div>
       ),
     },
   ];
 
-  
-
   return (
-    <Layout style={{ height: "100vh" }}>
-      <Layout className="site-layout">
-        <Header className="p-0 bg-white">
-          <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
-            <Input
-              placeholder="Search..."
-              prefix={<SearchOutlined />}
-              onChange={(e) => handleSearch(e.target.value)}
-              style={{ width: 300 }}
-            />
-            <div className="h-6 border-r lg:mx-4"></div>
-            <Button
-              className="font-bold text-white bg-red-500"
-              onClick={handleAddNewCourse}
-            >
-              <PlusCircleOutlined />
-              Add New Course
-            </Button>
-          </div>
-        </Header>
-        <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
-        <Table
-            pagination={{ pageSize: 6 }}
-            dataSource={filteredDataSource}
-            columns={columns}
-            expandable={{
-              expandedRowKeys: expandedKeys,
-              onExpand: (expanded, record) => handleViewMore(record._id),
-              expandedRowRender: (record: Course) => (
-                <div
-                  style={{
-                    padding: "10px 20px",
-                    backgroundColor: "#f9f9f9",
-                    borderRadius: "4px",
-                    marginLeft: "25px",
-                  }}
-                >
-                  <Row gutter={16} className="mb-5">
-                    <Col span={22}>
-                      <Typography.Title level={5}>
-                        Description:
-                      </Typography.Title>
-                      <p>{record.description || "-"}</p>
-                    </Col>
-                  </Row>
-
-                  <Row gutter={16} align="middle">
-                    <Col span={8}>
-                      <Typography.Text strong>
-                        Price:
-                      </Typography.Text>
-                    </Col>
-                    <Col span={8}>
-                      <Typography.Text strong>
-                        Discount:
-                      </Typography.Text>
-                    </Col>
-                  </Row>
-
-                  <Form layout="vertical">
-                    <Row gutter={16}>
-                      <Col span={8}>
-                        <Form.Item
-                          name="price"
-                          label="Price"
-                          initialValue={record.price}
-                        >
-                          <Input disabled />
-                        </Form.Item>
-                      </Col>
-                      <Col span={8}>
-                        <Form.Item
-                          name="discount"
-                          label="Discount"
-                          rules={[{ required: true, message: 'Please input the discount!' }]}
-                        >
-                          <Input />
-                        </Form.Item>
-                      </Col>
-                    </Row>
-                  </Form>
-                </div>
-              ),
-              expandIcon: () => null,
-            }}
-            rowKey="key"
+    <Layout style={{ minHeight: "100vh" }}>
+      <Header className="p-0 bg-white">
+        <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
+          <Input
+            placeholder="Search..."
+            prefix={<SearchOutlined />}
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: 300 }}
           />
-        </Content>
-      </Layout>
+          <div className="h-6 border-r lg:mx-4"></div>
+          <Button
+            className="font-bold text-white bg-red-500"
+            onClick={handleAddNewCourse}
+          >
+            <PlusCircleOutlined />
+            Add New Course
+          </Button>
+        </div>
+      </Header>
+      <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
+        <Table
+          pagination={{ pageSize: 6 }}
+          dataSource={filteredDataSource}
+          columns={columns}
+          expandable={{
+            expandedRowKeys: expandedKeys,
+            onExpand: (expanded, record) => handleViewMore(record._id),
+            expandedRowRender: (record: Course) => (
+              <div
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#f9f9f9",
+                  borderRadius: "4px",
+                  marginLeft: "25px",
+                }}
+              >
+                <Row gutter={16} className="mb-5">
+                  <Col span={22}>
+                    <Typography.Title level={5}>
+                      Description:
+                    </Typography.Title>
+                    <p>{record.description || "-"}</p>
+                  </Col>
+                </Row>
+
+                <Row gutter={16} align="middle">
+                  <Col span={8}>
+                    <Typography.Text strong>
+                      Price:
+                    </Typography.Text>
+                  </Col>
+                  <Col span={8}>
+                    <Typography.Text strong>
+                      Discount:
+                    </Typography.Text>
+                  </Col>
+                </Row>
+
+                <Form layout="vertical">
+                  <Row gutter={16}>
+                    <Col span={8}>
+                      <Form.Item
+                        name="price"
+                        label="Price"
+                        initialValue={record.price}
+                      >
+                        <Input disabled={!isSellChecked} />
+                      </Form.Item>
+                    </Col>
+                    <Col span={8}>
+                      <Form.Item
+                        name="discount"
+                        label="Discount"
+                        initialValue={record.discount}
+                        rules={[{ required: isSellChecked, message: 'Please input the discount!' }]}
+                      >
+                        <Input disabled={!isSellChecked} />
+                      </Form.Item>
+                    </Col>
+                  </Row>
+                </Form>
+              </div>
+            ),
+            expandIcon: () => null,
+          }}
+          rowKey="_id"
+        />
+      </Content>
 
       <Modal
         width={"50%"}
@@ -345,9 +345,9 @@ const handleSave = () => {
         <Form form={form} layout="vertical">
           <Form.Item
             name="name"
-            label="Name Course"
+            label="Course Name"
             rules={[
-              { required: true, message: "Please input the name course!" },
+              { required: true, message: "Please input the course name!" },
             ]}
           >
             <Input />
@@ -377,16 +377,18 @@ const handleSave = () => {
             <TextArea rows={4} />
           </Form.Item>
 
-          <Form.Item name="video_url"
+          <Form.Item
+            name="video_url"
             label="Video URL"
-            rules={[{ required: true, message: 'Please input the video url!' }]}
-                  >
+            rules={[{ required: true, message: 'Please input the video URL!' }]}
+          >
             <Input />
           </Form.Item>
 
-          <Form.Item name="image_url"
+          <Form.Item
+            name="image_url"
             label="Image URL"
-            rules={[{ required: true, message: 'Please input the image url!' }]}
+            rules={[{ required: true, message: 'Please input the image URL!' }]}
           >
             <Input />
           </Form.Item>
@@ -412,30 +414,30 @@ const handleSave = () => {
             />
           </Form.Item>
 
-          <Form.Item label="How do you want sell this course?">
-              <Switch checked={isSellChecked} onChange={onChangesell} />
-              <p className="mt-2 italic text-blue-500">(Otherwise, this course will be FREE)</p>
-            </Form.Item>
+          <Form.Item label="How do you want to sell this course?">
+            <Switch checked={isSellChecked} onChange={onChangesell} />
+            <p className="mt-2 italic text-blue-500">(Otherwise, this course will be FREE)</p>
+          </Form.Item>
 
-            {isSellChecked && (
-              <div>
-                <Form.Item
-                  name="price"
-                  label="Price"
-                  rules={[{ required: true, message: 'Please input the price!' }]}
-                >
-                  <Input type="number" />
-                </Form.Item>
+          {isSellChecked && (
+            <div>
+              <Form.Item
+                name="price"
+                label="Price"
+                rules={[{ required: true, message: 'Please input the price!' }]}
+              >
+                <Input type="number" />
+              </Form.Item>
 
-                <Form.Item
-                  name="discount"
-                  label="Discount"
-                  rules={[{ required: true, message: 'Please input the discount!' }]}
-                >
-                  <Input type="number" />
-                </Form.Item>
-              </div>
-            )}
+              <Form.Item
+                name="discount"
+                label="Discount"
+                rules={[{ required: true, message: 'Please input the discount!' }]}
+              >
+                <Input type="number" />
+              </Form.Item>
+            </div>
+          )}
         </Form>
       </Modal>
     </Layout>
@@ -443,4 +445,3 @@ const handleSave = () => {
 };
 
 export default ManagerCourseInstructor;
-
