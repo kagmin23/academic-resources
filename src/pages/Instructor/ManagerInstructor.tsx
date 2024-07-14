@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { Editor } from '@tinymce/tinymce-react';
 import {
   Button,
   Col,
@@ -13,12 +14,12 @@ import {
   Typography,
   message,
 } from "antd";
-import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import { Editor } from '@tinymce/tinymce-react';
 import { AlignType } from "rc-table/lib/interface";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { getCategories } from "services/AdminsApi/categoryApiService";
-import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
 import { getCourses } from "services/All/getCoursesApiService";
+import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -47,6 +48,8 @@ interface Category {
   name: string;
 }
 
+  
+
 const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Course[]>([]);
   const [filteredDataSource, setFilteredDataSource] = useState<Course[]>([]);
@@ -57,6 +60,22 @@ const ManagerCourseInstructor: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isSellChecked, setIsSellChecked] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+
+
+
+  const [logModalVisible, setLogModalVisible] = useState(false);
+
+  const showLogModal = () => {
+    setLogModalVisible(true);
+  };
+
+  const hideLogModal = () => {
+    setLogModalVisible(false);
+  };
+
+
+
+
 
   useEffect(() => {
     fetchCategories();
@@ -215,6 +234,11 @@ const ManagerCourseInstructor: React.FC = () => {
       key: "created_at",
     },
     {
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+    },
+    {
       title: "Actions",
       key: "actions",
       align: "center" as AlignType,
@@ -225,20 +249,20 @@ const ManagerCourseInstructor: React.FC = () => {
             className="mr-2 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
           >
-            Edit
+            
           </Button>
           <Button
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
             onClick={() => showConfirm(record)}
           >
-            Delete
+            
           </Button>
           <Button
             icon={<EyeOutlined />}
             onClick={() => handleViewMore(record._id)}
           >
-            View
+            
           </Button>
         </div>
       ),
@@ -302,7 +326,50 @@ const ManagerCourseInstructor: React.FC = () => {
                       Discount:
                     </Typography.Text>
                   </Col>
+                  
+                  <div>
+                    
+                    <Button onClick={showLogModal}>View Log</Button>
+                    <Link to={`view-session`}><Button>View Session</Button></Link>
+
+                  </div>
                 </Row>
+
+                <Modal
+        visible={logModalVisible}
+        onCancel={hideLogModal}
+        footer={null}
+        width={800}
+      >
+        <h1 className="mb-5">Log Status</h1>
+        <div className="flex mb-5 space-x-5">
+          <Button className="text-white bg-teal-600">All log</Button>
+          <Select className="w-40">
+          <Select.Option value="New">New</Select.Option>
+          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+          <Select.Option value="Approve">Approve</Select.Option>
+          <Select.Option value="Reject">Reject</Select.Option>
+          <Select.Option value="Active">Active</Select.Option>
+          <Select.Option value="Inactive">Inactive</Select.Option>
+          
+          </Select>
+
+          <Select className="w-40">
+          <Select.Option value="New">New</Select.Option>
+          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+          <Select.Option value="Approve">Approve</Select.Option>
+          <Select.Option value="Reject">Reject</Select.Option>
+          <Select.Option value="Active">Active</Select.Option>
+          <Select.Option value="Inactive">Inactive</Select.Option>
+          
+          </Select>
+        </div>
+
+        <h1>Course Name: ...</h1>
+        <h1>Old status: ...</h1>
+        <h1>New status: ... </h1>
+        <h1>Comment: ...</h1>
+      </Modal>
 
                 <Form layout="vertical">
                   <Row gutter={16}>
@@ -335,6 +402,7 @@ const ManagerCourseInstructor: React.FC = () => {
         />
       </Content>
 
+
       <Modal
         width={"50%"}
         title={isEditMode ? "Edit Course" : "Add New Course"}
@@ -349,8 +417,26 @@ const ManagerCourseInstructor: React.FC = () => {
             rules={[
               { required: true, message: "Please input the course name!" },
             ]}
+            
           >
-            <Input />
+            <Editor
+              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
+              initialValue="<p>This is the initial content of the editor</p>"
+              init={{
+                height: 200,
+                menubar: false,
+                plugins: [
+                  "advlist autolink lists link image charmap print preview anchor",
+                  "searchreplace visualblocks code fullscreen",
+                  "insertdatetime media table paste code help wordcount",
+                ],
+                toolbar:
+                  "undo redo | formatselect | bold italic backcolor | \
+                  alignleft aligncenter alignright alignjustify | \
+                  bullist numlist outdent indent | removeformat | help",
+              }}
+              onEditorChange={handleEditorChange}
+            />
           </Form.Item>
 
           <Form.Item
@@ -374,7 +460,24 @@ const ManagerCourseInstructor: React.FC = () => {
               { required: true, message: "Please input the description!" },
             ]}
           >
-            <TextArea rows={4} />
+            <Editor
+              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
+              initialValue="<p>This is the initial content of the editor</p>"
+              init={{
+                height: 200,
+                menubar: false,
+                plugins: [
+                  "advlist autolink lists link image charmap print preview anchor",
+                  "searchreplace visualblocks code fullscreen",
+                  "insertdatetime media table paste code help wordcount",
+                ],
+                toolbar:
+                  "undo redo | formatselect | bold italic backcolor | \
+                  alignleft aligncenter alignright alignjustify | \
+                  bullist numlist outdent indent | removeformat | help",
+              }}
+              onEditorChange={handleEditorChange}
+            />
           </Form.Item>
 
           <Form.Item
@@ -395,7 +498,7 @@ const ManagerCourseInstructor: React.FC = () => {
 
           <Form.Item label="Content">
             <Editor
-              apiKey="your-api-key"
+              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
               initialValue="<p>This is the initial content of the editor</p>"
               init={{
                 height: 200,

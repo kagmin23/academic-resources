@@ -1,8 +1,10 @@
 import {
+  CheckOutlined,
+  CloseOutlined,
   EyeOutlined,
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Col, Input, Layout, Row, Switch, Table, Typography } from 'antd';
+import { Button, Col, Input, Layout, Modal, Row, Select, Switch, Table, Typography } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useState } from 'react';
 // import debounce from 'lodash/debounce';
@@ -21,36 +23,23 @@ interface DataType {
   instructor: string;
 }
 
-const initialDataSource: DataType[] = [
-  {
-    key: '1',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 1',
-    status: false,
-    description: 'Description for Item 1 ',
-    price: 100,
-    created_at: '2024-01-01',
-    instructor: 'Instructor 1 ',
-  },
-  {
-    key: '2',
-    image: 'https://via.placeholder.com/50',
-    title: 'Item 2',
-    status: true,
-    description: 'Description for Item 2',
-    price: 200,
-    created_at: '2024-02-01',
-    instructor: 'Instructor 2',
-  },
-];
-
 const CourseAdmin: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [dataSource, setDataSource] = useState<DataType[]>(initialDataSource);
+  const [dataSource, setDataSource] = useState<DataType[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
 
   const handleSave = (record: DataType) => {
     console.log('Saved:', record);
+  };
+
+  const [logModalVisible, setLogModalVisible] = useState(false);
+
+  const showLogModal = () => {
+    setLogModalVisible(true);
+  };
+
+  const hideLogModal = () => {
+    setLogModalVisible(false);
   };
 
   const handleViewMore = (key: string) => {
@@ -104,6 +93,21 @@ const CourseAdmin: React.FC = () => {
       ),
     },
     {
+      title: 'Approval status',
+      dataIndex: 'approval status',
+      key: 'approval_status',
+      render: (status: boolean, record: DataType) => (
+          <div>
+            <Button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
+              <CheckOutlined />
+            </Button>
+            <Button className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
+              <CloseOutlined />
+            </Button>
+          </div>
+        )
+    },
+    {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
@@ -150,6 +154,7 @@ const CourseAdmin: React.FC = () => {
                       <Col span={24}>
                         <Title level={5} className='text-2xl'>Course Details</Title>
                       </Col>
+                      
                     </Row>
                     <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Col span={8}>
@@ -164,6 +169,7 @@ const CourseAdmin: React.FC = () => {
                         <Text strong>Price:</Text>
                         <p>${record.price}</p>
                       </Col>
+                      <Button className='mt-5' onClick={showLogModal}>View Log</Button>
                     </Row>
                   </div>
                 ),
@@ -172,6 +178,41 @@ const CourseAdmin: React.FC = () => {
               rowKey="key"
             />
           </div>
+          <Modal
+        visible={logModalVisible}
+        onCancel={hideLogModal}
+        footer={null}
+        width={800}
+      >
+        <h1 className="mb-5">Log Status</h1>
+        <div className="flex mb-5 space-x-5">
+          <Button className='bg-teal-600'>All log</Button>
+          <Select className="w-40">
+          <Select.Option value="New">New</Select.Option>
+          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+          <Select.Option value="Approve">Approve</Select.Option>
+          <Select.Option value="Reject">Reject</Select.Option>
+          <Select.Option value="Active">Active</Select.Option>
+          <Select.Option value="Inactive">Inactive</Select.Option>
+          
+          </Select>
+
+          <Select className="w-40">
+          <Select.Option value="New">New</Select.Option>
+          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+          <Select.Option value="Approve">Approve</Select.Option>
+          <Select.Option value="Reject">Reject</Select.Option>
+          <Select.Option value="Active">Active</Select.Option>
+          <Select.Option value="Inactive">Inactive</Select.Option>
+          
+          </Select>
+        </div>
+
+        <h1>Course Name: ...</h1>
+        <h1>Old status: ...</h1>
+        <h1>New status: ... </h1>
+        <h1>Comment: ...</h1>
+      </Modal>
         </Content>
         <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
       </Layout>
