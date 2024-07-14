@@ -16,8 +16,15 @@
     "jsx": "react-jsx",
     "baseUrl": "./src",
     "paths": {
-      "@app/*": ["app/*"]
+      "@app/*": ["app/*"],
+      // "components/*": ["/components/*"],
+      // "consts/*": ["/consts/*"],
+      // "models/*": ["/models/*"],
+      // "pages/*": ["/pages/*"],
+      // "services/*": ["/services/*"],
+      // "utils/*": ["/utils/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  // "exclude": ["node_modules"]
 }
