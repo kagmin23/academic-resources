@@ -1,9 +1,10 @@
 import { BellOutlined, BookOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
+import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu, notification } from 'antd';
 import Footer from 'components/Footer';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
+import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -16,10 +17,31 @@ interface MainLayoutProps {
 const LayoutInstructor: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null); // Define type based on your API response
   const navigate = useNavigate();
 
-  const notificationCountBell = 7;
-  const notificationCountCart = 9;
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await getCurrentUser(); // Replace with your API call
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          notification.error({
+            message: 'Error',
+            description: 'Failed to fetch current user information',
+          });
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Error',
+          description: 'Failed to fetch current user information',
+        });
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
@@ -38,7 +60,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
       <Menu.Item key="1">
         <Link to="/instructor/profile-instructor">Profile</Link>
       </Menu.Item>
-      <SubMenu key="2" title="Settings" >
+      <SubMenu key="2" title="Settings">
         <Menu.Item key="setting:1">
           <Link to="/instructor/profile-instructor/instructor-setting">Personal Info</Link>
         </Menu.Item>
@@ -51,6 +73,10 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
       </Menu.Item>
     </Menu>
   );
+
+  // Define notification counts or fetch them from API
+  const notificationCountBell = 7;
+  const notificationCountCart = 9;
 
   return (
     <Layout className="min-h-screen">
@@ -88,9 +114,15 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
               </Link>
             </div>
           </Badge>
-          <Dropdown overlay={profileMenu} trigger={['click']}>
-            <Avatar src="https://devo.vn/wp-content/uploads/2023/01/meo-khoc-cute.jpg" className="text-4xl text-white" style={{ width: 35, height: 35 }} />
-          </Dropdown>
+          {currentUser && (
+            <Dropdown overlay={profileMenu} trigger={['click']}>
+              <Avatar
+                src={currentUser.avatar} // Assuming `avatar` is the correct field in your API response
+                className="text-4xl text-white"
+                style={{ width: 35, height: 35 }}
+              />
+            </Dropdown>
+          )}
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
         </div>
       </Header>
