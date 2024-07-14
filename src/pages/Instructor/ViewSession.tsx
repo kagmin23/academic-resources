@@ -1,9 +1,19 @@
-import { Layout, Table, Typography } from 'antd';
+
 import React, { useEffect, useState } from 'react';
+import {
+  DeleteOutlined,
+  DownCircleOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  PlusOutlined,
+  ReadOutlined,
+  SearchOutlined
+} from '@ant-design/icons';
+import { Button, Divider, Form, Input, Layout, List, Modal, Table, Tabs, Typography, message } from "antd";
   // import debounce from 'lodash/debounce';
   import { useParams } from 'react-router-dom';
 import { getCourse } from 'services/Instructor/courseApiService';
-import { message } from 'antd';
+
   const { Header, Content, Footer } = Layout;
   const { Title, Text } = Typography;
   
@@ -99,16 +109,33 @@ interface DataType {
 
 
   return (
-    <div>
-      <div className='text-xl font-bold m-4'>
-      Name Of Course: {course.name}
-      </div>
-      <Table columns={columns} />
-     
+    <Layout style={{ height: '100vh' }}>
+       <Layout className="site-layout">
+         <Header className="p-0 bg-white">
+           <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-[#939fb1]">
+           <div className='text-lg font-bold my-auto text-white'>
+             Name Course: {course.name}
+           </div>
+             <Input
+               placeholder="Search..."
+               prefix={<SearchOutlined />}
+              //  onChange={e => handleSearch(e.target.value)}
+               style={{ width: 300 }}
+             />
+           </div>
+         </Header>
+         <Content>
       
+      <Table columns={columns} />
+      </Content>
+     </Layout>
+      </Layout>
 
-    </div>
-  )
-}
+    
+  );
+};
 
 export default ViewSession
+
+
+
