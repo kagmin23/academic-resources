@@ -1,7 +1,9 @@
 import { Layout, Table, Typography } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
   // import debounce from 'lodash/debounce';
-  
+  import { useParams } from 'react-router-dom';
+import { getCourse } from 'services/Instructor/courseApiService';
+import { message } from 'antd';
   const { Header, Content, Footer } = Layout;
   const { Title, Text } = Typography;
   
@@ -17,8 +19,45 @@ interface DataType {
     instructor: string;
   }
 
-  const ViewSession: React.FC = () => {
+  interface Course {
+    _id: string;
+    name: string;
+    description: string;
+    price: number;
+    discount: number;
+    // Thêm các thuộc tính khác của Course nếu cần
+  }
 
+  const ViewSession: React.FC = () => {
+    
+    const { courseId } = useParams<{ courseId: string }>();
+    const [course, setCourse] = useState<Course | null>(null);
+  
+    useEffect(() => {
+      const fetchCourse = async () => {
+        if (!courseId) {
+          console.error("courseId is undefined");
+          message.error('courseId is undefined');
+          return;
+        }
+  
+        try {
+          const response = await getCourse(courseId);
+          setCourse(response.data);
+        } catch (error) {
+          console.error("Failed to fetch course", error);
+          message.error('Failed to fetch course');
+        }
+      };
+  
+      fetchCourse();
+    }, [courseId]);
+  
+    if (!course) {
+      return <div>Loading...</div>;
+    }
+
+    
     const columns = [
         {
             title: 'ID',
@@ -61,7 +100,13 @@ interface DataType {
 
   return (
     <div>
-      <Table columns={columns} />;
+      <div className='text-xl font-bold m-4'>
+      Name Of Course: {course.name}
+      </div>
+      <Table columns={columns} />
+     
+      
+
     </div>
   )
 }

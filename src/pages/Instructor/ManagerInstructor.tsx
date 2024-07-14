@@ -20,6 +20,7 @@ import { Link } from "react-router-dom";
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
+import { useNavigate } from 'react-router-dom';
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -61,7 +62,7 @@ const ManagerCourseInstructor: React.FC = () => {
   const [isSellChecked, setIsSellChecked] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
 
-
+  const navigate = useNavigate();
 
   const [logModalVisible, setLogModalVisible] = useState(false);
 
@@ -222,6 +223,13 @@ const ManagerCourseInstructor: React.FC = () => {
     });
   };
 
+  // Hàm handleViewSession để chuyển hướng
+  const handleViewSession = (courseId: string) => {
+    navigate(`/instructor/profile-instructor/view-session/${courseId}`);
+  };
+
+
+  
   const columns = [
     {
       title: "Course Name",
@@ -330,7 +338,11 @@ const ManagerCourseInstructor: React.FC = () => {
                   <div>
                     
                     <Button onClick={showLogModal}>View Log</Button>
-                    <Link to={`view-session`}><Button>View Session</Button></Link>
+                    {/* <Link to={`/instructor/profile-instructor/view-session`}><Button>View Session</Button></Link> */}
+                    <Button
+            icon={<EyeOutlined />}
+            onClick={() => handleViewSession(record._id)}
+          >View Session</Button> {/* Cập nhật nút View Session */}
 
                   </div>
                 </Row>

@@ -52,6 +52,8 @@ const SidebarAdmin: React.FC = () => {
           heading: "Manager Certificate",
           href: "/instructor/profile-instructor/manager-instructor-certificate",
         },
+        
+        
       ],
     },
   ];
