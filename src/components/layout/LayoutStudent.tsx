@@ -1,10 +1,10 @@
-import { BellOutlined, BookOutlined, LogoutOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { Badge, Button, Drawer, Input, Layout, Menu, Dropdown, Avatar } from 'antd';
-
+import { BellOutlined, BookOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { Badge, Drawer, Input, Layout, Menu, Dropdown, Avatar } from 'antd';
 import Footer from 'components/Footer';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
+import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -13,10 +13,28 @@ const { SubMenu } = Menu;
 const LayoutStudent: React.FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null); // Define type based on your API response
   const navigate = useNavigate();
 
   const notificationCountBell = 5;
   const notificationCountCart = 3;
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await getCurrentUser(); // Fetch current user data including avatar
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          console.error('Failed to fetch current user:', response.error);
+        }
+      } catch (error) {
+        console.error('Error fetching current user:', error);
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
@@ -66,14 +84,14 @@ const LayoutStudent: React.FC = () => {
           />
           
           <Badge count={notificationCountBell} offset={[2, 5]}>
-                <div className="flex items-center space-x-4 text-xl text-white">
-                <Link to={'#'}>
-                  <BellOutlined  />
-                  </Link>
-              </div>
-            </Badge>
+            <div className="flex items-center space-x-4 text-xl text-white">
+              <Link to={'#'}>
+                <BellOutlined />
+              </Link>
+            </div>
+          </Badge>
 
-            <Badge count={notificationCountCart} offset={[5, 5]}>
+          <Badge count={notificationCountCart} offset={[5, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">
               <Link to={`#`}>
                 <MailOutlined className="text-xl" />
@@ -81,17 +99,22 @@ const LayoutStudent: React.FC = () => {
             </div>
           </Badge>
 
-            <Badge count={notificationCountCart} offset={[5, 5]} >
-
-              <div className="flex items-center space-x-4 text-xl text-white">
+          <Badge count={notificationCountCart} offset={[5, 5]}>
+            <div className="flex items-center space-x-4 text-xl text-white">
               <Link to={`shopping-cart`}>
                 <ShoppingCartOutlined className="text-xl" />
               </Link>
             </div>
           </Badge>
-          <Dropdown overlay={profileMenu} trigger={['click']}>
-            <Avatar src="https://devo.vn/wp-content/uploads/2023/01/meo-khoc-cute.jpg" className="text-4xl text-white" style={{ width: 35, height: 35 }} />
-          </Dropdown>
+          {currentUser && (
+            <Dropdown overlay={profileMenu} trigger={['click']}>
+              <Avatar
+                src={currentUser.avatar} // Assuming `avatar` is the correct field in your API response
+                className="text-4xl text-white"
+                style={{ width: 35, height: 35 }}
+              />
+            </Dropdown>
+          )}
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
         </div>
       </Header>
