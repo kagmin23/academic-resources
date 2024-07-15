@@ -1,4 +1,7 @@
+
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { Editor } from '@tinymce/tinymce-react';
 import {
   Button,
@@ -14,9 +17,10 @@ import {
   Typography,
   message,
 } from "antd";
+
 import { AlignType } from "rc-table/lib/interface";
-import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
+
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
@@ -228,7 +232,6 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
 
-  
   const columns = [
     {
       title: "Course Name",
@@ -252,13 +255,14 @@ const ManagerCourseInstructor: React.FC = () => {
       render: (text: string, record: Course) => (
         <div style={{ textAlign: "center" }}>
           <Button
-            size="small"
+	    size="small"
             icon={<EditOutlined />}
             className="mr-2 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
           >
             
           </Button>
+          
           <Button
             size="small"
             icon={<DeleteOutlined />}
@@ -267,6 +271,7 @@ const ManagerCourseInstructor: React.FC = () => {
           >
             
           </Button>
+         
           <Button
             size="small"
             icon={<EyeOutlined />}
@@ -274,6 +279,7 @@ const ManagerCourseInstructor: React.FC = () => {
           >
             
           </Button>
+         
         </div>
       ),
     },
@@ -281,7 +287,7 @@ const ManagerCourseInstructor: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Header className="p-0 bg-white">
+  <Header className="p-0 bg-white">
         <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
           <Input
             placeholder="Search..."
@@ -299,8 +305,9 @@ const ManagerCourseInstructor: React.FC = () => {
           </Button>
         </div>
       </Header>
-      <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
+      <Content className="mx-4 my-4 overflow-y-auto xl:mx-6" style={{ paddingTop: "64px" }}>
         <Table
+          style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 180px)' }}
           pagination={{ pageSize: 6 }}
           dataSource={filteredDataSource}
           columns={columns}
@@ -324,14 +331,12 @@ const ManagerCourseInstructor: React.FC = () => {
                     <p>{record.description || "-"}</p>
                   </Col>
                 </Row>
-
-                <Modal
+<Modal
         visible={logModalVisible}
         onCancel={hideLogModal}
         footer={null}
         width={800}
-      >
-        <h1 className="mb-5">Log Status</h1>
+      >        <h1 className="mb-5">Log Status</h1>
         <div className="flex mb-5 space-x-5">
           <Button className="text-white bg-teal-600">All log</Button>
           <Select className="w-40">
@@ -383,15 +388,6 @@ const ManagerCourseInstructor: React.FC = () => {
                       </Form.Item>
                     </Col>
                   </Row>
-
-                  <div className="flex flex-row gap-4">
-                    <Button onClick={showLogModal}>Log Status</Button>
-                    <Button
-                        // icon={<EyeOutlined />}
-                        onClick={() => handleViewSession(record._id)}
-                      >View Session</Button>
-                  </div>
-                  
                 </Form>
               </div>
             ),
@@ -541,6 +537,40 @@ const ManagerCourseInstructor: React.FC = () => {
             </div>
           )}
         </Form>
+      </Modal>
+
+      <Modal
+        visible={logModalVisible}
+        onCancel={() => setLogModalVisible(false)}
+        footer={null}
+        width={800}
+      >
+        <h1 className="mb-5">Log Status</h1>
+        <div className="flex mb-5 space-x-5">
+          <Button className="text-white bg-teal-600">All log</Button>
+          <Select className="w-40">
+            <Select.Option value="New">New</Select.Option>
+            <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+            <Select.Option value="Approve">Approve</Select.Option>
+            <Select.Option value="Reject">Reject</Select.Option>
+            <Select.Option value="Active">Active</Select.Option>
+            <Select.Option value="Inactive">Inactive</Select.Option>
+          </Select>
+
+          <Select className="w-40">
+            <Select.Option value="New">New</Select.Option>
+            <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+            <Select.Option value="Approve">Approve</Select.Option>
+            <Select.Option value="Reject">Reject</Select.Option>
+            <Select.Option value="Active">Active</Select.Option>
+            <Select.Option value="Inactive">Inactive</Select.Option>
+          </Select>
+        </div>
+
+        <h1>Course Name: ...</h1>
+        <h1>Old status: ...</h1>
+        <h1>New status: ... </h1>
+        <h1>Comment: ...</h1>
       </Modal>
     </Layout>
   );
