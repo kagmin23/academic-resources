@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Button, Input, Layout, Table, Modal, Form, message } from "antd";
 import { useParams } from 'react-router-dom';
 import { getSession, getSessions, createSession, updateSession, deleteSession } from 'services/Instructor/sessionApiService';
-import { PlusCircleOutlined, SearchOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { PlusCircleOutlined, SearchOutlined, ExclamationCircleOutlined, BarsOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getCourse } from 'services/Instructor/courseApiService';
 const { Header, Content } = Layout;
 const { confirm } = Modal;
@@ -178,8 +178,9 @@ const ViewSession: React.FC = () => {
       key: 'actions',
       render: (text: string, session: Session) => (
         <div>
-          <Button onClick={() => handleEditSession(session)}>Edit</Button>
-          <Button danger onClick={() => handleDeleteSession(session._id)}>Delete</Button>
+          <Button onClick={() => handleEditSession(session)}><EditOutlined /></Button>
+          <Button danger onClick={() => handleDeleteSession(session._id)}><DeleteOutlined /></Button>
+          <Button><BarsOutlined /></Button>
         </div>
       ),
     },
