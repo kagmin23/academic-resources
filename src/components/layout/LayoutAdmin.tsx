@@ -41,7 +41,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
   }, []);
 
   const handleMenuClick = (e: { key: string }) => {
-    setSelectedKeys([e.key]);
+    setSelectedKeys([e.key]); 
   };
 
   const onSearch = (value: string) => {

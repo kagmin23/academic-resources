@@ -69,7 +69,7 @@ export default function InstructorRouter() {
          <Route path={`save`} element={<ProtectedRouter allowedRoles={["instructor"]}><SavePage /></ProtectedRouter>} />
          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
          <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["instructor"]}><TopInstructorPage /></ProtectedRouter>} />
-         <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} />
+         {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}
 
          </Route>
     </Routes>
