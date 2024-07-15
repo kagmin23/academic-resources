@@ -1,5 +1,11 @@
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  ExclamationCircleFilled,
+  EyeOutlined,
+  PlusCircleOutlined,
+  SearchOutlined
+} from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
 import {
   Button,
@@ -15,15 +21,8 @@ import {
   Typography,
   message,
 } from "antd";
-import {
-  DeleteOutlined,
-  EditOutlined,
-  ExclamationCircleFilled,
-  EyeOutlined,
-  PlusCircleOutlined,
-  SearchOutlined
-} from "@ant-design/icons";
 import { AlignType } from "rc-table/lib/interface";
+import React, { useEffect, useState } from "react";
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
@@ -298,7 +297,7 @@ const ManagerCourseInstructor: React.FC = () => {
                 </Row>
 
                 <Row gutter={16} align="middle">
-                  <Col span={8}>
+                  {/* <Col span={8}>
                     <Typography.Text strong>
                       Price:
                     </Typography.Text>
@@ -307,7 +306,7 @@ const ManagerCourseInstructor: React.FC = () => {
                     <Typography.Text strong>
                       Discount:
                     </Typography.Text>
-                  </Col>
+                  </Col> */}
                   <Form layout="vertical">
                     <Row gutter={16}>
                       <Col span={8}>
