@@ -55,8 +55,8 @@ const ViewSession: React.FC = () => {
         const response = await getCourse(courseId);
         setCourse(response.data);
       } catch (error) {
-        console.error("Failed to fetch course", error);
-        message.error('Failed to fetch course');
+        console.error("Failed to Fetch Course", error);
+        message.error('Failed to Fetch Course');
       }
     };
 
@@ -71,7 +71,7 @@ const ViewSession: React.FC = () => {
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {
-          message.error('Failed to fetch sessions');
+          message.error('Failed to Fetch Sessions');
         } finally {
           setLoading(false);
         }

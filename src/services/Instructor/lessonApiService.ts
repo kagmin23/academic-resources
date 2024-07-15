@@ -4,7 +4,7 @@ export const createLesson = async (lessonData: {
   name: string,
   course_id: string,
   session_id: string,
-  lesson_type: string,
+  // lesson_type: string,
   video_url: string,
   image_url: string,
   description: string,

@@ -1,38 +1,13 @@
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Layout, Modal, Select, Space, Table, message } from "antd";
+import { Lesson, Session } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Layout, Table, Modal, Form, message } from "antd";
-import { useParams } from 'react-router-dom';
-import { createLesson, getLessons, getLesson, updateLesson, deleteLesson } from 'services/Instructor/lessonApiService';
-import { PlusCircleOutlined, SearchOutlined, ExclamationCircleOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { createLesson, deleteLesson, getLessons, updateLesson } from 'services/Instructor/lessonApiService';
 import { getSession } from 'services/Instructor/sessionApiService';
 
 const { Header, Content } = Layout;
 const { confirm } = Modal;
-
-interface Lesson {
-  _id: string;
-  name: string;
-  course_id: string;
-  session_id: string;
-  lesson_type: string;
-  description: string;
-  video_url: string;
-  image_url: string;
-  full_time: number;
-  position_order: number;
-  created_at: Date;
-  updated_at: Date;
-  is_deleted: boolean,
-}
-
-interface Session {
-  _id: string;
-  name: string;
-  description: string;
-  position_order: number;
-  created_at: string;
-  updated_at: string;
-}
 
 const ViewLesson: React.FC = () => {
   const { sessionId, courseId } = useParams<{ sessionId: string, courseId: string }>();
@@ -86,7 +61,7 @@ const ViewLesson: React.FC = () => {
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {
-          message.error('Failed to fetch lesson');
+          message.error('Failed to Fetch Lesson');
         } finally {
           setLoading(false);
         }
@@ -119,7 +94,7 @@ const ViewLesson: React.FC = () => {
 
   const handleDeleteLesson = (lessonId: string) => {
     confirm({
-      title: 'Do you want to delete this lesson?',
+      title: 'Do you want to delete this Lesson?',
       icon: <ExclamationCircleOutlined />,
       content: 'This action cannot be undone',
       onOk() {
@@ -131,8 +106,8 @@ const ViewLesson: React.FC = () => {
             message.success('Lesson deleted successfully');
           })
           .catch((error) => {
-            console.error("Failed to delete lesson", error);
-            message.error('Failed to delete lesson');
+            console.error("Failed to Delete Lesson", error);
+            message.error('Failed to Delete Lesson');
           });
       },
     });
@@ -158,8 +133,8 @@ const ViewLesson: React.FC = () => {
               message.success('Lesson updated successfully');
             })
             .catch((error) => {
-              console.error("Failed to update lesson", error);
-              message.error('Failed to update lesson');
+              console.error("Failed to Update Lesson", error);
+              message.error('Failed to Update Lesson');
             });
         } else {
           const newValues = {
@@ -179,8 +154,8 @@ const ViewLesson: React.FC = () => {
               message.success('Lesson created successfully');
             })
             .catch((error) => {
-              console.error("Failed to create lesson", error);
-              message.error('Failed to create lesson');
+              console.error("Failed to Create lesson", error);
+              message.error('Failed to Create lesson');
             });
         }
         setIsModalVisible(false);
@@ -216,19 +191,41 @@ const ViewLesson: React.FC = () => {
       title: 'Actions',
       key: 'actions',
       render: (text: string, lesson: Lesson) => (
-        <span>
-          <Button onClick={() => handleEditLesson(lesson)} icon={<EditOutlined />} />
-          <Button onClick={() => handleDeleteLesson(lesson._id)} icon={<DeleteOutlined />} />
+        <span className="flex flex-row gap-1">
+          <Button size="small" onClick={() => handleEditLesson(lesson)} icon={<EditOutlined />} />
+          <Button size="small" onClick={() => handleDeleteLesson(lesson._id)} icon={<DeleteOutlined />} />
         </span>
       ),
     },
   ];
 
+  const options = [
+    {
+      label: "text",
+      value: "text",
+      desc: "text"
+    },
+    {
+      label: "video",
+      value: "video",
+      desc: "video"
+    },
+    {
+      label: "image",
+      value: "image",
+      desc: "image"
+    }
+];
+
+const handleSelectLessonType = (value: string[]) => {
+    console.log(`Selected ${value}`);
+}
+
   return (
     <Layout style={{ height: '100vh' }}>
       <Header className="p-0 bg-white">
         <div className="flex justify-between bg-[#939fb1]">
-          <div className="text-lg font-bold my-auto mx-4 text-white">
+          <div className="mx-4 my-auto text-lg font-bold text-white">
             Name Course: {session.name}
           </div>
           <div className="mx-4 my-auto">
@@ -238,7 +235,7 @@ const ViewLesson: React.FC = () => {
               style={{ width: 300, borderRight: '2px solid white' }}
               onChange={e => handleSearch(e.target.value)}
             />
-            <Button className="font-bold text-white bg-red-500 ml-2" onClick={handleAddNewLesson}>
+            <Button className="ml-2 font-bold text-white bg-red-500" onClick={handleAddNewLesson}>
               <PlusCircleOutlined />
               Add New Lesson
             </Button>
@@ -264,24 +261,39 @@ const ViewLesson: React.FC = () => {
           <Form.Item
             name="name"
             label="Name"
-            rules={[{ required: true, message: 'Please enter the lesson name!' }]}
+            rules={[{ required: true, message: 'Please enter the Lesson Name!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true, message: 'Please enter the lesson description!' }]}
+            rules={[{ required: true, message: 'Please enter the Lesson Description!' }]}
           >
             <Input.TextArea />
           </Form.Item>
+          
           <Form.Item
             name="lesson_type"
             label="Lesson Type"
-            rules={[{ required: true, message: 'Please enter the lesson type!' }]}
-          >
-            <Input />
+            rules={[{ required: true, message: 'Please select the Lesson Type!' }]}
+            >
+          <Select
+            mode= 'multiple'
+            style= {{width: "100%"}}
+            defaultValue={['text']}
+            placeholder= "Please Select Lesson Type"
+            onChange={handleSelectLessonType}
+            options={options}
+            optionRender={(options) => (
+              <Space>
+                <span role='img' aria-label={options.data.label}></span>
+                {options.data.desc}
+              </Space>
+            )}
+          />
           </Form.Item>
+          
           <Form.Item
             name="video_url"
             label="Video URL"
