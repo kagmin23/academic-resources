@@ -118,14 +118,14 @@ const NewCourseAdmin: React.FC = () => {
               placeholder="Search"
               prefix={<SearchOutlined />}
               onChange={handleSearchChange}
-              className="items-center w-full h-8 text-lg border-2 border-gray-300 border-solid rounded"
+              className="items-center w-full h-8 text-sm border-2 border-gray-300 border-solid rounded"
               value={searchTerm}
             />
           </div>
           </div>
         </Header>
         <Content className="m-4">
-          <div className="p-4 mt-5 bg-white">
+          <div className="p-4 bg-white">
             <Table
               dataSource={filteredDataSource}
               columns={columns}

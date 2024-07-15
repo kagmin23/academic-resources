@@ -3,34 +3,48 @@ import Dashboard from 'pages/admin/DashBoard';
 import React from 'react';
 import { Outlet, Route, Routes } from 'react-router-dom';
 import LayoutAdmin from '../../components/layout/LayoutAdmin';
-import Category from './Category';
 import Content from './Course';
-import NewCourse from './NewCourse';
 import ProfileAdmin from './ProfileAdmin';
-import Report from './Report';
 import Sidebar from './Sidebar';
 import TransactionHistory from './TransactionHistory';
 
 import ChangepasswordAd from 'pages/admin/ChangePasswordAd';
 import ApproveInstructor from './ApproveInstructor';
-import Users from './Users';
+import CategoryAdmin from './Category';
+import NewCourseAdmin from './NewCourse';
+import ReportAdmin from './Report';
+import UsersAdmin from './Users';
+
 
 const AdminPage: React.FC = () => {
+
+  // const LayoutAdmin = React.lazy(() => import("../../components/layout/LayoutAdmin"));
+  // const Dashboard = React.lazy(() => import("../admin/DashBoard"));
+  // const Users = React.lazy(() => import("../admin/Users"));
+  // const ApproveInstructor = React.lazy(() => import("../admin/ApproveInstructor"));
+  // const Content = React.lazy(() => import("../admin/Course"));
+  // const NewCourse = React.lazy(() => import("../admin/NewCourse"));
+  // const Category = React.lazy(() => import("../admin/Category"));
+  // const Report = React.lazy(() => import("../admin/Report"));
+  // const ProfileAdmin = React.lazy(() => import("../admin/ProfileAdmin"));
+  // const ChangepasswordAd = React.lazy(() => import("../admin/ChangePasswordAd"));
+  // const TransactionHistory = React.lazy(() => import("../admin/TransactionHistory"));
+
   return (
     <div>
-      <LayoutAdmin/>
+      <LayoutAdmin />
     <div className="flex min-h-screen mb-5">
       <Sidebar />
       <div className="flex-grow p-4 bg-white rounded shadow-md">
         <Routes>
         <Route path={`/`} element={<Dashboard />} />
         <Route path={`dashboard`} element={<Dashboard />} />
-          <Route path={`user`} element={<Users />} />
+          <Route path={`user`} element={<UsersAdmin />} />
           <Route path={`approve-instructor`} element={<ApproveInstructor />} />
           <Route path={`course`} element={<Content />} />
-          <Route path={`approve-courses`} element={<NewCourse/>}/>
-          <Route path={`category`} element={<Category />} />
-          <Route path={`report`} element={<Report />} />
+          <Route path={`approve-courses`} element={<NewCourseAdmin />}/>
+          <Route path={`category`} element={<CategoryAdmin />} />
+          <Route path={`report`} element={<ReportAdmin />} />
           <Route path={`info-admin`} element={<ProfileAdmin />} />
           <Route path={`admin-changepassword`} element={<ChangepasswordAd />} />
           <Route path={`transaction-history`} element={<TransactionHistory />} />
