@@ -252,6 +252,7 @@ const ManagerCourseInstructor: React.FC = () => {
       render: (text: string, record: Course) => (
         <div style={{ textAlign: "center" }}>
           <Button
+            size="small"
             icon={<EditOutlined />}
             className="mr-2 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
@@ -259,6 +260,7 @@ const ManagerCourseInstructor: React.FC = () => {
             
           </Button>
           <Button
+            size="small"
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
             onClick={() => showConfirm(record)}
@@ -266,6 +268,7 @@ const ManagerCourseInstructor: React.FC = () => {
             
           </Button>
           <Button
+            size="small"
             icon={<EyeOutlined />}
             onClick={() => handleViewMore(record._id)}
           >
