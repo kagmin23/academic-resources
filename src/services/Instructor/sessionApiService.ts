@@ -1,4 +1,3 @@
-import { Course } from 'models/types';
 import { apiRequest } from 'services/apiService';
 
 interface AddSession {
@@ -20,6 +19,10 @@ export const createSession = async (sessionData: {
   position_order: number,
 }) => {
   const token = localStorage.getItem('token');
+  console.log("sessionData", sessionData)
+  if (typeof sessionData.position_order === 'string') {
+    sessionData.position_order = parseFloat(sessionData.position_order);
+  }
 
   return apiRequest('/api/session', {
     method: 'POST',
@@ -31,7 +34,8 @@ export const createSession = async (sessionData: {
   });
 };
 
-export const getSessions = async (keyword: string, pageNum: number, pageSize: number,course_id:string) => {
+
+export const getSessions = async (keyword: string, pageNum: number, pageSize: number, course_id: string) => {
   const token = localStorage.getItem('token');
 
   return apiRequest('/api/session/search', {
