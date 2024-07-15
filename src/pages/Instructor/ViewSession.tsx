@@ -4,6 +4,7 @@ import { useParams } from 'react-router-dom';
 import { getSession, getSessions, createSession, updateSession, deleteSession } from 'services/Instructor/sessionApiService';
 import { PlusCircleOutlined, SearchOutlined, ExclamationCircleOutlined, BarsOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
 import { getCourse } from 'services/Instructor/courseApiService';
+import { useNavigate } from 'react-router-dom';
 const { Header, Content } = Layout;
 const { confirm } = Modal;
 
@@ -34,6 +35,7 @@ const ViewSession: React.FC = () => {
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter((item) =>
@@ -152,6 +154,10 @@ const ViewSession: React.FC = () => {
       message.error('Validation failed');
     });
 };
+
+const handleViewLesson = (sessionId: string) => {
+  navigate(`/instructor/profile-instructor/view-session/${courseId}/manager-lession/${sessionId}`);
+};
   const columns = [
     {
       title: 'Name',
@@ -180,7 +186,8 @@ const ViewSession: React.FC = () => {
         <div>
           <Button onClick={() => handleEditSession(session)}><EditOutlined /></Button>
           <Button danger onClick={() => handleDeleteSession(session._id)}><DeleteOutlined /></Button>
-          <Button><BarsOutlined /></Button>
+          <Button onClick={() => handleViewLesson(session._id)}><BarsOutlined /></Button>
+         
         </div>
       ),
     },
