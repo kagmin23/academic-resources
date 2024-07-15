@@ -23,7 +23,7 @@ export const createLesson = async (lessonData: {
   });
 };
 
-export const getLessons = async (keyword: string, pageNum: number, pageSize: number) => {
+export const getLessons = async (session_id: string, pageNum: number, pageSize: number) => {
   const token = localStorage.getItem('token');
 
   return apiRequest('/api/lesson/search', {
@@ -34,7 +34,7 @@ export const getLessons = async (keyword: string, pageNum: number, pageSize: num
     },
     data: {
       searchCondition: {
-        keyword,
+        session_id,
         is_delete: false,
       },
       pageInfo: {
