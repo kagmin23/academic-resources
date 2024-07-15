@@ -301,7 +301,7 @@ const ManagerCourseInstructor: React.FC = () => {
       </Header>
       <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
         <Table
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
           dataSource={filteredDataSource}
           columns={columns}
           expandable={{
