@@ -287,7 +287,7 @@ const ManagerCourseInstructor: React.FC = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-  <Header className="p-0 bg-white">
+      <Header className="p-0 bg-white">
         <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
           <Input
             placeholder="Search..."
@@ -305,9 +305,10 @@ const ManagerCourseInstructor: React.FC = () => {
           </Button>
         </div>
       </Header>
-      <Content className="mx-4 my-4 overflow-y-auto xl:mx-6" style={{ paddingTop: "64px" }}>
+      <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
         <Table
-          pagination={{ pageSize: 10 }}
+          style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 180px)' }}
+          pagination={{ pageSize: 6 }}
           dataSource={filteredDataSource}
           columns={columns}
           expandable={{
