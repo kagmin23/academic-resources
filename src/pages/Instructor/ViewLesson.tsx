@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Layout, Modal, Select, Space, Table, message } from "antd";
+import { Button, Form, Input, Layout, Modal, Select, Table, message } from "antd";
 import { Lesson, Session } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -198,28 +198,14 @@ const ViewLesson: React.FC = () => {
       ),
     },
   ];
-
-  const options = [
-    {
-      label: "text",
-      value: "text",
-      desc: "text"
-    },
-    {
-      label: "video",
-      value: "video",
-      desc: "video"
-    },
-    {
-      label: "image",
-      value: "image",
-      desc: "image"
-    }
-];
-
-const handleSelectLessonType = (value: string[]) => {
-    console.log(`Selected ${value}`);
-}
+  
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+  
+  const onSearch = (value: string) => {
+    console.log('search:', value);
+  };
 
   return (
     <Layout style={{ height: '100vh' }}>
@@ -279,18 +265,25 @@ const handleSelectLessonType = (value: string[]) => {
             rules={[{ required: true, message: 'Please select the Lesson Type!' }]}
             >
           <Select
-            mode= 'multiple'
-            style= {{width: "100%"}}
-            defaultValue={['text']}
-            placeholder= "Please Select Lesson Type"
-            onChange={handleSelectLessonType}
-            options={options}
-            optionRender={(options) => (
-              <Space>
-                <span role='img' aria-label={options.data.label}></span>
-                {options.data.desc}
-              </Space>
-            )}
+            showSearch
+            placeholder="Select a person"
+            optionFilterProp="label"
+            onChange={onChange}
+            onSearch={onSearch}
+            options={[
+              {
+                value: 'text',
+                label: 'text',
+              },
+              {
+                value: 'video',
+                label: 'video',
+              },
+              {
+                value: 'image',
+                label: 'image',
+              },
+            ]}
           />
           </Form.Item>
           
