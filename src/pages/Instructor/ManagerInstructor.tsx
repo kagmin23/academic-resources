@@ -16,7 +16,6 @@ import {
 } from "antd";
 import { AlignType } from "rc-table/lib/interface";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
@@ -49,7 +48,7 @@ interface Category {
   name: string;
 }
 
-  
+
 
 const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Course[]>([]);
@@ -95,7 +94,7 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await getCourses('', 1, 10); 
+      const response = await getCourses('', 1, 10);
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
@@ -200,7 +199,7 @@ const ManagerCourseInstructor: React.FC = () => {
         message.error('Validation failed');
       });
   };
-  
+
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter((item) =>
@@ -229,7 +228,7 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
 
-  
+
   const columns = [
     {
       title: "Course Name",
@@ -257,20 +256,20 @@ const ManagerCourseInstructor: React.FC = () => {
             className="mr-2 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
           >
-            
+
           </Button>
           <Button
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
             onClick={() => showConfirm(record)}
           >
-            
+
           </Button>
           <Button
             icon={<EyeOutlined />}
             onClick={() => handleViewMore(record._id)}
           >
-            
+
           </Button>
         </div>
       ),
@@ -334,54 +333,54 @@ const ManagerCourseInstructor: React.FC = () => {
                       Discount:
                     </Typography.Text>
                   </Col>
-                  
+
                   <div>
-                    
+
                     <Button onClick={showLogModal}>View Log</Button>
                     {/* <Link to={`/instructor/profile-instructor/view-session`}><Button>View Session</Button></Link> */}
                     <Button
-            icon={<EyeOutlined />}
-            onClick={() => handleViewSession(record._id)}
-          >View Session</Button> {/* Cập nhật nút View Session */}
+                      icon={<EyeOutlined />}
+                      onClick={() => handleViewSession(record._id)}
+                    >View Session</Button> {/* Cập nhật nút View Session */}
 
                   </div>
                 </Row>
 
                 <Modal
-        visible={logModalVisible}
-        onCancel={hideLogModal}
-        footer={null}
-        width={800}
-      >
-        <h1 className="mb-5">Log Status</h1>
-        <div className="flex mb-5 space-x-5">
-          <Button className="text-white bg-teal-600">All log</Button>
-          <Select className="w-40">
-          <Select.Option value="New">New</Select.Option>
-          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-          <Select.Option value="Approve">Approve</Select.Option>
-          <Select.Option value="Reject">Reject</Select.Option>
-          <Select.Option value="Active">Active</Select.Option>
-          <Select.Option value="Inactive">Inactive</Select.Option>
-          
-          </Select>
+                  visible={logModalVisible}
+                  onCancel={hideLogModal}
+                  footer={null}
+                  width={800}
+                >
+                  <h1 className="mb-5">Log Status</h1>
+                  <div className="flex mb-5 space-x-5">
+                    <Button className="text-white bg-teal-600">All log</Button>
+                    <Select className="w-40">
+                      <Select.Option value="New">New</Select.Option>
+                      <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                      <Select.Option value="Approve">Approve</Select.Option>
+                      <Select.Option value="Reject">Reject</Select.Option>
+                      <Select.Option value="Active">Active</Select.Option>
+                      <Select.Option value="Inactive">Inactive</Select.Option>
 
-          <Select className="w-40">
-          <Select.Option value="New">New</Select.Option>
-          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-          <Select.Option value="Approve">Approve</Select.Option>
-          <Select.Option value="Reject">Reject</Select.Option>
-          <Select.Option value="Active">Active</Select.Option>
-          <Select.Option value="Inactive">Inactive</Select.Option>
-          
-          </Select>
-        </div>
+                    </Select>
 
-        <h1>Course Name: ...</h1>
-        <h1>Old status: ...</h1>
-        <h1>New status: ... </h1>
-        <h1>Comment: ...</h1>
-      </Modal>
+                    <Select className="w-40">
+                      <Select.Option value="New">New</Select.Option>
+                      <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                      <Select.Option value="Approve">Approve</Select.Option>
+                      <Select.Option value="Reject">Reject</Select.Option>
+                      <Select.Option value="Active">Active</Select.Option>
+                      <Select.Option value="Inactive">Inactive</Select.Option>
+
+                    </Select>
+                  </div>
+
+                  <h1>Course Name: ...</h1>
+                  <h1>Old status: ...</h1>
+                  <h1>New status: ... </h1>
+                  <h1>Comment: ...</h1>
+                </Modal>
 
                 <Form layout="vertical">
                   <Row gutter={16}>
@@ -429,7 +428,7 @@ const ManagerCourseInstructor: React.FC = () => {
             rules={[
               { required: true, message: "Please input the course name!" },
             ]}
-            
+
           >
             <Editor
               apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"

@@ -9,7 +9,7 @@ import SidebarInstructor from '../Instructor/SidebarInstructor';
 import ManagerCertificate from './ManagerCertificate';
 import SessionInstructor from './SessionInstructor';
 import ViewSession from './ViewSession';
-import ManagerLession from './ManagerLession';
+import ViewLesson from 'pages/Instructor/ViewLesson';
 
 const InstructorPage: React.FC = () => {
   return (
@@ -30,7 +30,7 @@ const InstructorPage: React.FC = () => {
           
           <Route path={`view-session/:courseId/`} element={<ViewSession />} />
           {/* <Route path={`manager-lession/:sessionId`} element={<ManagerLession/>}/>  */}
-          <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ManagerLession/>}/> 
+          <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/> 
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>
       </div>
