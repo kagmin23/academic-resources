@@ -1,9 +1,9 @@
-import { BookOutlined, SettingOutlined, UserOutlined, SafetyOutlined, LogoutOutlined } from '@ant-design/icons';
-import { Input, Layout, Menu, Dropdown, Avatar, notification } from 'antd';
-import React, { useState, useEffect } from 'react';
+import { BookOutlined, LogoutOutlined, SafetyOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
+import { Avatar, Dropdown, Layout, Menu, notification } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from 'services/AdminsApi/UserService';
+import 'tailwindcss/tailwind.css';
 
 const { Header, Content } = Layout;
 
@@ -89,10 +89,10 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           )}
         </div>
       </Header>
-      <Content style={{ marginTop: 64, padding: '16px' }}>
-        <div className="p-4 bg-white rounded shadow">
+      <Content style={{ marginTop: 64  }}>
+        {/* <div className="p-4 bg-white rounded shadow"> */}
           <Outlet />
-        </div>
+        {/* </div> */}
       </Content>
     </Layout>
   );

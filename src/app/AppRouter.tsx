@@ -12,6 +12,7 @@ import {
   CoursePage,
   DetailBlogPage,
   HomePage,
+  ResendVerifyToken,
   SavePage,
   TopInstructorPage,
   VerityToken
@@ -28,6 +29,7 @@ import ForgotPassword from 'pages/register/ForgotPassword';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import StudentRouter from '../pages/Student/StudentRouter';
+
 
 
 const AppRouter: React.FC = () => (
@@ -55,6 +57,7 @@ const AppRouter: React.FC = () => (
           <Route path="/save" element={<SavePage />} />
           <Route path="/all-instructor" element={<AllInstructor />} />
           <Route path="/verify-email" element={<VerityToken />} />
+          <Route path="/resend-email" element={<ResendVerifyToken />} />
         </Route>
 
         {/* Layout for Students */}
