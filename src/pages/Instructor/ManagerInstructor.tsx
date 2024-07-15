@@ -16,11 +16,10 @@ import {
 } from "antd";
 import { AlignType } from "rc-table/lib/interface";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
-import { useNavigate } from 'react-router-dom';
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -253,6 +252,7 @@ const ManagerCourseInstructor: React.FC = () => {
       render: (text: string, record: Course) => (
         <div style={{ textAlign: "center" }}>
           <Button
+            size="small"
             icon={<EditOutlined />}
             className="mr-2 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
@@ -260,6 +260,7 @@ const ManagerCourseInstructor: React.FC = () => {
             
           </Button>
           <Button
+            size="small"
             icon={<DeleteOutlined />}
             className="mr-2 text-white bg-red-600"
             onClick={() => showConfirm(record)}
@@ -267,6 +268,7 @@ const ManagerCourseInstructor: React.FC = () => {
             
           </Button>
           <Button
+            size="small"
             icon={<EyeOutlined />}
             onClick={() => handleViewMore(record._id)}
           >
@@ -299,7 +301,7 @@ const ManagerCourseInstructor: React.FC = () => {
       </Header>
       <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
         <Table
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
           dataSource={filteredDataSource}
           columns={columns}
           expandable={{
@@ -321,30 +323,6 @@ const ManagerCourseInstructor: React.FC = () => {
                     </Typography.Title>
                     <p>{record.description || "-"}</p>
                   </Col>
-                </Row>
-
-                <Row gutter={16} align="middle">
-                  <Col span={8}>
-                    <Typography.Text strong>
-                      Price:
-                    </Typography.Text>
-                  </Col>
-                  <Col span={8}>
-                    <Typography.Text strong>
-                      Discount:
-                    </Typography.Text>
-                  </Col>
-                  
-                  <div>
-                    
-                    <Button onClick={showLogModal}>View Log</Button>
-                    {/* <Link to={`/instructor/profile-instructor/view-session`}><Button>View Session</Button></Link> */}
-                    <Button
-            icon={<EyeOutlined />}
-            onClick={() => handleViewSession(record._id)}
-          >View Session</Button> {/* Cập nhật nút View Session */}
-
-                  </div>
                 </Row>
 
                 <Modal
@@ -405,6 +383,15 @@ const ManagerCourseInstructor: React.FC = () => {
                       </Form.Item>
                     </Col>
                   </Row>
+
+                  <div className="flex flex-row gap-4">
+                    <Button onClick={showLogModal}>Log Status</Button>
+                    <Button
+                        // icon={<EyeOutlined />}
+                        onClick={() => handleViewSession(record._id)}
+                      >View Session</Button>
+                  </div>
+                  
                 </Form>
               </div>
             ),

@@ -134,7 +134,7 @@ const CourseAdmin: React.FC = () => {
               placeholder="Search"
               prefix={<SearchOutlined />}
               onChange={handleSearchChange}
-              className="items-center w-full h-8 text-lg border-2 border-gray-300 border-solid rounded"
+              className="items-center w-full h-8 text-sm border-2 border-gray-300 border-solid rounded"
               value={searchTerm}
             />
           </div>

@@ -1,10 +1,9 @@
+import { BarsOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Layout, Modal, Table, message } from "antd";
 import React, { useEffect, useState } from 'react';
-import { Button, Input, Layout, Table, Modal, Form, message } from "antd";
-import { useParams } from 'react-router-dom';
-import { getSession, getSessions, createSession, updateSession, deleteSession } from 'services/Instructor/sessionApiService';
-import { PlusCircleOutlined, SearchOutlined, ExclamationCircleOutlined, BarsOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useNavigate, useParams } from 'react-router-dom';
 import { getCourse } from 'services/Instructor/courseApiService';
-import { useNavigate } from 'react-router-dom';
+import { createSession, deleteSession, getSessions, updateSession } from 'services/Instructor/sessionApiService';
 const { Header, Content } = Layout;
 const { confirm } = Modal;
 
@@ -185,11 +184,10 @@ const handleViewLesson = (sessionId: string) => {
       title: 'Actions',
       key: 'actions',
       render: (text: string, session: Session) => (
-        <div>
-          <Button onClick={() => handleEditSession(session)}><EditOutlined /></Button>
-          <Button danger onClick={() => handleDeleteSession(session._id)}><DeleteOutlined /></Button>
-          <Button onClick={() => handleViewLesson(session._id)}><BarsOutlined /></Button>
-         
+        <div className="flex flex-row gap-1">
+          <Button size="small" onClick={() => handleEditSession(session)}><EditOutlined /></Button>
+          <Button size="small" danger onClick={() => handleDeleteSession(session._id)}><DeleteOutlined /></Button>
+          <Button size="small" onClick={() => handleViewLesson(session._id)}><BarsOutlined /></Button>
         </div>
       ),
     },
@@ -203,7 +201,7 @@ const handleViewLesson = (sessionId: string) => {
     <Layout style={{ height: '100vh' }}>
       <Header className="p-0 bg-white">
         <div className="flex justify-between bg-[#939fb1]">
-          <div className="text-lg font-bold my-auto mx-4 text-white">
+          <div className="mx-4 my-auto text-lg font-bold text-gray-800">
             Name Course: {course.name}
           </div>
           <div className="mx-4 my-auto">
@@ -213,7 +211,7 @@ const handleViewLesson = (sessionId: string) => {
               style={{ width: 300, borderRight: '2px solid white' }}
               onChange={e => handleSearch(e.target.value)}
             />
-            <Button className="font-bold text-white bg-red-500 ml-2" onClick={handleAddNewSession}>
+            <Button className="ml-2 font-bold text-white bg-red-500" onClick={handleAddNewSession}>
               <PlusCircleOutlined />
               Add New Session
             </Button>

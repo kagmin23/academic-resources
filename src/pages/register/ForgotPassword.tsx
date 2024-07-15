@@ -1,15 +1,22 @@
 import { Button, Form, Input, message } from 'antd';
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { forgotPassword } from 'services/forgotPasswordApiService';
 import './stylesLogin.css';
 
 const ForgotPassword: React.FC = () => {
   const [form] = Form.useForm();
 
-  const handleForgotPassword = (values: any) => {
-    console.log('Forgot password for email:', values.email);
-    message.success('Password reset instructions sent to your email. Please check your email!');
-    form.resetFields();
+  const handleForgotPassword = async (values: any) => {
+    try {
+      console.log('Forgot password for email:', values.email);
+      await forgotPassword(values.email);
+      message.success('Password reset instructions sent to your email. Please check your email!');
+      form.resetFields();
+    } catch (error) {
+      console.error('Failed to reset password:', error);
+      message.error('Failed to Reset Password! Please check your information.');
+    }
   };
 
   const onForgotFailed = (errorInfo: any) => {
