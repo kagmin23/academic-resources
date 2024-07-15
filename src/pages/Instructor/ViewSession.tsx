@@ -68,7 +68,7 @@ const ViewSession: React.FC = () => {
     const fetchSessions = async () => {
       if (courseId) {
         try {
-          const response = await getSessions('', 1, 10);
+          const response = await getSessions('', 1, 10, courseId);
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {

@@ -1,6 +1,19 @@
+import { Course } from 'models/types';
 import { apiRequest } from 'services/apiService';
 
+interface AddSession {
+_id:string,
+name:string,
+user_id:string,
+course_id:string,
+description:string,
+position_order:number,
+created_at:Date,
+updated_at:Date,
+is_deleted:boolean,
+}
 export const createSession = async (sessionData: {
+
   name: string,
   course_id: string,
   description: string,
@@ -18,7 +31,7 @@ export const createSession = async (sessionData: {
   });
 };
 
-export const getSessions = async (keyword: string, pageNum: number, pageSize: number) => {
+export const getSessions = async (keyword: string, pageNum: number, pageSize: number,course_id:string) => {
   const token = localStorage.getItem('token');
 
   return apiRequest('/api/session/search', {
@@ -30,6 +43,7 @@ export const getSessions = async (keyword: string, pageNum: number, pageSize: nu
     data: {
       searchCondition: {
         keyword,
+        course_id,
         is_delete: false,
       },
       pageInfo: {
