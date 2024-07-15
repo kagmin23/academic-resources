@@ -16,11 +16,10 @@ import {
 } from "antd";
 import { AlignType } from "rc-table/lib/interface";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
-import { useNavigate } from 'react-router-dom';
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -323,30 +322,6 @@ const ManagerCourseInstructor: React.FC = () => {
                   </Col>
                 </Row>
 
-                <Row gutter={16} align="middle">
-                  <Col span={8}>
-                    <Typography.Text strong>
-                      Price:
-                    </Typography.Text>
-                  </Col>
-                  <Col span={8}>
-                    <Typography.Text strong>
-                      Discount:
-                    </Typography.Text>
-                  </Col>
-                  
-                  <div>
-                    
-                    <Button onClick={showLogModal}>View Log</Button>
-                    {/* <Link to={`/instructor/profile-instructor/view-session`}><Button>View Session</Button></Link> */}
-                    <Button
-            icon={<EyeOutlined />}
-            onClick={() => handleViewSession(record._id)}
-          >View Session</Button> {/* Cập nhật nút View Session */}
-
-                  </div>
-                </Row>
-
                 <Modal
         visible={logModalVisible}
         onCancel={hideLogModal}
@@ -405,6 +380,15 @@ const ManagerCourseInstructor: React.FC = () => {
                       </Form.Item>
                     </Col>
                   </Row>
+
+                  <div className="flex flex-row gap-4">
+                    <Button onClick={showLogModal}>Log Status</Button>
+                    <Button
+                        // icon={<EyeOutlined />}
+                        onClick={() => handleViewSession(record._id)}
+                      >View Session</Button>
+                  </div>
+                  
                 </Form>
               </div>
             ),
