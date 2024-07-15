@@ -137,7 +137,9 @@ const ViewSession: React.FC = () => {
       } else {
         createSession({ ...values, course_id: courseId })
           .then((response) => {
-            const newSession = response.data;
+            const newSession = {
+              ...response.data,
+            key:response.data._id};
             setDataSource([...dataSource, newSession]);
             setFilteredDataSource([...dataSource, newSession]);
             message.success('Session created successfully');
