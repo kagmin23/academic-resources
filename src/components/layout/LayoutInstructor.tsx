@@ -226,8 +226,8 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
           </Menu.Item>
         </Menu>
       </Drawer>
-      <Content className="w-full p-4 pt-16">
-        <div className="w-full p-4 bg-white rounded shadow h-fit">
+      <Content className="justify-center w-full p-4 pt-16">
+        <div className="justify-center w-full p-4 bg-white rounded shadow h-fit">
           <Outlet />
         </div>
       </Content>

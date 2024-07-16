@@ -12,6 +12,13 @@ export const createLesson = async (lessonData: {
   position_order: number,
 }) => {
   const token = localStorage.getItem('token');
+  console.log("Lesson Data", lessonData)
+
+  if (typeof lessonData.position_order === 'string' && typeof lessonData.full_time === 'string') {
+    lessonData.position_order = parseFloat(lessonData.position_order);
+    lessonData.full_time = parseFloat(lessonData.full_time);
+  }
+
 
   return apiRequest('/api/lesson', {
     method: 'POST',
@@ -23,7 +30,7 @@ export const createLesson = async (lessonData: {
   });
 };
 
-export const getLessons = async (session_id: string, pageNum: number, pageSize: number) => {
+export const getLessons = async (session_id: string, pageNum: number, pageSize: number,keyword:string) => {
   const token = localStorage.getItem('token');
 
   return apiRequest('/api/lesson/search', {
@@ -33,7 +40,9 @@ export const getLessons = async (session_id: string, pageNum: number, pageSize: 
       Authorization: `Bearer ${token}`,
     },
     data: {
+      //ddaay ne
       searchCondition: {
+        keyword,
         session_id,
         is_delete: false,
       },
@@ -68,6 +77,11 @@ export const updateLesson = async (lessonId: string, lessonData: {
     position_order: number,
 }) => {
   const token = localStorage.getItem('token');
+
+  if (typeof lessonData.position_order === 'string' && typeof lessonData.full_time === 'string') {
+    lessonData.position_order = parseFloat(lessonData.position_order);
+    lessonData.full_time = parseFloat(lessonData.full_time);
+  }
 
   return apiRequest(`/api/lesson/${lessonId}`, {
     method: 'PUT',

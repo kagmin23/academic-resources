@@ -15,7 +15,7 @@ import {
   ShoppingCartOutlined,
 } from '@ant-design/icons';
 import type { MenuProps } from 'antd';
-import { Drawer,Input } from 'antd';
+import { Drawer, Input } from 'antd';
 import { Link } from 'react-router-dom';
 
 
@@ -212,14 +212,6 @@ const handlePageChange = (page: number) => {
       <Row gutter={[16,16]} >
       {/* Menu ở Màn hình md trở lên */}
       <Col xs={0} sm={0} md={6} lg={6} xl={6}>
-          {/* Sidebar content */}
-
-
-          {/* <div className="p-4 bg-gray-200"> */}
-            {/* <h2 className="mb-4 text-lg font-semibold">Menu</h2> */}
-
-            {/* Add filters here */}
-
           <div className="flex flex-col h-full">
           <div className='h-[90vh] w-full flex-grow '>
           <Menu
@@ -270,7 +262,7 @@ const handlePageChange = (page: number) => {
           />
       </Drawer>
       {/* Content Course */}
-      <div className="md:w-1/3 mb-10">
+      <div className="mb-10 md:w-1/3">
           <Search
             placeholder="Search..."
             enterButton={<SearchOutlined></SearchOutlined>}
