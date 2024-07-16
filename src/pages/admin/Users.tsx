@@ -266,7 +266,7 @@ const UsersAdmin: React.FC = () => {
   ];
 
   return (
-    <Layout>
+    <div className="p4" >
       <Content className="p-4">
         <h2 className="mb-4 text-xl font-bold">Manage Accounts</h2>
         <div className="flex items-center mb-4 space-x-2">
@@ -388,7 +388,7 @@ const UsersAdmin: React.FC = () => {
           <p>Are you sure you want to lock this user?</p>
         </Modal>
       </Content>
-    </Layout>
+    </div>
   );
 };
 

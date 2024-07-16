@@ -95,7 +95,7 @@ const ApproveInstructor: React.FC = () => {
   ];
 
   return (
-    <Layout>
+    <div className=''>
       <Content className="p-4">
         <h2 className="mb-4 text-xl font-bold">Approve Instructor</h2>
         <div className="flex items-center mb-4 space-x-2">
@@ -119,7 +119,7 @@ const ApproveInstructor: React.FC = () => {
           <p>{confirmMessage}</p>
         </Modal>
       </Content>
-    </Layout>
+    </div>
   );
 };
 

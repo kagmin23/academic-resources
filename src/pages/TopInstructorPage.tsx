@@ -66,8 +66,8 @@ const dataSource: DataType[] = [
 
 const InstructorPage: React.FC = () => {
   return (
-    <div className="flex">
-        <div className="pb-5 mb-10 w-64  ">
+    <div className="flex overflow-auto">
+        <div className="pb-5 mb-10  w-[295px]  ">
           <Menu   mode="inline" theme="dark" className="h-svh p-2 lg:text-base xl:text-lg w-full">
             <Menu.Item key="1" icon={<UsergroupAddOutlined />}>
             <Link to={`/all-instructor`}>
@@ -92,7 +92,7 @@ const InstructorPage: React.FC = () => {
         <div className="flex flex-wrap justify-center  gap-2">
           {dataSource.map((data) => (
             
-            <div className="py-2 sm:m-5 text-center border-black rounded-sm  bg-slate-200 border md:w-1/2 lg:w-2/5 xl:w-1/4  hover:scale-105">
+            <div className="py-2 sm:m-5 text-center  border-black rounded-2xl shadow-xl shadow-black  bg-slate-200 border md:w-1/2 lg:w-2/5 xl:w-1/4 hover:shadow-yellow-800  ">
               <Link to={`/instructor-detail`}>
             <Image
                 preview = {false}
@@ -104,8 +104,8 @@ const InstructorPage: React.FC = () => {
               <h1 className="sm:text-3xl font-bold">
                 {data.name} <CheckCircleOutlined className="text-blue-600" />
               </h1>
-              <h4 className="my-5 h-16">{data.description}</h4>
-              <div>
+              <h4 className="my-5 h-auto">{data.description}</h4>
+              <div className="flex justify-center space-x-4">
                 <p>1M students</p>
                 <p> 3 courses</p>
               </div>

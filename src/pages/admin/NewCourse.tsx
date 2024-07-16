@@ -109,10 +109,8 @@ const NewCourseAdmin: React.FC = () => {
   
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Layout className="site-layout">
-      <Header className="p-0 bg-white">
-        <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pl-4">
+    <div>
+        <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 pl-4">
           <div className="w-full md:w-1/3">
             <Input
               placeholder="Search"
@@ -123,7 +121,6 @@ const NewCourseAdmin: React.FC = () => {
             />
           </div>
           </div>
-        </Header>
         <Content className="m-4">
           <div className="p-4 mt-5 bg-white">
             <Table
@@ -183,13 +180,12 @@ const NewCourseAdmin: React.FC = () => {
             />
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
-      </Layout>
+        <Footer style={{ textAlign: 'center', backgroundColor:"white" }}>Academic_Resources ©2024 Created by Group 4</Footer>
       <Modal title="Unapprove Course" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
 
         <p>Are you sure you refuse to approve this course?</p>
       </Modal>
-    </Layout>
+      </div>
   );
 };
 

@@ -11,13 +11,16 @@ import {
   UsergroupAddOutlined,
   YoutubeOutlined,
 } from "@ant-design/icons";
-import { Pagination } from "@mui/material";
-import { Button, Image, Input, Menu, Select, Space } from "antd";
-import React from "react";
+import { ChangeEvent, useEffect } from "react";
+import { Button, Image, Input, Menu, Select, Space,Pagination } from "antd";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "@mui/material";
+import { maxWidth, minWidth, width } from "@mui/system";
+import { setWith } from "lodash";
 
 interface DataType {
-  key: string;
+  id: number;
   image: string;
   name: string;
   description: string;
@@ -27,42 +30,119 @@ const { Search } = Input;
 
 const dataSource: DataType[] = [
   {
-    key: "1",
+    id:1,
     image:
       "https://www.shutterstock.com/image-vector/standing-business-man-teacher-wearing-260nw-510075547.jpg",
     name: "Jonh Doe",
     description: "Word press and plugin tutor ",
   },
   {
-    key: "2",
+    id: 2,
     image:
       "https://www.foodallergy.org/sites/default/files/styles/635x460/public/2020-06/shutterstock_1375976735.jpg?h=45a22253&itok=6rPqSQOO",
     name: "Jonh Doe",
     description: "Word press and plugin tutor",
   },
   {
-    key: "3",
+    id: 3,
     image: "https://via.placeholder.com/50",
     name: "Jonh Doe",
     description: "Word press and plugin tutor",
   },
   {
-    key: "4",
+    id: 4,
     image: "https://via.placeholder.com/50",
     name: "Jonh Doe",
     description: "Word press and plugin tutor",
   },
   {
-    key: "5",
+    id: 5,
     image: "https://via.placeholder.com/50",
     name: "Jonh Doe",
     description: "Word press and plugin tutor",
   },
+  {
+    id: 6,
+    image: "https://via.placeholder.com/50",
+    name: "Jonh Doe",
+    description: "Word press and plugin tutor",
+  },
+  {
+    id: 7,
+    image: "https://via.placeholder.com/50",
+    name: "Jonh Doe",
+    description: "Word press and plugin tutor",
+  },
+  {
+    id: 8,
+    image: "https://via.placeholder.com/50",
+    name: "Jonh Doe",
+    description: "Word press and plugin tutor",
+  },
+  {
+    id: 9,
+    image: "https://via.placeholder.com/50",
+    name: "Jonh Doe",
+    description: "Word press and plugin tutor",
+  },
+  {
+    id: 10,
+    image: "https://via.placeholder.com/50",
+    name: "Jonh Doe",
+    description: "Word press and plugin tutor",
+  },
+  {
+    id: 11,
+    image: "https://via.placeholder.com/50",
+    name: "Jonh Doe",
+    description: "Word press and plugin tutor",
+  },
+  {
+    id: 12,
+    image: "https://via.placeholder.com/50",
+    name: "Jonh Doe",
+    description: "Word press and plugin tutor",
+  },
+
 ];
 
+
+
 const AllInstructor: React.FC = () => {
+
+  const useViewport = () => {
+    const [width, setWidth] = React.useState(window.innerWidth);
+    React.useEffect(() => {
+      const handleWindowResize = () => setWidth(window.innerWidth);
+      window.addEventListener("resize", handleWindowResize);
+      return () => window.removeEventListener("resize", handleWindowResize);
+    }, []);
+  
+    return { width };
+  };
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize, setPageSize] = useState(6);
+  const viewPort = useViewport();
+  const smallScreen = viewPort.width <= 640;
+  const mediumScreen = viewPort.width <= 915 && viewPort.width >= 641 ;
+  const largeScreen = viewPort.width >= 916;
+
+const handlePageChange = (page: number) => {
+  setCurrentPage(page);
+}
+
+useEffect(() => {
+  if (smallScreen){
+    setPageSize(3);
+  } else if(mediumScreen){
+    setPageSize(4);
+  } else if(largeScreen){
+    setPageSize(8);
+  }
+})
   return (
-    <div className="flex">
+    <div className="flex h-lvh">
       <div className="pb-5 mb-10 w-72 ">
         <Menu
           defaultSelectedKeys={["1"]}
@@ -70,19 +150,19 @@ const AllInstructor: React.FC = () => {
           theme="dark"
           className="h-svh p-2 lg:text-base xl:text-lg w-full"
         >
-          <Menu.Item key="1" icon={<UsergroupAddOutlined />}>
+          <Menu.Item id="1" icon={<UsergroupAddOutlined />}>
             All Instructor
           </Menu.Item>
-          <Menu.Item key="2" icon={<PicLeftOutlined />}>
+          <Menu.Item id="2" icon={<PicLeftOutlined />}>
             Categories
           </Menu.Item>
-          <Menu.Item key="3" icon={<HeartOutlined />}>
+          <Menu.Item id="3" icon={<HeartOutlined />}>
             Saved
           </Menu.Item>
         </Menu>
       </div>
 
-      <div className="items-center ml-3 sm:mx-20">
+      <div className="items-center ml-3 mx-0 lg:ml-20 ">
         <div className="flex flex-row gap-5 mb-8 ">
           <h1 className="w-full sm:text-4xl text-xl font-bold">
             Instructors List
@@ -113,9 +193,9 @@ const AllInstructor: React.FC = () => {
             <RedoOutlined />
           </Button>
         </Space>
-        <div className="flex flex-wrap justify-center md:justify-normal  gap-2">
-          {dataSource.map((data) => (
-            <div className="py-2 sm:m-5 text-center border-black rounded-sm  bg-slate-200 border md:w-1/2 lg:w-2/5 xl:w-1/4  hover:scale-105">
+        <div className="grid  lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 justify-center   ">
+          {dataSource.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((data) => (
+            <div className="py-2 mb-3 sm:m-3 text-center xs:w-52 md:w-[180px]  border-black rounded-2xl shadow-md shadow-black  bg-slate-200 border hover:shadow-yellow-900 hover:scale-105">
               <Link to={`/instructor-detail`}>
                 <Image
                   preview={false}
@@ -128,7 +208,7 @@ const AllInstructor: React.FC = () => {
                   {data.name} <CheckCircleOutlined className="text-blue-600" />
                 </h1>
                 <h4 className="mb-2">{data.description}</h4>
-                <div>
+                <div className="flex space-x-4 justify-center">
                   <p>1M students</p>
                   <p> 3 courses</p>
                 </div>
@@ -140,8 +220,14 @@ const AllInstructor: React.FC = () => {
           ))}
           
         </div>
-        <Pagination defaultPage={1}
-        className="flex justify-center mt-8"/>
+        <Pagination
+  current={currentPage}
+  pageSize={pageSize}
+  total={dataSource.length}
+  onChange={handlePageChange}
+  className="flex justify-center mt-4"
+/>
+
 
       </div>
     </div>

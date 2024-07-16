@@ -189,9 +189,8 @@ const CategoryAdmin: React.FC = () => {
   ];
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header className="p-0 bg-white">
-        <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pr-4 pl-4">
+    <div>
+        <div className="flex flex-col items-start sm:flex-row sm:justify-between mb-4 space-y-4  md:items-center md:space-y-0 p-6">
           <div className="w-full md:w-1/3">
             <Input
               placeholder="Search"
@@ -201,16 +200,17 @@ const CategoryAdmin: React.FC = () => {
               value={searchTerm}
             />
           </div>
+          <div>
           <Button
-            className="font-bold text-white bg-red-500"
+            className="font-bold text-white text-sm sm:text-base bg-red-500"
             onClick={handleAddNew}
           >
             <PlusCircleOutlined />
             Add New Category
           </Button>
+          </div>
         </div>
-      </Header>
-      <Content className="m-4">
+      <Content className="">
         <div className="p-4 bg-white">
           <Table
             dataSource={filteredDataSource}
@@ -219,7 +219,7 @@ const CategoryAdmin: React.FC = () => {
           />
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>
+      <Footer style={{ textAlign: 'center', backgroundColor:"white"}}>
         Academic_Resources ©2024 Created by Group 4
       </Footer>
       <Modal
@@ -283,7 +283,7 @@ const CategoryAdmin: React.FC = () => {
           <Text>{modalData.created_at}</Text>
         </Modal>
       )}
-    </Layout>
+    </div>
   );
 };
 

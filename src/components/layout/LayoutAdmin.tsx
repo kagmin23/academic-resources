@@ -69,7 +69,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
   );
 
   return (
-    <Layout>
+    <Layout className='pb-20'>
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
         <Link to={``} className="flex items-center mr-20">
           <BookOutlined className="text-xl text-white" />
@@ -89,11 +89,6 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           )}
         </div>
       </Header>
-      <Content style={{ marginTop: 64, padding: '16px' }}>
-        <div className="p-4 bg-white rounded shadow">
-          <Outlet />
-        </div>
-      </Content>
     </Layout>
   );
 };

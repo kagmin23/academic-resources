@@ -5,7 +5,7 @@ import React from 'react';
 const Footer: React.FC = () => {
   return (
     <Layout.Footer className="text-white bg-gray-800">
-      <div className="container px-4 py-8 mx-auto">
+      <div className="container px-4  mx-auto">
         <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
             <h2 className="text-2xl font-bold"><BookOutlined />&nbsp;&nbsp;&nbsp;ACADEMIC_RESOURCES</h2>
