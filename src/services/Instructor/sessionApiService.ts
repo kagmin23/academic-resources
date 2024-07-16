@@ -76,6 +76,10 @@ export const updateSession = async (sessionId: string, sessionData: {
   position_order: number,
 }) => {
   const token = localStorage.getItem('token');
+  
+  if (typeof sessionData.position_order === 'string') {
+    sessionData.position_order = parseFloat(sessionData.position_order);
+  }
 
   return apiRequest(`/api/session/${sessionId}`, {
     method: 'PUT',

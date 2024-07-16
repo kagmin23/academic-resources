@@ -37,7 +37,8 @@ const ManagerCourseInstructor: React.FC = () => {
     try {
       const response = await getSessions('', 1, 10, '');
       console.log("reponse", response)
-        setSessions(response.data.pageData);
+      setSessions(response.data.pageData);
+      setDataSource(response.data.pageData);
     } catch (error) {
       message.error('Failed to fetch sessions');
       console.error('Error fetching sessions:', error);
@@ -51,6 +52,7 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
   const handleEdit = (record: Session) => {
+    console.log("Edit record:", record);
     setIsEditMode(true);
     setCurrentRecord(record);
     setIsModalVisible(true);
@@ -113,7 +115,6 @@ const ManagerCourseInstructor: React.FC = () => {
     });
   };
 
-
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter(item =>
       item.name.toLowerCase().includes(value.toLowerCase())
@@ -144,12 +145,6 @@ const ManagerCourseInstructor: React.FC = () => {
             pagination={{ pageSize: 5 }}
             dataSource={sessions}
             columns={[
-              // {
-              //   title: 'Course',
-              //   dataIndex: 'image',
-              //   key: 'image',
-              //   render: (text: string) => <img src={text} alt="item" className="w-12 h-12" />,
-              // },
               {
                 title: 'Session Name',
                 dataIndex: 'name',
@@ -232,6 +227,25 @@ const ManagerCourseInstructor: React.FC = () => {
           Academic_Resources ©2023 Created by My Team
         </Footer>
       </Layout>
+
+      <Modal
+        visible={isModalVisible}
+        title={isEditMode ? "Edit Lesson" : "Add Lesson"}
+        onCancel={() => setIsModalVisible(false)}
+        onOk={handleOnEditLesson}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item name="name" label="Lesson Name" rules={[{ required: true, message: 'Please input the lesson name!' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="description" label="Description" rules={[{ required: true, message: 'Please input the description!' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="position_order" label="Position Order" rules={[{ required: true, message: 'Please input the position order!' }]}>
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Layout>
   );
 };

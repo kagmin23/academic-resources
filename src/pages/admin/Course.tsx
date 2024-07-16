@@ -1,38 +1,39 @@
 import {
-  CheckOutlined,
-  CloseOutlined,
-  EyeOutlined,
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Col, Input, Layout, Modal, Row, Select, Switch, Table, Typography } from 'antd';
+import { Button, Col, Input, Layout, Modal, Row, Select, Switch, Table, Typography, message } from 'antd';
+import { Course } from 'models/types';
 import { AlignType } from 'rc-table/lib/interface';
-import React, { useState } from 'react';
-// import debounce from 'lodash/debounce';
+import React, { useEffect, useState } from 'react';
+import { getCourses } from 'services/All/getCoursesApiService';
+import './stylesAdmin.css';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Text } = Typography;
 
-interface DataType {
-  key: string;
-  image: string;
-  title: string;
-  status: boolean;
-  description: string;
-  price: number;
-  created_at: string;
-  instructor: string;
-}
-
 const CourseAdmin: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
-  const [dataSource, setDataSource] = useState<DataType[]>([]);
+  const [dataSource, setDataSource] = useState<Course[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+  const [logModalVisible, setLogModalVisible] = useState(false);
 
-  const handleSave = (record: DataType) => {
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+
+  const fetchSessions = async () => {
+    try {
+      const response = await getCourses('', 1, 10);
+      console.log("reponse", response)
+      setDataSource(response.data.pageData);
+    } catch (error) {
+      message.error('Failed to fetch sessions');
+      console.error('Error fetching sessions:', error);
+    }
+  };
+  const handleSave = (record: Course) => {
     console.log('Saved:', record);
   };
-
-  const [logModalVisible, setLogModalVisible] = useState(false);
 
   const showLogModal = () => {
     setLogModalVisible(true);
@@ -48,96 +49,154 @@ const CourseAdmin: React.FC = () => {
     );
   };
 
-  const handleStatusChange = (checked: boolean, record: DataType) => {
-    const updatedDataSource = dataSource.map(item =>
-      item.key === record.key ? { ...item, status: checked } : item
-    );
-    setDataSource(updatedDataSource);
+  const handleStatusChange = (checked: boolean, record: Course) => {
+    // const updatedDataSource = dataSource.map(item =>
+    //   item._id === record._id ? { ...item, status: checked } : item
+    // );
+    // setDataSource(updatedDataSource);
   };
-
-  // const debouncedSearch = debounce((value: string) => {
-  //   setSearchTerm(value);
-  // }, 300);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredDataSource = dataSource.filter(item =>
-    item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.instructor.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+
+  const onSearch = (value: string) => {
+    console.log('search:', value);
+  };
+
+  const filteredDataSource = dataSource ? dataSource.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    item.description.toLowerCase().includes(searchTerm.toLowerCase())
+  ) : [];
+  
 
   const columns = [
     {
       title: 'Course',
-      dataIndex: 'image',
-      key: 'image',
-      render: (text: string) => <img src={text} alt="item" className="w-12 h-12" />,
+      dataIndex: 'name',
+      key: 'name',
     },
     {
-      title: 'Title',
-      dataIndex: 'title',
-      key: 'title',
+      title: 'User Name',
+      dataIndex: 'user_name',
+      key: 'user_id',
+      align: "center" as AlignType
+    },
+    {
+      title: 'Categrory',
+      dataIndex: 'category_name',
+      key: 'category_name',
+      align: "center" as AlignType
+    },
+    {
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      align: "center" as AlignType
+    },
+    {
+      title: 'Discount',
+      dataIndex: 'discount',
+      key: 'discount',
+      align: "center" as AlignType
+    },
+    {
+      title: 'Video',
+      dataIndex: 'video_url',
+      key: 'video_url',
+      align: "center" as AlignType,
+      render: (video_url: string) => (
+        <div><iframe src={video_url}></iframe></div>
+      )
+    },
+    {
+      title: 'Image',
+      dataIndex: 'image_url',
+      key: 'image_url',
+      align: "center" as AlignType,
+      render: (image_url: string) => (
+        <div><iframe src={image_url}></iframe></div>
+      )
+    },
+    {
+      title: 'Created At',
+      dataIndex: 'created_at',
+      key: 'created_at',
+      align: "center" as AlignType
+    },
+    {
+      title: 'Updated At',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      align: "center" as AlignType
     },
     {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
-      render: (status: boolean, record: DataType) => (
+      render: (status: boolean, record: Course) => (
         <Switch
+          size="small"
           checked={status}
           onChange={(checked: boolean) => handleStatusChange(checked, record)}
         />
       ),
     },
     {
-      title: 'Approval status',
-      dataIndex: 'approval status',
+      title: 'Operating Status',
+      dataIndex: 'approval_status',
       key: 'approval_status',
-      render: (status: boolean, record: DataType) => (
-          <div>
-            <Button className="px-4 py-2 mr-2 font-bold text-white bg-green-500 rounded hover:bg-green-700">
-              <CheckOutlined />
-            </Button>
-            <Button className="px-4 py-2 font-bold text-white bg-red-500 rounded hover:bg-red-700">
-              <CloseOutlined />
-            </Button>
-          </div>
-        )
-    },
-    {
-      title: 'Created At',
-      dataIndex: 'created_at',
-      key: 'created_at',
-    },
-    {
-      title: 'Actions',
-      key: 'actions',
-      align: 'center' as AlignType,
-      render: (text: string, record: DataType) => (
-        <div style={{ textAlign: 'center' }}>
-          <Button icon={<EyeOutlined />} onClick={() => handleViewMore(record.key)}></Button>
+      render: (text: string, record: Course) => (
+        <div>
+          <Select
+              size="small"
+              className="text-xs"
+              showSearch
+              optionFilterProp="label"
+              defaultValue={"New"}
+              onChange={onChange}
+              onSearch={onSearch}
+              options={[
+                { value: 'new', label: 'New' },
+                { value: 'approve', label: 'Approve' },
+                { value: 'reject', label: 'Reject' },
+                { value: 'active', label: 'Active' },
+                { value: 'inactive', label: 'Inactive' },
+              ]}
+            />
         </div>
-      ),
+      )
     },
+    // {
+    //   title: 'Actions',
+    //   key: 'actions',
+    //   align: 'center' as AlignType,
+    //   render: (text: string, record: Course) => (
+    //     <div style={{ textAlign: 'center' }}>
+    //       <Button icon={<EyeOutlined />} onClick={() => handleViewMore(record._id)}></Button>
+    //     </div>
+    //   ),
+    // },
   ];
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
-        <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pl-4">
-          <div className="w-full md:w-1/3">
-            <Input
-              placeholder="Search"
-              prefix={<SearchOutlined />}
-              onChange={handleSearchChange}
-              className="items-center w-full h-8 text-sm border-2 border-gray-300 border-solid rounded"
-              value={searchTerm}
-            />
-          </div>
+          <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pl-4">
+            <div className="w-full md:w-1/3">
+              <Input
+                placeholder="Search"
+                prefix={<SearchOutlined />}
+                onChange={handleSearchChange}
+                className="items-center w-full h-8 text-sm border-2 border-gray-300 border-solid rounded"
+                value={searchTerm}
+              />
+            </div>
           </div>
         </Header>
         <Content className="m-4">
@@ -147,25 +206,20 @@ const CourseAdmin: React.FC = () => {
               columns={columns}
               expandable={{
                 expandedRowKeys: expandedKeys,
-                onExpand: (expanded, record) => handleViewMore(record.key),
-                expandedRowRender: (record: DataType) => (
+                onExpand: (expanded, record) => handleViewMore(record._id),
+                expandedRowRender: (record: Course) => (
                   <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
                     <Row gutter={16}>
                       <Col span={24}>
                         <Title level={5} className='text-2xl'>Course Details</Title>
                       </Col>
-                      
                     </Row>
                     <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
                       <Col span={8}>
                         <Text strong>Description:</Text>
                         <p>{record.description}</p>
                       </Col>
-                      <Col span={8} style={{ textAlign: 'center' }}>
-                        <Text strong>Instructor:</Text>
-                        <p>{record.instructor}</p>
-                      </Col>
-                      <Col span={7} style={{ textAlign: 'center'}}>
+                      <Col span={7} style={{ textAlign: 'center' }}>
                         <Text strong>Price:</Text>
                         <p>${record.price}</p>
                       </Col>
@@ -179,40 +233,38 @@ const CourseAdmin: React.FC = () => {
             />
           </div>
           <Modal
-        visible={logModalVisible}
-        onCancel={hideLogModal}
-        footer={null}
-        width={800}
-      >
-        <h1 className="mb-5">Log Status</h1>
-        <div className="flex mb-5 space-x-5">
-          <Button className='bg-teal-600'>All log</Button>
-          <Select className="w-40">
-          <Select.Option value="New">New</Select.Option>
-          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-          <Select.Option value="Approve">Approve</Select.Option>
-          <Select.Option value="Reject">Reject</Select.Option>
-          <Select.Option value="Active">Active</Select.Option>
-          <Select.Option value="Inactive">Inactive</Select.Option>
-          
-          </Select>
+            visible={logModalVisible}
+            onCancel={hideLogModal}
+            footer={null}
+            width={800}
+          >
+            <h1 className="mb-5">Log Status</h1>
+            <div className="flex mb-5 space-x-5">
+              <Button className='bg-teal-600'>All log</Button>
+              <Select className="w-40">
+                <Select.Option value="New">New</Select.Option>
+                <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                <Select.Option value="Approve">Approve</Select.Option>
+                <Select.Option value="Reject">Reject</Select.Option>
+                <Select.Option value="Active">Active</Select.Option>
+                <Select.Option value="Inactive">Inactive</Select.Option>
+              </Select>
 
-          <Select className="w-40">
-          <Select.Option value="New">New</Select.Option>
-          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-          <Select.Option value="Approve">Approve</Select.Option>
-          <Select.Option value="Reject">Reject</Select.Option>
-          <Select.Option value="Active">Active</Select.Option>
-          <Select.Option value="Inactive">Inactive</Select.Option>
-          
-          </Select>
-        </div>
+              <Select className="w-40">
+                <Select.Option value="New">New</Select.Option>
+                <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                <Select.Option value="Approve">Approve</Select.Option>
+                <Select.Option value="Reject">Reject</Select.Option>
+                <Select.Option value="Active">Active</Select.Option>
+                <Select.Option value="Inactive">Inactive</Select.Option>
+              </Select>
+            </div>
 
-        <h1>Course Name: ...</h1>
-        <h1>Old status: ...</h1>
-        <h1>New status: ... </h1>
-        <h1>Comment: ...</h1>
-      </Modal>
+            <h1>Course Name: ...</h1>
+            <h1>Old status: ...</h1>
+            <h1>New status: ... </h1>
+            <h1>Comment: ...</h1>
+          </Modal>
         </Content>
         <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
       </Layout>

@@ -246,8 +246,8 @@ const ManagerCourseInstructor: React.FC = () => {
     },
     {
       title: "Category",
-      dataIndex: "category_id",
-      key: "category_id",
+      dataIndex: "category_name",
+      key: "category_name",
       align: "center" as AlignType
     },
     {
