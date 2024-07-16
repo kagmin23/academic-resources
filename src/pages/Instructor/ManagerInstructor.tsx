@@ -7,6 +7,7 @@ import {
   Button,
   Col,
   Form,
+  Image,
   Input,
   Layout,
   Modal,
@@ -18,12 +19,14 @@ import {
   message,
 } from "antd";
 
+import { Category } from "models/types";
 import { AlignType } from "rc-table/lib/interface";
 import { useNavigate } from 'react-router-dom';
 
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
+import './stylesInstructor.css';
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -47,11 +50,6 @@ interface Course {
   is_deleted: boolean;
 }
 
-interface Category {
-  _id: string;
-  name: string;
-}
-
   
 
 const ManagerCourseInstructor: React.FC = () => {
@@ -64,6 +62,11 @@ const ManagerCourseInstructor: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isSellChecked, setIsSellChecked] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
+  // const [loading, setLoading] = useState<boolean>(true);
+  // const [course, setCourse] = useState<Course | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
+
+
 
   const navigate = useNavigate();
 
@@ -77,9 +80,13 @@ const ManagerCourseInstructor: React.FC = () => {
     setLogModalVisible(false);
   };
 
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
 
-
-
+  // if (!course) {
+  //   return <div>Loading...</div>;
+  // }
 
   useEffect(() => {
     fetchCategories();
@@ -168,6 +175,7 @@ const ManagerCourseInstructor: React.FC = () => {
         if (isEditMode && currentRecord) {
           updateCourse(currentRecord._id, values)
             .then(() => {
+              console.log("Values", values);
               const newDataSource = dataSource.map((item) =>
                 item._id === currentRecord._id ? { ...item, ...values } : item
               );
@@ -237,49 +245,88 @@ const ManagerCourseInstructor: React.FC = () => {
       title: "Course Name",
       dataIndex: "name",
       key: "name",
+      // align: "center" as AlignType
+    },
+    {
+      title: "Category",
+      dataIndex: "category_id",
+      key: "category_id",
+      align: "center" as AlignType
+    },
+    {
+      title: "Description",
+      dataIndex: "description",
+      key: "description",
+      // align: "center" as AlignType
+    },
+    // {
+    //   title: "Video",
+    //   dataIndex: "video_url",
+    //   key: "video_url",
+    //   align: "center" as AlignType
+    // },
+    // {
+    //   title: "Image",
+    //   dataIndex: "image_url",
+    //   key: "image_url",
+    //   align: "center" as AlignType
+    // },
+
+    {
+      title: "Price",
+      dataIndex: "price",
+      key: "price",
+      align: "center" as AlignType
+    },
+    {
+      title: "Discount",
+      dataIndex: "discount",
+      key: "discount",
+      align: "center" as AlignType
     },
     {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
+      align: "center" as AlignType
+    },
+    {
+      title: "Update At",
+      dataIndex: "updated_at",
+      key: "updated_at",
+      align: "center" as AlignType
     },
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
+      align: "center" as AlignType
     },
     {
       title: "Actions",
       key: "actions",
       align: "center" as AlignType,
       render: (text: string, record: Course) => (
-        <div style={{ textAlign: "center" }}>
+        <div className="flex flex-row justify-center gap-1">
           <Button
 	    size="small"
             icon={<EditOutlined />}
-            className="mr-2 text-white bg-blue-500"
+            className="text-blue-500"
             onClick={() => handleEdit(record)}
-          >
-            
-          </Button>
-          
+          ></Button>
+
           <Button
             size="small"
             icon={<DeleteOutlined />}
-            className="mr-2 text-white bg-red-600"
+            className="text-red-400"
             onClick={() => showConfirm(record)}
-          >
-            
-          </Button>
-         
+          ></Button>
+          
           <Button
             size="small"
             icon={<EyeOutlined />}
             onClick={() => handleViewMore(record._id)}
-          >
-            
-          </Button>
-         
+          ></Button>
         </div>
       ),
     },
@@ -288,7 +335,12 @@ const ManagerCourseInstructor: React.FC = () => {
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Header className="p-0 bg-white">
-        <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
+        <div className="flex flex-row items-center justify-between gap-4 p-4 bg-[#939fb1]">
+        <div className="mx-4 my-auto text-lg font-bold text-white">
+            Manager Course
+          </div>
+          <div className="h-6 border-r lg:mx-4"></div>
+
           <Input
             placeholder="Search..."
             prefix={<SearchOutlined />}
@@ -324,70 +376,77 @@ const ManagerCourseInstructor: React.FC = () => {
                 }}
               >
                 <Row gutter={16} className="mb-5">
+
+                  <Col span={22} className="mb-5">
+                    <Typography.Title level={5}>
+                      Content:
+                    </Typography.Title>
+                    <p>{record.content || "-"}</p>
+                  </Col>
+
+                  <Col span={22} className="mb-5">
+                    <Typography.Title level={5}>
+                      Video:
+                    </Typography.Title>
+                    <iframe src={record.video_url}></iframe>
+                  </Col>
+
                   <Col span={22}>
                     <Typography.Title level={5}>
-                      Description:
+                      Image:
                     </Typography.Title>
-                    <p>{record.description || "-"}</p>
+                    <Image src={record.image_url}></Image>
                   </Col>
+
                 </Row>
-<Modal
-        visible={logModalVisible}
-        onCancel={hideLogModal}
-        footer={null}
-        width={800}
-      >        <h1 className="mb-5">Log Status</h1>
-        <div className="flex mb-5 space-x-5">
-          <Button className="text-white bg-teal-600">All log</Button>
-          <Select className="w-40">
-          <Select.Option value="New">New</Select.Option>
-          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-          <Select.Option value="Approve">Approve</Select.Option>
-          <Select.Option value="Reject">Reject</Select.Option>
-          <Select.Option value="Active">Active</Select.Option>
-          <Select.Option value="Inactive">Inactive</Select.Option>
-          
-          </Select>
 
-          <Select className="w-40">
-          <Select.Option value="New">New</Select.Option>
-          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-          <Select.Option value="Approve">Approve</Select.Option>
-          <Select.Option value="Reject">Reject</Select.Option>
-          <Select.Option value="Active">Active</Select.Option>
-          <Select.Option value="Inactive">Inactive</Select.Option>
-          
-          </Select>
-        </div>
+                <Modal
+                    visible={logModalVisible}
+                    onCancel={hideLogModal}
+                    footer={null}
+                    width={800}
+                  >
+                    <h1 className="mb-5">Log Status</h1>
+                    <div className="flex mb-5 space-x-5">
+                      <Button className="text-white bg-teal-600">All log</Button>
+                      <Select className="w-40">
+                      <Select.Option value="New">New</Select.Option>
+                      <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                      <Select.Option value="Approve">Approve</Select.Option>
+                      <Select.Option value="Reject">Reject</Select.Option>
+                      <Select.Option value="Active">Active</Select.Option>
+                      <Select.Option value="Inactive">Inactive</Select.Option>
+                      
+                      </Select>
 
-        <h1>Course Name: ...</h1>
-        <h1>Old status: ...</h1>
-        <h1>New status: ... </h1>
-        <h1>Comment: ...</h1>
-      </Modal>
+                      <Select className="w-40">
+                      <Select.Option value="New">New</Select.Option>
+                      <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                      <Select.Option value="Approve">Approve</Select.Option>
+                      <Select.Option value="Reject">Reject</Select.Option>
+                      <Select.Option value="Active">Active</Select.Option>
+                      <Select.Option value="Inactive">Inactive</Select.Option>
+                      
+                      </Select>
+                    </div>
+
+                    <h1>Course Name: ...</h1>
+                    <h1>Old status: ...</h1>
+                    <h1>New status: ... </h1>
+                    <h1>Comment: ...</h1>
+                  </Modal>
 
                 <Form layout="vertical">
-                  <Row gutter={16}>
-                    <Col span={8}>
-                      <Form.Item
-                        name="price"
-                        label="Price"
-                        initialValue={record.price}
-                      >
-                        <Input disabled={!isSellChecked} />
-                      </Form.Item>
-                    </Col>
-                    <Col span={8}>
-                      <Form.Item
-                        name="discount"
-                        label="Discount"
-                        initialValue={record.discount}
-                        rules={[{ required: isSellChecked, message: 'Please input the discount!' }]}
-                      >
-                        <Input disabled={!isSellChecked} />
-                      </Form.Item>
-                    </Col>
-                  </Row>
+
+                  <div className="flex flex-row gap-4">
+                    <Button size="small" className="text-xs text-blue-500" onClick={showLogModal}>Log Status</Button>
+                    <Button
+                        size="small"
+                        className="text-xs text-blue-500"
+                        onClick={() => handleViewSession(record._id)}
+                      >View Session</Button>
+                  </div>
+                  
                 </Form>
               </div>
             ),
@@ -412,9 +471,8 @@ const ManagerCourseInstructor: React.FC = () => {
             rules={[
               { required: true, message: "Please input the course name!" },
             ]}
-            
           >
-            <Editor
+            {/* <Editor
               apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
               initialValue="<p>This is the initial content of the editor</p>"
               init={{
@@ -431,7 +489,8 @@ const ManagerCourseInstructor: React.FC = () => {
                   bullist numlist outdent indent | removeformat | help",
               }}
               onEditorChange={handleEditorChange}
-            />
+            /> */}
+            <Input/>
           </Form.Item>
 
           <Form.Item
@@ -455,7 +514,7 @@ const ManagerCourseInstructor: React.FC = () => {
               { required: true, message: "Please input the description!" },
             ]}
           >
-            <Editor
+            {/* <Editor
               apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
               initialValue="<p>This is the initial content of the editor</p>"
               init={{
@@ -472,7 +531,8 @@ const ManagerCourseInstructor: React.FC = () => {
                   bullist numlist outdent indent | removeformat | help",
               }}
               onEditorChange={handleEditorChange}
-            />
+            /> */}
+            <Input/>
           </Form.Item>
 
           <Form.Item

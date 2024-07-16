@@ -1,5 +1,7 @@
 import { BarsOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Modal, Table, message } from "antd";
+import { Course, Session } from 'models/types';
+import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCourse } from 'services/Instructor/courseApiService';
@@ -7,23 +9,6 @@ import { createSession, deleteSession, getSessions, updateSession } from 'servic
 
 const { Header, Content } = Layout;
 const { confirm } = Modal;
-
-interface Session {
-  _id: string;
-  name: string;
-  description: string;
-  position_order: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Course {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  discount: number;
-}
 
 const ViewSession: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();
@@ -171,28 +156,37 @@ const ViewSession: React.FC = () => {
       key: 'name',
     },
     {
+      title: 'Desciption',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    {
       title: 'Position Order',
       dataIndex: 'position_order',
       key: 'position_order',
+      align: "center" as AlignType,
     },
     {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
+      align: "center" as AlignType,
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
+      align: "center" as AlignType,
     },
     {
       title: 'Actions',
       key: 'actions',
+      align: "center" as AlignType,
       render: (text: string, session: Session) => (
-        <div className="flex flex-row gap-1">
-          <Button size="small" onClick={() => handleEditSession(session)}><EditOutlined /></Button>
-          <Button size="small" danger onClick={() => handleDeleteSession(session._id)}><DeleteOutlined /></Button>
-          <Button size="small" onClick={() => handleViewLesson(session._id)}><BarsOutlined /></Button>
+        <div className="flex flex-row justify-center gap-1">
+          <Button size="small" className="text-blue-500" onClick={() => handleEditSession(session)} icon={<EditOutlined />}></Button>
+          <Button size="small" className="text-red-500" danger onClick={() => handleDeleteSession(session._id)} icon={<DeleteOutlined />}></Button>
+          <Button size="small" onClick={() => handleViewLesson(session._id)} icon={<BarsOutlined />}></Button>
         </div>
       ),
     },
@@ -206,7 +200,7 @@ const ViewSession: React.FC = () => {
     <Layout style={{ height: '100vh' }}>
       <Header className="p-0 bg-white">
         <div className="flex justify-between bg-[#939fb1]">
-          <div className="mx-4 my-auto text-lg font-bold text-gray-800">
+          <div className="mx-4 my-auto text-lg font-bold text-white">
             Name Course: {course.name}
           </div>
           <div className="mx-4 my-auto">
@@ -216,6 +210,7 @@ const ViewSession: React.FC = () => {
               style={{ width: 300, borderRight: '2px solid white' }}
               onChange={e => handleSearch(e.target.value)}
             />
+            
             <Button className="ml-2 font-bold text-white bg-red-500" onClick={handleAddNewSession}>
               <PlusCircleOutlined />
               Add New Session

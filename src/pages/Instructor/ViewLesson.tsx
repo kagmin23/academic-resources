@@ -1,6 +1,7 @@
-import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Layout, Modal, Select, Space, Table, message } from "antd";
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Col, Form, Input, Layout, Modal, Row, Select, Table, Typography, message } from "antd";
 import { Lesson, Session } from 'models/types';
+import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createLesson, deleteLesson, getLessons, updateLesson } from 'services/Instructor/lessonApiService';
@@ -16,13 +17,12 @@ const ViewLesson: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-
-  const [isEditing, setIsEditing] = useState<boolean>(false);
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const [session, setSession] = useState<Session | null>(null);
+  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
+
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter((item) =>
@@ -55,9 +55,9 @@ const ViewLesson: React.FC = () => {
 
   useEffect(() => {
     const fetchLessons = async () => {
-      if (courseId) {
+      if (sessionId) {
         try {
-          const response = await getLessons('', 1, 10);
+          const response = await getLessons(sessionId, 1, 10, '');
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {
@@ -81,15 +81,23 @@ const ViewLesson: React.FC = () => {
 
   const handleAddNewLesson = () => {
     setIsEditMode(false);
-    setIsModalVisible(true);
+    setModalVisible(true);
     form.resetFields();
   };
 
   const handleEditLesson = (lesson: Lesson) => {
-    setIsEditing(true);
+    setIsEditMode(true);
     setModalVisible(true);
     setCurrentLesson(lesson);
     form.setFieldsValue(lesson);
+  };
+
+  const handleViewMore = (key: string) => {
+    setExpandedKeys((prevKeys) =>
+      prevKeys.includes(key)
+        ? prevKeys.filter((k) => k !== key)
+        : [...prevKeys, key]
+    );
   };
 
   const handleDeleteLesson = (lessonId: string) => {
@@ -117,13 +125,13 @@ const ViewLesson: React.FC = () => {
     form.validateFields()
       .then((values) => {
         form.resetFields();
+        const newValues = {
+          ...values,
+          course_id: courseId,
+          session_id: sessionId,
+        };
         if (isEditMode && currentLesson) {
-          const updatedValues = {
-            ...values,
-            course_id: courseId,
-            session_id: sessionId,
-          };
-          updateLesson(currentLesson._id, updatedValues)
+          updateLesson(currentLesson._id, newValues)
             .then(() => {
               const newDataSource = dataSource.map((item) =>
                 item._id === currentLesson._id ? { ...item, ...values } : item
@@ -137,11 +145,6 @@ const ViewLesson: React.FC = () => {
               message.error('Failed to Update Lesson');
             });
         } else {
-          const newValues = {
-            ...values,
-            course_id: courseId,
-            session_id: sessionId,
-          };
           createLesson(newValues)
             .then((response) => {
               const newRecord = {
@@ -158,7 +161,7 @@ const ViewLesson: React.FC = () => {
               message.error('Failed to Create lesson');
             });
         }
-        setIsModalVisible(false);
+        setModalVisible(false);
       })
       .catch((info) => {
         console.log("Validate Failed:", info);
@@ -176,50 +179,69 @@ const ViewLesson: React.FC = () => {
       title: 'Position Order',
       dataIndex: 'position_order',
       key: 'position_order',
+      align: "center" as AlignType,
+    },
+    {
+      title: 'Desciption',
+      dataIndex: 'description',
+      key: 'description',
+    },
+    // {
+    //   title: 'Lesson Type',
+    //   dataIndex: 'description',
+    //   key: 'description',
+    // },
+    // {
+    //   title: 'Video',
+    //   dataIndex: 'video_url',
+    //   key: 'video_url',
+    //   align: "center" as AlignType,
+    // },
+    // {
+    //   title: 'Image',
+    //   dataIndex: 'image_url',
+    //   key: 'image_url',
+    //   align: "center" as AlignType,
+    // },
+    {
+      title: 'Full Time',
+      dataIndex: 'full_time',
+      key: 'full_time',
+      align: "center" as AlignType,
     },
     {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
+      align: "center" as AlignType,
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
+      align: "center" as AlignType,
     },
     {
       title: 'Actions',
       key: 'actions',
+      align: "center" as AlignType,
       render: (text: string, lesson: Lesson) => (
-        <span className="flex flex-row gap-1">
-          <Button size="small" onClick={() => handleEditLesson(lesson)} icon={<EditOutlined />} />
-          <Button size="small" onClick={() => handleDeleteLesson(lesson._id)} icon={<DeleteOutlined />} />
+        <span className="flex flex-row justify-center gap-1">
+          <Button size="small" className="text-blue-500" onClick={() => handleEditLesson(lesson)} icon={<EditOutlined />} />
+          <Button size="small" className="text-red-500" onClick={() => handleDeleteLesson(lesson._id)} icon={<DeleteOutlined />} />
+          <Button size="small" onClick={() => handleViewMore(lesson._id)} icon={<EyeOutlined/>}></Button>
         </span>
       ),
     },
   ];
 
-  const options = [
-    {
-      label: "text",
-      value: "text",
-      desc: "text"
-    },
-    {
-      label: "video",
-      value: "video",
-      desc: "video"
-    },
-    {
-      label: "image",
-      value: "image",
-      desc: "image"
-    }
-];
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
 
-const handleSelectLessonType = (value: string[]) => {
-    console.log(`Selected ${value}`);
-}
+  const onSearch = (value: string) => {
+    console.log('search:', value);
+  };
 
   return (
     <Layout style={{ height: '100vh' }}>
@@ -247,15 +269,48 @@ const handleSelectLessonType = (value: string[]) => {
           columns={columns}
           dataSource={filteredDataSource}
           loading={loading}
-          rowKey="_id"
+          expandable={{
+            expandedRowKeys: expandedKeys,
+            onExpand: (expanded, lesson) => handleViewMore(lesson._id),
+            expandedRowRender: (lesson: Lesson) => (
+              <div
+                style={{
+                  padding: "10px 20px",
+                  backgroundColor: "#f9f9f9",
+                  borderRadius: "4px",
+                  marginLeft: "25px",
+                }}
+                >
+                  <Row gutter={16} className="mb-5">
+
+                    <Col span={22} className="mb-5">
+                      <Typography.Title level={5}>
+                        Video:
+                      </Typography.Title>
+                      <p>{lesson.video_url || "-"}</p>
+                    </Col>
+
+                    <Col span={22}>
+                      <Typography.Title level={5}>
+                        Image:
+                      </Typography.Title>
+                      <p>{lesson.image_url || "-"}</p>
+                    </Col>
+
+                  </Row>
+                </div>
+              ),
+              expandIcon: () => null,
+            }}
         />
+        
       </Content>
       <Modal
         width={"50%"}
         title={isEditMode ? "Edit Lesson" : "Add New Lesson"}
-        visible={isModalVisible}
+        visible={modalVisible}
         onOk={handleSaveLesson}
-        onCancel={() => setIsModalVisible(false)}
+        onCancel={() => setModalVisible(false)}
       >
         <Form form={form} layout="vertical">
           <Form.Item
@@ -272,28 +327,24 @@ const handleSelectLessonType = (value: string[]) => {
           >
             <Input.TextArea />
           </Form.Item>
-          
           <Form.Item
             name="lesson_type"
             label="Lesson Type"
             rules={[{ required: true, message: 'Please select the Lesson Type!' }]}
-            >
-          <Select
-            mode= 'multiple'
-            style= {{width: "100%"}}
-            defaultValue={['text']}
-            placeholder= "Please Select Lesson Type"
-            onChange={handleSelectLessonType}
-            options={options}
-            optionRender={(options) => (
-              <Space>
-                <span role='img' aria-label={options.data.label}></span>
-                {options.data.desc}
-              </Space>
-            )}
-          />
+          >
+            <Select
+              showSearch
+              placeholder="Select a lesson type"
+              optionFilterProp="label"
+              onChange={onChange}
+              onSearch={onSearch}
+              options={[
+                { value: 'text', label: 'text' },
+                { value: 'video', label: 'video' },
+                { value: 'image', label: 'image' },
+              ]}
+            />
           </Form.Item>
-          
           <Form.Item
             name="video_url"
             label="Video URL"

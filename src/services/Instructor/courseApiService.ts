@@ -34,6 +34,7 @@ export const getCourse = async (courseId: string) => {
 };
 
 export const updateCourse = async (courseId: string, courseData: {
+  _id: string,
   name: string,
   category_id: string,
   description: string,
@@ -44,7 +45,7 @@ export const updateCourse = async (courseId: string, courseData: {
   discount: number
 }) => {
   const token = localStorage.getItem('token');
-
+  console.log("data",courseData);
   return apiRequest(`/api/course/${courseId}`, {
     method: 'PUT',
     headers: {
