@@ -1,25 +1,34 @@
 import {
   DeleteOutlined,
-  DownCircleOutlined,
+  EditOutlined,
+  ExclamationCircleOutlined,
+  EyeOutlined,
   PlusOutlined,
   ReadOutlined,
-  SearchOutlined,
+  SearchOutlined
 } from '@ant-design/icons';
-import { Button, Divider, Input, Layout, List, Table, Tabs, message } from "antd";
+import { Button, Divider, Form, Input, Layout, List, Modal, Table, Tabs, message } from "antd";
 import { Session } from 'models/types';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { getSessions } from 'services/Instructor/sessionApiService';
+import { useParams } from 'react-router-dom';
+import { deleteSession, getSessions, updateSession } from 'services/Instructor/sessionApiService';
 
 const { Header, Content, Footer } = Layout;
 const { TabPane } = Tabs;
+const { confirm } = Modal;
 
 const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Session[]>([]);
   const [filteredDataSource, setFilteredDataSource] = useState<Session[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [currentRecord, setCurrentRecord] = useState<Session | null>(null);
+  const [form] = Form.useForm();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const { sessionId, courseId } = useParams<{ sessionId: string, courseId: string }>();
+  
   useEffect(() => {
     fetchSessions();
   }, []);
@@ -40,6 +49,70 @@ const ManagerCourseInstructor: React.FC = () => {
       prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]
     );
   };
+
+  const handleEdit = (record: Session) => {
+    setIsEditMode(true);
+    setCurrentRecord(record);
+    setIsModalVisible(true);
+    form.setFieldsValue(record);
+  };
+
+  const handleOnEditLesson = () => {
+    form.validateFields()
+      .then(async (values) => {
+        form.resetFields();
+        const newValues = {
+          ...values,
+          course_id: courseId,
+          session_id: sessionId,
+        };
+        if (isEditMode && currentRecord) {
+          try {
+            const response = await updateSession(currentRecord._id, newValues);
+            const updatedLesson = response.data;
+
+            const newDataSource = dataSource.map((item) =>
+              item._id === updatedLesson._id ? updatedLesson : item
+            );
+            setDataSource(newDataSource);
+            setFilteredDataSource(newDataSource);
+            message.success('Lesson updated successfully');
+          } catch (error) {
+            console.error("Failed to Update Lesson", error);
+            message.error('Failed to Update Lesson');
+          }
+        } else {
+          message.error("Edit error");
+        }
+        setIsModalVisible(false);
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+        message.error('Validation failed');
+      });
+  };
+
+  const handleOnDeleteSession = (sessionId: string) => {
+    confirm({
+      title: 'Do you want to delete this session?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'This action cannot be undone',
+      onOk() {
+        deleteSession(sessionId)
+          .then(() => {
+            const newDataSource = dataSource.filter((item) => item._id !== sessionId);
+            setDataSource(newDataSource);
+            setFilteredDataSource(newDataSource);
+            message.success('Session deleted successfully');
+          })
+          .catch((error) => {
+            console.error("Failed to delete Session", error);
+            message.error('Failed to delete Session');
+          });
+      },
+    });
+  };
+
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter(item =>
@@ -109,10 +182,12 @@ const ManagerCourseInstructor: React.FC = () => {
                 title: 'Actions',
                 key: 'actions',
                 align: 'center' as AlignType,
-                render: (text: string, record: Session) => (
-                  <div style={{ textAlign: 'center' }}>
-                    <Button size="small" icon={<DownCircleOutlined />} onClick={() => handleViewMore(record._id)}></Button>
-                  </div>
+                render: (text: string, session: Session) => (
+                  <div className="flex flex-row justify-center gap-1">
+                  <Button size="small" icon={<EditOutlined />} className="text-blue-500" onClick={() => handleEdit(session)}></Button>
+                  <Button size="small" icon={<DeleteOutlined />} className="text-red-500" onClick={() => handleOnDeleteSession(session._id)}></Button>
+                  <Button size="small" icon={<EyeOutlined />} onClick={() => handleViewMore(session._id)}></Button>
+                </div>
                 ),
               },
             ]}
