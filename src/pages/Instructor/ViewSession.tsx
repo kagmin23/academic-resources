@@ -1,5 +1,6 @@
 import { BarsOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Modal, Table, message } from "antd";
+import { Course, Session } from 'models/types';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,23 +9,6 @@ import { createSession, deleteSession, getSessions, updateSession } from 'servic
 
 const { Header, Content } = Layout;
 const { confirm } = Modal;
-
-interface Session {
-  _id: string;
-  name: string;
-  description: string;
-  position_order: number;
-  created_at: string;
-  updated_at: string;
-}
-
-interface Course {
-  _id: string;
-  name: string;
-  description: string;
-  price: number;
-  discount: number;
-}
 
 const ViewSession: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>();

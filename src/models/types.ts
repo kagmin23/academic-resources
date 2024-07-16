@@ -1,3 +1,13 @@
+export interface Category {
+  _id: string;
+  name: string;
+  description?: string;
+  user_id: string;
+  is_deleted: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
 export class Course {
     _id: string;
     name: string;
@@ -62,7 +72,9 @@ export class Course {
     _id: string;
     name: string;
     course_id: string;
+    course_name: string;
     session_id: string;
+    session_name: string;
     description: string;
     video_url: string;
     image_url: string;
@@ -74,12 +86,15 @@ export class Course {
   }
 
   export interface Session {
-    _id: string;
-    name: string;
-    description: string;
-    position_order: number;
-    created_at: string;
-    updated_at: string;
+    _id: string,
+    name: string,
+    user_id: string,
+    course_id: string,
+    description: string,
+    position_order: number,
+    created_at: Date,
+    updated_at: Date,
+    is_deleted: boolean
   }
 
   export enum LessonType {

@@ -1,5 +1,6 @@
 import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Modal, Table, Typography, notification } from 'antd';
+import { Category } from 'models/types';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { createCategory, deleteCategory, getCategories, getCategoryDetail, updateCategory } from 'services/AdminsApi/categoryApiService';
@@ -7,24 +8,14 @@ import { createCategory, deleteCategory, getCategories, getCategoryDetail, updat
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
 
-interface DataType {
-  _id: string;
-  name: string;
-  description?: string;
-  user_id: string;
-  is_deleted: boolean;
-  created_at: string;
-  updated_at: string;
-}
-
 const CategoryAdmin: React.FC = () => {
-  const [dataSource, setDataSource] = useState<DataType[]>([]);
-  const [filteredDataSource, setFilteredDataSource] = useState<DataType[]>([]);
+  const [dataSource, setDataSource] = useState<Category[]>([]);
+  const [filteredDataSource, setFilteredDataSource] = useState<Category[]>([]);
   const [isAddEditModalVisible, setIsAddEditModalVisible] = useState(false);
   const [isDeleteConfirmVisible, setIsDeleteConfirmVisible] = useState(false);
   const [isDetailModalVisible, setIsDetailModalVisible] = useState(false);
   const [deleteId, setDeleteId] = useState<string | null>(null);
-  const [modalData, setModalData] = useState<DataType | null>(null);
+  const [modalData, setModalData] = useState<Category | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [form] = Form.useForm();
 
@@ -52,7 +43,7 @@ const CategoryAdmin: React.FC = () => {
     form.resetFields();
   };
 
-  const handleEdit = (record: DataType) => {
+  const handleEdit = (record: Category) => {
     setIsAddEditModalVisible(true);
     setModalData(record);
     form.setFieldsValue({
@@ -167,7 +158,7 @@ const CategoryAdmin: React.FC = () => {
       title: 'Actions',
       key: 'actions',
       align: 'center' as AlignType,
-      render: (text: string, record: DataType) => (
+      render: (text: string, record: Category) => (
         <div style={{ textAlign: 'center' }}>
           <Button
             icon={<EditOutlined />}

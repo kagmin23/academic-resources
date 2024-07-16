@@ -4,6 +4,7 @@ import {
   Button,
   Col,
   Form,
+  Image,
   Input,
   Layout,
   Modal,
@@ -14,6 +15,7 @@ import {
   Typography,
   message,
 } from "antd";
+import { Category } from "models/types";
 import { AlignType } from "rc-table/lib/interface";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -44,11 +46,6 @@ interface Course {
   is_deleted: boolean;
 }
 
-interface Category {
-  _id: string;
-  name: string;
-}
-
   
 
 const ManagerCourseInstructor: React.FC = () => {
@@ -63,6 +60,8 @@ const ManagerCourseInstructor: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   // const [loading, setLoading] = useState<boolean>(true);
   // const [course, setCourse] = useState<Course | null>(null);
+  const [category, setCategory] = useState<Category | null>(null);
+
 
 
   const navigate = useNavigate();
@@ -172,6 +171,7 @@ const ManagerCourseInstructor: React.FC = () => {
         if (isEditMode && currentRecord) {
           updateCourse(currentRecord._id, values)
             .then(() => {
+              console.log("Values", values);
               const newDataSource = dataSource.map((item) =>
                 item._id === currentRecord._id ? { ...item, ...values } : item
               );
@@ -384,14 +384,14 @@ const ManagerCourseInstructor: React.FC = () => {
                     <Typography.Title level={5}>
                       Video:
                     </Typography.Title>
-                    <p>{record.video_url || "-"}</p>
+                    <iframe src={record.video_url}></iframe>
                   </Col>
 
                   <Col span={22}>
                     <Typography.Title level={5}>
                       Image:
                     </Typography.Title>
-                    <p>{record.image_url || "-"}</p>
+                    <Image src={record.image_url}></Image>
                   </Col>
 
                 </Row>
@@ -467,9 +467,8 @@ const ManagerCourseInstructor: React.FC = () => {
             rules={[
               { required: true, message: "Please input the course name!" },
             ]}
-            
           >
-            <Editor
+            {/* <Editor
               apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
               initialValue="<p>This is the initial content of the editor</p>"
               init={{
@@ -486,7 +485,8 @@ const ManagerCourseInstructor: React.FC = () => {
                   bullist numlist outdent indent | removeformat | help",
               }}
               onEditorChange={handleEditorChange}
-            />
+            /> */}
+            <Input/>
           </Form.Item>
 
           <Form.Item
@@ -510,7 +510,7 @@ const ManagerCourseInstructor: React.FC = () => {
               { required: true, message: "Please input the description!" },
             ]}
           >
-            <Editor
+            {/* <Editor
               apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
               initialValue="<p>This is the initial content of the editor</p>"
               init={{
@@ -527,7 +527,8 @@ const ManagerCourseInstructor: React.FC = () => {
                   bullist numlist outdent indent | removeformat | help",
               }}
               onEditorChange={handleEditorChange}
-            />
+            /> */}
+            <Input/>
           </Form.Item>
 
           <Form.Item

@@ -40,7 +40,6 @@ export const getLessons = async (session_id: string, pageNum: number, pageSize: 
       Authorization: `Bearer ${token}`,
     },
     data: {
-      //ddaay ne
       searchCondition: {
         keyword,
         session_id,
