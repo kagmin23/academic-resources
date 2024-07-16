@@ -54,7 +54,10 @@ const ManagerCourseInstructor: React.FC = () => {
     <Layout style={{ height: '100vh' }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
-          <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-[#939fb1]">
+          <div className="mx-4 my-auto text-lg font-bold text-white">
+            Manager Session
+          </div>
             <Input
               placeholder="Search..."
               prefix={<SearchOutlined />}
