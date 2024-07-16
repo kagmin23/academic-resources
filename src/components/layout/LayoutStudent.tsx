@@ -48,6 +48,22 @@ const LayoutStudent: React.FC = () => {
     setDrawerVisible(!drawerVisible);
   };
 
+  const handleLogout = async () => {
+    // const result = await logoutApiService();
+    // if (result.success) {
+    //   navigate('/log-in');
+    // } else {
+    //   notification.error({
+    //     message: 'Error',
+    //     description: result.message,
+    //   });
+    // }
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("exp token");
+    navigate("/")
+  };
+
   const profileMenu = (
     <Menu style={{ width: 200 }}>
       <Menu.Item key="1">
@@ -61,8 +77,8 @@ const LayoutStudent: React.FC = () => {
           <Link to="/student/profile-student/student-changepassword">Change Password</Link>
         </Menu.Item>
       </SubMenu>
-      <Menu.Item key="3">
-        <Link to="/">Logout</Link>
+      <Menu.Item key="3" onClick={handleLogout}>
+        Logout
       </Menu.Item>
     </Menu>
   );

@@ -57,3 +57,33 @@ export class Course {
       this.user_name = user_name;
     }
   }
+
+  export interface Lesson {
+    _id: string;
+    name: string;
+    course_id: string;
+    session_id: string;
+    description: string;
+    video_url: string;
+    image_url: string;
+    full_time: number;
+    position_order: number;
+    created_at: Date;
+    updated_at: Date;
+    is_deleted: boolean,
+  }
+
+  export interface Session {
+    _id: string;
+    name: string;
+    description: string;
+    position_order: number;
+    created_at: string;
+    updated_at: string;
+  }
+
+  export enum LessonType {
+    text = "text",
+    video = "video",
+    image = "image"
+  }

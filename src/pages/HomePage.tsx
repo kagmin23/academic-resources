@@ -14,7 +14,7 @@ import {
 import { Button, Card, Carousel, Col, Row, message } from 'antd';
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import './styles.css'; // Import the custom CSS file
+import './styles.css';
 
 const Courses = [
   {

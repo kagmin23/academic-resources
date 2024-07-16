@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getCourse } from 'services/Instructor/courseApiService';
 import { createSession, deleteSession, getSessions, updateSession } from 'services/Instructor/sessionApiService';
+
 const { Header, Content } = Layout;
 const { confirm } = Modal;
 
@@ -55,8 +56,8 @@ const ViewSession: React.FC = () => {
         const response = await getCourse(courseId);
         setCourse(response.data);
       } catch (error) {
-        console.error("Failed to fetch course", error);
-        message.error('Failed to fetch course');
+        console.error("Failed to Fetch Course", error);
+        message.error('Failed to Fetch Course');
       }
     };
 
@@ -71,7 +72,7 @@ const ViewSession: React.FC = () => {
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {
-          message.error('Failed to fetch sessions');
+          message.error('Failed to Fetch Sessions');
         } finally {
           setLoading(false);
         }
@@ -108,57 +109,61 @@ const ViewSession: React.FC = () => {
             message.success('Session deleted successfully');
           })
           .catch((error) => {
-            console.error("Failed to delete session", error);
-            message.error('Failed to delete session');
+            console.error("Failed to delete Session", error);
+            message.error('Failed to delete Session');
           });
       },
     });
   };
 
   const handleSaveSession = () => {
-  form.validateFields()
-    .then((values) => {
-      if (isEditing && currentSession) {
-        updateSession(currentSession._id, { ...values, course_id: courseId })
-          .then((response) => {
-            const updatedSession = response.data;
-            const newDataSource = dataSource.map((item) =>
-              item._id === updatedSession._id ? updatedSession : item
-            );
-            setDataSource(newDataSource);
-            setFilteredDataSource(newDataSource);
-            message.success('Session updated successfully');
-          })
-          .catch((error) => {
-            console.error("Failed to update session", error);
-            message.error('Failed to update session');
-          });
-      } else {
-        createSession({ ...values, course_id: courseId })
-          .then((response) => {
-            const newSession = {
-              ...response.data,
-            key:response.data._id};
-            setDataSource([...dataSource, newSession]);
-            setFilteredDataSource([...dataSource, newSession]);
-            message.success('Session created successfully');
-          })
-          .catch((error) => {
-            console.error("Failed to create session", error);
-            message.error('Failed to create session');
-          });
-      }
-      setModalVisible(false);
-    })
-    .catch((info) => {
-      console.log("Validate Failed:", info);
-      message.error('Validation failed');
-    });
-};
+    form.validateFields()
+      .then((values) => {
+        if (isEditing && currentSession) {
+          updateSession(currentSession._id, { ...values, course_id: courseId })
+            .then((response) => {
+              const updatedSession = response.data;
+              const newDataSource = dataSource.map((item) =>
+                item._id === updatedSession._id ? updatedSession : item
+              );
+              setDataSource(newDataSource);
+              setFilteredDataSource(newDataSource);
+              message.success('Session updated successfully');
+            })
+            .catch((error) => {
+              console.error("Failed to Update Session", error);
+              message.error('Failed to Update Session');
+            });
+        } else {
+          createSession({ ...values, course_id: courseId! })
+            .then((response) => {
+              const newSession = {
+                ...response.data,
+                key: response.data._id
+              };
+              console.log("value",values)
 
-const handleViewLesson = (sessionId: string) => {
-  navigate(`/instructor/profile-instructor/view-session/${courseId}/manager-lession/${sessionId}`);
-};
+              setDataSource([...dataSource, newSession]);
+              setFilteredDataSource([...dataSource, newSession]);
+              message.success('Session created successfully');
+            })
+            .catch((error) => {
+              console.error("Failed to Create Session", error);
+              message.error('Failed to Create Session');
+            });
+        }
+        setModalVisible(false);
+      })
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+        message.error('Validation failed');
+      });
+  };
+
+  const handleViewLesson = (sessionId: string) => {
+    navigate(`/instructor/profile-instructor/view-session/${courseId}/manager-lession/${sessionId}`);
+  };
+
   const columns = [
     {
       title: 'Name',
@@ -237,21 +242,21 @@ const handleViewLesson = (sessionId: string) => {
           <Form.Item
             name="name"
             label="Name"
-            rules={[{ required: true, message: 'Please enter the session name!' }]}
+            rules={[{ required: true, message: 'Please enter the Session name!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="description"
             label="Description"
-            rules={[{ required: true, message: 'Please enter the session description!' }]}
+            rules={[{ required: true, message: 'Please enter the Session description!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="position_order"
             label="Position Order"
-            rules={[{ required: true, message: 'Please enter the session position order!' }]}
+            rules={[{ required: true, message: 'Please enter the Session position order!' }]}
           >
             <Input type="number" />
           </Form.Item>

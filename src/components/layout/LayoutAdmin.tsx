@@ -52,6 +52,22 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
     setDrawerVisible(!drawerVisible);
   };
 
+  const handleLogout = async () => {
+    // const result = await logoutApiService();
+    // if (result.success) {
+    //   navigate('/log-in');
+    // } else {
+    //   notification.error({
+    //     message: 'Error',
+    //     description: result.message,
+    //   });
+    // }
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("exp token");
+    navigate("/")
+  };
+
   const settingsMenu = (
     <Menu style={{ width: 200 }}>
       <Menu.SubMenu key="setting" title="Setting" icon={<SettingOutlined />}>
@@ -62,8 +78,8 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
           <Link to="/admin/admin-changepassword">Change Password</Link>
         </Menu.Item>
       </Menu.SubMenu>
-      <Menu.Item key="logout" icon={<LogoutOutlined />}>
-        <Link to="/">Logout</Link>
+      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
+        Logout
       </Menu.Item>
     </Menu>
   );

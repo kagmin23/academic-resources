@@ -1,7 +1,22 @@
-import { BellOutlined, BookOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu, notification } from 'antd';
+import {
+  BellOutlined,
+  BookOutlined,
+  MailOutlined,
+  MenuOutlined,
+  ShoppingCartOutlined,
+} from '@ant-design/icons';
+import {
+  Avatar,
+  Badge,
+  Drawer,
+  Dropdown,
+  Input,
+  Layout,
+  Menu,
+  notification,
+} from 'antd';
 import Footer from 'components/Footer';
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
@@ -55,6 +70,22 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
     setDrawerVisible(!drawerVisible);
   };
 
+  const handleLogout = async () => {
+    // const result = await logoutApiService();
+    // if (result.success) {
+    //   navigate('/log-in');
+    // } else {
+    //   notification.error({
+    //     message: 'Error',
+    //     description: result.message,
+    //   });
+    // }
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    localStorage.removeItem("exp token");
+    navigate("/")
+  };
+
   const profileMenu = (
     <Menu style={{ width: 200 }}>
       <Menu.Item key="1">
@@ -68,8 +99,8 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
           <Link to="/instructor/profile-instructor/instructor-changepassword">Change Password</Link>
         </Menu.Item>
       </SubMenu>
-      <Menu.Item key="3">
-        <Link to="/">Logout</Link>
+      <Menu.Item key="3" onClick={handleLogout}>
+        Logout
       </Menu.Item>
     </Menu>
   );
