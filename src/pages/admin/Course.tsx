@@ -1,13 +1,15 @@
 import {
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Col, Input, Layout, Modal, Row, Select, Switch, Table, Typography, message } from 'antd';
+import { Button, Col, Input, Layout, Modal, Row, Select, Table, Typography, message } from 'antd';
 import { Course } from 'models/types';
+import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { changeCourseStatus } from 'services/All/changerStatusApiService';
 import { getCourses } from 'services/All/getCoursesApiService';
 import './stylesAdmin.css';
+
 
 const { Header, Content, Footer } = Layout;
 const { Title, Text } = Typography;
@@ -18,6 +20,7 @@ const CourseAdmin: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [logModalVisible, setLogModalVisible] = useState(false);
   const [comment, setComment] = useState('');
+  const [editingItem, setEditingItem] = useState<Partial<Course>>({});
 
 
   useEffect(() => {
@@ -135,26 +138,29 @@ const CourseAdmin: React.FC = () => {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (updated_at: string) => moment(updated_at).format("YYYY-MM-DD"),
     },
-    {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: boolean, record: Course) => (
-        <Switch
-          size="small"
-          checked={status}
-          onChange={(checked: boolean) => handleStatusChange(checked, record)}
-        />
-      ),
-    },
+    // {
+    //   title: 'Status',
+    //   dataIndex: 'status',
+    //   key: 'status',
+    //   render: (status: boolean, record: Course) => (
+    //     <Switch
+    //       size="small"
+    //       checked={status}
+    //       onChange={(checked: boolean) => handleStatusChange(checked, record)}
+    //     />
+    //   ),
+    // },
     {
       title: 'Operating Status',
       dataIndex: 'approval_status',

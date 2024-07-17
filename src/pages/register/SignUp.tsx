@@ -63,7 +63,16 @@ const SignUp: React.FC = () => {
           message: 'Success',
           description: 'You have signed up successfully!',
         });
+
+        
+        const descriptionValue = form.getFieldValue('description');
+        const phoneNumberValue = form.getFieldValue('phone_number');
+        if (!descriptionValue || !phoneNumberValue) {
+          throw new Error('Please fill in the description and phone number fields.');
+    } else {
       navigate('/verify-email');
+    }
+      
       
     } catch (error) {
       console.error('Registration error:', error);
@@ -75,8 +84,6 @@ const SignUp: React.FC = () => {
   };
   
   
-  
-
   const customUpload = (options: UploadRequestOption<any>) => {
     const { file, onSuccess } = options;
     const reader = new FileReader();
@@ -124,14 +131,6 @@ const SignUp: React.FC = () => {
       title: 'Sign Up',
       content: (
         <Form form={form} name="signup" initialValues={{ remember: true }} className="space-y-2">
-          {/* <Form.Item
-            name="role"
-            initialValue={"student"}
-            hidden
-          >
-            <Input value={"student"}/>
-          </Form.Item> */}
-
           <Form.Item
             name="name"
             rules={[{ required: true, message: 'Please input your username!' }]}
@@ -163,7 +162,7 @@ const SignUp: React.FC = () => {
             <Input.Password placeholder="Password" size="middle" />
           </Form.Item>
           <Form.Item
-            name="confirmPassword"
+            name="confirm_password"
             dependencies={['password']}
             rules={[
               { required: true, message: 'Please confirm your password!' },
@@ -186,7 +185,6 @@ const SignUp: React.FC = () => {
             </Button>
           </div>
           <GoogleLogin onSuccess={handleRegisterGoogle} onError={onError} />
-
         </Form>
       ),
     },
@@ -201,49 +199,34 @@ const SignUp: React.FC = () => {
               </Button>
             </Upload>
           </Form.Item>
-
-          <Form.Item name="bio">
-            <Input.TextArea placeholder="Update bio" size="large" rows={4} />
-          </Form.Item>
-
           <Form.Item
-            name="github"
-            label="GitHub Link"
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
+            name="description"
+            rules={[{ required: true, message: 'Please enter the description' }]}
           >
-            <Input placeholder="GitHub Link" size="middle" />
+            <Input.TextArea placeholder="Update description" size="large" rows={4} />
           </Form.Item>
           <Form.Item
-            name="youtube"
-            label="YouTube Link"
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
+            name="phone_number"
+            label="Phone Number"
+            rules={[{ required: true, message: 'Please enter the phone number' }]}
           >
-            <Input placeholder="YouTube Link" size="middle" />
+            <Input placeholder="Update Phone Number" size="small" />
           </Form.Item>
-          <Form.Item
-            name="facebook"
-            label="Facebook Link"
-            labelCol={{ span: 6 }}
-            wrapperCol={{ span: 18 }}
-          >
-            <Input placeholder="Facebook Link" size="middle" />
-          </Form.Item>
-
           <div className="flex justify-between">
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Link to="/verify-email"><Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
-              Finish
-            </Button></Link>
+            <Link to="/verify-email">
+              <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
+                Finish
+              </Button>
+            </Link>
           </div>
-          
         </Form>
       ),
     },
   ];
+  
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gray-100">

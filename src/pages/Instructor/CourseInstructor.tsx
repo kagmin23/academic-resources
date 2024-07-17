@@ -16,6 +16,7 @@ import {
   message,
 } from "antd";
 import { Category, Course } from "models/types";
+import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
@@ -24,6 +25,7 @@ import { changeCourseStatus } from "services/All/changerStatusApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
 import './stylesInstructor.css';
+
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -272,10 +274,9 @@ const ManagerCourseInstructor: React.FC = () => {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      align: "center" as AlignType
     },
     {
-      title: "Discount",
+      title: "Discount (%)",
       dataIndex: "discount",
       key: "discount",
       align: "center" as AlignType
@@ -284,13 +285,15 @@ const ManagerCourseInstructor: React.FC = () => {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: "Update At",
       dataIndex: "updated_at",
       key: "updated_at",
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     
     {
@@ -556,7 +559,7 @@ const ManagerCourseInstructor: React.FC = () => {
             name="description"
             label="Description"
             rules={[
-              { required: true, message: "Please input the description!" },
+              { required: false, message: "Please input the description!" },
             ]}
           >
             {/* <Editor
@@ -583,7 +586,7 @@ const ManagerCourseInstructor: React.FC = () => {
           <Form.Item
             name="video_url"
             label="Video URL"
-            rules={[{ required: true, message: 'Please input the video URL!' }]}
+            rules={[{ required: false, message: 'Please input the video URL!' }]}
           >
             <Input />
           </Form.Item>
@@ -591,7 +594,7 @@ const ManagerCourseInstructor: React.FC = () => {
           <Form.Item
             name="image_url"
             label="Image URL"
-            rules={[{ required: true, message: 'Please input the image URL!' }]}
+            rules={[{ required: false, message: 'Please input the image URL!' }]}
           >
             <Input />
           </Form.Item>
@@ -635,7 +638,7 @@ const ManagerCourseInstructor: React.FC = () => {
               <Form.Item
                 name="discount"
                 label="Discount"
-                rules={[{ required: true, message: 'Please input the discount!' }]}
+                // rules={[{ required: true, message: 'Please input the discount!' }]}
               >
                 <Input type="number" />
               </Form.Item>

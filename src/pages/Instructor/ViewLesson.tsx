@@ -1,6 +1,7 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Col, Form, Input, Layout, Modal, Row, Select, Table, Typography, message } from "antd";
 import { Lesson, Session } from 'models/types';
+import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -214,12 +215,15 @@ const ViewLesson: React.FC = () => {
       dataIndex: 'created_at',
       key: 'created_at',
       align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
       align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+
     },
     {
       title: 'Actions',
@@ -321,13 +325,6 @@ const ViewLesson: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="description"
-            label="Description"
-            rules={[{ required: true, message: 'Please enter the Lesson Description!' }]}
-          >
-            <Input.TextArea />
-          </Form.Item>
-          <Form.Item
             name="lesson_type"
             label="Lesson Type"
             rules={[{ required: true, message: 'Please select the Lesson Type!' }]}
@@ -346,16 +343,24 @@ const ViewLesson: React.FC = () => {
             />
           </Form.Item>
           <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: false, message: 'Please enter the Lesson Description!' }]}
+          >
+            <Input.TextArea />
+          </Form.Item>
+          
+          <Form.Item
             name="video_url"
             label="Video URL"
-            rules={[{ required: true, message: 'Please enter the video URL!' }]}
+            rules={[{ required: false, message: 'Please enter the video URL!' }]}
           >
             <Input />
           </Form.Item>
           <Form.Item
             name="image_url"
             label="Image URL"
-            rules={[{ required: true, message: 'Please enter the image URL!' }]}
+            rules={[{ required: false, message: 'Please enter the image URL!' }]}
           >
             <Input />
           </Form.Item>
