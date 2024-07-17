@@ -83,7 +83,9 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await getCourses('', 1, 10); 
+      const response = await getCourses('', 1, 10);
+      console.log("courses", response);
+
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
@@ -218,9 +220,11 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
     try {
+      console.log("courseId", courseId)
       console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
       const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("Response Data", response.data);
+      console.log("response", response)
+      // console.log("Response Data", response.data);
     } catch (error) {
       message.error("Changer Status Failed");
     }
@@ -301,6 +305,7 @@ const ManagerCourseInstructor: React.FC = () => {
             className="text-xs"
             showSearch
             optionFilterProp="label"
+            defaultValue={"new"}
             value={status}
             onChange={(newStatus) => {
               Modal.confirm({
@@ -318,6 +323,12 @@ const ManagerCourseInstructor: React.FC = () => {
                 onOk: async () => {
                   try {
                     await onChangeStatus(record._id, newStatus, comment);
+                    const updatedDataSource = dataSource.map(item =>
+                      item._id === record._id ? { ...item, approval_status: newStatus } : item
+                    );
+                    setDataSource(updatedDataSource);
+                
+                    message.success("Changed Status Successfully")
                   } catch (error) {
                     console.error("Error updating status:", error);
                     Modal.error({ content: "An error occurred. Please try again later." });
