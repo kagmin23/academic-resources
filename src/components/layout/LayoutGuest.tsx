@@ -44,7 +44,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          <div className="flex items-center space-x-4 text-xl text-white">
+         {/*  <div className="flex items-center space-x-4 text-xl text-white">
             <Link to="/log-in">
               <BellOutlined />
             </Link>
@@ -60,7 +60,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             <Link to="/log-in">
               <ShoppingCartOutlined className="text-xl" />
             </Link>
-          </div>
+          </div> */}
           <div className="flex gap-2">
             <Link to="/log-in">
               <Button className="w-full mt-4 text-xs bg-green-300">

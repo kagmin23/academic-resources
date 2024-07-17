@@ -188,7 +188,6 @@ function TransactionHistory() {
   }, []);
 
   useEffect(() => {
-    // Store the original unfiltered data when the component mounts
     const filteredData = originalData.filter((item) =>
       item.account.toLowerCase().includes(searchTerm.toLowerCase())
     );

@@ -84,7 +84,7 @@ const DashboardInstructor: React.FC = () => {
     };
 
     return (
-        <div className="text-white bg-[#D6E0FF] wrapper">
+        <div className="text-white  ">
             <div className="py-8 text-black">
                 <div className="container px-4 mx-auto">
                     <div className="flex flex-col items-center justify-center lg:flex-row lg:space-x-8">

@@ -31,11 +31,13 @@ const AdminPage: React.FC = () => {
   // const TransactionHistory = React.lazy(() => import("../admin/TransactionHistory"));
 
   return (
-    <div>
+    <div >
       <LayoutAdmin />
-    <div className="flex min-h-screen mb-5">
-      <Sidebar />
-      <div className="flex-grow p-4 bg-white rounded shadow-md">
+    <div className="flex h-lvh my-5 mr-5  shadow-md">
+      <div className='overflow-hidden'>
+      <Sidebar  />
+      </div>
+      <div className="flex-grow p-4 bg-white rounded overflow-auto">
         <Routes>
         <Route path={`/`} element={<Dashboard />} />
         <Route path={`dashboard`} element={<Dashboard />} />

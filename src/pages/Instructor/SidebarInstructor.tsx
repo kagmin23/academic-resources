@@ -6,7 +6,7 @@ import {
   UserSwitchOutlined
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 interface SidebarDataType {
@@ -62,8 +62,21 @@ const SidebarAdmin: React.FC = () => {
     setExpanded(!expanded);
   };
 
+  useEffect(() => {
+    const handleResize = () => {
+      setExpanded(window.innerWidth > 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
   return (
-    <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-full bg-[#1F2937] shadow-lg`}>
+    <div className={`transition-all duration-300 ${expanded ? 'w-56' : 'w-20'} h-full bg-[#1F2937] shadow-lg`}>
       <div className="flex items-center justify-between p-4">
         {/* <UserSwitchOutlined className="text-white" /> */}
         <span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>

@@ -62,7 +62,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-4 w-[1024px]">
       <Title level={2} className="mb-8 text-center">Academic Dashboard</Title>
 
       <Space className="mb-4">

@@ -78,8 +78,7 @@ const CourseAdmin: React.FC = () => {
   };
 
   const filteredDataSource = dataSource ? dataSource.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.description.toLowerCase().includes(searchTerm.toLowerCase())
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) 
   ) : [];
   
 
@@ -113,7 +112,7 @@ const CourseAdmin: React.FC = () => {
       key: 'discount',
       align: "center" as AlignType
     },
-    {
+    /* {
       title: 'Video',
       dataIndex: 'video_url',
       key: 'video_url',
@@ -130,7 +129,7 @@ const CourseAdmin: React.FC = () => {
       render: (image_url: string) => (
         <div><iframe src={image_url}></iframe></div>
       )
-    },
+    }, */
     {
       title: 'Created At',
       dataIndex: 'created_at',

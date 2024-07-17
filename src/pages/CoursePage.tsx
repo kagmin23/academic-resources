@@ -262,7 +262,7 @@ const handlePageChange = (page: number) => {
           />
       </Drawer>
       {/* Content Course */}
-      <div className="mb-10 md:w-1/3">
+      <div className="mb-10 ml-8  w-2/3 md:w-1/3">
           <Search
             placeholder="Search..."
             enterButton={<SearchOutlined></SearchOutlined>}
@@ -270,12 +270,12 @@ const handlePageChange = (page: number) => {
           />
           </div>
       <Link to={`/course-details`}>
-        <Row gutter={[15, 15]} className='xl:px-1 ' >
+        <Row gutter={[15, 15]} className='' >
             {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
-              <Col key={course.id} xs={24} sm={12} md={12} lg={8} xl={8} >
                 <Card
                   hoverable
                   cover={<img alt={course.title} src={course.image} />}
+                  className='ml-10'
                 >
                   <Card.Meta title={course.title} description={course.description} />
                   <div className="flex items-center justify-between mt-4 text-lg font-bold">
@@ -287,7 +287,6 @@ const handlePageChange = (page: number) => {
                   </div>
                 </Card>
                 
-                </Col>
               ))}
             </Row>
           </Link>

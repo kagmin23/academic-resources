@@ -13,10 +13,11 @@ import ViewSession from './ViewSession';
 
 const InstructorPage: React.FC = () => {
   return (
-    <div className="flex">
-      <div className='h-[88vh]'>
-    <SidebarInstructor /></div>
-      <div className="flex-grow min-h-screen ml-4">
+    <div className="flex h-lvh">
+      <div className='overflow-hidden'>
+    <SidebarInstructor />
+    </div>
+      <div className="flex-grow min-h-screen w-[1024px] overflow-y-auto ml-4">
         <Routes>
           <Route path={`/`} element={<DashboardInstructor />} />
           <Route path={`manager-instructor-course/`} element={<ManagerInstructor />} />

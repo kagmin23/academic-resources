@@ -1,7 +1,7 @@
 import { CheckCircleOutlined, ContainerOutlined, DeploymentUnitOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, ReadOutlined, SafetyOutlined, SettingOutlined, SwapOutlined, UserOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
@@ -88,9 +88,21 @@ const SidebarAdmin: React.FC = () => {
   //       console.error("Log-out failed", error);
   //   }
   // }
+  useEffect(() => {
+    const handleResize = () => {
+      setExpanded(window.innerWidth > 1024);
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
 
   return (
-    <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#1F2937] shadow-lg`}>
+    <div className={`transition-all duration-300 ${expanded ? 'w-56' : 'w-20'} h-screen bg-[#1F2937] shadow-lg`}>
       <div className="flex items-center justify-between p-4">
           <span className={`text-lg font-bold text-white transition-all duration-300 ${expanded ? 'block' : 'hidden'}`}>
             ADMINI<span className="text-blue-500">STRATOR</span>
