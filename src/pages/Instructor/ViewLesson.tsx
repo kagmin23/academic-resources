@@ -105,7 +105,7 @@ const ViewLesson: React.FC = () => {
       title: 'Do you want to delete this Lesson?',
       icon: <ExclamationCircleOutlined />,
       content: 'This action cannot be undone',
-      onOk() {
+      onOk() { 
         deleteLesson(lessonId)
           .then(() => {
             const newDataSource = dataSource.filter((item) => item._id !== lessonId);
@@ -248,7 +248,7 @@ const ViewLesson: React.FC = () => {
       <Header className="p-0 bg-white">
         <div className="flex justify-between bg-[#939fb1]">
           <div className="mx-4 my-auto text-lg font-bold text-white">
-            Name Course: {session.name}
+            Name Session: {session.name}
           </div>
           <div className="mx-4 my-auto">
             <Input
