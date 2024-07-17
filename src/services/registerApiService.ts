@@ -9,11 +9,14 @@ interface RegisterData {
   avatar: string;
   image: string;
   status: boolean;
-  phone_number: string
-
+  phone_number: string;
 }
 
-export const registerUser = async (userData: RegisterData) => {
+interface RegisterResponseData extends RegisterData {
+  pendingApproval?: boolean;
+}
+
+export const registerUser = async (userData: RegisterData): Promise<RegisterResponseData> => {
   try {
     const response = await axios.post(`${HOST_MAIN}/api/users`, userData, {
       headers: {
@@ -23,27 +26,29 @@ export const registerUser = async (userData: RegisterData) => {
 
     console.log('Registration response:', response);
 
-      if (userData) {
-        console.log("userData", userData)
+    if (userData.role === 'instructor') {
+      console.log("Instructor registration, pending approval");
+      localStorage.setItem('user', JSON.stringify(userData));
+      return { ...userData, pendingApproval: true }; // Return user data with pendingApproval flag
+    } else if (userData) {
+      console.log("userData", userData);
+      localStorage.setItem('user', JSON.stringify(userData));
+      return userData; // Return user data for non-instructor roles
+    } else {
+      console.error('Failed to get user data');
+      throw new Error('Failed to get user data');
+    }
+  } catch (error) {
+    console.error('Registration error:', error);
 
-        localStorage.setItem('user', JSON.stringify(userData));
-        return userData; // Trả về dữ liệu người dùng nếu cần thiết
-      } else {
-        console.error('Failed to get user data');
-        throw new Error('Failed to get user data');
-      }
+    let errorMessage = 'There was an error during the registration process. Please try again.';
+    if (axios.isAxiosError(error) && error.response?.data?.message) {
+      errorMessage = error.response.data.message;
+    } else if (error instanceof Error) {
+      errorMessage = error.message;
+    }
+    console.error('Error message:', errorMessage);
 
-      } catch (error) {
-        console.error('Registration error:', error);
-
-        let errorMessage = 'There was an error during the registration process. Please try again.';
-        if (axios.isAxiosError(error) && error.response?.data?.message) {
-          errorMessage = error.response.data.message;
-        } else if (error instanceof Error) {
-          errorMessage = error.message;
-        }
-        console.error('Error message:', errorMessage);
-
-        throw error;
+    throw error;
   }
 };
