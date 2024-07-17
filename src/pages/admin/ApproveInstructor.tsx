@@ -88,7 +88,13 @@ const ApproveInstructor: React.FC = () => {
 
   const columns: ColumnsType<Item> = [
     { title: 'ID', dataIndex: '_id', key: '_id' },
-    { title: 'Avarta', dataIndex: 'avatar', key: 'avatar' },
+    { title: 'Avarta',
+      dataIndex: 'avatar',
+      key: 'avatar',
+      render: (avatar: string) => (
+        <iframe src={avatar}></iframe>
+      )
+    },
     { title: 'Username', dataIndex: 'name', key: 'name' },
     {
       title: 'Date Of Birth',
