@@ -5,6 +5,7 @@ import { Button, Col, Input, Layout, Modal, Row, Select, Switch, Table, Typograp
 import { Course } from 'models/types';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
+import { changeCourseStatus } from 'services/All/changerStatusApiService';
 import { getCourses } from 'services/All/getCoursesApiService';
 import './stylesAdmin.css';
 
@@ -60,8 +61,14 @@ const CourseAdmin: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
+    try {
+      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
+      const response = await changeCourseStatus(courseId, newStatus, comment);
+      console.log("Response Data", response.data);
+    } catch (error) {
+      message.error("Changer Status Failed");
+    }
   };
 
   const onSearch = (value: string) => {
@@ -158,14 +165,13 @@ const CourseAdmin: React.FC = () => {
               showSearch
               optionFilterProp="label"
               defaultValue={"New"}
-              onChange={onChange}
+              onChange={() => onChangeStatus}
               onSearch={onSearch}
               options={[
                 { value: 'new', label: 'New' },
+                { value: 'waiting_approve', label: 'Waiting Approve' },
                 { value: 'approve', label: 'Approve' },
                 { value: 'reject', label: 'Reject' },
-                { value: 'active', label: 'Active' },
-                { value: 'inactive', label: 'Inactive' },
               ]}
             />
         </div>
