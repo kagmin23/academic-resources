@@ -23,9 +23,9 @@ import { Category } from "models/types";
 import { AlignType } from "rc-table/lib/interface";
 import { useNavigate } from 'react-router-dom';
 
-import { getCategories } from "services/AdminsApi/categoryApiService";
-import { getCourses } from "services/All/getCoursesApiService";
-import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
+import { getCategories } from "../../services/AdminsApi/categoryApiService";
+import { getCourses } from "../../services/All/getCoursesApiService";
+import { createCourse, deleteCourse, updateCourse } from "../../services/Instructor/courseApiService";
 import './stylesInstructor.css';
 
 const { confirm } = Modal;
@@ -249,8 +249,8 @@ const ManagerCourseInstructor: React.FC = () => {
     },
     {
       title: "Category",
-      dataIndex: "category_name",
-      key: "category_name",
+      dataIndex: "category_id",
+      key: "category_id",
       align: "center" as AlignType
     },
     {
@@ -375,31 +375,31 @@ const ManagerCourseInstructor: React.FC = () => {
                   marginLeft: "25px",
                 }}
               >
-              <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
-              <Col span={22} className="mb-5">
-              <Typography.Title level={5}>Content:</Typography.Title>
-                       <p>{record.content || "-"}</p>
-              </Col>
+                <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
+  <Col span={22} className="mb-5">
+    <Typography.Title level={5}>Nội dung:</Typography.Title>
+    <p>{record.content || "-"}</p>
+  </Col>
 
-              <Col span={11} className="mb-5" style={{ height: '315px' }}>
-              <Typography.Title level={5}>Video:</Typography.Title>
-                    <iframe 
-                      src={record.video_url} 
-                      style={{ width: '400px', height: '300px' }} 
-                      frameBorder="0" 
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                      allowFullScreen>
-                    </iframe>
-              </Col>
+  <Col span={11} className="mb-5">
+    <Typography.Title level={5}>Video:</Typography.Title>
+    <iframe 
+      src={record.video_url} 
+      style={{ width: '100%', height: '315px' }} 
+      frameBorder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowFullScreen>
+    </iframe>
+  </Col>
 
-            <Col span={11} offset={1} className="mb-5" style={{ height: '315px' }}>
-            <Typography.Title level={5}>Image:</Typography.Title>
-                <Image 
-                    src={record.image_url} 
-                    style={{ width: '400px', height: '300px', objectFit: 'cover' }} 
-                />
-            </Col>
-            </Row>
+  <Col span={11} offset={1} className="mb-5">
+    <Typography.Title level={5}>Hình ảnh:</Typography.Title>
+    <Image 
+      src={record.image_url} 
+      style={{ width: '100%', height: 'auto' }} 
+    />
+  </Col>
+</Row>
 
                 <Modal
                     visible={logModalVisible}
@@ -605,6 +605,7 @@ const ManagerCourseInstructor: React.FC = () => {
         onCancel={() => setLogModalVisible(false)}
         footer={null}
         width={800}
+        style={{ overflowY: 'auto' }}
       >
         <h1 className="mb-5">Log Status</h1>
         <div className="flex mb-5 space-x-5">
