@@ -203,8 +203,8 @@ const LayoutStudent: React.FC = () => {
           </Menu.Item>
         </Menu>
       </Drawer>
-      <Content className="p-4 pt-16">
-        <div className="p-4 bg-white rounded shadow">
+      <Content className=" pt-10 pb-3 ">
+        <div className="p-4 m-0 ">
           <Outlet />
         </div>
       </Content>

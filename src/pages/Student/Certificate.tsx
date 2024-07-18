@@ -107,7 +107,7 @@ const filteredCertificates = certifcate.filter((cert) =>
     const { RangePicker } = DatePicker;
   return (
    <Layout style={{ minHeight: '100vh' }}>
-     <div className="p-5 ">
+     <div className="p-5 bg-white">
           <div className="py-5">
         <h1 className="text-lg font-bold float-start sm:text-2xl ">
           <ReadOutlined className="mr-2"></ReadOutlined> Your Certificates
@@ -126,7 +126,7 @@ const filteredCertificates = certifcate.filter((cert) =>
       <RangePicker size="small" className="m-4"/>
       </Space>
         </div>
-        <div style={{maxWidth:1050}}>
+        <div style={{maxWidth:1050, margin:'0 auto'}}>
         <Row gutter={[15, 15]} className='xl:px-1 ' >
              {filteredCertificates.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((certifcate) => (
               <Col  key={certifcate.id} xs={24} sm={12} md={12} lg={8} xl={8} >

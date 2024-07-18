@@ -69,7 +69,7 @@ const SidebarStudent: React.FC = () => {
   ];
 
   return (
-    <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#475a75] shadow-lg`}>
+    <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-full min-h-screen bg-[#475a75] shadow-lg`}>
       <div className="flex flex-col items-center justify-between p-4">
         <Avatar size={64} src={aboutData.avatarSrc} />
         <Title level={4} style={{ marginLeft: 16, color: "white" }}>{aboutData.name}</Title>

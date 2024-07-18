@@ -21,6 +21,7 @@ import LayoutInstructor from '../../components/layout/LayoutInstructor';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import InstructorPage from './InstructorPage';
+
 import ViewSession from './ViewSession';
 export default function InstructorRouter() {
 
@@ -73,6 +74,7 @@ export default function InstructorRouter() {
 
          </Route>
     </Routes>
+   
 
 
 </div>

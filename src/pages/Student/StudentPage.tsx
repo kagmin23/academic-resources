@@ -10,9 +10,10 @@ import { Route, Routes } from 'react-router-dom';
 
 const StudentPage: React.FC = () => {
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
     <SidebarStudent />
-      <div className="flex-grow p-4 bg-white rounded shadow-md">
+      {/* <div className="flex-grow p-4 bg-white rounded shadow-md"> */}
+      <div className="flex-grow pl-4 ">
         <Routes>
           <Route path={`/`} element={<AboutStudent />} />
           <Route path={`course-student`} element={<MyCourseStudent />} />

@@ -14,9 +14,9 @@ import ViewLesson from 'pages/Instructor/ViewLesson';
 const InstructorPage: React.FC = () => {
   return (
     <div className="flex">
-      <div className='h-[88vh]'>
+      <div className='h-[91vh] '>
     <SidebarInstructor /></div>
-      <div className="flex-grow ml-4 min-h-screen">
+      <div className="flex-grow ml-4 h-screen overflow-auto hide-scrollbar" >
         <Routes>
           <Route path={`/`} element={<DashboardInstructor />} />
           <Route path={`manager-instructor-course/`} element={<ManagerInstructor />} />

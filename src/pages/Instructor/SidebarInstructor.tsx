@@ -24,7 +24,7 @@ const SidebarAdmin: React.FC = () => {
   const SidebarData: SidebarDataType[] = [
     {
       icon: PieChartOutlined,
-      heading: "Dashboard",
+      heading: "My Profile",
       href: "/instructor/profile-instructor",
     },
     {

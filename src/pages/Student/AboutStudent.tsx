@@ -1,7 +1,7 @@
 import { CalendarOutlined, CaretRightOutlined, FacebookOutlined, FileDoneOutlined, FileTextOutlined, LinkedinOutlined, LogoutOutlined, MailOutlined, ManOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined, WomanOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography } from 'antd';
-import React, { useState } from 'react';
-
+import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography ,notification,} from 'antd';
+import React, { useEffect, useState } from 'react';
+import { getCurrentUser } from '../../services/AdminsApi/UserService'
 const { Content } = Layout;
 const { Title, Text } = Typography;
 const { TabPane } = Tabs;
@@ -16,15 +16,8 @@ const coursesData = [
     price: 'Free',
     status: '1',
   },
-  {
-    key: '2',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/new-hEADWAY.png',
-    name: 'New Headway',
-    instructor: 'DTD',
-    lessons: '3 Lessons',
-    price: 'Free',
-    status: '1',
-  },
+
+  
   {
     key: '3',
     image: 'https://accountlp.thimpress.com/wp-content/uploads/2024/03/f7aad5d3f7e5c9cf37b0c24a9d075887-800x600.png',
@@ -43,81 +36,40 @@ const coursesData = [
     price: 'Free',
     status: '0',
   },
-  {
-    key: '5',
-    image: 'https://i.ytimg.com/vi/wGdNAFWe2c8/maxresdefault.jpg',
-    name: 'Design',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
-    status: '1',
-  },
-  {
-    key: '6',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/11/Gregor_an_image_of_a_womans_head_in_a_virtual_field_with_a_devi_c1ac4ecb-0c36-464c-b282-06798fc663af-800x600.png',
-    name: 'AI',
-    instructor: 'HieuTQ10',
-    lessons: '9 Lessons',
-    price: '13$',
-    status: '0',
-  },
-  {
-    key: '7',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/06/about-us-new-1-800x600.jpg',
-    name: 'Softskill',
-    instructor: 'TrungTM',
-    lessons: '3 Lessons',
-    price: '10$',
-    status: '0',
-  },
-  {
-    key: '8',
-    image: 'https://i.ytimg.com/vi/wGdNAFWe2c8/maxresdefault.jpg',
-    name: 'Design',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
-    status: '1',
-  },
-  {
-    key: '9',
-    image: 'https://i.ytimg.com/vi/wGdNAFWe2c8/maxresdefault.jpg',
-    name: 'Design',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
-    status: '1',
-  },
-  {
-    key: '10',
-    image: 'https://i.ytimg.com/vi/wGdNAFWe2c8/maxresdefault.jpg',
-    name: 'Design',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
-    status: '1',
-  },
+  
+  
+
 ];
 
-const aboutData = {
-  avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
-  name: 'David Doe',
-  email: 'davidd09@gmail.com',
-  dob: 'January 1, 2003',
-  gender: 'Female',
-  courseCreatedDate: 'January 15, 2023',
-  facebook: 'https://www.facebook.com/vu.hanthien.545',
-  linkedin: 'https://linkedin.com/in/david34',
-};
 
 const ProfileStudent: React.FC = () => {
   const [filteredCourses, setFilteredCourses] = useState(coursesData);
-  const [showAbout, setShowAbout] = useState(true);
-  const [showSettings, setShowSettings] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await getCurrentUser(); // Replace with your API call
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          notification.error({
+            message: 'Error',
+            description: 'Failed to fetch current user information',
+          });
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Error',
+          description: 'Failed to fetch current user information',
+        });
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
 
   const filterCoursesByStatus = (status: string) => {
-    setShowAbout(false);
-    setShowSettings(false);
+   
     if (status === 'all') {
       setFilteredCourses(coursesData);
     } else {
@@ -125,57 +77,56 @@ const ProfileStudent: React.FC = () => {
       setFilteredCourses(filtered);
     }
   };
+   if (!currentUser) {
+    return <div>Loading...</div>;
+}
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
       
       <Layout className="site-layout">
-        <Content>
-          {showAbout ? (
-            <Card style={{  maxHeight: 350, overflow: 'auto', margin: 20 }}>
-              <div style={{ display: 'flex', flexDirection: 'column' }}>
+        {/* <Content> */}
+          
+            <Card style={{  maxHeight: 350, overflow: 'auto'}}>
+              {/* <div style={{ display: 'flex', flexDirection: 'column' }}> */}
                 <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                  <Avatar size={64} src={aboutData.avatarSrc} />
-                  <Title level={4} style={{ marginLeft: 16 }}>{aboutData.name}</Title>
+                <Avatar size={128} src={currentUser.avatar} className="mb-4 lg:mr-4 lg:mb-0" />
+                  <div className="flex-grow">
+                                        <Title level={4}>{currentUser.name}</Title>
+                                        <div className="mb-2">
+                                            <MailOutlined style={{ marginRight: 8 }} />
+                                            <Text>Email: {currentUser.email}</Text>
+                                        </div>
+                                        <div className="mb-2">
+                                        <CalendarOutlined style={{ marginRight: 8 }} />
+                                        <Text>Date Of Birth: {currentUser.dob}</Text>
+                                         </div>
+
+                                        {/* <div className="mb-2">
+                                            <CalendarOutlined style={{ marginRight: 8 }} />
+                                            <Text>Date Of Birth: {aboutData.dob}</Text>
+                                        </div> */}
+                                        {/* <div className="mb-2">
+                                            {aboutData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
+                                            <Text>Gender: {aboutData.gender}</Text>
+                                        </div> */}
+                                        <div className="mb-2">
+                                            <Text>Phone Number: {currentUser.phone_number}</Text>
+                                        </div>
+                                        <div className="mb-2">
+                                            <Text>Course Created Date: {currentUser.created_at}</Text>
+                                        </div>
+                                        <div className="mb-2">
+                                            <Text>Bio: {currentUser.description}</Text>
+                                        </div>
+                                    </div>
                 </div>
-                <div style={{ marginBottom: 8 }}>
-                  <MailOutlined style={{ marginRight: 8 }} />
-                  <Text>Email: {aboutData.email}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <CalendarOutlined style={{ marginRight: 8 }} />
-                  <Text>Date Of Birth: {aboutData.dob}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  {aboutData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
-                  <Text>Gender: {aboutData.gender}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <Text>Course Created Date: {aboutData.courseCreatedDate}</Text>
-                </div>
-                <div style={{ marginBottom: 8 }}>
-                  <a href={aboutData.facebook} target="_blank" rel="noopener noreferrer">
-                    <FacebookOutlined style={{ marginRight: 8 }} />
-                    Facebook
-                  </a>
-                </div>
-                <div>
-                  <a href={aboutData.linkedin} target="_blank" rel="noopener noreferrer">
-                    <LinkedinOutlined style={{ marginRight: 8 }} />
-                    LinkedIn
-                  </a>
-                </div>
-              </div>
+              {/* </div> */}
             </Card>
-          ) : showSettings ? (
-            <Card title="Settings" style={{ maxWidth: 500, maxHeight: 350, overflow: 'auto', margin: 20 }}>
-              <div>
-                <Title level={4}>Account Settings</Title>
-                <Text>No settings available.</Text>
-              </div>
-            </Card>
-          ) : (
-            <div style={{ padding: 20 }}>
+          
+        
+         
+            {/* <div className='p-5 '>
               <Tabs defaultActiveKey="all" onChange={filterCoursesByStatus}>
                 <TabPane tab="All" key="all">
                   <Row gutter={[16, 16]}>
@@ -245,9 +196,9 @@ const ProfileStudent: React.FC = () => {
                   </Row>
                 </TabPane>
               </Tabs>
-            </div>
-          )}
-        </Content>
+            </div> */}
+        
+        {/* </Content> */}
       </Layout>
     </Layout>
   );
