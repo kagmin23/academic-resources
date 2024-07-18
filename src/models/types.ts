@@ -102,3 +102,12 @@ export class Course {
     video = "video",
     image = "image"
   }
+
+  export enum StatusType {
+    new = "text",
+    waiting_approve = "waiting_approve",
+    approve = "approve",
+    reject = "reject",
+    active = "active",
+    inactive = "inactive",
+  }
