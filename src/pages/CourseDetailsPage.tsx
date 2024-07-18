@@ -1,39 +1,23 @@
+import React, { useState } from 'react';
+import { Button, Modal, Tabs, Avatar, Badge, message } from 'antd';
+import { Link } from 'react-router-dom';
+import { createCart } from 'services/All/CartApiService';
 import {
     CommentOutlined,
     DislikeOutlined,
     ExclamationCircleOutlined,
     EyeOutlined,
-    FileOutlined,
     HeartOutlined,
     LikeOutlined,
-    LockOutlined,
     PlayCircleOutlined,
     ShareAltOutlined,
     StarOutlined
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Menu, Modal, Radio, Tabs } from 'antd';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 
-const { SubMenu } = Menu;
 const { TabPane } = Tabs;
-const { Group } = Radio;
 
 const CourseDetail: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
-
-    const lessons = [
-        { key: 'lesson1', title: 'Getting Started', duration: '30 minutes', preview: true },
-        { key: 'lesson2', title: 'Content Management', duration: '30 minutes' },
-        { key: 'lesson3', title: 'Course Download', duration: '30 minutes' },
-        { key: 'lesson4', title: 'Course Download 02', duration: '30 minutes' },
-        { key: 'lesson5', title: 'Contextualising Sustainability for a Changing World', duration: '10 minutes' },
-    ];
-
-    const assignments = [
-        { key: 'assignment1', title: 'Certificate On Theme Development 01', duration: '10 minutes', preview: true },
-        { key: 'assignment2', title: 'Certificate On Theme Development 02', duration: '30 minutes' },
-    ];
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -43,15 +27,18 @@ const CourseDetail: React.FC = () => {
         setIsModalVisible(false);
     };
 
-    const handleClick = (e: any) => {
-        const lesson = lessons.find(lesson => lesson.key === e.key);
-        if (lesson) {
-            setSelectedLesson(lesson.title);
+    const handleAddToCart = async () => {
+        try {
+            const response = await createCart({
+                course_id: 'courseId',
+            });
+            console.log('Cart item added successfully:', response.data);
+            message.success('Course added to cart successfully!');
+        } catch (error) {
+            console.error('Failed to add course to cart:', error);
+            message.error('Failed to add course to cart');
         }
     };
-
-
-    const [selectedLesson, setSelectedLesson] = useState(lessons[0]?.title);
 
     const renderStars = (starCount: number) => {
         const stars = [];
@@ -117,7 +104,7 @@ const CourseDetail: React.FC = () => {
                             </div>
                             <p className="mt-2 text-lg">Last updated 1/2024</p>
                             <div className="mt-4 ">
-                                <Button type="primary" className="p-5 mr-2 text-lg font-semibold bg-red-600">Add to Cart</Button>
+                                <Button type="primary" className="p-5 mr-2 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
                                 <Link to={`/student/buy-now`}><Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>Buy Now</Button></Link>
                             </div>
                             
@@ -174,210 +161,31 @@ const CourseDetail: React.FC = () => {
                                     <li>Prepare to build real web apps!</li>
                                 </ul>
                             </div>
-                            <div className="mt-4 text-xl text-gray-600">
-                                <h3 className='mb-2 text-2xl font-semibold'>Description</h3>
-                                <p>Just updated to include Bootstrap 4.1.3!</p>
-                                <p>Hi! Welcome to the Web Developer Bootcamp, the <strong>only course you need to learn web development</strong>. There are a lot of options for online developer training, but this course is without a doubt the most comprehensive and effective on the market. Here's why:</p>
-                                <ul className="mt-5 mb-5 ml-6 list-disc">
-                                    <li>This is the only online course taught by a professional bootcamp instructor.</li>
-                                    <li>94% of my in-person bootcamp students go on to get full-time developer jobs. Most of them are complete beginners when I start working with them.</li>
-                                    <li>The previous 2 bootcamp programs that I taught cost $14,000 and $21,000. This course is just as comprehensive but with brand new content for a fraction of the price.</li>
-                                    <li>Everything I cover is up-to-date and relevant to today's developer industry. No PHP or other dated technologies. This course does not cut any corners.</li>
-                                    <li>This is the only complete beginner full-stack developer course that covers NodeJS.</li>
-                                    <li>We build 13+ projects, including a gigantic production application called YelpCamp. No other course walks you through the creation of such a substantial application.</li>
-                                    <li>The course is constantly updated with new content, projects, and modules. Think of it as a subscription to a never-ending supply of developer training.</li>
-                                </ul>
-                                <p>When you're learning to program you often have to sacrifice learning the exciting and current technologies in favor of the "beginner friendly" classes. With this course, you get the best of both worlds. This is a course designed for the complete beginner, yet it covers some of the most exciting and relevant topics in the industry.</p>
-                                <p className='mt-4 mb-4'>Throughout the course we cover tons of tools and technologies including:</p>
-                                <ul className="mb-5 ml-6 font-bold text-gray-500 list-disc">
-                                    <li>HTML5</li>
-                                    <li>CSS3</li>
-                                    <li>JavaScript</li>
-                                    <li>Bootstrap 4</li>
-                                    <li>SemanticUI</li>
-                                    <li>DOM Manipulation</li>
-                                    <li>jQuery</li>
-                                    <li>Unix (Command Line) Commands</li>
-                                    <li>NodeJS</li>
-                                    <li>NPM</li>
-                                    <li>ExpressJS</li>
-                                    <li>REST</li>
-                                    <li>MongoDB</li>
-                                    <li>Database Associations</li>
-                                    <li>Authentication</li>
-                                    <li>PassportJS</li>
-                                    <li>Authorization</li>
-                                </ul>
-                                <p className='mb-5'>This course is also unique in the way that it is structured and presented. Many online courses are just a long series of "watch as I code" videos. This course is different. I've incorporated everything I learned in my years of teaching to make this course not only more effective but more engaging. The course includes:</p>
-                                <ul className='mb-5 ml-6 list-disc'>
-                                    <li>Lectures</li>
-                                    <li>Code-Alongs</li>
-                                    <li>Projects</li>
-                                    <li>Exercises</li>
-                                    <li>Research Assignments</li>
-                                    <li>Slides</li>
-                                    <li>Downloads</li>
-                                    <li>Readings</li>
-                                </ul>
-                                <p>If you have any questions, please don't hesitate to contact me. I got into this industry because I love working with people and helping students learn. Sign up today and see how fun, exciting, and rewarding web development can be!</p>
+                        </TabPane>
+                        <TabPane tab={<span className='text-xl font-semibold'>Instructor</span>} key="2">
+                            <div>
+                                <h3 className='mb-2 text-2xl font-semibold'>Johnson Smith</h3>
+                                <p className="text-xl text-gray-600">Lorem ipsum dolor sit amet consectetur adipisicing elit. At maiores quam doloribus ullam quasi. Expedita sapiente aut sit natus autem et voluptates labore, ipsa molestias tempora reiciendis illo nostrum magnam!</p>
                             </div>
                         </TabPane>
-                        <TabPane tab={<span className='text-xl font-semibold'>Course Content</span>} key="2">
-                            <Menu
-                                mode="inline"
-                                defaultSelectedKeys={[lessons[0].key]}
-                                onClick={handleClick}
-                                className="h-full"
-                            >
-                                <SubMenu key="sub1" title="Lesson" icon={<FileOutlined />}>
-                                    {lessons.map(lesson => (
-                                        <Menu.Item key={lesson.key} icon={lesson.preview ? <FileOutlined /> : <LockOutlined />} className="flex items-center h-24">
-                                            <div className="w-full">
-                                                <div className="text-base">{lesson.title}</div>
-                                                <div className="text-sm text-gray-500">{lesson.duration}</div>
-                                            </div>
-                                        </Menu.Item>
-                                    ))}
-                                </SubMenu>
-
-                                <SubMenu key="sub2" title="Assignment" icon={<FileOutlined />}>
-                                    {assignments.map(assignment => (
-                                        <Menu.Item key={assignment.key} icon={assignment.preview ? <FileOutlined /> : <LockOutlined />} className="flex items-center h-24">
-                                            <div className="w-full">
-                                                <div className="text-base">{assignment.title}</div>
-                                                <div className="text-sm text-gray-500">{assignment.duration}</div>
-                                            </div>
-                                        </Menu.Item>
-                                    ))}
-                                </SubMenu>
-                            </Menu>
-                        </TabPane>
-
-                        <TabPane tab={<span className='text-xl font-semibold '>Reviews</span>} key="3">
-                            <div className="flex flex-col md:flex-row">
-                                <div className="p-4 md:w-1/2">
-                                    <h1 className="mb-2 text-2xl font-semibold">Student Feedback</h1>
-                                    <div className="flex items-center p-4 mb-4 bg-gray-100 rounded-lg">
-                                        <h2 className='ml-4 mr-2 text-xl font-semibold'>4.6</h2>
-                                        <div className="mr-4 text-2xl">
-                                            {renderStars(4)}
+                        <TabPane tab={<span className='text-xl font-semibold'>Reviews</span>} key="3">
+                            <div>
+                                <h3 className='mb-2 text-2xl font-semibold'>Reviews</h3>
+                                {ratings.map((rating, index) => (
+                                    <div key={index} className="flex items-center mb-2">
+                                        <div className="flex-shrink-0 w-1/5">{renderStars(rating.stars)}</div>
+                                        <div className="flex-grow w-4/5 bg-gray-200">
+                                            <div className="h-4 bg-yellow-500" style={{ width: `${rating.percentage}%` }}></div>
                                         </div>
-                                        <div>
-                                            <div className="mt-2 text-lg font-semibold">Course Rating</div>
-                                        </div>
+                                        <div className="ml-2">{rating.percentage}%</div>
                                     </div>
-                                    <div className="w-full pl-4 md:w-1/2 md:pl-0">
-                                        <div className="space-y-2">
-                                            {ratings.map((rating) => (
-                                                <div key={rating.stars} className="flex items-center">
-                                                    <div className="w-full h-4 mx-2 bg-gray-200 rounded-full">
-                                                        <div className="h-4 bg-red-500 rounded-full" style={{ width: `${rating.percentage}%` }}></div>
-                                                    </div>
-                                                    <div className="flex items-center ml-2">
-                                                        <div className="flex text-xl">
-                                                            {renderStars(rating.stars)}
-                                                        </div>
-                                                        <span className="ml-2">{rating.percentage}%</span>
-                                                    </div>
-
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </div>
-
-
-                                </div>
-                                <div className="w-1/2 p-4">
-                                    <div className="space-y-8">
-                                        <div className="flex space-x-4">
-                                            <div className="flex-shrink-0">
-                                                <Avatar src="images/left-imgs/img-1.jpg" />
-                                            </div>
-                                            <div>
-                                                <div className="flex flex-col mb-2">
-                                                    <h4 className="text-lg font-semibold">John Doe</h4>
-                                                    <span className="text-sm">2 hours ago</span>
-                                                </div>
-                                                <div className="mr-4 text-2xl">
-                                                    {renderStars(4)}
-                                                </div>
-                                                <div className="flex items-center mb-2">
-                                                </div>
-                                                <p className="mb-2 text-lg text-gray-600">Nam gravida elit a velit rutrum, eget dapibus ex elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce lacinia, nunc sit amet tincidunt venenatis.</p>
-                                                <div className="flex items-center space-x-4 text-lg text-gray-600">
-                                                    <h4>Was this review helpful?</h4>
-                                                    <Group>
-                                                        <Radio className='text-lg' value={1}>Yes</Radio>
-                                                        <Radio className='text-lg' value={2}>No</Radio>
-                                                    </Group>
-                                                    <a href="#" className="text-lg">Report</a>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                        <div className="flex space-x-4">
-                                            <div className="flex-shrink-0">
-                                                <Avatar src="images/left-imgs/img-1.jpg" />
-                                            </div>
-                                            <div>
-                                                <div className="flex flex-col mb-2">
-                                                    <h4 className="text-lg font-semibold">John Doe</h4>
-                                                    <span className="text-sm">2 hours ago</span>
-                                                </div>
-                                                <div className="mr-4 text-2xl">
-                                                    {renderStars(3)}
-                                                </div>
-                                                <div className="flex items-center mb-2">
-                                                </div>
-                                                <p className="mb-2 text-lg text-gray-600">Nam gravida elit a velit rutrum, eget dapibus ex elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce lacinia, nunc sit amet tincidunt venenatis.</p>
-                                                <div className="flex items-center space-x-4 text-lg text-gray-600">
-                                                    <h4>Was this review helpful?</h4>
-                                                    <Group>
-                                                        <Radio className='text-lg' value={1}>Yes</Radio>
-                                                        <Radio className='text-lg' value={2}>No</Radio>
-                                                    </Group>
-                                                    <a href="#" className="text-lg">Report</a>
-                                                </div>
-
-                                            </div>
-                                        </div><div className="flex space-x-4">
-                                            <div className="flex-shrink-0">
-                                                <Avatar src="images/left-imgs/img-1.jpg" />
-                                            </div>
-                                            <div>
-                                                <div className="flex flex-col mb-2">
-                                                    <h4 className="text-lg font-semibold">John Doe</h4>
-                                                    <span className="text-sm">2 hours ago</span>
-                                                </div>
-                                                <div className="mr-4 text-2xl">
-                                                    {renderStars(4)}
-                                                </div>
-                                                <div className="flex items-center mb-2">
-                                                </div>
-                                                <p className="mb-2 text-lg text-gray-600">Nam gravida elit a velit rutrum, eget dapibus ex elementum. Interdum et malesuada fames ac ante ipsum primis in faucibus. Fusce lacinia, nunc sit amet tincidunt venenatis.</p>
-                                                <div className="flex items-center space-x-4 text-lg text-gray-600">
-                                                    <h4>Was this review helpful?</h4>
-                                                    <Group>
-                                                        <Radio className='text-lg' value={1}>Yes</Radio>
-                                                        <Radio className='text-lg' value={2}>No</Radio>
-                                                    </Group>
-                                                    <a href="#" className="">Report</a>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </TabPane>
                     </Tabs>
                 </div>
-
             </div>
-
-
         </div>
-
     );
 };
 

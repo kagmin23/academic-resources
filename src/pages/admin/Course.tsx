@@ -5,6 +5,7 @@ import { Button, Col, Input, Layout, Modal, Row, Select, Switch, Table, Typograp
 import { Course } from 'models/types';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
+import { changeCourseStatus } from 'services/All/changerStatusApiService';
 import { getCourses } from 'services/All/getCoursesApiService';
 import './stylesAdmin.css';
 
@@ -16,6 +17,8 @@ const CourseAdmin: React.FC = () => {
   const [dataSource, setDataSource] = useState<Course[]>([]);
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [logModalVisible, setLogModalVisible] = useState(false);
+  const [comment, setComment] = useState('');
+
 
   useEffect(() => {
     fetchSessions();
@@ -60,8 +63,14 @@ const CourseAdmin: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
+  const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
+    try {
+      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
+      const response = await changeCourseStatus(courseId, newStatus, comment);
+      console.log("Response Data", response.data);
+    } catch (error) {
+      message.error("Changer Status Failed");
+    }
   };
 
   const onSearch = (value: string) => {
@@ -150,37 +159,55 @@ const CourseAdmin: React.FC = () => {
       title: 'Operating Status',
       dataIndex: 'approval_status',
       key: 'approval_status',
-      render: (text: string, record: Course) => (
+      render: (status: string, record: Course) => (
         <div>
           <Select
-              size="small"
-              className="text-xs"
-              showSearch
-              optionFilterProp="label"
-              defaultValue={"New"}
-              onChange={onChange}
-              onSearch={onSearch}
-              options={[
-                { value: 'new', label: 'New' },
-                { value: 'approve', label: 'Approve' },
-                { value: 'reject', label: 'Reject' },
-                { value: 'active', label: 'Active' },
-                { value: 'inactive', label: 'Inactive' },
-              ]}
-            />
+            size="small"
+            className="text-xs"
+            showSearch
+            optionFilterProp="label"
+            defaultValue={"new"}
+            value={status}
+            onChange={(newStatus) => {
+              Modal.confirm({
+                title: "Change Status Confirmation",
+                content: (
+                  <>
+                    <p>Are you sure you want to change the status to "{newStatus}"?</p>
+                    <Input.TextArea
+                      rows={4}
+                      placeholder="Enter a comment (optional)"
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </>
+                ),
+                onOk: async () => {
+                  try {
+                    await onChangeStatus(record._id, newStatus, comment);
+                    const updatedDataSource = dataSource.map(item =>
+                      item._id === record._id ? { ...item, approval_status: newStatus } : item
+                    );
+                    setDataSource(updatedDataSource);
+                
+                    message.success("Changed Status Successfully")
+                  } catch (error) {
+                    console.error("Error updating status:", error);
+                    Modal.error({ content: "An error occurred. Please try again later." });
+                  }
+                },
+                onCancel: () => {},
+              });
+            }}
+            options={[
+              { value: 'new', label: 'New' },
+              { value: 'waiting_approve', label: 'Waiting Approve' },
+              { value: 'approve', label: 'Approve' },
+              { value: 'reject', label: 'Reject' },
+            ]}
+          />
         </div>
-      )
+      ),
     },
-    // {
-    //   title: 'Actions',
-    //   key: 'actions',
-    //   align: 'center' as AlignType,
-    //   render: (text: string, record: Course) => (
-    //     <div style={{ textAlign: 'center' }}>
-    //       <Button icon={<EyeOutlined />} onClick={() => handleViewMore(record._id)}></Button>
-    //     </div>
-    //   ),
-    // },
   ];
 
   return (
