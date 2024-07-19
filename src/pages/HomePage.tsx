@@ -1,121 +1,100 @@
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Button, Card, Carousel, Col, message, Row } from 'antd';
 import {
   ArrowRightOutlined,
-  DotNetOutlined,
-  DownOutlined,
   FlagOutlined,
   HeartOutlined,
-  JavaOutlined,
   LeftOutlined,
-  LinuxOutlined,
-  OpenAIOutlined,
   RightOutlined,
-  SketchOutlined
+  SketchOutlined,
+  OpenAIOutlined,
+  LinuxOutlined,
+  JavaOutlined,
+  DotNetOutlined,
+  DownOutlined,
 } from '@ant-design/icons';
-import { Button, Card, Carousel, Col, Row, message } from 'antd';
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { getCourses, getCategories } from 'services/User/clientApiService';
 import './styles.css';
 
-const Courses = [
-  {
-    title: "Course 1",
-    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100,
-  },
-  {
-    title: "Course 2",
-    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100,
-  },
-  {
-    title: "Course 3",
-    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100,
-  },
-  {
-    title: "Course 4",
-    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100,
-  },
-  {
-    title: "Course 5",
-    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100,
-  },
-  {
-    title: "Course 6",
-    img: "https://img.freepik.com/free-photo/painting-mountain-lake-with-mountain-background_188544-9126.jpg",
-    price:100,
-  },
-];
+interface Course {
+  _id: string;
+  name: string;
+  category_id: string;
+  category_name: string;
+  status: string;
+  description: string;
+  video_url: string;
+  image_url: string;
+  price_paid: number;
+  price: number;
+  discount: number;
+  full_time: number;
+  average_rating?: number;
+  review_count?: number;
+  instructor_id: string;
+  instructor_name: string;
+  is_in_cart: boolean;
+  is_purchased: boolean;
+  session_count: number;
+  lesson_count: number;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted?: boolean;
+}
 
-const NewCourses = [
-  {
-    title: "Course 1",
-    img: "https://cursa.app/img/catimgs/information-technology.webp",
-    price:100,
-  },
-  {
-    title: "Course 2",
-    img: "https://cursa.app/img/catimgs/information-technology.webp",
-    price:100,
-  },
-  {
-    title: "Course 3",
-    img: "https://cursa.app/img/catimgs/information-technology.webp",
-    price:100,
-  },
-  {
-    title: "Course 4",
-    img: 'https://cursa.app/img/catimgs/information-technology.webp',
-    price:100,
-  },
-  {
-    title: "Course 5",
-    img: 'https://cursa.app/img/catimgs/information-technology.webp',
-    price:100,
-  },
-];
+interface Category {
+  _id: string;
+  name: string;
+  img: string;
+}
 
-const Categories = [
-  {
-    title: "HTML",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRKrMluJOagc_Q-_PTfTYahHFFtgCsGsCDo_Qna-EQurzJ3l4yQsc0hdpz9d_5pFzKUSY&usqp=CAU",
-  },
-  {
-    title: "Javascript",
-    img: "https://play-lh.googleusercontent.com/rfWOJQVBHoAZ_B43v0ySFlLmJBLtksVGAxGaFRh2ex4nOmNQ86qzG4sYWV63IKrXlvI",
-  },
-  {
-    title: "Tailwind",
-    img: "https://ahmedkhald.com/static/media/tailwind.bf288b24c40bf937884e.png",
-  },
-  {
-    title: "React",
-    img: "https://cdn1.iconfinder.com/data/icons/education-set-3-3/74/15-512.png",
-  },
-  {
-    title: "NextJS",
-    img: "https://uxwing.com/wp-content/themes/uxwing/download/brands-and-social-media/nextjs-icon.png",
-  },
-  {
-    title: "Typescripts",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2_979C0CYjHp3QH53N8pLqEI2Ku6g5fLTwA&s",
-  },
-  {
-    title: "Ant Design",
-    img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbK58xrNN4qN90eMgx4KAkgz53IWUAqfNsGA&s",
-  },
-  {
-    title: "GitHub",
-    img: "https://cdn-icons-png.flaticon.com/512/2111/2111425.png",
-  }
-];
+interface ApiResponse {
+  success: boolean;
+  data: {
+    pageData: any[];
+  };
+}
 
 const HomePage: React.FC = () => {
   const [email, setEmail] = useState('');
+  const [courses, setCourses] = useState<Course[]>([]); 
+  const [categories, setCategories] = useState<Category[]>([]);
 
-  const handleScroll = (e: React.MouseEvent) => {
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response: ApiResponse = await getCourses('', '', 1, 10);
+        if (response.success) {
+          setCourses(response.data.pageData);
+        } else {
+          message.error('Failed to fetch courses');
+        }
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        message.error('An error occurred. Please try again later.');
+      }
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const response: ApiResponse = await getCategories('', 1, 10);
+        if (response.success) {
+          setCategories(response.data.pageData);
+        } else {
+          message.error('Failed to fetch categories');
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        message.error('An error occurred. Please try again later.');
+      }
+    };
+
+    fetchCourses();
+    fetchCategories();
+  }, []);
+
+  const handleScroll = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
     e.preventDefault();
     const targetId = e.currentTarget.getAttribute('href');
     if (targetId) {
@@ -136,9 +115,9 @@ const HomePage: React.FC = () => {
       const response = await fetch('/api/subscribe', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email })
+        body: JSON.stringify({ email }),
       });
 
       if (response.ok) {
@@ -154,19 +133,13 @@ const HomePage: React.FC = () => {
   };
 
   const CustomPrevArrow = (props: any) => (
-    <button
-      {...props}
-      className="absolute left-0 z-10 border-2 rounded-md -inset-1 bg-slate-600"
-    >
+    <button {...props} className="absolute left-0 z-10 border-2 rounded-md -inset-1 bg-slate-600">
       <LeftOutlined className="text-lg text-white" />
     </button>
   );
 
   const CustomNextArrow = (props: any) => (
-    <button
-      {...props}
-      className="absolute right-0 z-10 border-2 rounded-md -inset-1 bg-slate-600"
-    >
+    <button {...props} className="absolute right-0 z-10 border-2 rounded-md -inset-1 bg-slate-600">
       <RightOutlined className="text-xl text-white" />
     </button>
   );
@@ -197,16 +170,19 @@ const HomePage: React.FC = () => {
               left: '50%',
               transform: 'translateX(-50%)',
               textAlign: 'center',
-              color: 'black'
+              color: 'black',
             }}
           >
-            <ol className="text-black">100,000 Online Courses
+            <ol className="text-black">
+              100,000 Online Courses
               <li>Explore a variety of fresh topics</li>
             </ol>
-            <ol className="text-black">Expert Instruction
+            <ol className="text-black">
+              Expert Instruction
               <li>Find the right instructor for you</li>
             </ol>
-            <ol className="text-black">Unlimited Lifetime Access
+            <ol className="text-black">
+              Unlimited Lifetime Access
               <li>Learn on your schedule</li>
             </ol>
           </div>
@@ -214,66 +190,66 @@ const HomePage: React.FC = () => {
       </header>
 
       <div id="content">
-        <div className='flex items-center justify-center w-full'>
-          <div className='w-full text-center'>
-            <ul className="ml-4 text-2xl font-bold sm:mt-20 sm:text-4xl">Popular Courses</ul>
-            <Carousel
-              arrows
-              autoplay
-              dotPosition='bottom'
-              className='px-6'
-              slidesToShow={4}
-              prevArrow={<div><CustomPrevArrow /></div>}
-              nextArrow={<div><CustomNextArrow /></div>}
-              responsive={[
-                {
-                  breakpoint: 1280,
-                  settings: {
-                    slidesToShow: 4,
-                  }
+        <div className="w-full text-center">
+          <h2 className="ml-4 text-2xl font-bold sm:mt-20 sm:text-4xl">Popular Courses</h2>
+          <Carousel
+            arrows
+            autoplay
+            dotPosition="bottom"
+            className="px-6"
+            slidesToShow={4}
+            prevArrow={<div><CustomPrevArrow /></div>}
+            nextArrow={<div><CustomNextArrow /></div>}
+            responsive={[
+              {
+                breakpoint: 1280,
+                settings: {
+                  slidesToShow: 4,
                 },
-                {
-                  breakpoint: 1024,
-                  settings: {
-                    slidesToShow: 3,
-                  }
+              },
+              {
+                breakpoint: 1024,
+                settings: {
+                  slidesToShow: 3,
                 },
-                {
-                  breakpoint: 768,
-                  settings: {
-                    slidesToShow: 2,
-                  }
-                }
-              ]}
-            >
-              {Courses.map((course, index) => (
-                <div className='p-2 my-5 sm:my-10' key={index}>
-                  <Link to={`course-details`}>
-                    <img className="rounded-xl" src={course.img} alt="no image" />
-                  </Link>
-                  <div className='flex'>
-                    <h1 className='text-xl font-bold truncate lg:text-2xl'>{course.title}</h1>
-                  </div>
-                  <div className='flex space-x-9 sm:space-x-24 md:space-x-32 lg:space-x-36'>
-                    <p className='lg:text-lg'>{course.price}.000 VND</p>
-                    <div className='flex'>
-                      <Button size='small' title='Save this course' className='p-2 text-white bg-red-500'><HeartOutlined /></Button>
-                      <Button size='small' title='Report this course' className='p-2 text-white bg-blue-500'><FlagOutlined /></Button>
-                    </div>
+              },
+              {
+                breakpoint: 768,
+                settings: {
+                  slidesToShow: 2,
+                },
+              },
+            ]}
+          >
+            {courses.map((course, index) => (
+              <div className="p-2 my-5 sm:my-10" key={index}>
+                <Link to={`course-details/${course._id}`}>
+                  <img className="rounded-xl" src={course.image_url} alt={course.name} />
+                </Link>
+                <div className="flex justify-between items-center">
+                  <h1 className="text-xl font-bold truncate lg:text-2xl">{course.name}</h1>
+                  <div className="flex">
+                    <Button size="small" title="Save this course" className="p-2 text-white bg-red-500">
+                      <HeartOutlined />
+                    </Button>
+                    <Button size="small" title="Report this course" className="p-2 text-white bg-blue-500">
+                      <FlagOutlined />
+                    </Button>
                   </div>
                 </div>
-              ))}
-            </Carousel>
-          </div>
+                <p className="lg:text-lg">{course.price}.000 VND</p>
+              </div>
+            ))}
+          </Carousel>
         </div>
 
         <Link to="/course">
-          <p className="text-center pt-2.5 sm:text-sm">View More&nbsp;<ArrowRightOutlined /></p>
+          <p className="text-center pt-2.5 sm:text-sm">View More <ArrowRightOutlined /></p>
         </Link>
 
         <div className="body-homebox">
           <div className="box image-box">
-            <img className='sm:-ml-7' src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" />
+            <img className="sm:-ml-7" src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" />
           </div>
           <div className="sm:pt-10 sm:mr-20">
             <div className="flex flex-col items-center pt-20 sm:pt-10">
@@ -298,93 +274,66 @@ const HomePage: React.FC = () => {
           <button className="text-2xl text-white">Join for free <ArrowRightOutlined /></button>
         </div>
 
-        <div className='flex items-center justify-center w-full'>
-          <div className='w-full text-center'>
-            <ul className="mt-10 ml-4 text-2xl font-bold sm:text-4xl">New Courses</ul>
-            <Carousel
-              arrows
-              slidesToShow={4}
-              autoplay
-              className='px-6'
-              dotPosition='bottom'
-              prevArrow={<div className='flex flex-row'><CustomPrevArrow /></div>}
-              nextArrow={<div className='flex flex-row'><CustomNextArrow /></div>}
-              responsive={[
-                {
-                  breakpoint: 1280,
-                  settings: {
-                    slidesToShow: 4,
-                  }
+        <div className="w-full text-center">
+          <h2 className="mt-10 ml-4 text-2xl font-bold sm:text-4xl">New Courses</h2>
+          <Carousel
+            arrows
+            slidesToShow={4}
+            autoplay
+            className="px-6"
+            dotPosition="bottom"
+            prevArrow={<div className="flex flex-row"><CustomPrevArrow /></div>}
+            nextArrow={<div className="flex flex-row"><CustomNextArrow /></div>}
+            responsive={[
+              {
+                breakpoint: 1280,
+                settings: {
+                  slidesToShow: 4,
                 },
-                {
-                  breakpoint: 1024,
-                  settings: {
-                    slidesToShow: 3,
-                  }
+              },
+              {
+                breakpoint: 1024,
+                settings: {
+                  slidesToShow: 3,
                 },
-                {
-                  breakpoint: 768,
-                  settings: {
-                    slidesToShow: 2,
-                  }
-                }
-              ]}
-            >
-              {NewCourses.map((course, index) => (
-                <div className='p-2 my-5 sm:my-10' key={index}>
-                  <Link to={`course-details`}>
-                    <img className="rounded-xl" src={course.img} alt="no image" />
-                  </Link>
-                  <div className='flex'>
-                    <h1 className='text-xl font-bold truncate lg:text-2xl'>{course.title}</h1>
-                  </div>
-                  <div className='flex space-x-9 sm:space-x-24 md:space-x-32 lg:space-x-36'>
-                    <p className='lg:text-lg'>{course.price}.000 VND</p>
-                    <div className='flex'>
-                      <Button size='small' title='Save this course' className='p-2 text-white bg-red-500'><HeartOutlined /></Button>
-                      <Button size='small' title='Report this course' className='p-2 text-white bg-blue-500'><FlagOutlined /></Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </Carousel>
-          </div>
+              },
+              {
+                breakpoint: 768,
+                settings: {
+                  slidesToShow: 2,
+                },
+              },
+            ]}
+          >
+            {/* Render new courses */}
+          </Carousel>
         </div>
+
         <Link to="/course-details">
-          <p className="text-center pt-2.5 sm:text-sm">View More&nbsp;<ArrowRightOutlined /></p>
+          <p className="text-center pt-2.5 sm:text-sm">View More <ArrowRightOutlined /></p>
         </Link>
 
-        <div className="flex items-center justify-center h-24 mt-8 text-2xl font-bold">
-  Top Categories
-</div>
+        <div className="flex items-center justify-center h-24 mt-8 sm:text-4xl font-bold">
+          Top Categories
+        </div>
 
-<Row gutter={[16, 16]} className="justify-center">
-  {Categories.map((category, index) => (
-    <Col 
-      xs={24}  // 1 item per row on extra small devices
-      sm={8}   // 3 items per row on small devices
-      md={6}   // 4 items per row on medium devices
-      lg={6}   // 4 items per row on large devices
-      xl={6}   // 4 items per row on extra-large devices
-      key={index} 
-      className="flex justify-center"
-    >
-      <Card
-        bordered={false}
-        className="w-32 h-32 transition duration-300 ease-in-out sm:w-48 sm:h-48 hover:shadow-md"
-        cover={
-          <img 
-            alt={category.title} 
-            src={category.img} 
-            className="object-contain h-20 p-3 sm:h-32" 
-          />
-        }
-      >
-        <div className="text-center">{category.title}</div>
-      </Card>
-    </Col>
-  ))}
-</Row>
+        <Row gutter={[16, 16]} className="justify-center">
+          {categories.length > 0 ? (
+            categories.map((category, index) => (
+              <Col key={index} xs={12} sm={8} md={6} lg={4}>
+                <Card
+                  bordered={false}
+                  className="w-full h-48 transition duration-300 ease-in-out hover:shadow-md"
+                  cover={<img alt={category.name} src={category.img} className="object-cover h-32 p-3" />}
+                >
+                  <div className="text-center">{category.name}</div>
+                </Card>
+              </Col>
+            ))
+          ) : (
+            <div className="text-center">Loading categories...</div>
+          )}
+        </Row>
 
         <div className="bg-gray-100 contact-home">
           <h1 className="text-xl font-bold sm:text-2xl">Subscribe</h1>
