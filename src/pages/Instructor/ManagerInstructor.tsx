@@ -19,20 +19,38 @@ import {
   message,
 } from "antd";
 
-import { Category, Course } from "models/types";
+import { Category } from "models/types";
 import { AlignType } from "rc-table/lib/interface";
 import { useNavigate } from 'react-router-dom';
 
-import { getCategories } from "services/AdminsApi/categoryApiService";
-import { changeCourseStatus } from "services/All/changerStatusApiService";
-import { getCourses } from "services/All/getCoursesApiService";
-import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
+import { getCategories } from "../../services/AdminsApi/categoryApiService";
+import { getCourses } from "../../services/All/getCoursesApiService";
+import { createCourse, deleteCourse, updateCourse } from "../../services/Instructor/courseApiService";
 import './stylesInstructor.css';
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
 const { Text } = Typography;
 const { TextArea } = Input;
+
+interface Course {
+  _id: string;
+  name: string;
+  category_id: string;
+  user_id: string;
+  description: string;
+  content: string;
+  status: string;
+  video_url: string;
+  image_url: string;
+  price: number;
+  discount: number;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
+}
+
+  
 
 const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Course[]>([]);
@@ -47,7 +65,7 @@ const ManagerCourseInstructor: React.FC = () => {
   // const [loading, setLoading] = useState<boolean>(true);
   // const [course, setCourse] = useState<Course | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
-  const [comment, setComment] = useState('');
+
 
 
   const navigate = useNavigate();
@@ -87,9 +105,7 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const fetchCourses = async () => {
     try {
-      const response = await getCourses('', 1, 10);
-      console.log("courses", response);
-
+      const response = await getCourses('', 1, 10); 
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
@@ -218,24 +234,9 @@ const ManagerCourseInstructor: React.FC = () => {
     });
   };
 
+  // Hàm handleViewSession để chuyển hướng
   const handleViewSession = (courseId: string) => {
     navigate(`/instructor/profile-instructor/view-session/${courseId}`);
-  };
-
-  const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
-    try {
-      console.log("courseId", courseId)
-      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
-      const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("response", response)
-      // console.log("Response Data", response.data);
-    } catch (error) {
-      message.error("Changer Status Failed");
-    }
-  };
-
-  const onSearch = (value: string) => {
-    console.log('Search:', value);
   };
 
 
@@ -248,8 +249,8 @@ const ManagerCourseInstructor: React.FC = () => {
     },
     {
       title: "Category",
-      dataIndex: "category_name",
-      key: "category_name",
+      dataIndex: "category_id",
+      key: "category_id",
       align: "center" as AlignType
     },
     {
@@ -295,62 +296,12 @@ const ManagerCourseInstructor: React.FC = () => {
       key: "updated_at",
       align: "center" as AlignType
     },
-    
     {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      align: "center" as AlignType,
-      render: (status: string, record: Course) => (
-        <div>
-          <Select
-            size="small"
-            className="text-xs"
-            showSearch
-            optionFilterProp="label"
-            defaultValue={"new"}
-            value={status}
-            onChange={(newStatus) => {
-              Modal.confirm({
-                title: "Change Status Confirmation",
-                content: (
-                  <>
-                    <p>Are you sure you want to change the status to "{newStatus}"?</p>
-                    <Input.TextArea
-                      rows={4}
-                      placeholder="Enter a comment (optional)"
-                      onChange={(e) => setComment(e.target.value)}
-                    />
-                  </>
-                ),
-                onOk: async () => {
-                  try {
-                    await onChangeStatus(record._id, newStatus, comment);
-                    const updatedDataSource = dataSource.map(item =>
-                      item._id === record._id ? { ...item, approval_status: newStatus } : item
-                    );
-                    setDataSource(updatedDataSource);
-                
-                    message.success("Changed Status Successfully")
-                  } catch (error) {
-                    console.error("Error updating status:", error);
-                    Modal.error({ content: "An error occurred. Please try again later." });
-                  }
-                },
-                onCancel: () => {},
-              });
-            }}
-            options={[
-              { value: 'new', label: 'New' },
-              { value: 'waiting_approve', label: 'Waiting Approve' },
-              { value: 'active', label: 'Active' },
-              { value: 'inactive', label: 'Inactive' },
-            ]}
-          />
-        </div>
-      ),
+      align: "center" as AlignType
     },
-    
     {
       title: "Actions",
       key: "actions",
@@ -424,31 +375,31 @@ const ManagerCourseInstructor: React.FC = () => {
                   marginLeft: "25px",
                 }}
               >
-              <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
-              <Col span={22} className="mb-5">
-              <Typography.Title level={5}>Content:</Typography.Title>
-                       <p>{record.content || "-"}</p>
-              </Col>
+                <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
+  <Col span={22} className="mb-5">
+    <Typography.Title level={5}>Nội dung:</Typography.Title>
+    <p>{record.content || "-"}</p>
+  </Col>
 
-              <Col span={11} className="mb-5" style={{ height: '315px' }}>
-              <Typography.Title level={5}>Video:</Typography.Title>
-                    <iframe 
-                      src={record.video_url} 
-                      style={{ width: '400px', height: '300px' }} 
-                      frameBorder="0" 
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                      allowFullScreen>
-                    </iframe>
-              </Col>
+  <Col span={11} className="mb-5">
+    <Typography.Title level={5}>Video:</Typography.Title>
+    <iframe 
+      src={record.video_url} 
+      style={{ width: '100%', height: '315px' }} 
+      frameBorder="0" 
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+      allowFullScreen>
+    </iframe>
+  </Col>
 
-            <Col span={11} offset={1} className="mb-5" style={{ height: '315px' }}>
-            <Typography.Title level={5}>Image:</Typography.Title>
-                <Image 
-                    src={record.image_url} 
-                    style={{ width: '400px', height: '300px', objectFit: 'cover' }} 
-                />
-            </Col>
-            </Row>
+  <Col span={11} offset={1} className="mb-5">
+    <Typography.Title level={5}>Hình ảnh:</Typography.Title>
+    <Image 
+      src={record.image_url} 
+      style={{ width: '100%', height: 'auto' }} 
+    />
+  </Col>
+</Row>
 
                 <Modal
                     visible={logModalVisible}
@@ -654,6 +605,7 @@ const ManagerCourseInstructor: React.FC = () => {
         onCancel={() => setLogModalVisible(false)}
         footer={null}
         width={800}
+        style={{ overflowY: 'auto' }}
       >
         <h1 className="mb-5">Log Status</h1>
         <div className="flex mb-5 space-x-5">

@@ -204,29 +204,31 @@ const ManagerLessonInstructor: React.FC = () => {
               onExpand: (expanded, record) => handleViewMore(record._id),
               expandedRowRender: (record: Lesson) => (
                 <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
-                  <Row gutter={16}>
-                      <Col span={22} className="mb-5">
-                        <Typography.Title level={5}>
-                          Description:
-                        </Typography.Title>
-                        <p>{record.description || "-"}</p>
-                      </Col>
+                  <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
+              <Col span={22} className="mb-5">
+              <Typography.Title level={5}>Description:</Typography.Title>
+                       <p>{record.description || "-"}</p>
+              </Col>
 
-                      <Col span={22} className="mb-5">
-                        <Typography.Title level={5}>
-                          Video:
-                        </Typography.Title>
-                        <iframe src={record.video_url}></iframe>
-                      </Col>
+              <Col span={11} className="mb-5" style={{ height: '315px' }}>
+              <Typography.Title level={5}>Video:</Typography.Title>
+                    <iframe 
+                      src={record.video_url} 
+                      style={{ width: '400px', height: '300px' }} 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowFullScreen>
+                    </iframe>
+              </Col>
 
-                      <Col span={22}>
-                        <Typography.Title level={5}>
-                          Image:
-                        </Typography.Title>
-                        <Image src={record.image_url}></Image>
-                      </Col>
-
-                  </Row>
+            <Col span={11} offset={1} className="mb-5" style={{ height: '315px' }}>
+            <Typography.Title level={5}>Image:</Typography.Title>
+                <Image 
+                    src={record.image_url} 
+                    style={{ width: '400px', height: '300px', objectFit: 'cover' }} 
+                />
+            </Col>
+            </Row>
                 </div>
               ),
               expandIcon: () => null,
