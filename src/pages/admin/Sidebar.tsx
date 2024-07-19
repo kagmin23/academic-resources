@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, ContainerOutlined, DeploymentUnitOutlined, FlagOutlined, LineChartOutlined, LogoutOutlined, MenuUnfoldOutlined, PieChartOutlined, ReadOutlined, SafetyOutlined, SettingOutlined, SwapOutlined, UserOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { CheckCircleOutlined, ContainerOutlined, DeploymentUnitOutlined, FlagOutlined, LineChartOutlined, MenuUnfoldOutlined, PieChartOutlined, ReadOutlined, SwapOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -64,16 +64,17 @@ const SidebarAdmin: React.FC = () => {
       href: "/admin/category"
     },
     {
+      icon: LineChartOutlined,
+      heading: 'Purchase History',
+      href: "/admin/transaction-history"
+    },
+   
+    {
       icon: FlagOutlined,
       heading: 'Report',
       href: "/admin/report"
     },
-    {
-      icon: LineChartOutlined,
-      heading: 'Transaction History',
-      href: "/admin/transaction-history"
-    },
-   
+
   ];
 
   // const handleLogout = async () => {
