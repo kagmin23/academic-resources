@@ -1,14 +1,19 @@
 import axios from 'axios';
+import { Moment } from 'moment';
 import { HOST_MAIN } from './apiService';
 
 interface User {
-  email: string;
-  password: string;
+  _id: string;
   name: string;
-  role: string;
-  image: string;
+  dob: Moment;
+  email: string;
+  password:string;
+  phone_number: string;
   status: boolean;
-  data: string;
+  role: string;
+  description: string;
+  avatar: string;
+  video: string;
 }
 
 export const registerViaGoogle = async (

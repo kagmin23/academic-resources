@@ -1,3 +1,18 @@
+import { Moment } from "moment";
+
+interface User {
+  _id: string;
+  name: string;
+  dob: Moment;
+  email: string;
+  password:string;
+  phone_number: string;
+  status: boolean;
+  role: string;
+  description: string;
+  avatar: string;
+  video: string;
+}
 export interface Category {
   _id: string;
   name: string;
@@ -136,4 +151,24 @@ export class Course {
     created_at: Date,
     updated_at: Date,
     is_deleted: boolean,
+  }
+
+  export interface Purchase {
+    _id:	string,
+    purchase_no:	string,
+    status:	string,
+    price_paid:	number
+    price:	number
+    discount:	number
+    cart_id:	string,
+    cart_no:	string,
+    course_id:	string,
+    course_name:	string,
+    student_id:	string,
+    student_name:	string,
+    instructor_id:	string,
+    instructor_name:	string,
+    created_at:	Date,
+    updated_at:	Date,
+    is_deleted:	boolean,
   }

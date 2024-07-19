@@ -15,7 +15,7 @@ export const changeCourseStatus = async (courseId: string, newStatus: string, co
         Authorization: `Bearer ${token}`
       }
     });
-    console.log("Response api change status", response);
+    console.log("Response api change status", response.data);
 
     return response.data;
   } catch (error) {

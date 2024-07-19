@@ -5,8 +5,8 @@ import { Outlet, Route, Routes } from 'react-router-dom';
 import LayoutAdmin from '../../components/layout/LayoutAdmin';
 import Content from './Course';
 import ProfileAdmin from './ProfileAdmin';
+import TransactionHistory from './Purchase';
 import Sidebar from './Sidebar';
-import TransactionHistory from './TransactionHistory';
 
 import ChangepasswordAd from 'pages/admin/ChangePasswordAd';
 import ApproveInstructor from './ApproveInstructor';
