@@ -11,6 +11,7 @@ import {
   Modal,
   Row,
   Select,
+  Spin,
   Switch,
   Table,
   Typography,
@@ -18,7 +19,7 @@ import {
 } from "antd";
 import React, { useEffect, useState } from "react";
 
-import { Category, Course } from "models/types";
+import { Category, Course, LogStatus } from "models/types";
 import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
 import { useNavigate } from 'react-router-dom';
@@ -26,6 +27,7 @@ import { useNavigate } from 'react-router-dom';
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { changeCourseStatus } from "services/All/changerStatusApiService";
 import { getCourses } from "services/All/getCoursesApiService";
+import { logStatus } from "services/All/logStatusApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
 import './stylesInstructor.css';
 
@@ -50,13 +52,11 @@ const ManagerCourseInstructor: React.FC = () => {
   const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
   const [commentForm] = Form.useForm();
   const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [logs, setLogs] = useState<LogStatus[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [course_id, setCourseId] = useState<string>("");
 
-
-  const handleStatusChangeModal = (record: Course) => {
-    setIsStatusChangeModalVisible(true);
-    setCurrentRecord(record);
-    setComment('');
-  };
 
   const navigate = useNavigate();
 
@@ -250,10 +250,24 @@ const ManagerCourseInstructor: React.FC = () => {
     }
   };
   
-  
 
-  const onSearch = (value: string) => {
-    console.log('Search:', value);
+  useEffect(() => {
+    if (logModalVisible) {
+      fetchLogStatus();
+    }
+  }, [logModalVisible]);
+
+  const fetchLogStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await logStatus(course_id, "", 1, 100);
+      setLogs(response.data.pageData);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch Logs Status");
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -262,7 +276,6 @@ const ManagerCourseInstructor: React.FC = () => {
       title: "Course Name",
       dataIndex: "name",
       key: "name",
-      // align: "center" as AlignType
     },
     {
       title: "Category",
@@ -447,44 +460,57 @@ const ManagerCourseInstructor: React.FC = () => {
             </Col>
             </Row>
 
-                <Modal
-                    visible={logModalVisible}
-                    onCancel={hideLogModal}
-                    footer={null}
-                    width={800}
-                  >
-                    <h1 className="mb-5">Log Status</h1>
+            <Modal
+                visible={logModalVisible}
+                onCancel={hideLogModal}
+                footer={null}
+                width={800}
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center h-64">
+                    <Spin size="large" />
+                  </div>
+                ) : (
+                  <>
+                    <h1 className="mb-5">Log Status {course_id}</h1>
                     <div className="flex mb-5 space-x-5">
                       <Button className="text-white bg-teal-600">All log</Button>
                       <Select className="w-40">
-                      <Select.Option value="New">New</Select.Option>
-                      <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-                      <Select.Option value="Approve">Approve</Select.Option>
-                      <Select.Option value="Reject">Reject</Select.Option>
-                      <Select.Option value="Active">Active</Select.Option>
-                      <Select.Option value="Inactive">Inactive</Select.Option>
-                      
+                        <Select.Option value="New">New</Select.Option>
+                        <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                        <Select.Option value="Approve">Approve</Select.Option>
+                        <Select.Option value="Reject">Reject</Select.Option>
+                        <Select.Option value="Active">Active</Select.Option>
+                        <Select.Option value="Inactive">Inactive</Select.Option>
                       </Select>
-
                       <Select className="w-40">
-                      <Select.Option value="New">New</Select.Option>
-                      <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-                      <Select.Option value="Approve">Approve</Select.Option>
-                      <Select.Option value="Reject">Reject</Select.Option>
-                      <Select.Option value="Active">Active</Select.Option>
-                      <Select.Option value="Inactive">Inactive</Select.Option>
-                      
+                        <Select.Option value="all">All</Select.Option>
+                        <Select.Option value="new">New</Select.Option>
+                        <Select.Option value="waiting_approve">Waiting approve</Select.Option>
+                        <Select.Option value="approve">Approve</Select.Option>
+                        <Select.Option value="reject">Reject</Select.Option>
+                        <Select.Option value="active">Active</Select.Option>
+                        <Select.Option value="inactive">Inactive</Select.Option>
                       </Select>
                     </div>
-
-                    <h1>Course Name: ...</h1>
-                    <h1>Old status: ...</h1>
-                    <h1>New status: ... </h1>
-                    <h1>Comment: ...</h1>
-                  </Modal>
+                    {error && <p className="text-red-500">{error}</p>}
+                    {logs.length === 0 ? (
+                      <p>No logs available.</p>
+                    ) : (
+                      logs.map((log, index) => (
+                        <div key={index} className="mb-4">
+                          <h1>Course Name: {log.course_name}</h1>
+                          <h1>Old status: {log.old_status}</h1>
+                          <h1>New status: {log.new_status}</h1>
+                          <h1>Comment: {log.comment}</h1>
+                        </div>
+                      ))
+                    )}
+                  </>
+                )}
+              </Modal>
 
                 <Form layout="vertical">
-
                   <div className="flex flex-row gap-4">
                     <Button size="small" className="text-xs text-blue-500" onClick={showLogModal}>Log Status</Button>
                     <Button
@@ -607,40 +633,6 @@ const ManagerCourseInstructor: React.FC = () => {
             </div>
           )}
         </Form>
-      </Modal>
-
-      <Modal
-        visible={logModalVisible}
-        onCancel={() => setLogModalVisible(false)}
-        footer={null}
-        width={800}
-      >
-        <h1 className="mb-5">Log Status</h1>
-        <div className="flex mb-5 space-x-5">
-          <Button className="text-white bg-teal-600">All log</Button>
-          <Select className="w-40">
-            <Select.Option value="New">New</Select.Option>
-            <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-            <Select.Option value="Approve">Approve</Select.Option>
-            <Select.Option value="Reject">Reject</Select.Option>
-            <Select.Option value="Active">Active</Select.Option>
-            <Select.Option value="Inactive">Inactive</Select.Option>
-          </Select>
-
-          <Select className="w-40">
-            <Select.Option value="New">New</Select.Option>
-            <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-            <Select.Option value="Approve">Approve</Select.Option>
-            <Select.Option value="Reject">Reject</Select.Option>
-            <Select.Option value="Active">Active</Select.Option>
-            <Select.Option value="Inactive">Inactive</Select.Option>
-          </Select>
-        </div>
-
-        <h1>Course Name: ...</h1>
-        <h1>Old status: ...</h1>
-        <h1>New status: ... </h1>
-        <h1>Comment: ...</h1>
       </Modal>
     </Layout>
   );

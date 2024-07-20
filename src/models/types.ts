@@ -188,3 +188,16 @@ export class Course {
     updated_at:	Date,
     is_deleted:	boolean,
   }
+
+  export interface LogStatus {
+    _id:	string,
+    user_id:	string,
+    user_name:	string,
+    course_id:	string,
+    course_name:	string,
+    old_status:	string,
+    new_status:	string,
+    comment:	string,
+    created_at:	Date,
+    is_deleted:	boolean,
+  }
