@@ -125,6 +125,7 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
   const handleViewMore = (key: string) => {
+    setCourseId(key);
     setExpandedKeys((prevKeys) =>
       prevKeys.includes(key)
         ? prevKeys.filter((k) => k !== key)
@@ -252,6 +253,7 @@ const ManagerCourseInstructor: React.FC = () => {
   
 
   useEffect(() => {
+    debugger
     if (logModalVisible) {
       fetchLogStatus();
     }
@@ -364,7 +366,7 @@ const ManagerCourseInstructor: React.FC = () => {
       render: (text: string, record: Course) => (
         <div className="flex flex-row justify-center gap-1">
           <Button
-	    size="small"
+	          size="small"
             icon={<EditOutlined />}
             className="text-blue-500"
             onClick={() => handleEdit(record)}
@@ -472,7 +474,7 @@ const ManagerCourseInstructor: React.FC = () => {
                   </div>
                 ) : (
                   <>
-                    <h1 className="mb-5">Log Status {course_id}</h1>
+                    <h1 className="mb-5">Log Status</h1>
                     <div className="flex mb-5 space-x-5">
                       <Button className="text-white bg-teal-600">All log</Button>
                       <Select className="w-40">
