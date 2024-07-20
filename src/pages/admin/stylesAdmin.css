@@ -1,4 +1,3 @@
 .ant-table-cell {
-    @apply text-sm; /* Change this to the desired Tailwind font size class */
-  }
-  
+    @apply text-xs;
+}

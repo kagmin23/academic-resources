@@ -1,18 +1,18 @@
 import {
   DeleteOutlined,
   EditOutlined,
+  ExclamationCircleOutlined,
   EyeOutlined,
-  PlusCircleOutlined,
   SearchOutlined
 } from '@ant-design/icons';
 
-import { ExclamationCircleFilled } from '@ant-design/icons';
-import { Button, Col, Form, Input, Layout, Modal, Row, Table, message } from 'antd';
-import Title from 'antd/lib/typography/Title';
+import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Table, Typography, message } from 'antd';
 import { Lesson } from 'models/types';
+import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { getLessons } from 'services/Instructor/lessonApiService';
+import { useParams } from 'react-router-dom';
+import { deleteLesson, getLessons, updateLesson } from 'services/Instructor/lessonApiService';
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -25,10 +25,8 @@ const ManagerLessonInstructor: React.FC = () => {
   const [currentRecord, setCurrentRecord] = useState<Lesson | null>(null);
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-  const [isVideoModalVisible, setIsVideoModalVisible] = useState(false);
   const [lessons, setLessons] = useState<Lesson[]>([]);
-  const [typeLesson, setTypeLesson] = useState<Lesson[]>([]);
-
+  const { sessionId, courseId } = useParams<{ sessionId: string, courseId: string }>();
 
   useEffect(() => {
     fetchLessons();
@@ -37,22 +35,11 @@ const ManagerLessonInstructor: React.FC = () => {
   const fetchLessons = async () => {
     try {
       const response = await getLessons('', 1, 10, '');
-      console.log("reponse", response)
       setLessons(response.data.pageData);
     } catch (error) {
-      message.error('Failed to fetch sessions');
-      console.error('Error fetching sessions:', error);
+      message.error('Failed to fetch lessons');
+      console.error('Error fetching lessons:', error);
     }
-  };
-
-  const handleChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-
-  const handleAddNewLesson = () => {
-    setIsEditMode(false);
-    setIsModalVisible(true);
-    form.resetFields();
   };
 
   const handleEdit = (record: Lesson) => {
@@ -68,36 +55,67 @@ const ManagerLessonInstructor: React.FC = () => {
     );
   };
 
-  const handleDelete = (record: Lesson) => {
-    const newDataSource = dataSource.filter(item => item._id !== record._id);
-    setDataSource(newDataSource);
-    setFilteredDataSource(newDataSource);
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
   };
 
-  const handleSave = () => {
-    form
-      .validateFields()
-      .then(values => {
+  const onSearch = (value: string) => {
+    console.log('search:', value);
+  };
+
+  const handleOnDeleteLesson = (lessonId: string) => {
+    confirm({
+      title: 'Do you want to delete this Lesson?',
+      icon: <ExclamationCircleOutlined />,
+      content: 'This action cannot be undone',
+      onOk() {
+        deleteLesson(lessonId)
+          .then(() => {
+            const newDataSource = dataSource.filter((item) => item._id !== lessonId);
+            setDataSource(newDataSource);
+            setFilteredDataSource(newDataSource);
+            message.success('Lesson deleted successfully');
+          })
+          .catch((error) => {
+            console.error("Failed to Delete Lesson", error);
+            message.error('Failed to Delete Lesson');
+          });
+      },
+    });
+  };
+
+  const handleOnEditLesson = () => {
+    form.validateFields()
+      .then(async (values) => {
         form.resetFields();
+        const newValues = {
+          ...values,
+          course_id: courseId,
+          session_id: sessionId,
+        };
         if (isEditMode && currentRecord) {
-          const newDataSource = dataSource.map(item =>
-            item._id === currentRecord._id ? { ...item, ...values } : item
-          );
-          setDataSource(newDataSource);
-          setFilteredDataSource(newDataSource);
+          try {
+            const response = await updateLesson(currentRecord._id, newValues);
+            const updatedLesson = response.data;
+
+            const newDataSource = dataSource.map((item) =>
+              item._id === updatedLesson._id ? updatedLesson : item
+            );
+            setDataSource(newDataSource);
+            setFilteredDataSource(newDataSource);
+            message.success('Lesson updated successfully');
+          } catch (error) {
+            console.error("Failed to Update Lesson", error);
+            message.error('Failed to Update Lesson');
+          }
         } else {
-          const newRecord = {
-            ...values,
-            key: (dataSource.length + 1).toString(),
-            created_at: new Date().toISOString().split('T')[0],
-          };
-          setDataSource([...dataSource, newRecord]);
-          setFilteredDataSource([...dataSource, newRecord]);
+          message.error("Edit error");
         }
         setIsModalVisible(false);
       })
-      .catch(info => {
-        console.log('Validate Failed:', info);
+      .catch((info) => {
+        console.log("Validate Failed:", info);
+        message.error('Validation failed');
       });
   };
 
@@ -106,25 +124,6 @@ const ManagerLessonInstructor: React.FC = () => {
       item.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredDataSource(filteredData);
-  };
-
-  const showConfirm = (record: Lesson) => {
-    confirm({
-      title: 'Do you Want to delete these items?',
-      icon: <ExclamationCircleFilled />,
-      content: 'Some descriptions',
-      onOk() {
-        console.log('OK');
-        handleDelete(record);
-      },
-      onCancel() {
-        console.log('Cancel');
-      },
-    });
-  };
-
-  const handlePreviewCourse = (videoUrl: string) => {
-    setIsVideoModalVisible(true);
   };
 
   const columns = [
@@ -143,18 +142,11 @@ const ManagerLessonInstructor: React.FC = () => {
       title: 'Session Name',
       dataIndex: 'session_name',
       key: 'session_name',
-      // align: "center" as AlignType,
     },
     {
       title: 'Course Name',
       dataIndex: 'course_name',
       key: 'course_name',
-      // align: "center" as AlignType,
-    },
-    {
-      title: 'Description',
-      dataIndex: 'description',
-      key: 'description',
     },
     {
       title: 'Full Time',
@@ -166,22 +158,25 @@ const ManagerLessonInstructor: React.FC = () => {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
+      align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: 'Update At',
       dataIndex: 'updated_at',
       key: 'updated_at',
       align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: 'Actions',
       key: 'actions',
       align: 'center' as AlignType,
-      render: (text: string, record: Lesson) => (
+      render: (text: string, lesson: Lesson) => (
         <div className="flex flex-row justify-center gap-1">
-          <Button size="small" icon={<EditOutlined />} className="text-blue-500" onClick={() => handleEdit(record)}></Button>
-          <Button size="small" icon={<DeleteOutlined />} className="text-red-500" onClick={() => showConfirm(record)}></Button>
-          <Button size="small" icon={<EyeOutlined />} onClick={() => handleViewMore(record._id)}></Button>
+          <Button size="small" icon={<EditOutlined />} className="text-blue-500" onClick={() => handleEdit(lesson)}></Button>
+          <Button size="small" icon={<DeleteOutlined />} className="text-red-500" onClick={() => handleOnDeleteLesson(lesson._id)}></Button>
+          <Button size="small" icon={<EyeOutlined />} onClick={() => handleViewMore(lesson._id)}></Button>
         </div>
       ),
     },
@@ -191,18 +186,16 @@ const ManagerLessonInstructor: React.FC = () => {
     <Layout style={{ height: '100vh' }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
-          <div className="flex flex-wrap items-center justify-end gap-4 p-4 bg-[#939fb1]">
+          <div className="flex flex-wrap items-center justify-between gap-4 p-4 bg-[#939fb1]">
+          <div className="mx-4 my-auto text-lg font-bold text-white">
+            Manager Lesson
+          </div>
             <Input
               placeholder="Search..."
               prefix={<SearchOutlined />}
               onChange={e => handleSearch(e.target.value)}
               style={{ width: 300 }}
             />
-            <div className="h-6 border-r lg:mx-4"></div>
-            <Button className="font-bold text-white bg-red-500" onClick={handleAddNewLesson}>
-              <PlusCircleOutlined />
-              Add New Lesson
-            </Button>
           </div>
         </Header>
         <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
@@ -215,16 +208,31 @@ const ManagerLessonInstructor: React.FC = () => {
               onExpand: (expanded, record) => handleViewMore(record._id),
               expandedRowRender: (record: Lesson) => (
                 <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
-                  <Row gutter={16}>
-                    <Col span={16}>
-                      <Row gutter={16} className='mb-5'>
-                        <Col span={24}>
-                          <Title level={5}>Description:</Title>
-                          <p>{record.description || '-'}</p>
-                        </Col>
-                      </Row>
-                    </Col>
-                  </Row>
+                  <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
+              <Col span={22} className="mb-5">
+              <Typography.Title level={5}>Description:</Typography.Title>
+                       <p>{record.description || "-"}</p>
+              </Col>
+
+              <Col span={11} className="mb-5" style={{ height: '315px' }}>
+              <Typography.Title level={5}>Video:</Typography.Title>
+                    <iframe 
+                      src={record.video_url} 
+                      style={{ width: '400px', height: '300px' }} 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                      allowFullScreen>
+                    </iframe>
+              </Col>
+
+            <Col span={11} offset={1} className="mb-5" style={{ height: '315px' }}>
+            <Typography.Title level={5}>Image:</Typography.Title>
+                <Image 
+                    src={record.image_url} 
+                    style={{ width: '400px', height: '300px', objectFit: 'cover' }} 
+                />
+            </Col>
+            </Row>
                 </div>
               ),
               expandIcon: () => null,
@@ -236,16 +244,42 @@ const ManagerLessonInstructor: React.FC = () => {
 
       <Modal
         width={'50%'}
-        title={isEditMode ? "Edit Lesson" : "Add New Lesson"}
+        title={"Edit Lesson"}
         visible={isModalVisible}
-        onOk={handleSave}
+        onOk={handleOnEditLesson}
         onCancel={() => setIsModalVisible(false)}
       >
         <Form form={form} layout="vertical">
-          <Form.Item name="name" label="Lesson Name" rules={[{ required: true, message: 'Please enter lesson name' }]}>
+          <Form.Item name="name" label="Lesson Name" rules={[{ required: true, message: 'Please enter Lesson Name' }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="description" label="Description">
+          <Form.Item name="lesson_type" label="Lesson Type"  rules={[{ required: true, message: 'Please select Lesson Type' }]}>
+            <Select
+                showSearch
+                placeholder="Select a lesson type"
+                optionFilterProp="label"
+                onChange={onChange}
+                onSearch={onSearch}
+                options={[
+                  { value: 'text', label: 'text' },
+                  { value: 'video', label: 'video' },
+                  { value: 'image', label: 'image' },
+                ]}
+              />
+          </Form.Item>
+          <Form.Item name="description" label="Description" rules={[{ required: true, message: 'Please enter Lesson Description' }]}>
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item name="video_url" label="Video" rules={[{ required: true, message: 'Please enter Lesson Video Url' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="image_url" label="Image" rules={[{ required: true, message: 'Please enter Lesson Image Url' }]}>
+            <Input.TextArea />
+          </Form.Item>
+          <Form.Item name="full_time" label="Full Time" rules={[{ required: true, message: 'Please enter Lesson Full Time' }]}>
+            <Input />
+          </Form.Item>
+          <Form.Item name="position_order" label="Position Order" rules={[{ required: true, message: 'Please enter Lesson Position Order' }]}>
             <Input.TextArea />
           </Form.Item>
         </Form>

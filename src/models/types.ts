@@ -1,3 +1,19 @@
+import { Moment } from "moment";
+
+// export interface User {
+//   _id: string;
+//   name: string;
+//   dob: Moment;
+//   email: string;
+//   password:string;
+//   phone_number: string;
+//   status: boolean;
+//   role: string;
+//   description: string;
+//   avatar: string;
+//   image: string;
+//   video: string;
+// }
 export interface Category {
   _id: string;
   name: string;
@@ -103,6 +119,7 @@ export class Course {
     image = "image"
   }
 
+
   export class User {
     _id: string;
     name: string;
@@ -152,3 +169,86 @@ export class Course {
     }
   }
   
+
+  export enum StatusType {
+    new = "text",
+    waiting_approve = "waiting_approve",
+    approve = "approve",
+    reject = "reject",
+    active = "active",
+    inactive = "inactive",
+  }
+
+  export interface ClientCourses {
+    _id: string;
+    name: string;
+    category_id: string;
+    category_name: string;
+    status: string;
+    description: string;
+    video_url: string;
+    image_url: string;
+    price_paid: number;
+    price: number;
+    discount: number;
+    average_rating: number;
+    review_count: number;
+    instructor_id: string;
+    instructor_name: string;
+    full_time: number;
+    session_list: Session[];
+    is_in_cart: boolean;
+    is_purchased: boolean;
+    created_at: Date;
+    updated_at: Date;
+    is_deleted: boolean;
+  }
+
+  export interface ClientLesson {
+    _id: string;
+    name: string;
+    lesson_type: string;
+    position_order: number;
+    full_time: number;
+  }
+  
+  export interface ClientSession {
+    _id: string;
+    name: string;
+    position_order: number;
+    full_time: number;
+    lesson_list: Lesson[];
+  }
+
+  export interface Purchase {
+    _id:	string,
+    purchase_no:	string,
+    status:	string,
+    price_paid:	number
+    price:	number
+    discount:	number
+    cart_id:	string,
+    cart_no:	string,
+    course_id:	string,
+    course_name:	string,
+    student_id:	string,
+    student_name:	string,
+    instructor_id:	string,
+    instructor_name:	string,
+    created_at:	Date,
+    updated_at:	Date,
+    is_deleted:	boolean,
+  }
+
+  export interface LogStatus {
+    _id:	string,
+    user_id:	string,
+    user_name:	string,
+    course_id:	string,
+    course_name:	string,
+    old_status:	string,
+    new_status:	string,
+    comment:	string,
+    created_at:	Date,
+    is_deleted:	boolean,
+  }

@@ -1,14 +1,15 @@
 // Import the functions you need from the SDKs you need
+import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
-import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
-  apiKey: process.env.TYPES_APP_API_KEY,
+  apiKey: "AIzaSyAfSXjLtZeniWlcPiRIjRnP81nLIBj2xro",
   authDomain: "academic-resources-14608.firebaseapp.com",
+  databaseURL: "https://academic-resources-14608-default-rtdb.firebaseio.com",
   projectId: "academic-resources-14608",
   storageBucket: "academic-resources-14608.appspot.com",
   messagingSenderId: "505933380198",
@@ -18,6 +19,4 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const storage = getStorage(app);
-
-export { storage };
+const analytics = getAnalytics(app);

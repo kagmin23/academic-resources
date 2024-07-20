@@ -1,64 +1,99 @@
-import { Input, Layout, Modal, Switch, Table, message } from 'antd';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { Button, Input, Layout, Modal, Table, message } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment, { Moment } from 'moment';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { changeStatus } from 'services/AdminsApi/changeStatusApiService';
+import { getUsers } from 'services/AdminsApi/getUserApiService';
+import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
 
 const { Content } = Layout;
 
-interface Item {
-  id: number;
+interface ApproveIns {
+  _id: string;
   name: string;
-  gender: string;
-  dateofbirth: Moment;
+  dob: Moment;
   email: string;
-  phone: string;
+  password: string;
+  phone_number: string;
   status: boolean;
-  image: string;
+  role: string;
+  description: string;
+  avatar: string;
   video: string;
-  des: string;
 }
 
-const initialData: Item[] = [
-  { id: 1, name: "instructor123", gender: "Male", dateofbirth: moment("1990-01-01"), email: "phan@gmail.com", phone: "0111", status: false, image: "not yet", video: "not yet", des: "not yet" },
-  { id: 2, name: "instructor2", gender: "Female", dateofbirth: moment("1995-05-05"), email: "kang@gmail.com", phone: "0222", status: false, image: "not yet", video: "not yet", des: "not yet" },
-  { id: 3, name: "instructor18", gender: "Male", dateofbirth: moment("1988-12-25"), email: "min@gmail.com", phone: "0333", status: false, image: "not yet", video: "not yet", des: "not yet" },
-];
-
 const ApproveInstructor: React.FC = () => {
-  const [data, setData] = useState<Item[]>(initialData);
+  const [data, setData] = useState<ApproveIns[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
-  const [lockItemId, setLockItemId] = useState<number | undefined>();
-  const [statusChangeItem, setStatusChangeItem] = useState<Item | undefined>(undefined);
+  const [lockItemId, setLockItemId] = useState<string | undefined>(undefined);
   const [confirmMessage, setConfirmMessage] = useState<string>("");
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await getUsers({
+          searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false },
+          pageInfo: { pageNum: 1, pageSize: 10 },
+        });
+        if (response.success) {
+          setData(response.data.pageData);
+        } else {
+          message.error("Failed to fetch users");
+        }
+      } catch (error) {
+        message.error("Error fetching users");
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value);
   };
 
-  const handleStatusChange = (checked: boolean, item: Item) => {
-    if (!checked) {
-      setLockItemId(item.id);
-      setStatusChangeItem(item);
-      setConfirmMessage("Are you sure you want to LOCK this Instructor account?");
-      setLockConfirmVisible(true);
-    } else {
-      setLockItemId(item.id);
-      setStatusChangeItem(item);
-      setConfirmMessage("Are you sure you want to APPROVE this Instructor account?");
-      setLockConfirmVisible(true);
+  const handleStatusChange = async (checked: boolean, item: ApproveIns) => {
+    try {
+      await changeStatus(item._id, checked);
+      const updatedData = data.map((dataItem) =>
+        dataItem._id === item._id ? { ...dataItem, status: checked } : dataItem
+      );
+      setData(updatedData);
+      message.success(`User status ${checked ? 'activated' : 'deactivated'} successfully`);
+    } catch (error) {
+      message.error('Error changing user status');
     }
   };
 
-  const handleLockStatus = () => {
-    if (statusChangeItem) {
-      const updatedData = data.map((item) =>
-        item.id === statusChangeItem.id ? { ...item, status: !item.status } : item
+  const handleLockStatus = async () => {
+    if (lockItemId) {
+      try {
+        await changeStatus(lockItemId, false);
+        const updatedData = data.map((item) =>
+          item._id === lockItemId ? { ...item, status: false } : item
+        );
+        setData(updatedData);
+        setLockItemId(undefined);
+        setLockConfirmVisible(false);
+        message.success("User status locked successfully");
+      } catch (error) {
+        message.error('Error locking user status');
+      }
+    }
+  };
+
+  const handleApproveInstructor = async (item: ApproveIns) => {
+    try {
+      await reviewProfileInstructor();
+      message.success("Instructor profile approved successfully");
+      const updatedData = data.map((dataItem) =>
+        dataItem._id === item._id ? { ...dataItem, status: true } : dataItem
       );
       setData(updatedData);
-      setStatusChangeItem(undefined);
-      setLockConfirmVisible(false);
-      message.success(`User status ${statusChangeItem.status ? 'deactivated' : 'activated'} successfully!`);
+    } catch (error) {
+      message.error('Error approving instructor profile');
     }
   };
 
@@ -66,30 +101,48 @@ const ApproveInstructor: React.FC = () => {
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const columns: ColumnsType<Item> = [
-    { title: 'ID', dataIndex: 'id', key: 'id' },
-    { title: 'Image', dataIndex: 'image', key: 'image' },
+  const columns: ColumnsType<ApproveIns> = [
+    { title: 'ID', dataIndex: '_id', key: '_id' },
+    // {
+    //   title: 'Avatar',
+    //   dataIndex: 'avatar',
+    //   key: 'avatar',
+    //   render: (avatar: string) => <iframe src={avatar} title="Avatar"></iframe>,
+    // },
     { title: 'Username', dataIndex: 'name', key: 'name' },
-    { title: 'Gender', dataIndex: 'gender', key: 'gender' },
-    { 
-      title: 'Date Of Birth', 
-      dataIndex: 'dateofbirth', 
-      key: 'dateofbirth', 
-      render: (dateofbirth: Moment) => dateofbirth.format("YYYY-MM-DD"),
+    {
+      title: 'Date Of Birth',
+      dataIndex: 'dob',
+      key: 'dob',
+      render: (dob: Moment) => moment(dob).format("YYYY-MM-DD"),
     },
-    { title: 'Phone', dataIndex: 'phone', key: 'phone' },
+    { title: 'Phone', dataIndex: 'phone_number', key: 'phone_number' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
     { title: 'Video', dataIndex: 'video', key: 'video' },
-    { title: 'Description', dataIndex: 'des', key: 'des' },
+    { title: 'Description', dataIndex: 'description', key: 'description' },
+
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: boolean, item: Item) => (
-        <Switch
-          checked={status}
-          onChange={(checked) => handleStatusChange(checked, item)}
-        />
+      title: 'Action',
+      key: 'action',
+      render: (_, item: ApproveIns) => (
+        <div className="flex flex-row gap-1">
+        <Button
+          className="text-white bg-blue-500"
+          size="small"
+          icon={<CheckOutlined />}
+          onClick={() => handleApproveInstructor(item)}
+        >
+        </Button>
+
+        <Button
+          className="text-white bg-red-500"
+          size="small"
+          icon={<CloseOutlined />}
+          onClick={() => handleApproveInstructor(item)}
+        >
+        </Button>
+        
+        </div>
       ),
     },
   ];
@@ -104,14 +157,14 @@ const ApproveInstructor: React.FC = () => {
             value={searchTerm}
             onChange={handleSearchChange}
             className="w-1/3"
-            onSearch={value => setSearchTerm(value)}
+            onSearch={(value) => setSearchTerm(value)}
           />
         </div>
-        
-        <Table dataSource={filteredData} columns={columns} rowKey="id" />
+
+        <Table dataSource={filteredData} columns={columns} rowKey="_id" />
 
         <Modal
-          title="CONFIRM INSTRUCTOR ACCOUNT VALID"
+          title="CONFIRM INSTRUCTOR ACCOUNT VALID?"
           visible={lockConfirmVisible}
           onOk={handleLockStatus}
           onCancel={() => setLockConfirmVisible(false)}

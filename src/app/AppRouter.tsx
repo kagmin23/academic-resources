@@ -29,6 +29,7 @@ import ForgotPassword from 'pages/register/ForgotPassword';
 import LayoutGuest from '../components/layout/LayoutGuest';
 import ProtectedRouter from '../components/roles/ProtectedRouter';
 import StudentRouter from '../pages/Student/StudentRouter';
+import SignUpGoogleInstructor from '../pages/register/SignUpGoogleInstructor';
 
 
 
@@ -58,6 +59,7 @@ const AppRouter: React.FC = () => (
           <Route path="/all-instructor" element={<AllInstructor />} />
           <Route path="/verify-email" element={<VerityToken />} />
           <Route path="/resend-email" element={<ResendVerifyToken />} />
+          <Route path="/sign-up-google" element={<SignUpGoogleInstructor />} />
         </Route>
 
         {/* Layout for Students */}
