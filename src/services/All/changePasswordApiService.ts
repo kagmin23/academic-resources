@@ -1,7 +1,7 @@
 import { apiRequest } from "services/apiService";
 
 export const changeUserPassword = async (user_id: string, old_password: string, new_password: string) => {
-  const token = localStorage.getItem('token'); // Retrieve token from local storage or wherever it is stored
+  const token = localStorage.getItem('token');
 
   return apiRequest('/api/users/change-password', {
     method: 'PUT',
