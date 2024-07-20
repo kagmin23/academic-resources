@@ -3,6 +3,7 @@ import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, 
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import moment, { Moment } from "moment";
+import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from "react";
 import { createUser, deleteUser } from "services/AdminsApi/UserService";
 import { changeUserRole } from "services/AdminsApi/changeRoleApiService";
@@ -229,8 +230,10 @@ const UsersAdmin: React.FC = () => {
       title: 'Role', 
       dataIndex: 'role', 
       key: 'role',
+      align: "center" as AlignType,
       render: (role, item) => (
         <Select
+          size="small"
           value={role}
           onChange={(value) => handleRoleChange(item._id, value)}
           style={{ width: 120 }}
@@ -245,8 +248,10 @@ const UsersAdmin: React.FC = () => {
       title: 'Status',
       dataIndex: 'status',
       key: 'status',
+      align: "center" as AlignType,
       render: (status, item) => (
         <Switch
+          size="small"
           checked={status}
           onChange={(checked) => handleStatusChange(checked, item)}
         />
@@ -305,61 +310,60 @@ const UsersAdmin: React.FC = () => {
           pagination={false}
         />
 
-        {/* Modals */}
         <Modal
-  title={`${editingItem._id ? 'Edit' : 'Add'} User`}
-  visible={isModalOpen}
-  onOk={handleAdd}
-  onCancel={() => {
-    setEditingItem({});
-    setModalOpen(false);
-  }}
->
-  <Form layout="vertical">
-    <Form.Item label="Username">
-      <Input
-        value={editingItem.name}
-        onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
-      />
-    </Form.Item>
-    <Form.Item label="Date of Birth">
-      <DatePicker
-        value={editingItem.dob ? moment(editingItem.dob) : undefined}
-        onChange={(date) => setEditingItem({ ...editingItem, dob: date })}
-      />
-    </Form.Item>
-    <Form.Item label="Phone">
-      <Input
-        value={editingItem.phone_number}
-        onChange={(e) => setEditingItem({ ...editingItem, phone_number: e.target.value })}
-      />
-    </Form.Item>
-    <Form.Item label="Email">
-      <Input
-        value={editingItem.email}
-        onChange={(e) => setEditingItem({ ...editingItem, email: e.target.value })}
-      />
-    </Form.Item>
-    <Form.Item label="Role">
-      <Select
-        value={editingItem.role}
-        onChange={(value) => setEditingItem({ ...editingItem, role: value })}
-      >
-        <Option value="admin">Admin</Option>
-        <Option value="student">Student</Option>
-        <Option value="instructor">Instructor</Option>
-      </Select>
-    </Form.Item>
-    {!editingItem._id && (
-      <Form.Item label="Password">
-        <Input.Password
-          value={editingItem.password}
-          onChange={(e) => setEditingItem({ ...editingItem, password: e.target.value })}
-        />
-      </Form.Item>
-    )}
-  </Form>
-</Modal>
+              title={`${editingItem._id ? 'Edit' : 'Add'} User`}
+            visible={isModalOpen}
+            onOk={handleAdd}
+            onCancel={() => {
+              setEditingItem({});
+              setModalOpen(false);
+            }}
+          >
+            <Form layout="vertical">
+              <Form.Item label="Username">
+                <Input
+                  value={editingItem.name}
+                  onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+                />
+              </Form.Item>
+              <Form.Item label="Date of Birth">
+                <DatePicker
+                  value={editingItem.dob ? moment(editingItem.dob) : undefined}
+                  onChange={(date) => setEditingItem({ ...editingItem, dob: date })}
+                />
+              </Form.Item>
+              <Form.Item label="Phone">
+                <Input
+                  value={editingItem.phone_number}
+                  onChange={(e) => setEditingItem({ ...editingItem, phone_number: e.target.value })}
+                />
+              </Form.Item>
+              <Form.Item label="Email">
+                <Input
+                  value={editingItem.email}
+                  onChange={(e) => setEditingItem({ ...editingItem, email: e.target.value })}
+                />
+              </Form.Item>
+              <Form.Item label="Role">
+                <Select
+                  value={editingItem.role}
+                  onChange={(value) => setEditingItem({ ...editingItem, role: value })}
+                >
+                  <Option value="admin">Admin</Option>
+                  <Option value="student">Student</Option>
+                  <Option value="instructor">Instructor</Option>
+                </Select>
+              </Form.Item>
+              {!editingItem._id && (
+                <Form.Item label="Password">
+                  <Input.Password
+                    value={editingItem.password}
+                    onChange={(e) => setEditingItem({ ...editingItem, password: e.target.value })}
+                  />
+                </Form.Item>
+              )}
+            </Form>
+          </Modal>
 
 
         <Modal

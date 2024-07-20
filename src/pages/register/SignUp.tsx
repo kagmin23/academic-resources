@@ -4,7 +4,6 @@ import { RadioChangeEvent } from 'antd/lib';
 import { User } from 'models/types';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
 import customUpload from 'utils/upLoad';
 import { registerUser } from '../../services/registerApiService';
 
@@ -46,11 +45,12 @@ const SignUp: React.FC = () => {
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
+  
       const updatedCompletedSteps = [...completedSteps];
       updatedCompletedSteps[current] = true;
       setCompletedSteps(updatedCompletedSteps);
-      const finalFormData = { ...formData, ...values, role: value };
   
+      const finalFormData = { ...formData, ...values, role: value };
       setFormData(finalFormData);
   
       localStorage.setItem("user", JSON.stringify(finalFormData));
@@ -58,25 +58,23 @@ const SignUp: React.FC = () => {
   
       const response = await registerUser(finalFormData);
       console.log('Registration successful:', response);
+  
       notification.success({
         message: 'Success',
         description: 'You have signed up successfully!',
-      })
-      navigate('/verify-email');
-      ;
+      });
   
-      if (value === 'instructor') {
-        await reviewProfileInstructor();
-        console.log('Instructor profile review submitted');
-      }
+      navigate('/verify-email');
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Registration failed:', error);
+      
       notification.error({
         message: 'Registration Error',
-        description: 'There was an error during the registration process. Please try again.',
+        description: 'There was an error with your registration. Please try again.',
       });
     }
-  };
+  }
+  
 
   const steps = [
     {

@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined } from '@ant-design/icons';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { Button, Form, Input, Radio, Upload, message } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
@@ -6,110 +6,60 @@ import { User } from 'models/types';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerViaGoogle } from 'services/registerGoogleApiService';
-import customUpload from 'utils/upLoad';
 
 const SignUp: React.FC = () => {
   const [form] = Form.useForm();
-  const [value, setValue] = useState<string>('student');
-  const [current, setCurrent] = useState<number>(0);
+  const [value, setValue] = useState<string>("");
   const [formData, setFormData] = useState<User>();
-  const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false, false, false, false]);
   const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
   const [uploadStatus, setUploadStatus] = useState<string>('uploading');
   const navigate = useNavigate();
 
-  
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
+    // Reset form fields when role changes
+    form.resetFields();
   };
 
-  // const customUpload = (options: any) => {
-  //   const { file, onSuccess } = options;
-  //   const reader = new FileReader();
-  //   reader.readAsDataURL(file as Blob);
-  //   reader.onload = () => {
-  //     setFormData();
-  //     if (onSuccess) onSuccess('ok');
-  //     setUploadStatus('done');
-  //   };
-  // };
-  
-  
-  const handleRegisterGoogleIns = async (credentialResponse: CredentialResponse) => {
+  const handleRegisterGoogle = async (credentialResponse: CredentialResponse) => {
     try {
+        if (value === 'instructor') {
+            console.log("value",value)
+            const fieldsValue = form.getFieldsValue();
+            const { description, phone_number, video } = fieldsValue;
+    
+            if (!description || !phone_number || !video) {
+              message.error("Please provide all required fields for instructor registration.");
+              return;
+            }
+          }
       const { credential } = credentialResponse;
       console.log("credential", credential)
       if (!credential) throw new Error("Google credential is missing");
-  
-      const dataUser = await registerViaGoogle(credential, "instructor");
+
+      
+
+      const dataUser = await registerViaGoogle(credential, value);
       console.log("dataUser", dataUser)
-      message.success("Register Succesfully!");
+      message.success("Register Successfully!");
       navigate("/verify-email");
     } catch (error) {
-      console.log("Error Occurred: ",error);
-      // const errorMessage = error.response?.data?.message || error.message || "Your Google Account isn't registered!";
-      // notification.error({
-      //   message: "Register via Google Failed!",
-      //   description: errorMessage.includes("Email already registered!")
-      //     ? "This email is already registered. Please use a different email or log in."
-      //     : errorMessage
-      // });
+      console.log("Error Occurred: ", error);
+      message.error("Registration failed.");
     }
   };
-  
-  
 
   const onError = () => {
-    console.error()
-  }
+    console.error();
+  };
 
-  const steps = [
-    {
-      title: 'Sign Up',
-      content: (
-        <Form form={form} name="signup" initialValues={{ remember: true }} className="space-y-2">
-          <Form.Item
-            name="role"
-            rules={[{ required: true, message: 'Please select the role!' }]}
-          >
-            <Input placeholder="Role" size="middle" />
-          </Form.Item>
-
-          <GoogleLogin onSuccess={handleRegisterGoogleIns} onError={onError} />
-        </Form>
-      ),
-    },
-    {
-      title: 'Update',
-      content: (
-        <Form form={form} className="space-y-4">
-          <Form.Item name="video">
-            <Upload customRequest={() => customUpload} listType="picture" maxCount={1}>
-              <Button icon={uploadStatus === 'done' ? <CheckCircleOutlined style={{ color: 'green' }} /> : <UploadOutlined />}>
-                {uploadStatus === 'done' ? 'Upload Completed' : 'Upload Video'}
-              </Button>
-            </Upload>
-          </Form.Item>
-
-
-          <Form.Item
-            name="description"
-            rules={[{ required: true, message: 'Please enter the description' }]}
-          >
-            <Input.TextArea placeholder="Update description" size="large" rows={4} />
-          </Form.Item>
-          <Form.Item
-            name="phone_number"
-            label="Phone Number"
-            rules={[{ required: true, message: 'Please enter the phone number' }]}
-          >
-            <Input placeholder="Update Phone Number" size="small" />
-          </Form.Item>
-        </Form>
-      ),
-    },
-  ];
-  
+//   const handleVideoChange = (file: RcFile) => {
+//     setFormData(prev => ({
+//       ...prev,
+//       video: file
+//     }));
+//     return false; // Prevent automatic upload
+//   };
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gray-100">
@@ -124,13 +74,36 @@ const SignUp: React.FC = () => {
         <p className="italic text-center text-gray-600">Sign Up and Start Learning!</p>
 
         {showRadioGroup && (
-          <Radio.Group onChange={onChangeRole} value={value}>
-            <Radio value="student">Student</Radio>
-            <Radio value="instructor">Instructor</Radio>
-          </Radio.Group>
-        )}
+          <Form form={form} layout="vertical">
+            <Form.Item>
+              <Radio.Group onChange={onChangeRole} value={value}>
+                <Radio value="student">Student</Radio>
+                <Radio value="instructor">Instructor</Radio>
+              </Radio.Group>
+            </Form.Item>
 
-        <GoogleLogin onSuccess={handleRegisterGoogleIns} onError={onError} />
+            {value === 'instructor' && (
+              <>
+                <Form.Item name="description" label="Description" rules={[{ required: true, message: 'Please input your description!' }]}>
+                  <Input.TextArea />
+                </Form.Item>
+                <Form.Item name="phone_number" label="Phone Number" rules={[{ required: true, message: 'Please input your phone number!' }]}>
+                  <Input />
+                </Form.Item>
+                <Form.Item name="video" label="Upload Video" rules={[{ required: true, message: 'Please upload a video!' }]}>
+                  <Upload showUploadList={false}>
+                    <Button icon={<UploadOutlined />}>Upload Video</Button>
+                  </Upload>
+                </Form.Item>
+                <p className="text-xs italic font-bold text-red-500">* Please enter the information for Instructor required before!</p>
+              </>
+            )}
+
+            <Form.Item>
+              <GoogleLogin onSuccess={handleRegisterGoogle} onError={onError} />
+            </Form.Item>
+          </Form>
+        )}
 
         <div className="mt-4 text-center text-gray-600">
           <p>By signing up, you agree to our <a href="#" className="text-blue-600">Terms of Use</a> and <a href="#" className="text-blue-600">Privacy Policy</a>.</p>

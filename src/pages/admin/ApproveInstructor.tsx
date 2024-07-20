@@ -1,13 +1,15 @@
-import { Input, Layout, Modal, Switch, Table, message } from 'antd';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { Button, Input, Layout, Modal, Table, message } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment, { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
 import { changeStatus } from 'services/AdminsApi/changeStatusApiService';
 import { getUsers } from 'services/AdminsApi/getUserApiService';
+import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
 
 const { Content } = Layout;
 
-interface Item {
+interface ApproveIns {
   _id: string;
   name: string;
   dob: Moment;
@@ -22,7 +24,7 @@ interface Item {
 }
 
 const ApproveInstructor: React.FC = () => {
-  const [data, setData] = useState<Item[]>([]);
+  const [data, setData] = useState<ApproveIns[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
   const [lockItemId, setLockItemId] = useState<string | undefined>(undefined);
@@ -52,7 +54,7 @@ const ApproveInstructor: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleStatusChange = async (checked: boolean, item: Item) => {
+  const handleStatusChange = async (checked: boolean, item: ApproveIns) => {
     try {
       await changeStatus(item._id, checked);
       const updatedData = data.map((dataItem) =>
@@ -82,19 +84,31 @@ const ApproveInstructor: React.FC = () => {
     }
   };
 
+  const handleApproveInstructor = async (item: ApproveIns) => {
+    try {
+      await reviewProfileInstructor();
+      message.success("Instructor profile approved successfully");
+      const updatedData = data.map((dataItem) =>
+        dataItem._id === item._id ? { ...dataItem, status: true } : dataItem
+      );
+      setData(updatedData);
+    } catch (error) {
+      message.error('Error approving instructor profile');
+    }
+  };
+
   const filteredData = data.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const columns: ColumnsType<Item> = [
+  const columns: ColumnsType<ApproveIns> = [
     { title: 'ID', dataIndex: '_id', key: '_id' },
-    { title: 'Avarta',
-      dataIndex: 'avatar',
-      key: 'avatar',
-      render: (avatar: string) => (
-        <iframe src={avatar}></iframe>
-      )
-    },
+    // {
+    //   title: 'Avatar',
+    //   dataIndex: 'avatar',
+    //   key: 'avatar',
+    //   render: (avatar: string) => <iframe src={avatar} title="Avatar"></iframe>,
+    // },
     { title: 'Username', dataIndex: 'name', key: 'name' },
     {
       title: 'Date Of Birth',
@@ -106,15 +120,29 @@ const ApproveInstructor: React.FC = () => {
     { title: 'Email', dataIndex: 'email', key: 'email' },
     { title: 'Video', dataIndex: 'video', key: 'video' },
     { title: 'Description', dataIndex: 'description', key: 'description' },
+
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: boolean, item: Item) => (
-        <Switch
-          checked={status}
-          onChange={(checked) => handleStatusChange(checked, item)}
-        />
+      title: 'Action',
+      key: 'action',
+      render: (_, item: ApproveIns) => (
+        <div className="flex flex-row gap-1">
+        <Button
+          className="text-white bg-blue-500"
+          size="small"
+          icon={<CheckOutlined />}
+          onClick={() => handleApproveInstructor(item)}
+        >
+        </Button>
+
+        <Button
+          className="text-white bg-red-500"
+          size="small"
+          icon={<CloseOutlined />}
+          onClick={() => handleApproveInstructor(item)}
+        >
+        </Button>
+        
+        </div>
       ),
     },
   ];
@@ -136,7 +164,7 @@ const ApproveInstructor: React.FC = () => {
         <Table dataSource={filteredData} columns={columns} rowKey="_id" />
 
         <Modal
-          title="CONFIRM INSTRUCTOR ACCOUNT VALID"
+          title="CONFIRM INSTRUCTOR ACCOUNT VALID?"
           visible={lockConfirmVisible}
           onOk={handleLockStatus}
           onCancel={() => setLockConfirmVisible(false)}
