@@ -1,19 +1,22 @@
 import axios from 'axios';
 import { HOST_MAIN } from './apiService';
 
-export const registerViaGoogle = async (credential: string, role: string): Promise<string> => {
+export const registerViaGoogle = async (credential: string, role: string, description?: string, phone_number?: string, video?: string): Promise<string> => {
   try {
     const { data } = await axios.post(
       `${HOST_MAIN}/api/users/google`,
-      { google_id: credential,
+      {
+        google_id: credential,
         role: role,
-        description: "",
-        video: "",
-        phone_number: ""
-       },
-      { headers: {
-        "Content-Type": "application/json"
-      } }
+        description: description || "",
+        phone_number: phone_number || "",
+        video: video || ""
+      },
+      {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
     );
     return data;
   } catch (error: any) {

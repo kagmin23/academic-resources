@@ -1,6 +1,7 @@
-import { DeleteOutlined, EditOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Modal, Table, Typography, notification } from 'antd';
 import { Category } from 'models/types';
+import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { createCategory, deleteCategory, getCategories, getCategoryDetail, updateCategory } from 'services/AdminsApi/categoryApiService';
@@ -155,24 +156,43 @@ const CategoryAdmin: React.FC = () => {
       key: 'description',
     },
     {
+      title: 'Created At',
+      dataIndex: 'created_at',
+      key: 'created_at',
+      align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+    },
+    {
+      title: 'Updated At',
+      dataIndex: 'updated_at',
+      key: 'updated_at',
+      align: 'center' as AlignType,
+      render: (updated_at: string) => moment(updated_at).format("YYYY-MM-DD"),
+    },
+    {
+      title: 'Is deleted',
+      dataIndex: 'is_deleted',
+      key: 'is_deleted',
+      align: 'center' as AlignType,
+      render: (updated_at: string) => moment(updated_at).format("YYYY-MM-DD"),
+    },
+    {
       title: 'Actions',
       key: 'actions',
       align: 'center' as AlignType,
       render: (text: string, record: Category) => (
-        <div style={{ textAlign: 'center' }}>
+        <div className="gap-2">
           <Button
+            size="small"
             icon={<EditOutlined />}
-            className="mr-2 text-white bg-blue-500"
+            className="mr-1 text-white bg-blue-500"
             onClick={() => handleEdit(record)}
           ></Button>
           <Button
+            size="small"
             icon={<DeleteOutlined />}
-            className="mr-2 text-white bg-red-600"
+            className="text-white bg-red-600"
             onClick={() => handleOpenDeleteConfirm(record._id)}
-          ></Button>
-          <Button
-            icon={<EyeOutlined />}
-            onClick={() => handleViewDetails(record._id)}
           ></Button>
         </div>
       ),
@@ -250,7 +270,7 @@ const CategoryAdmin: React.FC = () => {
       >
         <Text>Are you sure you want to delete this category?</Text>
       </Modal>
-      {modalData && (
+      {/* {modalData && (
         <Modal
           title="Category Detail"
           visible={isDetailModalVisible}
@@ -273,7 +293,7 @@ const CategoryAdmin: React.FC = () => {
           <Text strong>Created At: </Text>
           <Text>{modalData.created_at}</Text>
         </Modal>
-      )}
+      )} */}
     </Layout>
   );
 };

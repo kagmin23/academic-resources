@@ -13,6 +13,8 @@ import './stylesAdmin.css';
 
 const { Header, Content, Footer } = Layout;
 const { Title, Text } = Typography;
+const { Option } = Select;
+
 
 const CourseAdmin: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
@@ -22,6 +24,7 @@ const CourseAdmin: React.FC = () => {
   const [comment, setComment] = useState('');
   const [editingItem, setEditingItem] = useState<Partial<Course>>({});
   const [courses, setCourses] = useState<Course[]>([]);
+  const [filteredRole, setFilteredRole] = useState<string>("all");
 
 
 
@@ -96,6 +99,9 @@ const CourseAdmin: React.FC = () => {
     item.description.toLowerCase().includes(searchTerm.toLowerCase())
   ) : [];
   
+  const handleRoleFilterChange = (value: any) => {
+    setFilteredRole(value);
+  };
 
   const columns = [
     {
@@ -122,7 +128,7 @@ const CourseAdmin: React.FC = () => {
       align: "center" as AlignType
     },
     {
-      title: 'Discount',
+      title: 'Discount (%)',
       dataIndex: 'discount',
       key: 'discount',
       align: "center" as AlignType
@@ -207,7 +213,7 @@ const CourseAdmin: React.FC = () => {
     <Layout style={{ minHeight: '100vh' }}>
       <Layout className="site-layout">
         <Header className="p-0 bg-white">
-          <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pl-4">
+          <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pl-4 gap-5">
             <div className="w-full md:w-1/3">
               <Input
                 placeholder="Search"
@@ -216,7 +222,37 @@ const CourseAdmin: React.FC = () => {
                 className="items-center w-full h-8 text-sm border-2 border-gray-300 border-solid rounded"
                 value={searchTerm}
               />
+              
             </div>
+            <div className="flex flex-row w-full gap-5">
+
+            {/* <Select
+                placeholder="Filter by Course Name"
+
+                value={filteredRole}
+                onChange={handleRoleFilterChange}
+                className="w-1/6"
+              >
+                <Option value="new">All</Option>
+                <Option value="waiting_approve">Waiting Approve</Option>
+                <Option value="approve">Approve</Option>
+                <Option value="reject">Reject</Option>
+              </Select> */}
+
+            <Select
+                placeholder="Filter by Status"
+
+                value={filteredRole}
+                onChange={handleRoleFilterChange}
+                className="w-1/6"
+              >
+                <Option value="all">All</Option>
+                <Option value="new">New</Option>
+                <Option value="waiting_approve">Waiting Approve</Option>
+                <Option value="approve">Approve</Option>
+                <Option value="reject">Reject</Option>
+              </Select>
+              </div>
           </div>
         </Header>
         <Content className="m-4">
