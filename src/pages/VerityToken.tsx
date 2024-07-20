@@ -14,7 +14,7 @@ interface ErrorResponse {
 const VerifyToken: React.FC = () => {
   const [verificationCode, setVerificationCode] = useState('');
   const [loading, setLoading] = useState(false);
-  const [form] = Form.useForm(); // Get the form instance here
+  const [form] = Form.useForm();
   const navigate = useNavigate();
 
   const onFinish = async (values: any) => {
@@ -25,7 +25,7 @@ const VerifyToken: React.FC = () => {
       });
 
       notification.success({
-        message: 'Verification Successful',
+        message: 'Verification Successfully',
         description: response.data.message || 'Your email has been verified successfully!',
       });
       navigate('/log-in');

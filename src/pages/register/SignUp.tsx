@@ -1,24 +1,24 @@
-import { CheckCircleOutlined, UploadOutlined } from '@ant-design/icons';
-import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
+import { CheckCircleOutlined, GoogleOutlined, UploadOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Radio, Upload, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
-import type { UploadRequestOption } from 'rc-upload/lib/interface';
+import { User } from 'models/types';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCurrentLogin } from 'services/googleApiLogin';
-import { registerViaGoogle } from 'services/registerGoogleApiService';
+import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
+import customUpload from 'utils/upLoad';
 import { registerUser } from '../../services/registerApiService';
 
 const SignUp: React.FC = () => {
   const [form] = Form.useForm();
   const [value, setValue] = useState<string>('student');
   const [current, setCurrent] = useState<number>(0);
-  const [formData, setFormData] = useState<any>({});
+  const [formData, setFormData] = useState<User>();
   const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false, false, false, false]);
   const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
   const [uploadStatus, setUploadStatus] = useState<string>('uploading');
   const navigate = useNavigate();
 
+  
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
   };
@@ -42,38 +42,33 @@ const SignUp: React.FC = () => {
   const onPrev = () => {
     setCurrent(current - 1);
   };
-
+  
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
       const updatedCompletedSteps = [...completedSteps];
       updatedCompletedSteps[current] = true;
       setCompletedSteps(updatedCompletedSteps);
-      const finalFormData = { ...formData, ...values, role: value};
-      console.log("final", finalFormData);
-
+      const finalFormData = { ...formData, ...values, role: value };
+  
       setFormData(finalFormData);
-      
+  
       localStorage.setItem("user", JSON.stringify(finalFormData));
       console.log('Final Form Data:', finalFormData);
   
       const response = await registerUser(finalFormData);
-        console.log('Registration successful:', response);
-        notification.success({
-          message: 'Success',
-          description: 'You have signed up successfully!',
-        });
-
-        
-        const descriptionValue = form.getFieldValue('description');
-        const phoneNumberValue = form.getFieldValue('phone_number');
-        if (!descriptionValue || !phoneNumberValue) {
-          throw new Error('Please fill in the description and phone number fields.');
-    } else {
+      console.log('Registration successful:', response);
+      notification.success({
+        message: 'Success',
+        description: 'You have signed up successfully!',
+      })
       navigate('/verify-email');
-    }
-      
-      
+      ;
+  
+      if (value === 'instructor') {
+        await reviewProfileInstructor();
+        console.log('Instructor profile review submitted');
+      }
     } catch (error) {
       console.error('Registration error:', error);
       notification.error({
@@ -82,49 +77,6 @@ const SignUp: React.FC = () => {
       });
     }
   };
-  
-  
-  const customUpload = (options: UploadRequestOption<any>) => {
-    const { file, onSuccess } = options;
-    const reader = new FileReader();
-    reader.readAsDataURL(file as Blob);
-    reader.onload = () => {
-      setFormData({ ...formData, avatar: reader.result });
-      if (onSuccess) onSuccess('ok');
-      setUploadStatus('done');
-    };
-  };
-
-  const handleRegisterGoogle = async (credentialResponse: CredentialResponse) => {
-    try {
-      const { credential } = credentialResponse;
-      console.log(credential);
-      if (!credential) {
-        throw new Error("Google credential is missing");
-      }
-
-      const token = await registerViaGoogle(credential);
-      if (token) {
-        const user = await getCurrentLogin(token);
-        if (user?.data) {
-          sessionStorage.setItem("user", JSON.stringify(user));
-          notification.success({
-            message: "Register Successful",
-          });
-          navigate("/student");
-        }
-      }
-    } catch (error: any) {
-      notification.error({
-        message: "Register via Google Failed!",
-        description: error.message || "Your Google Account isn't registered!",
-      });
-    }
-  };
-
-  const onError = () => {
-    console.error()
-  }
 
   const steps = [
     {
@@ -180,11 +132,11 @@ const SignUp: React.FC = () => {
           </Form.Item>
           <Checkbox>Remember me</Checkbox>
           <div className="flex justify-between">
-            <Button type="primary" onClick={onNext} className="w-full h-12 text-white bg-red-500 hover:bg-red-600">
+            <Button type="primary" onClick={onNext} className="w-full h-10 text-white bg-red-500 hover:bg-red-600">
               Next
             </Button>
           </div>
-          <GoogleLogin onSuccess={handleRegisterGoogle} onError={onError} />
+          <Link to="/sign-up-google"><Button type="primary" className="w-full h-10 my-2"><GoogleOutlined />Continue with Google</Button></Link>
         </Form>
       ),
     },
@@ -192,13 +144,15 @@ const SignUp: React.FC = () => {
       title: 'Update',
       content: (
         <Form form={form} className="space-y-4">
-          <Form.Item name="avatar">
-            <Upload customRequest={customUpload} listType="picture" maxCount={1}>
+          <Form.Item name="video">
+            <Upload customRequest={() => customUpload} listType="picture" maxCount={1}>
               <Button icon={uploadStatus === 'done' ? <CheckCircleOutlined style={{ color: 'green' }} /> : <UploadOutlined />}>
-                {uploadStatus === 'done' ? 'Upload Complete' : 'Upload Avatar'}
+                {uploadStatus === 'done' ? 'Upload Completed' : 'Upload Video'}
               </Button>
             </Upload>
           </Form.Item>
+
+
           <Form.Item
             name="description"
             rules={[{ required: true, message: 'Please enter the description' }]}
@@ -216,11 +170,9 @@ const SignUp: React.FC = () => {
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Link to="/verify-email">
               <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
                 Finish
               </Button>
-            </Link>
           </div>
         </Form>
       ),

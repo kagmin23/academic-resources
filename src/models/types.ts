@@ -1,6 +1,6 @@
 import { Moment } from "moment";
 
-interface User {
+export interface User {
   _id: string;
   name: string;
   dob: Moment;
@@ -11,6 +11,7 @@ interface User {
   role: string;
   description: string;
   avatar: string;
+  image: string;
   video: string;
 }
 export interface Category {

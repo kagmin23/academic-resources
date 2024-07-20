@@ -85,19 +85,21 @@ function PurchaseAdmin() {
   ];
 
   useEffect(() => {
-    const fetchData = async () => {
-      console.log("data", fetchData)
+    const fetchPurchase = async () => {
       try {
-        const response = await searchPurchase("", 1, 10);
+        const response = await searchPurchase();
+        console.log("response", response)
         setPurchase(response.data.pageData);
         setData(response.data.pageData);
+        console.log("data", fetchPurchase)
+
       } catch (error) {
         message.error("Error fetching purchases")
         console.error('Error fetching purchases:', error);
       }
     };
     
-    fetchData();
+    fetchPurchase();
   }, []);
 
   
