@@ -24,11 +24,12 @@ import { getCurrentUser } from '../../services/AdminsApi/UserService' // Adjust 
 import { Link } from 'react-router-dom';
 import Lottie from "lottie-react";
 import animation from '../../assets/111.json'
+import { useNavigate } from 'react-router-dom';
 // const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 
 const DashboardInstructor: React.FC = () => {
-    
+    const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState<any>(null);
   
 
@@ -62,28 +63,17 @@ const DashboardInstructor: React.FC = () => {
     }
     const formattedDob = new Date(currentUser.dob).toLocaleDateString('en-GB');
     const formattedCreatedAt = new Date(currentUser.created_at).toLocaleDateString('en-GB');
+    const handleEdit = (userId: string) => {
+      // navigate(`/instructor/profile-instructor/view-session/${courseId}`);
+      navigate(`/instructor/profile-instructor/instructor-setting/${userId}`);
+     
+    };
 
 
     return (
         // <div className="text-white bg-[#D6E0FF] wrapper">
         <div className="text-white  wrappers ">
-            {/* <div className='w-full h-56 bg-gradient-to-br from-blue-300  to-purple-200  '>
-                <div className=' '>
-                 <Lottie animationData={animation} className='w-[250px]'  loop={true} />;</div>
-             <div className='absolute'>   
-            <div className='text-white  text-center  text-3xl font-bold  '>Welcome to Academic Resource, {currentUser.name}</div>
-            </div> 
-            <div className="transform translate-y-1/4 flex justify-center"> 
-                 <Avatar
-                  size={160}
-                  src={currentUser.avatar}
-                  className="border-4 border-white "
-                 />
-            </div>
-            <div className='flex justify-end'>
-                
-            </div>
-            </div> */}
+         
             <div className='w-full h-56 bg-gradient-to-br from-blue-300 to-purple-200 relative'>
                 <div className='absolute -top-6 left-0 w-full h-full'>
                     <Lottie animationData={animation} className='w-[400px] h-[400px] m-auto' loop={true} />
@@ -152,10 +142,13 @@ const DashboardInstructor: React.FC = () => {
                     allowFullScreen>
                 </iframe></div>
             </div>
-            <div className='w-full my-7 flex justify-center'>
-            <Link to="/instructor/profile-instructor/instructor-setting">
-            <Button className='rounded-full bg-gradient-to-br from-blue-400 p-5  to-purple-300 text-lg text-white  w-full'><EditOutlined />Edit Profile</Button>
-            </Link>
+            <div className=' my-7 w-full flex justify-center'>
+            {/* <Link to="/instructor/profile-instructor/instructor-setting"> */}
+            <Button className='rounded-full bg-gradient-to-br  from-blue-400 p-5  to-purple-300 text-lg text-white  w-1/4'
+             onClick={() => handleEdit(currentUser._id)}>
+              
+            <EditOutlined />Edit Profile</Button>
+            {/* </Link> */}
             </div>
            
        

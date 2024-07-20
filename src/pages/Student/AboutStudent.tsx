@@ -1,207 +1,164 @@
-import { CalendarOutlined, CaretRightOutlined, FacebookOutlined, FileDoneOutlined, FileTextOutlined, LinkedinOutlined, LogoutOutlined, MailOutlined, ManOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined, WomanOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Col, Image, Layout, Menu, Row, Tabs, Typography ,notification,} from 'antd';
+
+import {
+  CalendarOutlined,
+  CaretRightOutlined,
+  DislikeOutlined,
+  EyeOutlined,
+  GiftOutlined ,
+  PhoneOutlined,
+  SignatureOutlined,
+  FacebookOutlined,
+  LikeOutlined,
+  LinkedinOutlined,
+  MailOutlined,
+  ManOutlined,
+  ShareAltOutlined,
+  WomanOutlined,
+  YoutubeOutlined,
+  VideoCameraOutlined,
+  EditOutlined,
+} from '@ant-design/icons';
+import { Avatar, Badge, Button, Card, Col, Row, Tabs, Typography, notification, Divider} from 'antd';
 import React, { useEffect, useState } from 'react';
-import { getCurrentUser } from '../../services/AdminsApi/UserService'
-const { Content } = Layout;
+import { getCurrentUser } from '../../services/AdminsApi/UserService' // Adjust path as per your project structure
+import { Link } from 'react-router-dom';
+import Lottie from "lottie-react";
+import animation from '../../assets/111.json'
+import { useNavigate } from 'react-router-dom';
+// const { TabPane } = Tabs;
 const { Title, Text } = Typography;
-const { TabPane } = Tabs;
 
-const coursesData = [
-  {
-    key: '1',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
-    name: 'How To Teach Online Course Effectively',
-    instructor: 'F8',
-    lessons: '9 Lessons',
-    price: 'Free',
-    status: '1',
-  },
-
-  
-  {
-    key: '3',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2024/03/f7aad5d3f7e5c9cf37b0c24a9d075887-800x600.png',
-    name: 'Database',
-    instructor: 'VanTTN',
-    lessons: '19 Lessons',
-    price: 'Free',
-    status: '0',
-  },
-  {
-    key: '4',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/home-banner-top-800x600.jpg',
-    name: 'Testing',
-    instructor: 'ChiLTQ',
-    lessons: '20 Lessons',
-    price: 'Free',
-    status: '0',
-  },
-  
-  
-
-];
-
-
-const ProfileStudent: React.FC = () => {
-  const [filteredCourses, setFilteredCourses] = useState(coursesData);
+const DashboardInstructor: React.FC = () => {
+  const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
+
+
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await getCurrentUser(); // Replace with your API call
-        if (response.success) {
-          setCurrentUser(response.data);
-        } else {
+      const fetchCurrentUser = async () => {
+        try {
+          const response = await getCurrentUser(); // Replace with your API call
+          if (response.success) {
+            setCurrentUser(response.data);
+          } else {
+            notification.error({
+              message: 'Error',
+              description: 'Failed to fetch current user information',
+            });
+          }
+        } catch (error) {
           notification.error({
             message: 'Error',
             description: 'Failed to fetch current user information',
           });
         }
-      } catch (error) {
-        notification.error({
-          message: 'Error',
-          description: 'Failed to fetch current user information',
-        });
-      }
-    };
+      };
+  
+      fetchCurrentUser();
+    }, []);
+    
 
-    fetchCurrentUser();
-  }, []);
 
-  const filterCoursesByStatus = (status: string) => {
+  if (!currentUser) {
+      return <div>Loading...</div>;
+  }
+  const formattedDob = new Date(currentUser.dob).toLocaleDateString('en-GB');
+  const formattedCreatedAt = new Date(currentUser.created_at).toLocaleDateString('en-GB');
+  const handleEdit = (userId: string) => {
+    // navigate(`/instructor/profile-instructor/view-session/${courseId}`);
+    navigate(`/instructor/profile-instructor/instructor-setting/${userId}`);
    
-    if (status === 'all') {
-      setFilteredCourses(coursesData);
-    } else {
-      const filtered = coursesData.filter(course => course.status === status);
-      setFilteredCourses(filtered);
-    }
   };
-   if (!currentUser) {
-    return <div>Loading...</div>;
-}
+
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      
-      <Layout className="site-layout">
-        {/* <Content> */}
-          
-            <Card style={{  maxHeight: 350, overflow: 'auto'}}>
-              {/* <div style={{ display: 'flex', flexDirection: 'column' }}> */}
-                <div style={{ display: 'flex', alignItems: 'center', marginBottom: 20 }}>
-                <Avatar size={128} src={currentUser.avatar} className="mb-4 lg:mr-4 lg:mb-0" />
-                  <div className="flex-grow">
-                                        <Title level={4}>{currentUser.name}</Title>
-                                        <div className="mb-2">
-                                            <MailOutlined style={{ marginRight: 8 }} />
-                                            <Text>Email: {currentUser.email}</Text>
-                                        </div>
-                                        <div className="mb-2">
-                                        <CalendarOutlined style={{ marginRight: 8 }} />
-                                        <Text>Date Of Birth: {currentUser.dob}</Text>
-                                         </div>
+      // <div className="text-white bg-[#D6E0FF] wrapper">
+      <div className="text-white  wrappers ">
+       
+          <div className='w-full h-56 bg-gradient-to-br from-blue-300 to-purple-200 relative'>
+              <div className='absolute -top-6 left-0 w-full h-full'>
+                  <Lottie animationData={animation} className='w-[400px] h-[400px] m-auto' loop={true} />
+              </div>
+              <div className='absolute inset-0 flex flex-col items-center justify-center'>
+                  <div className='text-white pt-14 text-center text-3xl font-bold'>
+                      Welcome to Academic Resource, {currentUser.name}
+                  </div>
+                  <div className="transform translate-y-1/4 flex justify-center mt-3">
+                      <Avatar
+                          size={160}
+                          src={currentUser.avatar}
+                          className="border-4 border-white"
+                      />
+                  </div>
+              </div>
+          </div>
+          <div className='mt-14 w-3/4  font-medium mx-auto'>
+              
+              <div className='flex justify-between'>
+                  <div>
+                      <div className="mb-5">
+                           <MailOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
+                           <Text className=" text-gray-700 text-lg">Email: {currentUser.email}</Text>
+                      </div>  
+                      <div className="mb-6">
+                           < GiftOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
+                           <Text className=" text-gray-700 text-lg">Date Of Birth:  {formattedDob}</Text>
+                      </div>
+                  </div>
+                  
 
-                                        {/* <div className="mb-2">
-                                            <CalendarOutlined style={{ marginRight: 8 }} />
-                                            <Text>Date Of Birth: {aboutData.dob}</Text>
-                                        </div> */}
-                                        {/* <div className="mb-2">
-                                            {aboutData.gender === 'Male' ? <ManOutlined style={{ marginRight: 8 }} /> : <WomanOutlined style={{ marginRight: 8 }} />}
-                                            <Text>Gender: {aboutData.gender}</Text>
-                                        </div> */}
-                                        <div className="mb-2">
-                                            <Text>Phone Number: {currentUser.phone_number}</Text>
-                                        </div>
-                                        <div className="mb-2">
-                                            <Text>Course Created Date: {currentUser.created_at}</Text>
-                                        </div>
-                                        <div className="mb-2">
-                                            <Text>Bio: {currentUser.description}</Text>
-                                        </div>
-                                    </div>
-                </div>
-              {/* </div> */}
-            </Card>
+                  <div>
+                       <div className="mb-5">
+                              <PhoneOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
+                              <Text className=" text-gray-700 text-lg">Phone Number: {currentUser.phone_number}</Text>
+                        </div>
+                        <div className="mb-6">
+                              <CalendarOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
+                              <Text className=" text-gray-700 text-lg">Joining Date: {formattedCreatedAt}</Text>
+                        </div>
+                  </div>
+                  
+                  </div>
+              
+              <div className=''>
+                  <SignatureOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500"/>
+                  <Text className=" text-gray-700 text-lg">Bio: {currentUser.description} </Text>
+
+              </div>
+ 
+
           
-        
+
+          </div>
+          <Divider orientation="left"></Divider>
+          <div className='w-3/4 mx-auto '>
+              <Text className='text-xl font-bold'><VideoCameraOutlined className=" text-blue-500" style={{ marginRight: 8,fontSize: '25px'}}/>Introductory Video:</Text>
+              <div className='mt-4 p-2'>
+              <iframe 
+                  width="100%" 
+                  height="400" 
+                  src={currentUser.video.replace('watch?v=', 'embed/')} 
+                  title="Introductory Video" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowFullScreen>
+              </iframe></div>
+          </div>
+          <div className=' my-7 w-full flex justify-center'>
+          {/* <Link to="/instructor/profile-instructor/instructor-setting"> */}
+          <Button className='rounded-full bg-gradient-to-br  from-blue-400 p-5  to-purple-300 text-lg text-white  w-1/4'
+           onClick={() => handleEdit(currentUser._id)}>
+            
+          <EditOutlined />Edit Profile</Button>
+          {/* </Link> */}
+          </div>
          
-            {/* <div className='p-5 '>
-              <Tabs defaultActiveKey="all" onChange={filterCoursesByStatus}>
-                <TabPane tab="All" key="all">
-                  <Row gutter={[16, 16]}>
-                    {filteredCourses.map(course => (
-                      <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
-                        <Card
-                          cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
-                          actions={[
-                            <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
-                              Start Learning
-                            </Button>,
-                          ]}
-                        >
-                          <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
-                          <Text>{course.lessons}</Text>
-                          <br />
-                          <Text style={{ color: 'blue' }}>{course.price}</Text>
-                        </Card>
-                      </Col>
-                    ))}
-                  </Row>
-                </TabPane>
-                <TabPane tab="Published" key="1">
-                  <Row gutter={[16, 16]}>
-                    {filteredCourses
-                      .filter(course => course.status === '1')
-                      .map(course => (
-                        <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
-                          <Card
-                            cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
-                            actions={[
-                              <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
-                                Start Learning
-                              </Button>,
-                            ]}
-                          >
-                            <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
-                            <Text>{course.lessons}</Text>
-                            <br />
-                            <Text style={{ color: 'blue' }}>{course.price}</Text>
-                          </Card>
-                        </Col>
-                      ))}
-                  </Row>
-                </TabPane>
-                <TabPane tab="Pending" key="0">
-                  <Row gutter={[16, 16]}>
-                    {filteredCourses
-                      .filter(course => course.status === '0')
-                      .map(course => (
-                        <Col xs={24} sm={12} md={8} lg={6} key={course.key}>
-                          <Card
-                            cover={<Image src={course.image} style={{ height: '100%', objectFit: 'cover' }} />}
-                            actions={[
-                              <Button type="primary" key="start-learning" icon={<CaretRightOutlined />}>
-                                Start Learning
-                              </Button>,
-                            ]}
-                          >
-                            <Card.Meta title={course.name} description={`Instructor: ${course.instructor}`} />
-                            <Text>{course.lessons}</Text>
-                            <br />
-                            <Text style={{ color: 'blue' }}>{course.price}</Text>
-                          </Card>
-                        </Col>
-                      ))}
-                  </Row>
-                </TabPane>
-              </Tabs>
-            </div> */}
-        
-        {/* </Content> */}
-      </Layout>
-    </Layout>
+     
+
+          
+         
+      </div>
   );
 };
 
-export default ProfileStudent;
+export default DashboardInstructor;
+
+

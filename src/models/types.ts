@@ -102,3 +102,53 @@ export class Course {
     video = "video",
     image = "image"
   }
+
+  export class User {
+    _id: string;
+    name: string;
+    email: string;
+    google_id: string;
+    role: string;
+    status: boolean;
+    description: string;
+    phone_number: string;
+    avatar: string;
+    video: string;
+    dob: Date;
+    created_at: Date;
+    updated_at: Date;
+    is_deleted: boolean;
+  
+    constructor(
+      _id: string = "",
+      name: string = "",
+      email: string = "",
+      google_id: string = "",
+      role: string = "",
+      status: boolean = true,
+      description: string = "",
+      phone_number: string = "",
+      avatar: string = "",
+      video: string = "",
+      dob: Date = new Date(),
+      created_at: Date = new Date(),
+      updated_at: Date = new Date(),
+      is_deleted: boolean = false
+    ) {
+      this._id = _id;
+      this.name = name;
+      this.email = email;
+      this.google_id = google_id;
+      this.role = role;
+      this.status = status;
+      this.description = description;
+      this.phone_number = phone_number;
+      this.avatar = avatar;
+      this.video = video;
+      this.dob = dob;
+      this.created_at = created_at;
+      this.updated_at = updated_at;
+      this.is_deleted = is_deleted;
+    }
+  }
+  

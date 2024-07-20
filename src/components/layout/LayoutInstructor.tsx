@@ -93,7 +93,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
       </Menu.Item>
       <SubMenu key="2" title="Settings">
         <Menu.Item key="setting:1">
-          <Link to="/instructor/profile-instructor/instructor-setting">Personal Info</Link>
+        <Link to={`/instructor/profile-instructor/instructor-setting/${currentUser._id}`}>Personal Info</Link>
         </Menu.Item>
         <Menu.Item key="setting:2">
           <Link to="/instructor/profile-instructor/instructor-changepassword">Change Password</Link>

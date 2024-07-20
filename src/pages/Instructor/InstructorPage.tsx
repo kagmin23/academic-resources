@@ -25,6 +25,7 @@ const InstructorPage: React.FC = () => {
           <Route path={`manager-instructor-session`} element={<SessionInstructor />} />
           <Route path={`manager-instructor-certificate`} element={<ManagerCertificate   />} />
           <Route path={`instructor-setting`} element={<Setting />} />
+          <Route path={`instructor-setting/:userId/`} element={<Setting />} />
           <Route path={`instructor-changepassword`} element={<ChangepasswordIns />} />
           {/* <Route path={`view-session`} element={<ViewSession/>}/> */}
           
