@@ -1,13 +1,15 @@
 import {
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Col, Input, Layout, Modal, Row, Select, Switch, Table, Typography, message } from 'antd';
+import { Button, Col, Input, Layout, Modal, Row, Select, Table, Typography, message } from 'antd';
 import { Course } from 'models/types';
+import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { changeCourseStatus } from 'services/All/changerStatusApiService';
 import { getCourses } from 'services/All/getCoursesApiService';
 import './stylesAdmin.css';
+
 
 const { Header, Content, Footer } = Layout;
 const { Title, Text } = Typography;
@@ -18,6 +20,9 @@ const CourseAdmin: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [logModalVisible, setLogModalVisible] = useState(false);
   const [comment, setComment] = useState('');
+  const [editingItem, setEditingItem] = useState<Partial<Course>>({});
+  const [courses, setCourses] = useState<Course[]>([]);
+
 
 
   useEffect(() => {
@@ -65,16 +70,25 @@ const CourseAdmin: React.FC = () => {
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
     try {
+      console.log("courseId", courseId);
       console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
       const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("Response Data", response.data);
-    } catch (error) {
-      message.error("Changer Status Failed");
-    }
-  };
+      console.log("response", response);
+  
+      if (response) {
+        message.success('Changed Status Successfully!');
+        setCourses(prevCourses =>
+          prevCourses.map(course =>
+            course._id === courseId ? { ...course, status: newStatus } : course
+          )
+        );
+      }
 
-  const onSearch = (value: string) => {
-    console.log('search:', value);
+      
+    } catch (error) {
+      message.error('Please enter the reason of this course!');
+      console.error('Error:', error);
+    }
   };
 
   const filteredDataSource = dataSource ? dataSource.filter(item =>
@@ -113,52 +127,44 @@ const CourseAdmin: React.FC = () => {
       key: 'discount',
       align: "center" as AlignType
     },
-    {
-      title: 'Video',
-      dataIndex: 'video_url',
-      key: 'video_url',
-      align: "center" as AlignType,
-      render: (video_url: string) => (
-        <div><iframe src={video_url}></iframe></div>
-      )
-    },
-    {
-      title: 'Image',
-      dataIndex: 'image_url',
-      key: 'image_url',
-      align: "center" as AlignType,
-      render: (image_url: string) => (
-        <div><iframe src={image_url}></iframe></div>
-      )
-    },
+    // {
+    //   title: 'Video',
+    //   dataIndex: 'video_url',
+    //   key: 'video_url',
+    //   align: "center" as AlignType,
+    //   render: (video_url: string) => (
+    //     <div><iframe src={video_url}></iframe></div>
+    //   )
+    // },
+    // {
+    //   title: 'Image',
+    //   dataIndex: 'image_url',
+    //   key: 'image_url',
+    //   align: "center" as AlignType,
+    //   render: (image_url: string) => (
+    //     <div><iframe src={image_url}></iframe></div>
+    //   )
+    // },
     {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (updated_at: string) => moment(updated_at).format("YYYY-MM-DD"),
     },
     {
-      title: 'Status',
-      dataIndex: 'status',
-      key: 'status',
-      render: (status: boolean, record: Course) => (
-        <Switch
-          size="small"
-          checked={status}
-          onChange={(checked: boolean) => handleStatusChange(checked, record)}
-        />
-      ),
-    },
-    {
-      title: 'Operating Status',
-      dataIndex: 'approval_status',
-      key: 'approval_status',
+      title: "Status",
+      dataIndex: "status",
+      key: "status",
+      align: "center" as AlignType,
       render: (status: string, record: Course) => (
         <div>
           <Select
@@ -166,14 +172,14 @@ const CourseAdmin: React.FC = () => {
             className="text-xs"
             showSearch
             optionFilterProp="label"
-            defaultValue={"new"}
+            defaultValue={status}
             value={status}
             onChange={(newStatus) => {
               Modal.confirm({
-                title: "Change Status Confirmation",
+                title: "Change Status Confirmation!",
                 content: (
                   <>
-                    <p>Are you sure you want to change the status to "{newStatus}"?</p>
+                    <p className="mb-3">Are you sure you want to change the status to "{newStatus}"?</p>
                     <Input.TextArea
                       rows={4}
                       placeholder="Enter a comment (optional)"
@@ -181,20 +187,7 @@ const CourseAdmin: React.FC = () => {
                     />
                   </>
                 ),
-                onOk: async () => {
-                  try {
-                    await onChangeStatus(record._id, newStatus, comment);
-                    const updatedDataSource = dataSource.map(item =>
-                      item._id === record._id ? { ...item, approval_status: newStatus } : item
-                    );
-                    setDataSource(updatedDataSource);
-                
-                    message.success("Changed Status Successfully")
-                  } catch (error) {
-                    console.error("Error updating status:", error);
-                    Modal.error({ content: "An error occurred. Please try again later." });
-                  }
-                },
+                onOk: () => onChangeStatus(record._id, newStatus, comment),
                 onCancel: () => {},
               });
             }}

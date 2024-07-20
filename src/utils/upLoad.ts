@@ -1,14 +1,20 @@
+import { RcFile } from 'antd/es/upload/interface';
 
-import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../utils/firebase";
+const customUpload = (options: { file: RcFile; onSuccess?: (response: any) => void; onError?: (error: any) => void }) => {
+  const { file, onSuccess, onError } = options;
+  const reader = new FileReader();
 
+  reader.onload = () => {
+    const base64File = reader.result as string;
 
-const uploadFile = async (file: File) => {
-  console.log(file);
-  const storageRef = ref(storage, file.name);
-  const response = await uploadBytes(storageRef, file);
-  const downloadURL = await getDownloadURL(response.ref);
-  return downloadURL;
+    if (onSuccess) onSuccess('Successfully!');
+  };
+
+  reader.onerror = (error) => {
+    if (onError) onError(error);
+  };
+
+  reader.readAsDataURL(file);
 };
 
-export default uploadFile;
+export default customUpload;

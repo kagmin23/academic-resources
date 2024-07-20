@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { HOST_MAIN } from './apiService';
 
-interface RegisterData {
+interface RegisterUser {
   email: string;
   password: string;
   name: string;
@@ -12,11 +12,11 @@ interface RegisterData {
   phone_number: string;
 }
 
-interface RegisterResponseData extends RegisterData {
+interface RegisterResponseData extends RegisterUser {
   pendingApproval?: boolean;
 }
 
-export const registerUser = async (userData: RegisterData): Promise<RegisterResponseData> => {
+export const registerUser = async (userData: RegisterUser): Promise<RegisterResponseData> => {
   try {
     const response = await axios.post(`${HOST_MAIN}/api/users`, userData, {
       headers: {

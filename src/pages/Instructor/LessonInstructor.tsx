@@ -8,6 +8,7 @@ import {
 
 import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Table, Typography, message } from 'antd';
 import { Lesson } from 'models/types';
+import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -157,12 +158,15 @@ const ManagerLessonInstructor: React.FC = () => {
       title: 'Created At',
       dataIndex: 'created_at',
       key: 'created_at',
+      align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: 'Update At',
       dataIndex: 'updated_at',
       key: 'updated_at',
       align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: 'Actions',

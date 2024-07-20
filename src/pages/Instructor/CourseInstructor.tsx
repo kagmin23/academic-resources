@@ -1,7 +1,5 @@
 
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Editor } from '@tinymce/tinymce-react';
 import {
   Button,
@@ -18,7 +16,10 @@ import {
   Typography,
   message,
 } from "antd";
+import React, { useEffect, useState } from "react";
+
 import { Category, Course } from "models/types";
+import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
 import { useNavigate } from 'react-router-dom';
 
@@ -27,6 +28,7 @@ import { changeCourseStatus } from "services/All/changerStatusApiService";
 import { getCourses } from "services/All/getCoursesApiService";
 import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
 import './stylesInstructor.css';
+
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
@@ -43,11 +45,18 @@ const ManagerCourseInstructor: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isSellChecked, setIsSellChecked] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  // const [loading, setLoading] = useState<boolean>(true);
-  // const [course, setCourse] = useState<Course | null>(null);
   const [category, setCategory] = useState<Category | null>(null);
   const [comment, setComment] = useState('');
+  const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
+  const [commentForm] = Form.useForm();
+  const [courses, setCourses] = useState<Course[]>([]);
 
+
+  const handleStatusChangeModal = (record: Course) => {
+    setIsStatusChangeModalVisible(true);
+    setCurrentRecord(record);
+    setComment('');
+  };
 
   const navigate = useNavigate();
 
@@ -60,14 +69,6 @@ const ManagerCourseInstructor: React.FC = () => {
   const hideLogModal = () => {
     setLogModalVisible(false);
   };
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (!course) {
-  //   return <div>Loading...</div>;
-  // }
 
   useEffect(() => {
     fetchCategories();
@@ -223,15 +224,33 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
     try {
-      console.log("courseId", courseId)
       console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
+  
+      const course = courses.find(course => course._id === courseId);
+  
+      if (course?.status === 'reject' && (newStatus === 'active' || newStatus === 'inactive')) {
+        message.error('This course has been rejected and cannot be changed to Active or Inactive.');
+        return;
+      }
+  
       const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("response", response)
-      // console.log("Response Data", response.data);
+      console.log("response", response);
+  
+      if (response) {
+        message.success('Changed Status Successfully!');
+        setCourses(prevCourses =>
+          prevCourses.map(course =>
+            course._id === courseId ? { ...course, status: newStatus } : course
+          )
+        );
+      }
     } catch (error) {
-      message.error("Changer Status Failed");
+      message.error('Please add your Session and Lesson!');
+      console.error('Error:', error);
     }
   };
+  
+  
 
   const onSearch = (value: string) => {
     console.log('Search:', value);
@@ -251,33 +270,19 @@ const ManagerCourseInstructor: React.FC = () => {
       key: "category_name",
       align: "center" as AlignType
     },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      // align: "center" as AlignType
-    },
     // {
-    //   title: "Video",
-    //   dataIndex: "video_url",
-    //   key: "video_url",
-    //   align: "center" as AlignType
-    // },
-    // {
-    //   title: "Image",
-    //   dataIndex: "image_url",
-    //   key: "image_url",
-    //   align: "center" as AlignType
+    //   title: "Description",
+    //   dataIndex: "description",
+    //   key: "description",
     // },
 
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      align: "center" as AlignType
     },
     {
-      title: "Discount",
+      title: "Discount (%)",
       dataIndex: "discount",
       key: "discount",
       align: "center" as AlignType
@@ -286,13 +291,15 @@ const ManagerCourseInstructor: React.FC = () => {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: "Update At",
       dataIndex: "updated_at",
       key: "updated_at",
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     
     {
@@ -307,14 +314,14 @@ const ManagerCourseInstructor: React.FC = () => {
             className="text-xs"
             showSearch
             optionFilterProp="label"
-            defaultValue={"new"}
+            defaultValue={status}
             value={status}
             onChange={(newStatus) => {
               Modal.confirm({
-                title: "Change Status Confirmation",
+                title: "Change Status Confirmation!",
                 content: (
                   <>
-                    <p>Are you sure you want to change the status to "{newStatus}"?</p>
+                    <p className="mb-3">Are you sure you want to change the status to "{newStatus}"?</p>
                     <Input.TextArea
                       rows={4}
                       placeholder="Enter a comment (optional)"
@@ -322,20 +329,7 @@ const ManagerCourseInstructor: React.FC = () => {
                     />
                   </>
                 ),
-                onOk: async () => {
-                  try {
-                    await onChangeStatus(record._id, newStatus, comment);
-                    const updatedDataSource = dataSource.map(item =>
-                      item._id === record._id ? { ...item, approval_status: newStatus } : item
-                    );
-                    setDataSource(updatedDataSource);
-                
-                    message.success("Changed Status Successfully")
-                  } catch (error) {
-                    console.error("Error updating status:", error);
-                    Modal.error({ content: "An error occurred. Please try again later." });
-                  }
-                },
+                onOk: () => onChangeStatus(record._id, newStatus, comment),
                 onCancel: () => {},
               });
             }}
@@ -424,6 +418,10 @@ const ManagerCourseInstructor: React.FC = () => {
                 }}
               >
               <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
+              <Col span={22} className="mb-5">
+              <Typography.Title level={5}>Description:</Typography.Title>
+                       <p>{record.description || "-"}</p>
+              </Col>
               <Col span={22} className="mb-5">
               <Typography.Title level={5}>Content:</Typography.Title>
                        <p>{record.content || "-"}</p>
@@ -521,24 +519,6 @@ const ManagerCourseInstructor: React.FC = () => {
               { required: true, message: "Please input the course name!" },
             ]}
           >
-            {/* <Editor
-              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
-              initialValue="<p>This is the initial content of the editor</p>"
-              init={{
-                height: 200,
-                menubar: false,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic backcolor | \
-                  alignleft aligncenter alignright alignjustify | \
-                  bullist numlist outdent indent | removeformat | help",
-              }}
-              onEditorChange={handleEditorChange}
-            /> */}
             <Input/>
           </Form.Item>
 
@@ -560,34 +540,16 @@ const ManagerCourseInstructor: React.FC = () => {
             name="description"
             label="Description"
             rules={[
-              { required: true, message: "Please input the description!" },
+              { required: false, message: "Please input the description!" },
             ]}
           >
-            {/* <Editor
-              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
-              initialValue="<p>This is the initial content of the editor</p>"
-              init={{
-                height: 200,
-                menubar: false,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic backcolor | \
-                  alignleft aligncenter alignright alignjustify | \
-                  bullist numlist outdent indent | removeformat | help",
-              }}
-              onEditorChange={handleEditorChange}
-            /> */}
             <Input/>
           </Form.Item>
 
           <Form.Item
             name="video_url"
             label="Video URL"
-            rules={[{ required: true, message: 'Please input the video URL!' }]}
+            rules={[{ required: false, message: 'Please input the video URL!' }]}
           >
             <Input />
           </Form.Item>
@@ -595,7 +557,7 @@ const ManagerCourseInstructor: React.FC = () => {
           <Form.Item
             name="image_url"
             label="Image URL"
-            rules={[{ required: true, message: 'Please input the image URL!' }]}
+            rules={[{ required: false, message: 'Please input the image URL!' }]}
           >
             <Input />
           </Form.Item>
@@ -639,7 +601,6 @@ const ManagerCourseInstructor: React.FC = () => {
               <Form.Item
                 name="discount"
                 label="Discount"
-                rules={[{ required: true, message: 'Please input the discount!' }]}
               >
                 <Input type="number" />
               </Form.Item>

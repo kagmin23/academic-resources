@@ -9,6 +9,7 @@ import {
 } from '@ant-design/icons';
 import { Button, Divider, Form, Input, Layout, List, Modal, Table, Tabs, message } from "antd";
 import { Session } from 'models/types';
+import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -166,12 +167,15 @@ const ManagerCourseInstructor: React.FC = () => {
                 dataIndex: 'created_at',
                 key: 'created_at',
                 align: 'center' as AlignType,
+                render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
               },
               {
                 title: 'Update At',
                 dataIndex: 'updated_at',
                 key: 'updated_at',
                 align: 'center' as AlignType,
+                render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+
               },
               {
                 title: 'Actions',

@@ -1,16 +1,6 @@
 import axios from "axios";
 import { HOST_MAIN } from "services/apiService";
 
-interface User {
-  email: string;
-  password: string;
-  name: string;
-  role: string;
-  image: string;
-  status: boolean;
-  phone_number: string
-}
-
 export const loginUser = async (email: string, password: string) => {
   try {
     console.log("Attempting to log in with email:", email);

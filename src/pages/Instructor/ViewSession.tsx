@@ -1,6 +1,7 @@
 import { BarsOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Modal, Table, message } from "antd";
 import { Course, Session } from 'models/types';
+import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -171,12 +172,14 @@ const ViewSession: React.FC = () => {
       dataIndex: 'created_at',
       key: 'created_at',
       align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: 'Updated At',
       dataIndex: 'updated_at',
       key: 'updated_at',
       align: "center" as AlignType,
+      render: (updated_at: string) => moment(updated_at).format("YYYY-MM-DD"),
     },
     {
       title: 'Actions',
