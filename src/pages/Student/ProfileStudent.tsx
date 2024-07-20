@@ -4,14 +4,6 @@ import 'tailwindcss/tailwind.css';
 
 const { Text } = Typography;
 
-interface FormValues {
-  name: string;
-  email: string;
-  password: string;
-  facebook: string;
-  linkedin: string;
-}
-
 const SettingStudent: React.FC = () => {
   const [itemStates, setItemStates] = useState<{ [key: string]: boolean }>({
     'Email': false,
