@@ -1,69 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Form, Input, Button, notification } from 'antd';
+import { Button, Form, Input, notification } from 'antd';
+import React, { useState } from 'react';
 import { getCurrentUser } from 'services/AdminsApi/UserService';
 import { changeUserPassword } from 'services/All/changePasswordApiService';
 
-
 const ChangePasswordAd: React.FC = () => {
-  const [form] = Form.useForm();
-  const [currentUser, setCurrentUser] = useState<any>(null); // Adjust type as per your getCurrentUser response structure
-
-  useEffect(() => {
-    fetchCurrentUser();
-  }, []);
-
-  const fetchCurrentUser = async () => {
-    try {
-      const response = await getCurrentUser();
-      if (response.success) {
-        setCurrentUser(response.data);
-      } else {
-        throw new Error(response.message || 'Failed to fetch current user data.');
-      }
-    } catch (error) {
-      console.error('Fetch current user error:', error);
-      notification.error({
-        message: 'Fetch Current User Error',
-        description: 'Failed to fetch current user data. Please try again later.',
-      });
-    }
-  };
-
-  const onFinish = async (values: any) => {
-    const { currentPassword, newPassword, confirmPassword } = values;
-    try {
-      if (newPassword !== confirmPassword) {
-        throw new Error('The new passwords do not match.');
-      }
-      
-      if (!currentUser) {
-        throw new Error('Current user data not available.');
-      }
-
-      const response = await changeUserPassword(currentUser._id, currentPassword, newPassword);
-      
-      if (response.success) {
-        notification.success({
-          message: 'Password Changed',
-          description: 'Your password has been changed successfully.',
-        });
-        form.resetFields();
-      } else {
-        notification.error({
-          message: 'Password Change Failed',
-          description: response.message || 'Failed to change password.',
-        });
-      }
-    } catch (error) {
-      console.error('Password change error:', error);
-      const errorMessage = typeof error === 'string' ? error : 'Failed to change password. Please try again later.';
-      notification.error({
-        message: 'Password Change Error',
-        description: errorMessage,
-      });
-    }
-  };
-
   return (
     <div className="flex h-screen">
       <main className="flex-1 p-6 overflow-auto">
@@ -72,55 +12,139 @@ const ChangePasswordAd: React.FC = () => {
         <div className="mt-4">
           <section className="mb-6">
             <div className="mb-4">
-              <h2 className="text-xl font-semibold">Change Password</h2>
+              <h2 className="text-xl font-semibold">Password recovery</h2>
             </div>
             <div className="space-y-4">
-              <div className="p-4 border rounded-lg">
-                <Form form={form} name="change_password" onFinish={onFinish} layout="vertical">
-                  <Form.Item
-                    name="currentPassword"
-                    label="Current Password"
-                    rules={[{ required: true, message: 'Please input your current password!' }]}
-                  >
-                    <Input.Password />
-                  </Form.Item>
-                  <Form.Item
-                    name="newPassword"
-                    label="New Password"
-                    rules={[{ required: true, message: 'Please input your new password!' }]}
-                  >
-                    <Input.Password />
-                  </Form.Item>
-                  <Form.Item
-                    name="confirmPassword"
-                    label="Confirm Password"
-                    dependencies={['newPassword']}
-                    hasFeedback
-                    rules={[
-                      { required: true, message: 'Please confirm your new password!' },
-                      ({ getFieldValue }) => ({
-                        validator(_, value) {
-                          if (!value || getFieldValue('newPassword') === value) {
-                            return Promise.resolve();
-                          }
-                          return Promise.reject(new Error('The two passwords that you entered do not match!'));
-                        },
-                      }),
-                    ]}
-                  >
-                    <Input.Password />
-                  </Form.Item>
-                  <Form.Item>
-                    <Button type="primary" htmlType="submit" className="ml-8 text-lg font-semibold">
-                      Save
-                    </Button>
-                  </Form.Item>
-                </Form>
-              </div>
+              <InfoItem label="Change Password" />
             </div>
           </section>
         </div>
       </main>
+    </div>
+  );
+};
+
+type InfoItemProps = {
+  label: string;
+};
+
+const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
+  const [isDropdownVisible, setIsDropdownVisible] = useState(false);
+  const [form] = Form.useForm();
+  const [userId, setUserId] = useState<string | null>(null);
+
+  const toggleDropdown = async () => {
+    setIsDropdownVisible(!isDropdownVisible);
+
+    if (!isDropdownVisible && !userId) {
+      try {
+        const response = await getCurrentUser();
+        console.log('Current user response:', response); // Debug log
+        setUserId(response.data._id); // Correctly set userId from response
+      } catch (error) {
+        console.error('Failed to fetch current user:', error);
+        notification.error({
+          message: 'Error',
+          description: 'Failed to fetch current user details.',
+        });
+      }
+    }
+  };
+
+  const onFinish = async (values: any) => {
+    console.log('Form values:', values); // Debug log
+    const { currentPassword, newPassword, confirmPassword } = values;
+
+    if (newPassword !== confirmPassword) {
+      notification.error({
+        message: 'Error',
+        description: 'The new password and confirm password do not match!',
+      });
+      return;
+    }
+
+    if (!userId) {
+      notification.error({
+        message: 'Error',
+        description: 'User ID not found. Please try again.',
+      });
+      return;
+    }
+
+    try {
+      console.log('Changing password with:', { userId, currentPassword, newPassword }); // Debug log
+      await changeUserPassword(userId, currentPassword, newPassword);
+      notification.success({
+        message: 'Success',
+        description: 'Password has been updated successfully!',
+      });
+      form.resetFields();
+    } catch (error) {
+      console.error('Failed to change password:', error);
+      notification.error({
+        message: 'Error',
+        description: 'Failed to change password. Please try again later.',
+      });
+    }
+  };
+
+  return (
+    <div className="p-4 border rounded-lg">
+      <div className="flex justify-between items-center cursor-pointer" onClick={toggleDropdown}>
+        <div>
+          <h4 className="text-lg font-medium">{label}</h4>
+          <span className="text-gray-800">Haven't changed password yet</span>
+        </div>
+        <Button className="text-gray-500">
+          <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="chevron-right" className={`h-5 w-5 transition-transform ${isDropdownVisible ? 'rotate-90' : ''}`} role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 512">
+            <path fill="currentColor" d="M310.6 233.4c12.5 12.5 12.5 32.8 0 45.3l-192 192c-12.5 12.5-32.8 12.5-45.3 0s-12.5-32.8 0-45.3L242.7 256 73.4 86.6c-12.5-12.5-12.5-32.8 0-45.3s32.8-12.5 45.3 0l192 192z"></path>
+          </svg>
+        </Button>
+      </div>
+      {isDropdownVisible && (
+        <div className="mt-4 space-y-4">
+          <Form form={form} name="change_password" onFinish={onFinish} layout="vertical">
+            <Form.Item
+              name="currentPassword"
+              label="Current Password"
+              rules={[{ required: true, message: 'Please input your current password!' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+            <Form.Item
+              name="newPassword"
+              label="New Password"
+              rules={[{ required: true, message: 'Please input your new password!' }]}
+            >
+              <Input.Password />
+            </Form.Item>
+            <Form.Item
+              name="confirmPassword"
+              label="Confirm Password"
+              dependencies={['newPassword']}
+              hasFeedback
+              rules={[
+                { required: true, message: 'Please confirm your new password!' },
+                ({ getFieldValue }) => ({
+                  validator(_, value) {
+                    if (!value || getFieldValue('newPassword') === value) {
+                      return Promise.resolve();
+                    }
+                    return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                  },
+                }),
+              ]}
+            >
+              <Input.Password />
+            </Form.Item>
+            <Form.Item>
+              <Button type="primary" htmlType="submit" className="ml-8 text-lg font-semibold">
+                Save
+              </Button>
+            </Form.Item>
+          </Form>
+        </div>
+      )}
     </div>
   );
 };
