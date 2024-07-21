@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal, Tabs, Avatar, Badge, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { createCart } from 'services/All/CartApiService';
 import {
     CommentOutlined,
@@ -17,6 +17,7 @@ import {
 const { TabPane } = Tabs;
 
 const CourseDetail: React.FC = () => {
+    const { courseId } = useParams<{ courseId: string }>();
     const [isModalVisible, setIsModalVisible] = useState(false);
 
     const showModal = () => {

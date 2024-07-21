@@ -64,7 +64,7 @@ const AboutStudent: React.FC = () => {
   const formattedDob = new Date(currentUser.dob).toLocaleDateString('en-GB');
   const formattedCreatedAt = new Date(currentUser.created_at).toLocaleDateString('en-GB');
   const handleEdit = (userId: string) => {
-    // navigate(`/instructor/profile-instructor/view-session/${courseId}`);
+    
     navigate(`/student/profile-student/info-student/${userId}`);
    
   };
