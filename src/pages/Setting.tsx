@@ -183,7 +183,7 @@ const SettingInstructor: React.FC = () => {
   );
 };
 
-// export default SettingInstructor;
+export default SettingInstructor;
 // import { Button, Form, Input, Typography, notification, message, Modal, Select, Upload } from 'antd';
 // import React, { useState, useEffect } from 'react';
 // import 'tailwindcss/tailwind.css';
