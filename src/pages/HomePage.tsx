@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, Carousel, Col, message, Row } from 'antd';
+import { Button, Card, Carousel, Col, message, Row,notification } from 'antd';
 import {
   ArrowRightOutlined,
   FlagOutlined,
@@ -16,6 +16,8 @@ import {
 } from '@ant-design/icons';
 import { getCourses, getCategories } from 'services/User/clientApiService';
 import './styles.css';
+import { useNavigate } from 'react-router-dom';
+import { getCurrentUser } from '../services/AdminsApi/UserService'
 
 interface Course {
   _id: string;
@@ -60,6 +62,34 @@ const HomePage: React.FC = () => {
   const [email, setEmail] = useState('');
   const [courses, setCourses] = useState<Course[]>([]); 
   const [categories, setCategories] = useState<Category[]>([]);
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
+
+  useEffect(() => {
+      const fetchCurrentUser = async () => {
+        try {
+          const response = await getCurrentUser();
+          if (response.success) {
+            setCurrentUser(response.data);
+          } else {
+            notification.error({
+              message: 'Error',
+              description: 'Failed to fetch current user information',
+            });
+          }
+        } catch (error) {
+          // notification.error({
+          //   message: 'Error',
+          //   description: 'Failed to fetch current user information',
+          // });
+        }
+      };
+  
+      fetchCurrentUser();
+    }, []);
+    
+
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -144,6 +174,17 @@ const HomePage: React.FC = () => {
     </button>
   );
 
+  const handleNavigateToCourseDetails = (courseId: string) => {
+    if (!currentUser) {
+      navigate(`/course-details/${courseId}`);
+    } else if (currentUser.role === 'student') {
+      navigate(`/student/course-details/${courseId}`);
+    } else if (currentUser.role === 'instructor') {
+      navigate(`/instructor/course-details/${courseId}`);
+    }else {
+      navigate(`/course-details/${courseId}`);
+    }
+  };
   return (
     <div className="bg-gray-100 homepage">
       <header className="hero-image">
@@ -223,9 +264,12 @@ const HomePage: React.FC = () => {
           >
             {courses.map((course, index) => (
               <div className="p-2 my-5 sm:my-10" key={index}>
-                <Link to={`course-details/${course._id}`}>
+                {/* <Link to={`course-details/${course._id}`}>
                   <img className="rounded-xl" src={course.image_url} alt={course.name} />
-                </Link>
+                </Link> */}
+                 <div onClick={() => handleNavigateToCourseDetails(course._id)}>
+                  <img className="rounded-xl" src={course.image_url} alt={course.name} />
+                </div>
                 <div className="flex justify-between items-center">
                   <h1 className="text-xl font-bold truncate lg:text-2xl">{course.name}</h1>
                   <div className="flex">

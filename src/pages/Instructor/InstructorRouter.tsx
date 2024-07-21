@@ -56,7 +56,7 @@ export default function InstructorRouter() {
          <Route path={`course/*`}element={<ProtectedRouter allowedRoles={["instructor"]}><CoursePage /></ProtectedRouter>} />
          <Route path={`course/category`} element={<ProtectedRouter allowedRoles={["instructor"]}><CategoryPage /></ProtectedRouter>} />
          <Route path={`category`} element={<ProtectedRouter allowedRoles={["instructor"]}><CategoryPage /></ProtectedRouter>} />
-         <Route path={`course-details`} element={<ProtectedRouter allowedRoles={["instructor"]}><CourseDetailsPage /></ProtectedRouter>} />
+         <Route path={`course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["instructor"]}><CourseDetailsPage /></ProtectedRouter>} />
          <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={["instructor"]}><ShoppingCart /></ProtectedRouter>} />
          <Route path={`profile-instructor/*`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorPage /></ProtectedRouter>} />
          <Route path={`buy-now`} element={<ProtectedRouter allowedRoles={["instructor"]}><BuyNow /></ProtectedRouter>} />
