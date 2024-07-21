@@ -74,7 +74,7 @@ const BuyNow: React.FC = () => {
                                         <p className="mt-4 text-lg font-semibold">Price: {formattedPrice} VNĐ</p>
                                         {courseDetail.discount > 0 && (
                                             <p className="mt-2 text-lg font-semibold text-red-600">
-                                                Discounted Price: {discountedPrice} VNĐ
+                                                Discounted Price: {discountedPrice} %
                                             </p>
                                         )}
                                     </div>
