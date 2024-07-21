@@ -1,21 +1,23 @@
 import axios from 'axios';
 import { HOST_MAIN } from './apiService';
 
-interface RegisterUser {
+// Định nghĩa kiểu dữ liệu
+export interface RegisterUser {
   email: string;
   password: string;
   name: string;
-  role: string;
-  avatar: string;
-  image: string;
-  status: boolean;
-  phone_number: string;
+  role: 'student' | 'instructor';
+  avatar?: string;
+  video?: string;
+  description?: string;
+  phone_number?: string;
 }
 
-interface RegisterResponseData extends RegisterUser {
+export interface RegisterResponseData extends RegisterUser {
   pendingApproval?: boolean;
 }
 
+// Hàm đăng ký người dùng
 export const registerUser = async (userData: RegisterUser): Promise<RegisterResponseData> => {
   try {
     const response = await axios.post(`${HOST_MAIN}/api/users`, userData, {
@@ -29,14 +31,11 @@ export const registerUser = async (userData: RegisterUser): Promise<RegisterResp
     if (userData.role === 'instructor') {
       console.log("Instructor registration, pending approval");
       localStorage.setItem('user', JSON.stringify(userData));
-      return { ...userData, pendingApproval: true }; // Return user data with pendingApproval flag
-    } else if (userData) {
-      console.log("userData", userData);
-      localStorage.setItem('user', JSON.stringify(userData));
-      return userData; // Return user data for non-instructor roles
+      return { ...userData, pendingApproval: true };
     } else {
-      console.error('Failed to get user data');
-      throw new Error('Failed to get user data');
+      console.log("Non-instructor registration");
+      localStorage.setItem('user', JSON.stringify(userData));
+      return { ...userData };
     }
   } catch (error) {
     console.error('Registration error:', error);
@@ -49,6 +48,6 @@ export const registerUser = async (userData: RegisterUser): Promise<RegisterResp
     }
     console.error('Error message:', errorMessage);
 
-    throw error;
+    throw new Error(errorMessage);
   }
 };
