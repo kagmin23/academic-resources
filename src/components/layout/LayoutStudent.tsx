@@ -71,7 +71,9 @@ const LayoutStudent: React.FC = () => {
       </Menu.Item>
       <SubMenu key="2" title="Settings">
         <Menu.Item key="setting:1">
-          <Link to="/student/profile-student/info-student">Personal Info</Link>
+          {/* <Link to="/student/profile-student/info-student/${currentUser ? currentUser._id : ''}`}">Personal Info</Link> */}
+          <Link to={`/student/profile-student/info-student/${currentUser ? currentUser._id : ''}`}>Personal Info</Link>
+
         </Menu.Item>
         <Menu.Item key="setting:2">
           <Link to="/student/profile-student/student-changepassword">Change Password</Link>

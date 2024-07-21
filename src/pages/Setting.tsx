@@ -130,13 +130,7 @@ const SettingInstructor: React.FC = () => {
                 <Input />
               </Form.Item>
 
-              <Form.Item
-                name="avatar"
-                label="Avatar URL"
-                rules={[{ required: false }]}
-              >
-                <Input />
-              </Form.Item>
+            
               <Form.Item
                 name="phone_number"
                 label="Phone Number"
@@ -157,6 +151,13 @@ const SettingInstructor: React.FC = () => {
                 rules={[{ required: false }]}
               >
                 <Input.TextArea minLength={6} rows={6} />
+              </Form.Item>
+              <Form.Item
+                name="avatar"
+                label="Avatar URL"
+                rules={[{ required: false }]}
+              >
+                <Input />
               </Form.Item>
               <Form.Item
                 name="video"

@@ -28,7 +28,7 @@ import { useNavigate } from 'react-router-dom';
 // const { TabPane } = Tabs;
 const { Title, Text } = Typography;
 
-const DashboardInstructor: React.FC = () => {
+const AboutStudent: React.FC = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
@@ -65,7 +65,7 @@ const DashboardInstructor: React.FC = () => {
   const formattedCreatedAt = new Date(currentUser.created_at).toLocaleDateString('en-GB');
   const handleEdit = (userId: string) => {
     // navigate(`/instructor/profile-instructor/view-session/${courseId}`);
-    navigate(`/instructor/profile-instructor/instructor-setting/${userId}`);
+    navigate(`/student/profile-student/info-student/${userId}`);
    
   };
 
@@ -159,6 +159,6 @@ const DashboardInstructor: React.FC = () => {
   );
 };
 
-export default DashboardInstructor;
+export default AboutStudent;
 
 

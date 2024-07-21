@@ -18,6 +18,8 @@ const StudentPage: React.FC = () => {
           <Route path={`/`} element={<AboutStudent />} />
           <Route path={`course-student`} element={<MyCourseStudent />} />
           <Route path={`info-student`} element={<ProfileStudent />} />
+          <Route path={`info-student/:userId/`} element={<ProfileStudent />} />
+         
           <Route path={`student-changepassword`} element={<ChangepasswordStu />} />
           <Route path={`certificate-student`} element={<Certificate/>} />
         </Routes>
