@@ -22,7 +22,7 @@ import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import Certificate from './Certificate';
 import RouterLesson from './RouterLesson';
-
+import Checkout from 'pages/Checkout';
 export default function StudentRouter() {
 
   // const LayoutStudent = React.lazy(() => import("../../components/layout/LayoutStudent"));
@@ -69,6 +69,8 @@ export default function StudentRouter() {
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["student"]}><TopInstructorPage /></ProtectedRouter>} />
                     <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={["student"]}><Certificate /></ProtectedRouter>} />
+                    <Route path={`checkout`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
+
                     </Route>
                </Routes>
 
