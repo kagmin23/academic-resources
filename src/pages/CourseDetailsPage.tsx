@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Modal, Tabs, Avatar, Badge, message } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import { createCart } from 'services/All/CartApiService';
+import { getCourseDetail } from 'services/User/clientApiService';
 import {
     CommentOutlined,
     DislikeOutlined,
@@ -16,8 +17,62 @@ import {
 
 const { TabPane } = Tabs;
 
+interface CourseDetailType {
+    _id: string,
+    name: string,
+    description: string,
+    category_id: string,
+    category_name: string,
+    status: string,
+    video_url: string,
+    image_url: string,
+    price_paid: number,
+    price: number,
+    discount: number,
+    average_rating: number,
+    review_count: number,
+    instructor_id: string,
+    instructor_name: string,
+    full_time: number,
+    session_list: {
+        _id: string,
+        name: string,
+        position_order: number,
+        lession_list: {
+            _id: string,
+            name: string,
+            lession_type: string,
+            position_order: number,
+            full_time: number,
+        }
+    }[],
+    is_in_cart: boolean,
+    is_purchased: boolean,
+    created_at: Date,
+    updated_at: Date,
+    is_deleted: boolean,
+}
+
 const CourseDetail: React.FC = () => {
+    const { courseId } = useParams<{ courseId: string }>();
+    const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+
+    useEffect(() => {
+        if (!courseId) {
+            console.error('Course ID is not available');
+            return;
+        }
+        const fetchCourseDetail = async () => {
+            try {
+                const response = await getCourseDetail(courseId);
+                setCourseDetail(response.data);
+            } catch (error) {
+                console.error('Failed to fetch course details:', error);
+            }
+        };
+        fetchCourseDetail();
+    }, [courseId]);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -28,9 +83,13 @@ const CourseDetail: React.FC = () => {
     };
 
     const handleAddToCart = async () => {
+        if (!courseId) {
+            message.error('Course ID is not available');
+            return;
+        }
         try {
             const response = await createCart({
-                course_id: 'courseId',
+                course_id: courseId,
             });
             console.log('Cart item added successfully:', response.data);
             message.success('Course added to cart successfully!');
@@ -60,6 +119,10 @@ const CourseDetail: React.FC = () => {
         { stars: 1, percentage: 0 },
     ];
 
+    if (!courseDetail) {
+        return <div>Loading...</div>;
+    }
+
     return (
         <div className="text-white bg-gray-900 wrapper">
             <div className="py-8">
@@ -88,26 +151,31 @@ const CourseDetail: React.FC = () => {
                         </div>
 
                         <div className="w-full mt-8 lg:w-2/3 lg:ml-8 lg:mt-0">
-                            <h2 className="text-2xl font-bold">The Web Developer Bootcamp</h2>
-                            <p className="mt-3 text-lg">The only course you need to learn web development - HTML, CSS, JS, Node, and More!</p>
+                            <h2 className="text-2xl font-bold">{courseDetail.name}</h2>
+                            <p className="mt-3 text-lg">{courseDetail.description}</p>
                             <div className="flex items-center mt-4 text-lg ">
                                 <div className='p-1 bg-yellow-500 rounded-lg'>
                                     <StarOutlined className="font-semibold text-white " />
-                                    <span className="ml-2 ">5.3.2</span>
+                                    <span className="ml-2 ">{courseDetail.average_rating}</span>
                                 </div>
-                                <span className="ml-2">(81,665 ratings)</span>
+                                <span className="ml-2">({courseDetail.average_rating} ratings)</span>
                             </div>
-                            <p className="mt-3 text-lg">114,521 students enrolled</p>
+                            <p className="mt-3 text-lg">{courseDetail.review_count} students enrolled</p>
                             <div className="flex items-center mt-4 mb-3 text-lg">
                                 <CommentOutlined className="" />
                                 <span className="ml-2">English</span>
                             </div>
-                            <p className="mt-2 text-lg">Last updated 1/2024</p>
+                            <p className="mt-2 text-lg">Last updated {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                             <div className="mt-4 ">
                                 <Button type="primary" className="p-5 mr-2 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
-                                <Link to={`/student/buy-now`}><Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>Buy Now</Button></Link>
+
+                                <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
+                                    <Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>
+                                        Buy Now
+                                    </Button>
+                                </Link>
+
                             </div>
-                            
                             <p className="mt-2 text-lg">30-Day Money-Back Guarantee</p>
                         </div>
                     </div>
@@ -117,9 +185,9 @@ const CourseDetail: React.FC = () => {
                 <div className="container px-3 mx-auto">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                            <Avatar src="images/left-imgs/img-1.jpg" size="large" />
+                            <Avatar src={courseDetail.instructor_id} size="large" />
                             <div className="flex flex-col ml-4">
-                                <a href="#" className="mb-3 text-lg font-semibold text-black">Johnson Smith</a>
+                                <a href="#" className="mb-3 text-lg font-semibold text-black">{courseDetail.instructor_name}</a>
                                 <Button type="default" className="p-5 ml-2 text-lg font-semibold text-white bg-red-600">Subscribe</Button>
                             </div>
                         </div>
@@ -144,42 +212,48 @@ const CourseDetail: React.FC = () => {
                             </div>
                             <div className="flex justify-center w-full mt-2 sm:w-auto sm:justify-start sm:mt-0">
                                 <Badge showZero className="flex flex-col items-center p-4 ml-0 border border-gray-300 rounded-lg sm:ml-2">
-                                    <ShareAltOutlined className="mb-2 text-2xl" />
-                                    <span>9</span>
+                                    <ShareAltOutlined className="mb-2 mr-1 text-2xl" />
+                                    <span>75</span>
                                 </Badge>
                             </div>
                         </div>
-
                     </div>
-                    <Tabs defaultActiveKey="1" className="mt-4">
-                        <TabPane tab={<span className='text-xl font-semibold'>About</span>} key="1">
-                            <div>
-                                <h3 className='mb-2 text-2xl font-semibold'>Requirements</h3>
-                                <ul className="ml-6 text-xl text-gray-600 list-disc">
-                                    <li>Have a computer with Internet</li>
-                                    <li>Be ready to learn an insane amount of awesome stuff</li>
-                                    <li>Prepare to build real web apps!</li>
-                                </ul>
+                </div>
+            </div>
+            <div className="py-8 bg-white">
+                <div className="container px-3 mx-auto">
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab={<span className="text-lg font-semibold text-black">Overview</span>} key="1">
+                            <div className="mt-4">
+                                <h3 className="mb-2 text-2xl font-semibold text-black">Course Description</h3>
+                                <p className="text-lg text-black">{courseDetail.description}</p>
+                            </div>
+                            <div className="mt-4">
+                                <h3 className="mb-2 text-2xl font-semibold text-black">Instructor</h3>
+                                <p className="text-lg text-black">{courseDetail.instructor_name}</p>
                             </div>
                         </TabPane>
-                        <TabPane tab={<span className='text-xl font-semibold'>Instructor</span>} key="2">
-                            <div>
-                                <h3 className='mb-2 text-2xl font-semibold'>Johnson Smith</h3>
-                                <p className="text-xl text-gray-600">Lorem ipsum dolor sit amet consectetur adipisicing elit. At maiores quam doloribus ullam quasi. Expedita sapiente aut sit natus autem et voluptates labore, ipsa molestias tempora reiciendis illo nostrum magnam!</p>
-                            </div>
-                        </TabPane>
-                        <TabPane tab={<span className='text-xl font-semibold'>Reviews</span>} key="3">
-                            <div>
-                                <h3 className='mb-2 text-2xl font-semibold'>Reviews</h3>
+                        <TabPane tab={<span className="text-lg font-semibold text-black">Reviews</span>} key="2">
+                            <div className="mt-4">
                                 {ratings.map((rating, index) => (
-                                    <div key={index} className="flex items-center mb-2">
-                                        <div className="flex-shrink-0 w-1/5">{renderStars(rating.stars)}</div>
-                                        <div className="flex-grow w-4/5 bg-gray-200">
-                                            <div className="h-4 bg-yellow-500" style={{ width: `${rating.percentage}%` }}></div>
+                                    <div key={index} className="flex items-center mb-4">
+                                        <div className="flex-shrink-0">{renderStars(rating.stars)}</div>
+                                        <div className="flex-grow h-2 ml-4 bg-gray-200">
+                                            <div className="h-2 bg-yellow-500" style={{ width: `${rating.percentage}%` }}></div>
                                         </div>
-                                        <div className="ml-2">{rating.percentage}%</div>
+                                        <div className="flex-shrink-0 ml-4">{rating.percentage}%</div>
                                     </div>
                                 ))}
+                            </div>
+                        </TabPane>
+                        <TabPane tab={<span className="text-lg font-semibold text-black">Q&A</span>} key="3">
+                            <div className="mt-4">
+                                <h3 className="mb-2 text-2xl font-semibold text-black">Course Description</h3>
+                                <p className="text-lg text-black">{courseDetail.description}</p>
+                            </div>
+                            <div className="mt-4">
+                                <h3 className="mb-2 text-2xl font-semibold text-black">Instructor</h3>
+                                <p className="text-lg text-black">{courseDetail.instructor_name}</p>
                             </div>
                         </TabPane>
                     </Tabs>

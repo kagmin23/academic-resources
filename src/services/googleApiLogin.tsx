@@ -2,6 +2,7 @@ import axios from 'axios';
 import { HOST_MAIN } from './apiService';
 
 interface User {
+  _id:string;
   email: string;
   password: string;
   name: string;
@@ -9,6 +10,13 @@ interface User {
   image: string;
   status: boolean;
   data: string;
+  description:string;
+  phone_number:string;
+  avatar:string;
+  dob:Date;
+  created_at:Date;
+  updated_at:Date;
+
 }
 
 export const loginViaGoogle = async (

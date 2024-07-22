@@ -71,7 +71,9 @@ const LayoutStudent: React.FC = () => {
       </Menu.Item>
       <SubMenu key="2" title="Settings">
         <Menu.Item key="setting:1">
-          <Link to="/student/profile-student/info-student">Personal Info</Link>
+          
+          <Link to={`/student/profile-student/info-student/${currentUser ? currentUser._id : ''}`}>Personal Info</Link>
+
         </Menu.Item>
         <Menu.Item key="setting:2">
           <Link to="/student/profile-student/student-changepassword">Change Password</Link>
@@ -203,8 +205,8 @@ const LayoutStudent: React.FC = () => {
           </Menu.Item>
         </Menu>
       </Drawer>
-      <Content className="p-4 pt-16">
-        <div className="p-4 bg-white rounded shadow">
+      <Content className=" pt-10 pb-3 ">
+        <div className="p-4 m-0 ">
           <Outlet />
         </div>
       </Content>

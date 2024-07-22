@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, ConfigProvider } from 'antd';
+import { Button, Card, ConfigProvider, Select, message, Checkbox } from 'antd';
 import sp from '../assets/sp.jpg';
-import { getCarts, deleteCart } from 'services/All/CartApiService';
+import { getCarts, deleteCart, updateCartStatus } from 'services/All/CartApiService';
+import { getCourse } from 'services/Instructor/courseApiService';
 import { TinyColor } from '@ctrl/tinycolor';
+
+const { Option } = Select;
 
 // Color Button
 const colors1 = ['#6253E1', '#04BEFE'];
@@ -22,18 +25,25 @@ const cardTitleStyle: React.CSSProperties = {
   fontWeight: 'bold',
 };
 
+const statusColors = {
+  new: 'blue',
+  waiting_paid: 'orange',
+  cancel: 'red',
+  completed: 'green',
+};
+
 export default function ShoppingCart() {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchCarts() {
       setLoading(true);
       try {
         const response = await getCarts('', 1, 10);
-        // Ensure response.data is an array
-        if (Array.isArray(response.data)) {
-          setCourses(response.data); // Update with actual data path
+        if (response.data && Array.isArray(response.data.pageData)) {
+          setCourses(response.data.pageData);
         } else {
           console.error('Response data is not an array:', response.data);
         }
@@ -51,17 +61,46 @@ export default function ShoppingCart() {
     try {
       await deleteCart(courseId);
       setCourses((prevCourses) =>
-        prevCourses.filter((course) => course.id !== courseId)
+        prevCourses.filter((course) => course._id !== courseId)
+      );
+      setSelectedCourses((prevSelected) =>
+        prevSelected.filter((id) => id !== courseId)
       );
     } catch (error) {
       console.error('Failed to delete cart item:', error);
     }
   };
 
-  // Check if courses is an array before using reduce
-  const totalPrice: number = Array.isArray(courses) ? courses.reduce((total, course) => total + parseFloat(course.price.replace('.', '')), 0) : 0;
-  const discount: number = Array.isArray(courses) && courses.length >= 2 ? 0.1 : 0;
-  const finalPrice: number = (totalPrice * (1 - discount));
+  const handleStatusChange = (value: string, courseId: string) => {
+    setCourses((prevCourses) =>
+      prevCourses.map((course) =>
+        course._id === courseId ? { ...course, status: value } : course
+      )
+    );
+  };
+
+  const handleUpdateStatus = async (courseId: string, cartNo: string, status: string) => {
+    try {
+      const items = [{ _id: courseId, cart_no: cartNo }];
+      await updateCartStatus(status, items);
+      message.success('Status updated successfully');
+    } catch (error) {
+      console.error('Failed to update cart status:', error);
+      message.error('Failed to update status');
+    }
+  };
+
+  const handleCheckboxChange = (courseId: string) => {
+    setSelectedCourses((prevSelected) =>
+      prevSelected.includes(courseId)
+        ? prevSelected.filter((id) => id !== courseId)
+        : [...prevSelected, courseId]
+    );
+  };
+
+  const selectedTotalPrice = courses
+    .filter((course) => selectedCourses.includes(course._id))
+    .reduce((total, course) => total + course.price * (1 - course.discount), 0);
 
   return (
     <div className="w-full min-h-screen mx-auto bg-gray-200">
@@ -74,8 +113,12 @@ export default function ShoppingCart() {
             {loading ? (
               <div>Loading...</div>
             ) : (
-              courses.map((course, index) => (
-                <Card.Grid key={index} style={gridStyle} className="md:flex">
+              courses.map((course) => (
+                <Card.Grid key={course._id} style={gridStyle} className="md:flex">
+                  <Checkbox className='mr-4'
+                    checked={selectedCourses.includes(course._id)}
+                    onChange={() => handleCheckboxChange(course._id)}
+                  />
                   <img
                     src={course.image || sp}
                     alt="Product"
@@ -84,20 +127,40 @@ export default function ShoppingCart() {
                   <div className="w-full md:flex md:w-2/3">
                     <div className="flex-grow mx-4">
                       <div className="w-full font-bold text-center md:text-lg sm:text-sm md:text-left">
-                        {course.name}
+                        {course.course_name}
                       </div>
                       <div className="w-full font-medium text-center md:text-base sm:text-xs text-slate-500 md:text-left">
-                        By: {course.author}
+                        By: {course.instructor_name}
                       </div>
+                      <Select
+                        value={course.status}
+                        onChange={(value) => handleStatusChange(value, course._id)}
+                        className="mt-2"
+                      >
+                        <Option value="new">New</Option>
+                        <Option value="waiting_paid">Waiting Paid</Option>
+                        <Option value="cancel">Cancel</Option>
+                        <Option value="completed">Completed</Option>
+                      </Select>
+                      <Button
+                        type="primary"
+                        className="mt-2"
+                        onClick={() => handleUpdateStatus(course._id, course.cart_no, course.status)}
+                      >
+                        Update Status
+                      </Button>
                     </div>
                     <div className="md:w-1/5">
                       <div className="font-semibold text-center md:text-lg sm:text-sm">
-                        <p>{course.price} VNĐ</p>
+                        <div>
+                          <span style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} VNĐ</span> <span>({course.discount * 100}%)</span>
+                        </div>
+                        <div>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} VNĐ</div>
                       </div>
                       <Button
                         danger
                         className="w-full mt-5 font-bold text-center md:mt-16"
-                        onClick={() => handleDelete(course.id)}
+                        onClick={() => handleDelete(course._id)}
                       >
                         Delete
                       </Button>
@@ -115,15 +178,11 @@ export default function ShoppingCart() {
             </div>
             <div className="flex justify-between my-4 text-base font-medium">
               <div>Original Price</div>
-              <div>{totalPrice.toLocaleString('vi-VN')}</div>
-            </div>
-            <div className="flex justify-between my-4 text-base font-medium">
-              <div>Discount Price</div>
-              <div>{(totalPrice * discount).toLocaleString('vi-VN')}</div>
+              <div>{selectedTotalPrice.toLocaleString('vi-VN')} VNĐ</div>
             </div>
             <div className="flex justify-between py-5 text-xl font-bold border-t border-gray-500">
               <div>Total:</div>
-              <div>{finalPrice.toLocaleString('vi-VN')} VNĐ</div>
+              <div>{selectedTotalPrice.toLocaleString('vi-VN')} VNĐ</div>
             </div>
             <ConfigProvider
               theme={{
@@ -139,7 +198,7 @@ export default function ShoppingCart() {
             >
               <a href="">
                 <Button type="primary" size="large" className="w-full">
-                  Checkout Now
+                  Proceed to Checkout
                 </Button>
               </a>
             </ConfigProvider>

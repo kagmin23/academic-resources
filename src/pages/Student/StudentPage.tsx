@@ -10,13 +10,16 @@ import ManagerStudentPurchase from './ManagerPurchase';
 
 const StudentPage: React.FC = () => {
   return (
-    <div className="flex">
-      <SidebarStudent />
-      <div className="flex-grow p-4 bg-white rounded shadow-md">
+    <div className="flex min-h-screen">
+    <SidebarStudent />
+      {/* <div className="flex-grow p-4 bg-white rounded shadow-md"> */}
+      <div className="flex-grow pl-4 ">
         <Routes>
           <Route path={`/`} element={<AboutStudent />} />
           <Route path={`course-student`} element={<MyCourseStudent />} />
           <Route path={`info-student`} element={<ProfileStudent />} />
+          <Route path={`info-student/:userId/`} element={<ProfileStudent />} />
+         
           <Route path={`student-changepassword`} element={<ChangepasswordStu />} />
           <Route path={`certificate-student`} element={<Certificate />} />
           <Route path={`manager-student-purchase`} element={<ManagerStudentPurchase />} />

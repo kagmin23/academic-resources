@@ -1,23 +1,23 @@
 import ChangepasswordIns from 'pages/Instructor/ChangePasswordIns';
 import DashboardInstructor from 'pages/Instructor/DashboardInstructor';
-import ViewLesson from 'pages/Instructor/ViewLesson';
 import Setting from 'pages/Setting';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LessonInstructor from '../Instructor/LessonInstructor';
+import ManagerInstructor from '../Instructor/ManagerInstructor';
 import SidebarInstructor from '../Instructor/SidebarInstructor';
-import ManagerInstructor from './CourseInstructor';
 import ManagerCertificate from './ManagerCertificate';
 import SessionInstructor from './SessionInstructor';
 import ViewSession from './ViewSession';
 import ManagerInstructorPurchase from './ManagerInstructorPurchase';
+import ViewLesson from 'pages/Instructor/ViewLesson';
 
 const InstructorPage: React.FC = () => {
   return (
     <div className="flex">
-      <div className='h-[88vh]'>
+      <div className='h-[91vh] '>
     <SidebarInstructor /></div>
-      <div className="flex-grow min-h-screen ml-4">
+      <div className="flex-grow ml-4 h-screen overflow-auto hide-scrollbar" >
         <Routes>
           <Route path={`/`} element={<DashboardInstructor />} />
           <Route path={`manager-instructor-course/`} element={<ManagerInstructor />} />
@@ -28,6 +28,7 @@ const InstructorPage: React.FC = () => {
           <Route path={`manager-instructor-purchase`} element={<ManagerInstructorPurchase />} />
 
           <Route path={`instructor-setting`} element={<Setting />} />
+          <Route path={`instructor-setting/:userId/`} element={<Setting />} />
           <Route path={`instructor-changepassword`} element={<ChangepasswordIns />} />
           {/* <Route path={`view-session`} element={<ViewSession/>}/> */}
           

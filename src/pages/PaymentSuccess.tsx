@@ -1,11 +1,12 @@
 import { Button } from "antd";
+import  {CheckCircleFilled } from '@ant-design/icons' ;
 // import Lottie from "lottie-react";
 import { Link } from 'react-router-dom';
 export default function PaymentSuccess() {
   return (
     <div className='w-full my-8' >
         <div className='flex justify-center'>
-        {/* <CheckCircleFilled className="text-green-700 text-8xl" /> */}
+        <CheckCircleFilled className="text-green-700 text-8xl" />
         {/* <Lottie animationData={image} className='w-36 h-36'  loop={false} />; */}
         </div>
         

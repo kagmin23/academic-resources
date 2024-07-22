@@ -50,6 +50,9 @@ const AppRouter: React.FC = () => (
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/add-blog/*" element={<AddBlog />} />
           <Route path={`course-details`} element={<CourseDetailsPage />} />
+          <Route path="course-details/:courseId/"element={<CourseDetailsPage />} />
+
+
           <Route path="/detail-blog" element={<DetailBlogPage />} />
           <Route path="/course" element={<CoursePage />} />
           <Route path="/about" element={<About />} />

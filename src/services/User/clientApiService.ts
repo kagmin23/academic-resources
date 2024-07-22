@@ -23,7 +23,7 @@ export const getCourses = async (keyword: string, category_id: string, pageNum: 
 };
 
 export const getCourseDetail = async (courseId: string) => {
-  const token = localStorage.getItem('');
+  const token = localStorage.getItem(''); 
 
   return apiRequest(`/api/client/course/${courseId}`, {
     method: 'GET',
