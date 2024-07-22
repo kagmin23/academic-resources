@@ -32,9 +32,11 @@ const AdminPage: React.FC = () => {
   return (
     <div>
       <LayoutAdmin />
-    <div className="flex min-h-screen mb-5">
-      <Sidebar />
-      <div className="flex-grow p-4 bg-white rounded shadow-md">
+      <div className="flex h-svh  overflow-hidden ">
+      <div className=''>
+        <Sidebar />
+      </div>
+      <div className="flex-grow p-4 overflow-auto h-full bg-white rounded ">
         <Routes>
         <Route path={`/`} element={<Dashboard />} />
         <Route path={`dashboard`} element={<Dashboard />} />
