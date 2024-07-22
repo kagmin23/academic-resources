@@ -1,10 +1,10 @@
+import { ExclamationCircleOutlined, HeartOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
+import { Avatar, Button, Modal, Tabs, message } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Tabs, Avatar, message } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { createCart } from 'services/All/CartApiService';
+import { createOrUpdate } from 'services/All/subcriptionApiService';
 import { getCourseDetail } from 'services/User/clientApiService';
-import { createOrUpdate } from 'services/All/SubcriptionApiService';
-import { CommentOutlined, ExclamationCircleOutlined, PlayCircleOutlined, HeartOutlined, StarOutlined } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
 
@@ -123,14 +123,6 @@ const CourseDetail: React.FC = () => {
         return stars;
     };
 
-    const ratings = [
-        { stars: 5, percentage: 70 },
-        { stars: 4, percentage: 40 },
-        { stars: 3, percentage: 5 },
-        { stars: 2, percentage: 2 },
-        { stars: 1, percentage: 0 },
-    ];
-
     if (!courseDetail) {
         return <div>Loading...</div>;
     }
@@ -170,12 +162,12 @@ const CourseDetail: React.FC = () => {
                                     <StarOutlined className="font-semibold text-white " />
                                     <span className="ml-2 ">{courseDetail.average_rating}</span>
                                 </div>
-                                <span className="ml-2">({courseDetail.average_rating} ratings)</span>
+                                <span className="ml-2">({courseDetail.average_rating} Ratings)</span>
                             </div>
                             <p className="mt-3 text-lg">{courseDetail.review_count} students enrolled</p>
                             <div className="flex items-center mt-4 mb-3 text-lg">
-                                <CommentOutlined className="" />
-                                <span className="ml-2">English</span>
+                                {courseDetail.category_name}
+                            
                             </div>
                             <p className="mt-2 text-lg">Last updated {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                             <div className="mt-4 ">
@@ -228,7 +220,7 @@ const CourseDetail: React.FC = () => {
                                                 {session.lession_list && session.lession_list.length > 0 ? (
                                                     session.lession_list.map((lesson) => (
                                                         <li key={lesson._id} className="flex items-center py-2">
-                                                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200"></div>
+                                                            <div className="flex-shrink-0 w-8 h-8 bg-gray-200 rounded-full"></div>
                                                             <div className="ml-4">
                                                                 <div className="text-lg font-medium">{lesson.name}</div>
                                                                 <div className="text-gray-600">{lesson.lession_type} - {lesson.full_time} mins</div>

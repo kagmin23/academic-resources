@@ -1,4 +1,3 @@
-
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
 import {Button,Col, Form,Image, Input, Layout, Modal, Row, Select, Spin,Switch,Table,Typography,message} from "antd";
@@ -34,7 +33,7 @@ const ManagerCourseInstructor: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [category, setCategory] = useState<Category | null>(null);
   const [comment, setComment] = useState('');
-  const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
+  // const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
   const [commentForm] = Form.useForm();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
