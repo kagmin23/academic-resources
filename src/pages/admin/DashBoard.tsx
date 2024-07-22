@@ -5,7 +5,7 @@ import {
   FlagOutlined,
   UserOutlined
 } from '@ant-design/icons';
-import { Card, Col, DatePicker, Progress, Row, Space, Typography } from 'antd';
+import { Card, Col, DatePicker, Layout, Progress, Row, Space, Typography } from 'antd';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
 import React, { useState } from 'react';
@@ -62,6 +62,7 @@ const Dashboard: React.FC = () => {
   };
 
   return (
+    <Layout>
     <div className="p-4">
       <Title level={2} className="mb-8 text-center">Academic Dashboard</Title>
 
@@ -166,6 +167,7 @@ const Dashboard: React.FC = () => {
         </Col>
       </Row>
     </div>
+    </Layout>
   );
 };
 
