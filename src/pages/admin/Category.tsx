@@ -230,9 +230,6 @@ const CategoryAdmin: React.FC = () => {
           />
         </div>
       </Content>
-      <Footer style={{ textAlign: 'center' }}>
-        Academic_Resources ©2024 Created by Group 4
-      </Footer>
       <Modal
           title={modalData ? "Edit Category" : "Add New Category"}
           visible={isAddEditModalVisible}

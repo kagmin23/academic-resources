@@ -322,7 +322,6 @@ const CourseAdmin: React.FC = () => {
             <h1>Comment: ...</h1>
           </Modal>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
       </Layout>
     </Layout>
   );

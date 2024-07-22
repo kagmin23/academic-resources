@@ -125,7 +125,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          <Badge count={notificationCountBell} offset={[3, 1]}>
+         {/*  <Badge count={notificationCountBell} offset={[3, 1]}>
             <div className="flex items-center space-x-4 text-xl text-white">
               <BellOutlined />
             </div>
@@ -137,7 +137,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
                 <MailOutlined className="text-xl" />
               </Link>
             </div>
-          </Badge>
+          </Badge> */}
 
           <Badge count={notificationCountCart} offset={[5, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">

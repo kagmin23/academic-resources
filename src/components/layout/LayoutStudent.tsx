@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
+import { getCarts } from '../../services/All/CartApiService'; // Adjust path as per your project structure
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -14,26 +15,45 @@ const LayoutStudent: React.FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null); // Define type based on your API response
+  const [notificationCountCart, setNotificationCountCart] = useState<number>(0);
   const navigate = useNavigate();
 
   const notificationCountBell = 5;
-  const notificationCountCart = 3;
+
+  const fetchCurrentUser = async () => {
+    try {
+      const response = await getCurrentUser(); // Fetch current user data including avatar
+      if (response.success) {
+        setCurrentUser(response.data);
+      } else {
+        console.error('Failed to fetch current user:', response.error);
+      }
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+  };
+
+  const fetchCartData = async () => {
+    try {
+      const response = await getCarts('', 1, 100); // Fetch cart data with a large page size to get all items
+      if (response.success) {
+        setNotificationCountCart(response.data.length);
+      } else {
+        console.error('Failed to fetch cart data:', response.error);
+      }
+    } catch (error) {
+      console.error('Error fetching cart data:', error);
+    }
+  };
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await getCurrentUser(); // Fetch current user data including avatar
-        if (response.success) {
-          setCurrentUser(response.data);
-        } else {
-          console.error('Failed to fetch current user:', response.error);
-        }
-      } catch (error) {
-        console.error('Error fetching current user:', error);
-      }
-    };
-
     fetchCurrentUser();
+    fetchCartData();
+  }, []);
+
+  useEffect(() => {
+    const interval = setInterval(fetchCartData, 5000); // Fetch cart data every 5 seconds
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
 
   const handleMenuClick = (e: { key: string }) => {
@@ -71,9 +91,7 @@ const LayoutStudent: React.FC = () => {
       </Menu.Item>
       <SubMenu key="2" title="Settings">
         <Menu.Item key="setting:1">
-          
           <Link to={`/student/profile-student/info-student/${currentUser ? currentUser._id : ''}`}>Personal Info</Link>
-
         </Menu.Item>
         <Menu.Item key="setting:2">
           <Link to="/student/profile-student/student-changepassword">Change Password</Link>
@@ -101,7 +119,7 @@ const LayoutStudent: React.FC = () => {
             className="hidden ml-4 w-72 md:block md:w-96"
           />
           
-          <Badge count={notificationCountBell} offset={[2, 5]}>
+          {/* <Badge count={notificationCountBell} offset={[2, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">
               <Link to={'#'}>
                 <BellOutlined />
@@ -115,7 +133,7 @@ const LayoutStudent: React.FC = () => {
                 <MailOutlined className="text-xl" />
               </Link>
             </div>
-          </Badge>
+          </Badge> */}
 
           <Badge count={notificationCountCart} offset={[5, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">
@@ -205,8 +223,8 @@ const LayoutStudent: React.FC = () => {
           </Menu.Item>
         </Menu>
       </Drawer>
-      <Content className=" pt-10 pb-3 ">
-        <div className="p-4 m-0 ">
+      <Content className="pt-10 pb-3">
+        <div className="p-4 m-0">
           <Outlet />
         </div>
       </Content>
