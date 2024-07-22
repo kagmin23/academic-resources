@@ -47,6 +47,11 @@ const SidebarStudent: React.FC = () => {
       href: "/student/profile-student/course-student",
     },
     {
+      icon: ScheduleOutlined,
+      heading: 'Subscription',
+      href: "/student/profile-student/student-subscription",
+    },
+    {
       icon: ContainerOutlined,
       heading: 'Certificates',
       href: "/student/profile-student/certificate-student",
