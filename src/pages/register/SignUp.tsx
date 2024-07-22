@@ -1,9 +1,9 @@
-import { CheckCircleOutlined, GoogleOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Radio, DatePicker, notification } from 'antd';
+import { GoogleOutlined } from '@ant-design/icons';
+import { Button, Checkbox, DatePicker, Form, Input, Radio, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { registerUser, RegisterUser } from '../../services/registerApiService';
+import { RegisterUser, registerUser } from '../../services/registerApiService';
 import FileUploader from './UploadFile';
 
 const SignUp: React.FC = () => {
@@ -92,7 +92,7 @@ const SignUp: React.FC = () => {
       console.error('Registration failed:', error);
 
       notification.error({
-        message: 'Registration Error',
+message: 'Registration Error',
         description: 'There was an error with your registration. Please try again.',
       });
     }
@@ -168,13 +168,13 @@ const SignUp: React.FC = () => {
       title: 'Update',
       content: (
         <Form form={form} className="space-y-4">
-          <div className="flex gap-4 flex-wrap">
+          <div className="flex flex-wrap gap-4">
             {value === 'instructor' && (
               <Form.Item
                 name="videoUrl"
                 rules={[{ required: true, message: 'Please upload a video!' }]}
               >
-                <FileUploader type="video" onUploadSuccess={handleVideoUploadSuccess} />
+<FileUploader type="video" onUploadSuccess={handleVideoUploadSuccess} />
               </Form.Item>
             )}
             <Form.Item
