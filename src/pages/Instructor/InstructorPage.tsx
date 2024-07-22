@@ -10,6 +10,7 @@ import ManagerInstructor from './CourseInstructor';
 import ManagerCertificate from './ManagerCertificate';
 import SessionInstructor from './SessionInstructor';
 import ViewSession from './ViewSession';
+import ManagerInstructorPurchase from './ManagerInstructorPurchase';
 
 const InstructorPage: React.FC = () => {
   return (
@@ -24,6 +25,8 @@ const InstructorPage: React.FC = () => {
           <Route path={`manager-instructor-lesson`} element={<LessonInstructor />} />
           <Route path={`manager-instructor-session`} element={<SessionInstructor />} />
           <Route path={`manager-instructor-certificate`} element={<ManagerCertificate   />} />
+          <Route path={`manager-instructor-purchase`} element={<ManagerInstructorPurchase />} />
+
           <Route path={`instructor-setting`} element={<Setting />} />
           <Route path={`instructor-changepassword`} element={<ChangepasswordIns />} />
           {/* <Route path={`view-session`} element={<ViewSession/>}/> */}
