@@ -183,7 +183,6 @@ const NewCourseAdmin: React.FC = () => {
             />
           </div>
         </Content>
-        <Footer style={{ textAlign: 'center' }}>Academic_Resources ©2024 Created by Group 4</Footer>
       </Layout>
       <Modal title="Unapprove Course" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
 

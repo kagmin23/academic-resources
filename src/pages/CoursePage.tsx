@@ -4,24 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import clientCoursesApiService from 'services/clientCoursesApiService';
 
-const items = [
-  { key: '1', label: 'Popular' },
-  { key: '2', label: 'Free' },
-  { key: '3', label: 'Rate' },
-  { key: '4', label: 'Name Course' },
-  {
-    key: 'category',
-    label: 'Category',
-    children: [
-      { key: '5', label: 'HTML/CSS' },
-      { key: '6', label: 'Java' },
-      { key: '7', label: 'Typescript' },
-      { key: '8', label: 'C#' },
-      { key: '9', label: 'Javascript' },
-      { key: '10', label: 'C++' },
-    ],
-  },
-];
+
 
 const CoursePage: React.FC = () => {
   const [courses, setCourses] = useState<ClientCourses[]>([]);
@@ -77,7 +60,6 @@ const CoursePage: React.FC = () => {
                 defaultSelectedKeys={['1']}
                 defaultOpenKeys={['sub1']}
                 mode="inline"
-                items={items}
                 theme="dark"
                 className='w-2/3 h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
               />
@@ -102,7 +84,6 @@ const CoursePage: React.FC = () => {
               defaultSelectedKeys={['1']}
               defaultOpenKeys={['sub1']}
               mode="inline"
-              items={items}
               theme="dark"
               className='w-full h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
             />
