@@ -1,6 +1,4 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
-import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
 import { Editor } from '@tinymce/tinymce-react';
 import {
   Button,
@@ -12,45 +10,31 @@ import {
   Modal,
   Row,
   Select,
+  Spin,
   Switch,
   Table,
   Typography,
   message,
 } from "antd";
+import React, { useEffect, useState } from "react";
 
-import { Category } from "models/types";
+import { Category, Course, LogStatus } from "models/types";
+import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
 import { useNavigate } from 'react-router-dom';
 
-import { getCategories } from "../../services/AdminsApi/categoryApiService";
-import { getCourses } from "../../services/All/getCoursesApiService";
-import { createCourse, deleteCourse, updateCourse } from "../../services/Instructor/courseApiService";
+import { getCategories } from "services/AdminsApi/categoryApiService";
 import { changeCourseStatus } from "services/All/changerStatusApiService";
+import { getCourses } from "services/All/getCoursesApiService";
+import { logStatus } from "services/All/logStatusApiService";
+import { createCourse, deleteCourse, updateCourse } from "services/Instructor/courseApiService";
 import './stylesInstructor.css';
+
 
 const { confirm } = Modal;
 const { Header, Content } = Layout;
 const { Text } = Typography;
 const { TextArea } = Input;
-
-interface Course {
-  _id: string;
-  name: string;
-  category_id: string;
-  user_id: string;
-  description: string;
-  content: string;
-  status: string;
-  video_url: string;
-  image_url: string;
-  price: number;
-  discount: number;
-  created_at: Date;
-  updated_at: Date;
-  is_deleted: boolean;
-}
-
-
 
 const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Course[]>([]);
@@ -62,11 +46,15 @@ const ManagerCourseInstructor: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isSellChecked, setIsSellChecked] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [comment, setComment] = useState('');
-  // const [loading, setLoading] = useState<boolean>(true);
-  const [courses, setCourses] = useState<Course[]>([]);
   const [category, setCategory] = useState<Category | null>(null);
-
+  const [comment, setComment] = useState('');
+  // const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
+  const [commentForm] = Form.useForm();
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [logs, setLogs] = useState<LogStatus[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [course_id, setCourseId] = useState<string>("");
 
 
   const navigate = useNavigate();
@@ -80,14 +68,6 @@ const ManagerCourseInstructor: React.FC = () => {
   const hideLogModal = () => {
     setLogModalVisible(false);
   };
-
-  // if (loading) {
-  //   return <div>Loading...</div>;
-  // }
-
-  // if (!course) {
-  //   return <div>Loading...</div>;
-  // }
 
   useEffect(() => {
     fetchCategories();
@@ -107,6 +87,8 @@ const ManagerCourseInstructor: React.FC = () => {
   const fetchCourses = async () => {
     try {
       const response = await getCourses('', 1, 10);
+      console.log("courses", response);
+
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
@@ -142,34 +124,12 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
   const handleViewMore = (key: string) => {
+    setCourseId(key);
     setExpandedKeys((prevKeys) =>
       prevKeys.includes(key)
         ? prevKeys.filter((k) => k !== key)
         : [...prevKeys, key]
     );
-  };
-
-  const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
-    try {
-      console.log("courseId", courseId);
-      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
-      const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("response", response);
-
-      if (response) {
-        message.success('Changed Status Successfully!');
-        setCourses(prevCourses =>
-          prevCourses.map(course =>
-            course._id === courseId ? { ...course, status: newStatus } : course
-          )
-        );
-      }
-
-
-    } catch (error) {
-      message.error('Please enter the reason of this course!');
-      console.error('Error:', error);
-    }
   };
 
   const handleDelete = (record: Course) => {
@@ -235,7 +195,7 @@ const ManagerCourseInstructor: React.FC = () => {
         message.error('Validation failed');
       });
   };
-
+  
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter((item) =>
@@ -258,9 +218,57 @@ const ManagerCourseInstructor: React.FC = () => {
     });
   };
 
-  // Hàm handleViewSession để chuyển hướng
   const handleViewSession = (courseId: string) => {
     navigate(`/instructor/profile-instructor/view-session/${courseId}`);
+  };
+
+  const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
+    try {
+      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
+  
+      const course = courses.find(course => course._id === courseId);
+  
+      if (course?.status === 'reject' && (newStatus === 'active' || newStatus === 'inactive')) {
+        message.error('This course has been rejected and cannot be changed to Active or Inactive.');
+        return;
+      }
+  
+      const response = await changeCourseStatus(courseId, newStatus, comment);
+      console.log("response", response);
+  
+      if (response) {
+        message.success('Changed Status Successfully!');
+        setCourses(prevCourses =>
+          prevCourses.map(course =>
+            course._id === courseId ? { ...course, status: newStatus } : course
+          )
+        );
+      }
+    } catch (error) {
+      message.error('Please add your Session and Lesson!');
+      console.error('Error:', error);
+    }
+  };
+  
+
+  useEffect(() => {
+    debugger
+    if (logModalVisible) {
+      fetchLogStatus();
+    }
+  }, [logModalVisible]);
+
+  const fetchLogStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await logStatus(course_id, "", 1, 100);
+      setLogs(response.data.pageData);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch Logs Status");
+    } finally {
+      setLoading(false);
+    }
   };
 
 
@@ -269,41 +277,26 @@ const ManagerCourseInstructor: React.FC = () => {
       title: "Course Name",
       dataIndex: "name",
       key: "name",
-      // align: "center" as AlignType
     },
     {
       title: "Category",
       dataIndex: "category_name",
-      key: "category_id",
+      key: "category_name",
       align: "center" as AlignType
     },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "description",
-      // align: "center" as AlignType
-    },
     // {
-    //   title: "Video",
-    //   dataIndex: "video_url",
-    //   key: "video_url",
-    //   align: "center" as AlignType
-    // },
-    // {
-    //   title: "Image",
-    //   dataIndex: "image_url",
-    //   key: "image_url",
-    //   align: "center" as AlignType
+    //   title: "Description",
+    //   dataIndex: "description",
+    //   key: "description",
     // },
 
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      align: "center" as AlignType
     },
     {
-      title: "Discount",
+      title: "Discount (%)",
       dataIndex: "discount",
       key: "discount",
       align: "center" as AlignType
@@ -312,14 +305,17 @@ const ManagerCourseInstructor: React.FC = () => {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
     {
       title: "Update At",
       dataIndex: "updated_at",
       key: "updated_at",
-      align: "center" as AlignType
+      align: "center" as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
+    
     {
       title: "Status",
       dataIndex: "status",
@@ -348,19 +344,20 @@ const ManagerCourseInstructor: React.FC = () => {
                   </>
                 ),
                 onOk: () => onChangeStatus(record._id, newStatus, comment),
-                onCancel: () => { },
+                onCancel: () => {},
               });
             }}
             options={[
               { value: 'new', label: 'New' },
               { value: 'waiting_approve', label: 'Waiting Approve' },
-              { value: 'approve', label: 'Approve' },
-              { value: 'reject', label: 'Reject' },
+              { value: 'active', label: 'Active' },
+              { value: 'inactive', label: 'Inactive' },
             ]}
           />
         </div>
-      )
+      ),
     },
+    
     {
       title: "Actions",
       key: "actions",
@@ -368,7 +365,7 @@ const ManagerCourseInstructor: React.FC = () => {
       render: (text: string, record: Course) => (
         <div className="flex flex-row justify-center gap-1">
           <Button
-            size="small"
+	          size="small"
             icon={<EditOutlined />}
             className="text-blue-500"
             onClick={() => handleEdit(record)}
@@ -380,7 +377,7 @@ const ManagerCourseInstructor: React.FC = () => {
             className="text-red-400"
             onClick={() => showConfirm(record)}
           ></Button>
-
+          
           <Button
             size="small"
             icon={<EyeOutlined />}
@@ -395,7 +392,7 @@ const ManagerCourseInstructor: React.FC = () => {
     <Layout style={{ minHeight: "100vh" }}>
       <Header className="p-0 bg-white">
         <div className="flex flex-row items-center justify-between gap-4 p-4 bg-[#939fb1]">
-          <div className="mx-4 my-auto text-lg font-bold text-white">
+        <div className="mx-4 my-auto text-lg font-bold text-white">
             Manager Course
           </div>
           <div className="h-6 border-r lg:mx-4"></div>
@@ -434,79 +431,96 @@ const ManagerCourseInstructor: React.FC = () => {
                   marginLeft: "25px",
                 }}
               >
-                <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
-                  <Col span={22} className="mb-5">
-                    <Typography.Title level={5}>Nội dung:</Typography.Title>
-                    <p>{record.content || "-"}</p>
-                  </Col>
+              <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
+              <Col span={22} className="mb-5">
+              <Typography.Title level={5}>Description:</Typography.Title>
+                       <p>{record.description || "-"}</p>
+              </Col>
+              <Col span={22} className="mb-5">
+              <Typography.Title level={5}>Content:</Typography.Title>
+                       <p>{record.content || "-"}</p>
+              </Col>
 
-                  <Col span={11} className="mb-5">
-                    <Typography.Title level={5}>Video:</Typography.Title>
-                    <iframe
-                      src={record.video_url}
-                      style={{ width: '100%', height: '315px' }}
-                      frameBorder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              <Col span={11} className="mb-5" style={{ height: '315px' }}>
+              <Typography.Title level={5}>Video:</Typography.Title>
+                    <iframe 
+                      src={record.video_url} 
+                      style={{ width: '400px', height: '300px' }} 
+                      frameBorder="0" 
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                       allowFullScreen>
                     </iframe>
-                  </Col>
+              </Col>
 
-                  <Col span={11} offset={1} className="mb-5">
-                    <Typography.Title level={5}>Hình ảnh:</Typography.Title>
-                    <Image
-                      src={record.image_url}
-                      style={{ width: '100%', height: 'auto' }}
-                    />
-                  </Col>
-                </Row>
+            <Col span={11} offset={1} className="mb-5" style={{ height: '315px' }}>
+            <Typography.Title level={5}>Image:</Typography.Title>
+                <Image 
+                    src={record.image_url} 
+                    style={{ width: '400px', height: '300px', objectFit: 'cover' }} 
+                />
+            </Col>
+            </Row>
 
-                <Modal
-                  visible={logModalVisible}
-                  onCancel={hideLogModal}
-                  footer={null}
-                  width={800}
-                >
-                  <h1 className="mb-5">Log Status</h1>
-                  <div className="flex mb-5 space-x-5">
-                    <Button className="text-white bg-teal-600">All log</Button>
-                    <Select className="w-40">
-                      <Select.Option value="New">New</Select.Option>
-                      <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-                      <Select.Option value="Approve">Approve</Select.Option>
-                      <Select.Option value="Reject">Reject</Select.Option>
-                      <Select.Option value="Active">Active</Select.Option>
-                      <Select.Option value="Inactive">Inactive</Select.Option>
-
-                    </Select>
-
-                    <Select className="w-40">
-                      <Select.Option value="New">New</Select.Option>
-                      <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-                      <Select.Option value="Approve">Approve</Select.Option>
-                      <Select.Option value="Reject">Reject</Select.Option>
-                      <Select.Option value="Active">Active</Select.Option>
-                      <Select.Option value="Inactive">Inactive</Select.Option>
-
-                    </Select>
+            <Modal
+                visible={logModalVisible}
+                onCancel={hideLogModal}
+                footer={null}
+                width={800}
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center h-64">
+                    <Spin size="large" />
                   </div>
-
-                  <h1>Course Name: ...</h1>
-                  <h1>Old status: ...</h1>
-                  <h1>New status: ... </h1>
-                  <h1>Comment: ...</h1>
-                </Modal>
+                ) : (
+                  <>
+                    <h1 className="mb-5">Log Status</h1>
+                    <div className="flex mb-5 space-x-5">
+                      <Button className="text-white bg-teal-600">All log</Button>
+                      <Select className="w-40">
+                        <Select.Option value="New">New</Select.Option>
+                        <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                        <Select.Option value="Approve">Approve</Select.Option>
+                        <Select.Option value="Reject">Reject</Select.Option>
+                        <Select.Option value="Active">Active</Select.Option>
+                        <Select.Option value="Inactive">Inactive</Select.Option>
+                      </Select>
+                      <Select className="w-40">
+                        <Select.Option value="all">All</Select.Option>
+                        <Select.Option value="new">New</Select.Option>
+                        <Select.Option value="waiting_approve">Waiting approve</Select.Option>
+                        <Select.Option value="approve">Approve</Select.Option>
+                        <Select.Option value="reject">Reject</Select.Option>
+                        <Select.Option value="active">Active</Select.Option>
+                        <Select.Option value="inactive">Inactive</Select.Option>
+                      </Select>
+                    </div>
+                    {error && <p className="text-red-500">{error}</p>}
+                    {logs.length === 0 ? (
+                      <p>No logs available.</p>
+                    ) : (
+                      logs.map((log, index) => (
+                        <div key={index} className="mb-4">
+                          <h1>Course Name: {log.course_name}</h1>
+                          <h1>Old status: {log.old_status}</h1>
+                          <h1>New status: {log.new_status}</h1>
+                          <h1>Comment: {log.comment}</h1>
+                        </div>
+                      ))
+                    )}
+                  </>
+                )}
+              </Modal>
 
                 <Form layout="vertical">
-
                   <div className="flex flex-row gap-4">
                     <Button size="small" className="text-xs text-blue-500" onClick={showLogModal}>Log Status</Button>
                     <Button
-                      size="small"
-                      className="text-xs text-blue-500"
-                      onClick={() => handleViewSession(record._id)}
-                    >View Session</Button>
+                        size="small"
+                        className="text-xs text-blue-500"
+                        onClick={() => handleViewSession(record._id)}
+                      >View Session</Button>
                   </div>
-
+                  
                 </Form>
               </div>
             ),
@@ -532,25 +546,7 @@ const ManagerCourseInstructor: React.FC = () => {
               { required: true, message: "Please input the course name!" },
             ]}
           >
-            {/* <Editor
-              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
-              initialValue="<p>This is the initial content of the editor</p>"
-              init={{
-                height: 200,
-                menubar: false,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic backcolor | \
-                  alignleft aligncenter alignright alignjustify | \
-                  bullist numlist outdent indent | removeformat | help",
-              }}
-              onEditorChange={handleEditorChange}
-            /> */}
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Form.Item
@@ -571,34 +567,16 @@ const ManagerCourseInstructor: React.FC = () => {
             name="description"
             label="Description"
             rules={[
-              { required: true, message: "Please input the description!" },
+              { required: false, message: "Please input the description!" },
             ]}
           >
-            {/* <Editor
-              apiKey="oppz09dr2j6na1m8aw9ihopacggkqdg19jphtdksvl25ol4k"
-              initialValue="<p>This is the initial content of the editor</p>"
-              init={{
-                height: 200,
-                menubar: false,
-                plugins: [
-                  "advlist autolink lists link image charmap print preview anchor",
-                  "searchreplace visualblocks code fullscreen",
-                  "insertdatetime media table paste code help wordcount",
-                ],
-                toolbar:
-                  "undo redo | formatselect | bold italic backcolor | \
-                  alignleft aligncenter alignright alignjustify | \
-                  bullist numlist outdent indent | removeformat | help",
-              }}
-              onEditorChange={handleEditorChange}
-            /> */}
-            <Input />
+            <Input/>
           </Form.Item>
 
           <Form.Item
             name="video_url"
             label="Video URL"
-            rules={[{ required: true, message: 'Please input the video URL!' }]}
+            rules={[{ required: false, message: 'Please input the video URL!' }]}
           >
             <Input />
           </Form.Item>
@@ -606,7 +584,7 @@ const ManagerCourseInstructor: React.FC = () => {
           <Form.Item
             name="image_url"
             label="Image URL"
-            rules={[{ required: true, message: 'Please input the image URL!' }]}
+            rules={[{ required: false, message: 'Please input the image URL!' }]}
           >
             <Input />
           </Form.Item>
@@ -650,48 +628,12 @@ const ManagerCourseInstructor: React.FC = () => {
               <Form.Item
                 name="discount"
                 label="Discount"
-                rules={[{ required: true, message: 'Please input the discount!' }]}
               >
                 <Input type="number" />
               </Form.Item>
             </div>
           )}
         </Form>
-      </Modal>
-
-      <Modal
-        visible={logModalVisible}
-        onCancel={() => setLogModalVisible(false)}
-        footer={null}
-        width={800}
-        style={{ overflowY: 'auto' }}
-      >
-        <h1 className="mb-5">Log Status</h1>
-        <div className="flex mb-5 space-x-5">
-          <Button className="text-white bg-teal-600">All log</Button>
-          <Select className="w-40">
-            <Select.Option value="New">New</Select.Option>
-            <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-            <Select.Option value="Approve">Approve</Select.Option>
-            <Select.Option value="Reject">Reject</Select.Option>
-            <Select.Option value="Active">Active</Select.Option>
-            <Select.Option value="Inactive">Inactive</Select.Option>
-          </Select>
-
-          <Select className="w-40">
-            <Select.Option value="New">New</Select.Option>
-            <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-            <Select.Option value="Approve">Approve</Select.Option>
-            <Select.Option value="Reject">Reject</Select.Option>
-            <Select.Option value="Active">Active</Select.Option>
-            <Select.Option value="Inactive">Inactive</Select.Option>
-          </Select>
-        </div>
-
-        <h1>Course Name: ...</h1>
-        <h1>Old status: ...</h1>
-        <h1>New status: ... </h1>
-        <h1>Comment: ...</h1>
       </Modal>
     </Layout>
   );
