@@ -1,9 +1,8 @@
 import React from 'react';
-import { Card, Layout, Table, Typography } from 'antd';
+import { Card, Table, Typography } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import SidebarStudent from './SidebarStudent';
+import SidebarStudent from './SidebarStudent'; // Giả sử SidebarStudent vẫn được sử dụng
 
-const { Content } = Layout;
 const { Title } = Typography;
 
 const purchaseData = [
@@ -30,7 +29,6 @@ const purchaseData = [
     course_name: 'Create an LMS Website with LearnPress',
     student_name: 'Alice Johnson',
     instructor_name: 'Bob Brown',
-  
   },
   {
     key: '3',
@@ -43,7 +41,6 @@ const purchaseData = [
     course_name: 'Introduction LearnPress - LMS plugin',
     student_name: 'Charlie Davis',
     instructor_name: 'Eve White',
-   
   },
   {
     key: '4',
@@ -56,7 +53,6 @@ const purchaseData = [
     course_name: 'New Headway',
     student_name: 'Michael Scott',
     instructor_name: 'Dwight Schrute',
-    
   },
 ];
 
@@ -112,7 +108,6 @@ const columns = [
     dataIndex: 'created_at',
     key: 'created_at',
   },
- 
   {
     title: 'Course Name',
     dataIndex: 'course_name',
@@ -128,25 +123,22 @@ const columns = [
     dataIndex: 'instructor_name',
     key: 'instructor_name',
   },
- 
 ];
 
 const ManagerStudentPurchase = () => {
   const navigate = useNavigate();
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Layout className="site-layout">
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            <Card style={{ margin: 20 }}>
-              <Title level={4}>Purchase Manager</Title>
-              <Table dataSource={purchaseData} columns={columns} />
-            </Card>
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
+    <div className="flex h-screen bg-[#ffffff]">
+      <div style={{ flex: '0 0 250px', background: '#f0f2f5', overflowY: 'auto' }}>
+      </div>
+      <div style={{ flex: '1', overflowY: 'auto', padding: '24px' }}>
+        <Card style={{ margin: '20px' }}>
+          <Title level={4}>Purchase Manager</Title>
+          <Table dataSource={purchaseData} columns={columns} />
+        </Card>
+      </div>
+    </div>
   );
 };
 

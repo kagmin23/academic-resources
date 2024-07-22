@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import {  Card, Layout, Table, Typography, Image } from 'antd';
+import { Card, Table, Typography, Image } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
-const { Content, Sider } = Layout;
 const { Title } = Typography;
 
 const coursesData = [
@@ -91,20 +90,16 @@ const ProfileStudent = () => {
   };
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Layout className="site-layout">
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            {showMyCourses && (
-              <Card style={{ margin: 20 }}>
-                <Title level={4}>My Courses</Title>
-                <Table dataSource={coursesData} columns={columns} />
-              </Card>
-            )}
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
+    <div className="flex flex-col h-screen bg-[#ffffff] p-4">
+      <div className="flex-1 overflow-y-auto">
+        {showMyCourses && (
+          <Card style={{ margin: 20 }}>
+            <Title level={4}>My Courses</Title>
+            <Table dataSource={coursesData} columns={columns} />
+          </Card>
+        )}
+      </div>
+    </div>
   );
 };
 

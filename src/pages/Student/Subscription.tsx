@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { Card, Layout, Table, Typography, Button } from 'antd';
+import { Card, Table, Typography, Button } from 'antd';
 
-const { Content } = Layout;
 const { Title } = Typography;
-
 
 const subscriptionData = [
   {
@@ -54,21 +52,18 @@ const StudentSubscription = () => {
   ];
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Layout className="site-layout">
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            <Card style={{ margin: 20 }}>
-              <Title level={4}>{title}</Title>
-              <Table
-                dataSource={subscriptionData}
-                columns={studentColumns}
-              />
-            </Card>
-          </div>
-        </Content>
-      </Layout>
-    </Layout>
+    <div className="flex flex-col h-screen bg-[#ffffff] p-4">
+      <div className="flex-1 overflow-y-auto">
+        <Card style={{ margin: 20 }}>
+          <Title level={4}>{title}</Title>
+          <Table
+            dataSource={subscriptionData}
+            columns={studentColumns}
+            pagination={false} // Disable pagination if needed
+          />
+        </Card>
+      </div>
+    </div>
   );
 };
 
