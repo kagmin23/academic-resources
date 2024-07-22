@@ -54,3 +54,14 @@ export const getCategories = async (keyword: string, pageNum: number, pageSize: 
     },
   });
 };
+
+export const getUserDetail = async (userId: string) => {
+  const token = localStorage.getItem(''); 
+
+  return apiRequest(`/api/users/${userId}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+};
