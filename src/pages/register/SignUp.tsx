@@ -171,16 +171,16 @@ const SignUp: React.FC = () => {
           <div className="flex gap-4 flex-wrap">
             {value === 'instructor' && (
               <Form.Item
-                name="videoUrl"
+                name="video"
                 rules={[{ required: true, message: 'Please upload a video!' }]}
-              >
+              >Video
                 <FileUploader type="video" onUploadSuccess={handleVideoUploadSuccess} />
               </Form.Item>
             )}
             <Form.Item
-              name="avatarUrl"
+              name="avatar"
               rules={[{ required: true, message: 'Please upload an avatar!' }]}
-            >
+            >Avatar
               <FileUploader type="image" onUploadSuccess={handleAvatarUploadSuccess} />
             </Form.Item>
           </div>
@@ -191,13 +191,13 @@ const SignUp: React.FC = () => {
             <Input.TextArea placeholder="Update description" size="large" rows={4} />
           </Form.Item>
           <Form.Item
-            name="dateOfBirth"
+            name="dob"
             rules={[{ required: true, message: 'Please select your date of birth!' }]}
           >
             <DatePicker placeholder="Select Date of Birth" style={{ width: '100%' }} />
           </Form.Item>
           <Form.Item
-            name="phoneNumber"
+            name="phone_number"
             label="Phone Number"
             rules={[{ required: true, message: 'Please enter the phone number' }]}
           >
