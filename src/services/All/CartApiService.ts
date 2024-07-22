@@ -23,7 +23,7 @@ export const createCart = async (courseData: {
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
-      },
+      }, 
       data: {
         searchCondition: {
           keyword,
@@ -49,3 +49,18 @@ export const createCart = async (courseData: {
   };
 
   
+  export const updateCartStatus = async (status: string, items: { _id: string, cart_no: string }[]) => {
+    const token = localStorage.getItem('token');
+  
+    return apiRequest('/api/cart/update-status', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
+        status,
+        items,
+      },
+    });
+  };
