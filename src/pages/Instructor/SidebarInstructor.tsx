@@ -58,6 +58,11 @@ const SidebarAdmin: React.FC = () => {
           heading: "Manager Purchase",
           href: "/instructor/profile-instructor/manager-instructor-purchase",
         },
+        {
+          icon: ShoppingOutlined,
+          heading: "Subscription",
+          href: "/instructor/profile-instructor/instructor-subscription",
+        },
         
         
       ],

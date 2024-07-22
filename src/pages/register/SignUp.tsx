@@ -179,7 +179,6 @@ const SignUp: React.FC = () => {
             )}
             <Form.Item
               name="avatar"
-              rules={[{ required: true, message: 'Please upload an avatar!' }]}
             >Avatar
               <FileUploader type="image" onUploadSuccess={handleAvatarUploadSuccess} />
             </Form.Item>

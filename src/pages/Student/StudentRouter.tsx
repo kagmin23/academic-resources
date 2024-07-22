@@ -23,6 +23,7 @@ import Report from '../ReportPage';
 import Certificate from './Certificate';
 import RouterLesson from './RouterLesson';
 import ManagerStudentPurchase from './ManagerPurchase';
+import StudentSubscription from './Subscription';
 
 export default function StudentRouter() {
 
@@ -71,6 +72,7 @@ export default function StudentRouter() {
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["student"]}><TopInstructorPage /></ProtectedRouter>} />
                     <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={["student"]}><Certificate /></ProtectedRouter>} />
                     <Route path={`manager-student-purchase`} element={<ProtectedRouter allowedRoles={["student"]}><ManagerStudentPurchase /></ProtectedRouter>} />
+                    <Route path={`student-subscription`} element={<ProtectedRouter allowedRoles={["student"]}><StudentSubscription /></ProtectedRouter>} />
 
                     </Route>
                </Routes>

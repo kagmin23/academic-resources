@@ -23,6 +23,7 @@ import Report from '../ReportPage';
 import InstructorPage from './InstructorPage';
 
 import ViewSession from './ViewSession';
+import InstructorSubscription from './SubcriptionInstructor';
 export default function InstructorRouter() {
 
   // const LayoutInstructor = React.lazy(() => import("../../components/layout/LayoutInstructor"));
@@ -71,6 +72,8 @@ export default function InstructorRouter() {
          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
          <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["instructor"]}><TopInstructorPage /></ProtectedRouter>} />
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}
+         <Route path={`instructor-subscription`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorSubscription /></ProtectedRouter>} />
+
 
          </Route>
     </Routes>
