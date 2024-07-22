@@ -1,62 +1,59 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Modal, Tabs, Avatar, Badge, message } from 'antd';
+import { Button, Modal, Tabs, Avatar, message } from 'antd';
 import { Link, useParams } from 'react-router-dom';
 import { createCart } from 'services/All/CartApiService';
 import { getCourseDetail } from 'services/User/clientApiService';
-import {
-    CommentOutlined,
-    DislikeOutlined,
-    ExclamationCircleOutlined,
-    EyeOutlined,
-    HeartOutlined,
-    LikeOutlined,
-    PlayCircleOutlined,
-    ShareAltOutlined,
-    StarOutlined
-} from '@ant-design/icons';
+import { createOrUpdate } from 'services/All/SubcriptionApiService';
+import { CommentOutlined, ExclamationCircleOutlined, PlayCircleOutlined, HeartOutlined, StarOutlined } from '@ant-design/icons';
 
 const { TabPane } = Tabs;
 
+interface Lesson {
+    _id: string;
+    name: string;
+    lession_type: string;
+    position_order: number;
+    full_time: number;
+}
+
+interface Session {
+    _id: string;
+    name: string;
+    position_order: number;
+    lession_list: Lesson[];
+}
+
 interface CourseDetailType {
-    _id: string,
-    name: string,
-    description: string,
-    category_id: string,
-    category_name: string,
-    status: string,
-    video_url: string,
-    image_url: string,
-    price_paid: number,
-    price: number,
-    discount: number,
-    average_rating: number,
-    review_count: number,
-    instructor_id: string,
-    instructor_name: string,
-    full_time: number,
-    session_list: {
-        _id: string,
-        name: string,
-        position_order: number,
-        lession_list: {
-            _id: string,
-            name: string,
-            lession_type: string,
-            position_order: number,
-            full_time: number,
-        }
-    }[],
-    is_in_cart: boolean,
-    is_purchased: boolean,
-    created_at: Date,
-    updated_at: Date,
-    is_deleted: boolean,
+    _id: string;
+    name: string;
+    description: string;
+    category_id: string;
+    category_name: string;
+    status: string;
+    video_url: string;
+    image_url: string;
+    price_paid: number;
+    price: number;
+    discount: number;
+    average_rating: number;
+    review_count: number;
+    instructor_id: string;
+    instructor_name: string;
+    full_time: number;
+    session_list: Session[];
+    is_in_cart: boolean;
+    is_purchased: boolean;
+    created_at: Date;
+    updated_at: Date;
+    is_deleted: boolean;
 }
 
 const CourseDetail: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
 
     useEffect(() => {
         if (!courseId) {
@@ -88,15 +85,30 @@ const CourseDetail: React.FC = () => {
             return;
         }
         try {
-            const response = await createCart({
-                course_id: courseId,
-            });
+            const response = await createCart({ course_id: courseId });
             console.log('Cart item added successfully:', response.data);
             message.success('Course added to cart successfully!');
         } catch (error) {
             console.error('Failed to add course to cart:', error);
             message.error('Failed to add course to cart');
         }
+    };
+
+    const handleSubscribe = async () => {
+        if (!courseDetail) return;
+        try {
+            await createOrUpdate(courseDetail.instructor_id);
+            setIsSubscribed(true);
+            message.success('Subscription successful!');
+        } catch (error) {
+            console.error('Failed to subscribe:', error);
+            message.error('Failed to subscribe');
+        }
+    };
+
+    const toggleSession = (sessionId: string) => {
+        // If the clicked session is already expanded, collapse it; otherwise, expand it
+        setExpandedSessionId(expandedSessionId === sessionId ? null : sessionId);
     };
 
     const renderStars = (starCount: number) => {
@@ -188,72 +200,55 @@ const CourseDetail: React.FC = () => {
                             <Avatar src={courseDetail.instructor_id} size="large" />
                             <div className="flex flex-col ml-4">
                                 <a href="#" className="mb-3 text-lg font-semibold text-black">{courseDetail.instructor_name}</a>
-                                <Button type="default" className="p-5 ml-2 text-lg font-semibold text-white bg-red-600">Subscribe</Button>
+                                <Button onClick={handleSubscribe} type="primary" className="mr-2">
+                                    {isSubscribed ? 'Subscribed' : 'Subscribe'}
+                                </Button>
+                                <span className="text-gray-600">69,025 students</span>
                             </div>
                         </div>
-                        <div className="flex flex-wrap items-center p-2">
-                            <div className="flex justify-center w-full sm:w-auto sm:justify-start">
-                                <Badge showZero className="flex flex-col items-center p-4 border border-gray-300 rounded-lg">
-                                    <EyeOutlined className="mb-2 mr-1 text-2xl" />
-                                    <span>1452</span>
-                                </Badge>
-                            </div>
-                            <div className="flex justify-center w-full mt-2 sm:w-auto sm:justify-start sm:mt-0">
-                                <Badge showZero className="flex flex-col items-center p-4 ml-0 border border-gray-300 rounded-lg sm:ml-2">
-                                    <LikeOutlined className="mb-2 mr-1 text-2xl" />
-                                    <span>100</span>
-                                </Badge>
-                            </div>
-                            <div className="flex justify-center w-full mt-2 sm:w-auto sm:justify-start sm:mt-0">
-                                <Badge showZero className="flex flex-col items-center p-4 ml-0 border border-gray-300 rounded-lg sm:ml-2">
-                                    <DislikeOutlined className="mb-2 mr-1 text-2xl" />
-                                    <span>20</span>
-                                </Badge>
-                            </div>
-                            <div className="flex justify-center w-full mt-2 sm:w-auto sm:justify-start sm:mt-0">
-                                <Badge showZero className="flex flex-col items-center p-4 ml-0 border border-gray-300 rounded-lg sm:ml-2">
-                                    <ShareAltOutlined className="mb-2 mr-1 text-2xl" />
-                                    <span>75</span>
-                                </Badge>
-                            </div>
+                        <div className="flex space-x-4">
+                            <Button type="link" icon={<PlayCircleOutlined />}>Preview this course</Button>
+                            <Button type="link" icon={<HeartOutlined />}>Add to Wishlist</Button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="py-8 bg-white">
-                <div className="container px-3 mx-auto">
+            <div className="py-4 bg-gray-100">
+                <div className="container px-4 mx-auto">
                     <Tabs defaultActiveKey="1">
-                        <TabPane tab={<span className="text-lg font-semibold text-black">Overview</span>} key="1">
-                            <div className="mt-4">
-                                <h3 className="mb-2 text-2xl font-semibold text-black">Course Description</h3>
-                                <p className="text-lg text-black">{courseDetail.description}</p>
-                            </div>
-                            <div className="mt-4">
-                                <h3 className="mb-2 text-2xl font-semibold text-black">Instructor</h3>
-                                <p className="text-lg text-black">{courseDetail.instructor_name}</p>
-                            </div>
-                        </TabPane>
-                        <TabPane tab={<span className="text-lg font-semibold text-black">Reviews</span>} key="2">
-                            <div className="mt-4">
-                                {ratings.map((rating, index) => (
-                                    <div key={index} className="flex items-center mb-4">
-                                        <div className="flex-shrink-0">{renderStars(rating.stars)}</div>
-                                        <div className="flex-grow h-2 ml-4 bg-gray-200">
-                                            <div className="h-2 bg-yellow-500" style={{ width: `${rating.percentage}%` }}></div>
-                                        </div>
-                                        <div className="flex-shrink-0 ml-4">{rating.percentage}%</div>
+                        <TabPane tab="Curriculum" key="1">
+                            {courseDetail.session_list && courseDetail.session_list.length > 0 ? (
+                                courseDetail.session_list.map((session) => (
+                                    <div key={session._id} className="p-4 mb-4 bg-white rounded shadow-md">
+                                        <h3 className="text-xl font-semibold cursor-pointer" onClick={() => toggleSession(session._id)}>
+                                            {session.name}
+                                        </h3>
+                                        {expandedSessionId === session._id && (
+                                            <ul>
+                                                {session.lession_list && session.lession_list.length > 0 ? (
+                                                    session.lession_list.map((lesson) => (
+                                                        <li key={lesson._id} className="flex items-center py-2">
+                                                            <div className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-200"></div>
+                                                            <div className="ml-4">
+                                                                <div className="text-lg font-medium">{lesson.name}</div>
+                                                                <div className="text-gray-600">{lesson.lession_type} - {lesson.full_time} mins</div>
+                                                            </div>
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li>No lessons available</li>
+                                                )}
+                                            </ul>
+                                        )}
                                     </div>
-                                ))}
-                            </div>
+                                ))
+                            ) : (
+                                <div>No sessions available</div>
+                            )}
                         </TabPane>
-                        <TabPane tab={<span className="text-lg font-semibold text-black">Q&A</span>} key="3">
-                            <div className="mt-4">
-                                <h3 className="mb-2 text-2xl font-semibold text-black">Course Description</h3>
-                                <p className="text-lg text-black">{courseDetail.description}</p>
-                            </div>
-                            <div className="mt-4">
-                                <h3 className="mb-2 text-2xl font-semibold text-black">Instructor</h3>
-                                <p className="text-lg text-black">{courseDetail.instructor_name}</p>
+                        <TabPane tab="Reviews" key="2">
+                            <div className="p-4">
+                                {/* Review content goes here */}
                             </div>
                         </TabPane>
                     </Tabs>
