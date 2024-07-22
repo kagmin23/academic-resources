@@ -6,7 +6,7 @@ import ProfileStudent from 'pages/Student/ProfileStudent';
 import SidebarStudent from 'pages/Student/SidebarStudent';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-
+import ManagerStudentPurchase from './ManagerPurchase';
 
 const StudentPage: React.FC = () => {
   return (
@@ -21,7 +21,8 @@ const StudentPage: React.FC = () => {
           <Route path={`info-student/:userId/`} element={<ProfileStudent />} />
          
           <Route path={`student-changepassword`} element={<ChangepasswordStu />} />
-          <Route path={`certificate-student`} element={<Certificate/>} />
+          <Route path={`certificate-student`} element={<Certificate />} />
+          <Route path={`manager-student-purchase`} element={<ManagerStudentPurchase />} />
         </Routes>
       </div>
     </div>
