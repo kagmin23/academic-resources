@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, ConfigProvider, Select, message } from 'antd';
+import { Button, Card, ConfigProvider, Select, message, Checkbox } from 'antd';
 import sp from '../assets/sp.jpg';
 import { getCarts, deleteCart, updateCartStatus } from 'services/All/CartApiService';
+import { getCourse } from 'services/Instructor/courseApiService';
 import { TinyColor } from '@ctrl/tinycolor';
 
 const { Option } = Select;
@@ -34,7 +35,7 @@ const statusColors = {
 export default function ShoppingCart() {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedStatus, setSelectedStatus] = useState<string>('new');
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
 
   useEffect(() => {
     async function fetchCarts() {
@@ -62,6 +63,9 @@ export default function ShoppingCart() {
       setCourses((prevCourses) =>
         prevCourses.filter((course) => course._id !== courseId)
       );
+      setSelectedCourses((prevSelected) =>
+        prevSelected.filter((id) => id !== courseId)
+      );
     } catch (error) {
       console.error('Failed to delete cart item:', error);
     }
@@ -86,11 +90,17 @@ export default function ShoppingCart() {
     }
   };
 
-  const totalPrice: number = Array.isArray(courses)
-    ? courses.reduce((total, course) => total + course.price, 0)
-    : 0;
-  const discount: number = Array.isArray(courses) && courses.length >= 2 ? 0.1 : 0;
-  const finalPrice: number = totalPrice * (1 - discount);
+  const handleCheckboxChange = (courseId: string) => {
+    setSelectedCourses((prevSelected) =>
+      prevSelected.includes(courseId)
+        ? prevSelected.filter((id) => id !== courseId)
+        : [...prevSelected, courseId]
+    );
+  };
+
+  const selectedTotalPrice = courses
+    .filter((course) => selectedCourses.includes(course._id))
+    .reduce((total, course) => total + course.price * (1 - course.discount), 0);
 
   return (
     <div className="w-full min-h-screen mx-auto bg-gray-200">
@@ -105,6 +115,10 @@ export default function ShoppingCart() {
             ) : (
               courses.map((course) => (
                 <Card.Grid key={course._id} style={gridStyle} className="md:flex">
+                  <Checkbox className='mr-4'
+                    checked={selectedCourses.includes(course._id)}
+                    onChange={() => handleCheckboxChange(course._id)}
+                  />
                   <img
                     src={course.image || sp}
                     alt="Product"
@@ -138,7 +152,10 @@ export default function ShoppingCart() {
                     </div>
                     <div className="md:w-1/5">
                       <div className="font-semibold text-center md:text-lg sm:text-sm">
-                        <p>{course.price.toLocaleString('vi-VN')} VNĐ</p>
+                        <div>
+                          <span style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} VNĐ</span> <span>({course.discount * 100}%)</span>
+                        </div>
+                        <div>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} VNĐ</div>
                       </div>
                       <Button
                         danger
@@ -161,15 +178,11 @@ export default function ShoppingCart() {
             </div>
             <div className="flex justify-between my-4 text-base font-medium">
               <div>Original Price</div>
-              <div>{totalPrice.toLocaleString('vi-VN')}</div>
-            </div>
-            <div className="flex justify-between my-4 text-base font-medium">
-              <div>Discount Price</div>
-              <div>{(totalPrice * discount).toLocaleString('vi-VN')}</div>
+              <div>{selectedTotalPrice.toLocaleString('vi-VN')} VNĐ</div>
             </div>
             <div className="flex justify-between py-5 text-xl font-bold border-t border-gray-500">
               <div>Total:</div>
-              <div>{finalPrice.toLocaleString('vi-VN')} VNĐ</div>
+              <div>{selectedTotalPrice.toLocaleString('vi-VN')} VNĐ</div>
             </div>
             <ConfigProvider
               theme={{
@@ -183,7 +196,7 @@ export default function ShoppingCart() {
                 },
               }}
             >
-                            <a href="">
+              <a href="">
                 <Button type="primary" size="large" className="w-full">
                   Proceed to Checkout
                 </Button>

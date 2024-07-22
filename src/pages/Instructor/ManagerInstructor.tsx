@@ -1,21 +1,7 @@
+
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
-import {
-  Button,
-  Col,
-  Form,
-  Image,
-  Input,
-  Layout,
-  Modal,
-  Row,
-  Select,
-  Spin,
-  Switch,
-  Table,
-  Typography,
-  message,
-} from "antd";
+import {Button,Col, Form,Image, Input, Layout, Modal, Row, Select, Spin,Switch,Table,Typography,message} from "antd";
 import React, { useEffect, useState } from "react";
 
 import { Category, Course, LogStatus } from "models/types";
@@ -48,7 +34,7 @@ const ManagerCourseInstructor: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [category, setCategory] = useState<Category | null>(null);
   const [comment, setComment] = useState('');
-  // const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
+  const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
   const [commentForm] = Form.useForm();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
@@ -195,7 +181,7 @@ const ManagerCourseInstructor: React.FC = () => {
         message.error('Validation failed');
       });
   };
-  
+
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter((item) =>
@@ -225,17 +211,17 @@ const ManagerCourseInstructor: React.FC = () => {
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
     try {
       console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
-  
+
       const course = courses.find(course => course._id === courseId);
-  
+
       if (course?.status === 'reject' && (newStatus === 'active' || newStatus === 'inactive')) {
         message.error('This course has been rejected and cannot be changed to Active or Inactive.');
         return;
       }
-  
+
       const response = await changeCourseStatus(courseId, newStatus, comment);
       console.log("response", response);
-  
+
       if (response) {
         message.success('Changed Status Successfully!');
         setCourses(prevCourses =>
@@ -249,7 +235,7 @@ const ManagerCourseInstructor: React.FC = () => {
       console.error('Error:', error);
     }
   };
-  
+
 
   useEffect(() => {
     debugger
@@ -315,7 +301,7 @@ const ManagerCourseInstructor: React.FC = () => {
       align: "center" as AlignType,
       render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
-    
+
     {
       title: "Status",
       dataIndex: "status",
@@ -344,7 +330,7 @@ const ManagerCourseInstructor: React.FC = () => {
                   </>
                 ),
                 onOk: () => onChangeStatus(record._id, newStatus, comment),
-                onCancel: () => {},
+                onCancel: () => { },
               });
             }}
             options={[
@@ -357,7 +343,7 @@ const ManagerCourseInstructor: React.FC = () => {
         </div>
       ),
     },
-    
+
     {
       title: "Actions",
       key: "actions",
@@ -365,7 +351,7 @@ const ManagerCourseInstructor: React.FC = () => {
       render: (text: string, record: Course) => (
         <div className="flex flex-row justify-center gap-1">
           <Button
-	          size="small"
+            size="small"
             icon={<EditOutlined />}
             className="text-blue-500"
             onClick={() => handleEdit(record)}
@@ -377,7 +363,7 @@ const ManagerCourseInstructor: React.FC = () => {
             className="text-red-400"
             onClick={() => showConfirm(record)}
           ></Button>
-          
+
           <Button
             size="small"
             icon={<EyeOutlined />}
@@ -392,7 +378,7 @@ const ManagerCourseInstructor: React.FC = () => {
     <Layout style={{ minHeight: "100vh" }}>
       <Header className="p-0 bg-white">
         <div className="flex flex-row items-center justify-between gap-4 p-4 bg-[#939fb1]">
-        <div className="mx-4 my-auto text-lg font-bold text-white">
+          <div className="mx-4 my-auto text-lg font-bold text-white">
             Manager Course
           </div>
           <div className="h-6 border-r lg:mx-4"></div>
@@ -431,96 +417,96 @@ const ManagerCourseInstructor: React.FC = () => {
                   marginLeft: "25px",
                 }}
               >
-              <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
-              <Col span={22} className="mb-5">
-              <Typography.Title level={5}>Description:</Typography.Title>
-                       <p>{record.description || "-"}</p>
-              </Col>
-              <Col span={22} className="mb-5">
-              <Typography.Title level={5}>Content:</Typography.Title>
-                       <p>{record.content || "-"}</p>
-              </Col>
+                <Row gutter={16} className="mb-5" style={{ display: 'flex' }}>
+                  <Col span={22} className="mb-5">
+                    <Typography.Title level={5}>Description:</Typography.Title>
+                    <p>{record.description || "-"}</p>
+                  </Col>
+                  <Col span={22} className="mb-5">
+                    <Typography.Title level={5}>Content:</Typography.Title>
+                    <p>{record.content || "-"}</p>
+                  </Col>
 
-              <Col span={11} className="mb-5" style={{ height: '315px' }}>
-              <Typography.Title level={5}>Video:</Typography.Title>
-                    <iframe 
-                      src={record.video_url} 
-                      style={{ width: '400px', height: '300px' }} 
-                      frameBorder="0" 
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  <Col span={11} className="mb-5" style={{ height: '315px' }}>
+                    <Typography.Title level={5}>Video:</Typography.Title>
+                    <iframe
+                      src={record.video_url}
+                      style={{ width: '400px', height: '300px' }}
+                      frameBorder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                       allowFullScreen>
                     </iframe>
-              </Col>
+                  </Col>
 
-            <Col span={11} offset={1} className="mb-5" style={{ height: '315px' }}>
-            <Typography.Title level={5}>Image:</Typography.Title>
-                <Image 
-                    src={record.image_url} 
-                    style={{ width: '400px', height: '300px', objectFit: 'cover' }} 
-                />
-            </Col>
-            </Row>
+                  <Col span={11} offset={1} className="mb-5" style={{ height: '315px' }}>
+                    <Typography.Title level={5}>Image:</Typography.Title>
+                    <Image
+                      src={record.image_url}
+                      style={{ width: '400px', height: '300px', objectFit: 'cover' }}
+                    />
+                  </Col>
+                </Row>
 
-            <Modal
-                visible={logModalVisible}
-                onCancel={hideLogModal}
-                footer={null}
-                width={800}
-              >
-                {loading ? (
-                  <div className="flex items-center justify-center h-64">
-                    <Spin size="large" />
-                  </div>
-                ) : (
-                  <>
-                    <h1 className="mb-5">Log Status</h1>
-                    <div className="flex mb-5 space-x-5">
-                      <Button className="text-white bg-teal-600">All log</Button>
-                      <Select className="w-40">
-                        <Select.Option value="New">New</Select.Option>
-                        <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-                        <Select.Option value="Approve">Approve</Select.Option>
-                        <Select.Option value="Reject">Reject</Select.Option>
-                        <Select.Option value="Active">Active</Select.Option>
-                        <Select.Option value="Inactive">Inactive</Select.Option>
-                      </Select>
-                      <Select className="w-40">
-                        <Select.Option value="all">All</Select.Option>
-                        <Select.Option value="new">New</Select.Option>
-                        <Select.Option value="waiting_approve">Waiting approve</Select.Option>
-                        <Select.Option value="approve">Approve</Select.Option>
-                        <Select.Option value="reject">Reject</Select.Option>
-                        <Select.Option value="active">Active</Select.Option>
-                        <Select.Option value="inactive">Inactive</Select.Option>
-                      </Select>
+                <Modal
+                  visible={logModalVisible}
+                  onCancel={hideLogModal}
+                  footer={null}
+                  width={800}
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center h-64">
+                      <Spin size="large" />
                     </div>
-                    {error && <p className="text-red-500">{error}</p>}
-                    {logs.length === 0 ? (
-                      <p>No logs available.</p>
-                    ) : (
-                      logs.map((log, index) => (
-                        <div key={index} className="mb-4">
-                          <h1>Course Name: {log.course_name}</h1>
-                          <h1>Old status: {log.old_status}</h1>
-                          <h1>New status: {log.new_status}</h1>
-                          <h1>Comment: {log.comment}</h1>
-                        </div>
-                      ))
-                    )}
-                  </>
-                )}
-              </Modal>
+                  ) : (
+                    <>
+                      <h1 className="mb-5">Log Status</h1>
+                      <div className="flex mb-5 space-x-5">
+                        <Button className="text-white bg-teal-600">All log</Button>
+                        <Select className="w-40">
+                          <Select.Option value="New">New</Select.Option>
+                          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
+                          <Select.Option value="Approve">Approve</Select.Option>
+                          <Select.Option value="Reject">Reject</Select.Option>
+                          <Select.Option value="Active">Active</Select.Option>
+                          <Select.Option value="Inactive">Inactive</Select.Option>
+                        </Select>
+                        <Select className="w-40">
+                          <Select.Option value="all">All</Select.Option>
+                          <Select.Option value="new">New</Select.Option>
+                          <Select.Option value="waiting_approve">Waiting approve</Select.Option>
+                          <Select.Option value="approve">Approve</Select.Option>
+                          <Select.Option value="reject">Reject</Select.Option>
+                          <Select.Option value="active">Active</Select.Option>
+                          <Select.Option value="inactive">Inactive</Select.Option>
+                        </Select>
+                      </div>
+                      {error && <p className="text-red-500">{error}</p>}
+                      {logs.length === 0 ? (
+                        <p>No logs available.</p>
+                      ) : (
+                        logs.map((log, index) => (
+                          <div key={index} className="mb-4">
+                            <h1>Course Name: {log.course_name}</h1>
+                            <h1>Old status: {log.old_status}</h1>
+                            <h1>New status: {log.new_status}</h1>
+                            <h1>Comment: {log.comment}</h1>
+                          </div>
+                        ))
+                      )}
+                    </>
+                  )}
+                </Modal>
 
                 <Form layout="vertical">
                   <div className="flex flex-row gap-4">
                     <Button size="small" className="text-xs text-blue-500" onClick={showLogModal}>Log Status</Button>
                     <Button
-                        size="small"
-                        className="text-xs text-blue-500"
-                        onClick={() => handleViewSession(record._id)}
-                      >View Session</Button>
+                      size="small"
+                      className="text-xs text-blue-500"
+                      onClick={() => handleViewSession(record._id)}
+                    >View Session</Button>
                   </div>
-                  
+
                 </Form>
               </div>
             ),
@@ -546,7 +532,7 @@ const ManagerCourseInstructor: React.FC = () => {
               { required: true, message: "Please input the course name!" },
             ]}
           >
-            <Input/>
+            <Input />
           </Form.Item>
 
           <Form.Item
@@ -570,7 +556,7 @@ const ManagerCourseInstructor: React.FC = () => {
               { required: false, message: "Please input the description!" },
             ]}
           >
-            <Input/>
+            <Input />
           </Form.Item>
 
           <Form.Item

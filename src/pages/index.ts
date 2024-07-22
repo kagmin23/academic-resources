@@ -7,7 +7,6 @@ export { default as BuyNow } from './BuyNow';
 export { default as CategoryPage } from './CategoryPage';
 export { default as Contact } from './Contact';
 export { default as CourseDetailsPage } from './CourseDetailsPage';
-export { default as CourseOrder } from './CourseOrder';
 export { default as CoursePage } from './CoursePage';
 export { default as DetailBlogPage } from './DetailBlogPage';
 export { default as HomePage } from './HomePage';
