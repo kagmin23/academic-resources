@@ -22,6 +22,7 @@ import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import Certificate from './Certificate';
 import RouterLesson from './RouterLesson';
+import ManagerStudentPurchase from './ManagerPurchase';
 
 export default function StudentRouter() {
 
@@ -69,6 +70,8 @@ export default function StudentRouter() {
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["student"]}><TopInstructorPage /></ProtectedRouter>} />
                     <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={["student"]}><Certificate /></ProtectedRouter>} />
+                    <Route path={`manager-student-purchase`} element={<ProtectedRouter allowedRoles={["student"]}><ManagerStudentPurchase /></ProtectedRouter>} />
+
                     </Route>
                </Routes>
 

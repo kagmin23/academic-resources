@@ -125,7 +125,7 @@ const CourseAdmin: React.FC = () => {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      align: "center" as AlignType
+      // align: "center" as AlignType
     },
     {
       title: 'Discount (%)',
@@ -226,7 +226,7 @@ const CourseAdmin: React.FC = () => {
             </div>
             <div className="flex flex-row w-full gap-5">
 
-            {/* <Select
+            <Select
                 placeholder="Filter by Course Name"
 
                 value={filteredRole}
@@ -234,10 +234,10 @@ const CourseAdmin: React.FC = () => {
                 className="w-1/6"
               >
                 <Option value="new">All</Option>
-                <Option value="waiting_approve">Waiting Approve</Option>
+                {/* <Option value="waiting_approve">Waiting Approve</Option>
                 <Option value="approve">Approve</Option>
-                <Option value="reject">Reject</Option>
-              </Select> */}
+                <Option value="reject">Reject</Option> */}
+              </Select>
 
             <Select
                 placeholder="Filter by Status"
