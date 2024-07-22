@@ -44,7 +44,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          <div className="flex items-center space-x-4 text-xl text-white">
+         {/*  <div className="flex items-center space-x-4 text-xl text-white">
             <Link to="/log-in">
               <BellOutlined />
             </Link>
@@ -54,7 +54,7 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
               <Link to="/log-in">
                 <MailOutlined className="text-xl" />
               </Link>
-              </div>
+              </div> */}
 
           <div className="flex items-center space-x-4 text-xl text-white">
             <Link to="/log-in">
