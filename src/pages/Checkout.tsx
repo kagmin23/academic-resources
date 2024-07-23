@@ -69,8 +69,8 @@ export default function Checkout() {
             </React.Fragment>
           ))}
           <Row>
-            <Col span={16} className='text-lg'>Total products: {products.length}</Col>
-            <Col span={8} className='text-lg'>Total Price: {totalPrice} VNĐ</Col>
+            <Col span={16} className='text-lg font-medium'>Total products: {products.length}</Col>
+            <Col span={8} className='text-lg font-medium'>Total Price: {totalPrice} VNĐ</Col>
           </Row>
         </Card>
       </div>
