@@ -11,7 +11,7 @@ import SessionInstructor from './SessionInstructor';
 import ViewSession from './ViewSession';
 import ManagerInstructorPurchase from './ManagerInstructorPurchase';
 import ViewLesson from 'pages/Instructor/ViewLesson';
-
+import SubcriptionInstructor from 'pages/SubcriptionInstructor';
 const InstructorPage: React.FC = () => {
   return (
     <div className="flex">
@@ -35,7 +35,10 @@ const InstructorPage: React.FC = () => {
           <Route path={`view-session/:courseId/`} element={<ViewSession />} />
           {/* <Route path={`manager-lession/:sessionId`} element={<ManagerLession/>}/>  */}
           <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/> 
+          <Route path={`subcription-instructor`} element={<SubcriptionInstructor />} />
+
           <Route path={`*`} element={<h1>404</h1>} />
+        
         </Routes>
       </div>
     </div>
