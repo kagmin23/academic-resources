@@ -10,7 +10,6 @@ import {
   CoursePage,
   HomePage,
   LessonStudent,
-  SavePage,
   Setting,
   ShoppingCart,
   TopInstructorPage
@@ -70,7 +69,6 @@ export default function StudentRouter() {
                     <Route path={`add-blog`} element={<ProtectedRouter allowedRoles={["student"]}><AddBlog /></ProtectedRouter>} />
                     <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={["student"]}><LessonStudent /></ProtectedRouter>} />
                     <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={["student"]}><RouterLesson /></ProtectedRouter>} />
-                    <Route path={`save`} element={<ProtectedRouter allowedRoles={["student"]}><SavePage /></ProtectedRouter>} />
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["student"]}><TopInstructorPage /></ProtectedRouter>} />
                     <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={["student"]}><Certificate /></ProtectedRouter>} />

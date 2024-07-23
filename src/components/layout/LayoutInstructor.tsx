@@ -183,9 +183,6 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
               <Link to={`about`}>About</Link>
             </Menu.Item>
             <Menu.Item key="7" className="mx-2">
-              <Link to={`save`}>Save</Link>
-            </Menu.Item>
-            <Menu.Item key="8" className="mx-2">
               <Link to={`contact`}>Contact</Link>
             </Menu.Item>
           </Menu>

@@ -1,13 +1,8 @@
 import {
   CheckCircleOutlined,
-  CheckOutlined,
-  FacebookOutlined,
   HeartOutlined,
   PicLeftOutlined,
-  SearchOutlined,
-  TwitterOutlined,
   UsergroupAddOutlined,
-  YoutubeOutlined
 } from "@ant-design/icons";
 import { Button, Image, Input, Menu } from "antd";
 import React from "react";
