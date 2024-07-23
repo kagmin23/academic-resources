@@ -11,7 +11,6 @@ import Sidebar from './Sidebar';
 import ChangepasswordAd from 'pages/admin/ChangePasswordAd';
 import ApproveInstructor from './ApproveInstructor';
 import CategoryAdmin from './Category';
-import NewCourseAdmin from './NewCourse';
 import ReportAdmin from './Report';
 import UsersAdmin from './Users';
 
@@ -33,16 +32,17 @@ const AdminPage: React.FC = () => {
   return (
     <div>
       <LayoutAdmin />
-    <div className="flex min-h-screen mb-5">
-      <Sidebar />
-      <div className="flex-grow p-4 bg-white rounded shadow-md">
+      <div className="flex h-svh  overflow-hidden ">
+      <div className=''>
+        <Sidebar />
+      </div>
+      <div className="flex-grow p-4 overflow-auto h-full bg-white rounded ">
         <Routes>
         <Route path={`/`} element={<Dashboard />} />
         <Route path={`dashboard`} element={<Dashboard />} />
           <Route path={`user`} element={<UsersAdmin />} />
           <Route path={`approve-instructor`} element={<ApproveInstructor />} />
           <Route path={`course`} element={<Content />} />
-          <Route path={`approve-courses`} element={<NewCourseAdmin />}/>
           <Route path={`category`} element={<CategoryAdmin />} />
           <Route path={`report`} element={<ReportAdmin />} />
           <Route path={`info-admin`} element={<ProfileAdmin />} />

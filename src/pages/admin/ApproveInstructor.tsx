@@ -117,9 +117,9 @@ const ApproveInstructor: React.FC = () => {
       render: (dob: Moment) => moment(dob).format("YYYY-MM-DD"),
     },
     { title: 'Phone', dataIndex: 'phone_number', key: 'phone_number' },
-    { title: 'Email', dataIndex: 'email', key: 'email' },
-    { title: 'Video', dataIndex: 'video', key: 'video' },
-    { title: 'Description', dataIndex: 'description', key: 'description' },
+    { title: 'Email', dataIndex: 'email', key: 'email',},
+    { title: 'Video', dataIndex: 'video', key: 'video', width: 50 },
+    { title: 'Description', dataIndex: 'description', key: 'description', width: 200 },
 
     {
       title: 'Action',

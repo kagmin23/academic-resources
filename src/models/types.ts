@@ -1,4 +1,24 @@
-import { Moment } from "moment";
+
+export interface RegisterUser {
+  _id:	string,
+  name:	string,
+  password: string,
+  email: string,
+  google_id: string,
+  role:	string,
+  status:	boolean
+  avatar?: string;
+  phone_number?: string;
+  description?: string;
+  video?: string;
+  dob: Date,
+  created_at:	Date,
+  updated_at:	Date,
+  is_deleted:	boolean,
+}
+export interface RegisterResponseData extends RegisterUser {
+  pendingApproval?: boolean;
+}
 
 // export interface User {
 //   _id: string;

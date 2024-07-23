@@ -42,21 +42,9 @@ const SidebarAdmin: React.FC = () => {
       ]
     },
     {
-      icon: ContainerOutlined,
+      icon: ReadOutlined,
       heading: 'Courses',
-      href: "/admin",
-      children: [
-        {
-          icon: ReadOutlined,
-          heading: "Courses",
-          href: "/admin/course"
-        },
-        {
-          icon: CheckCircleOutlined,
-          heading: "Approve",
-          href: "/admin/approve-courses"
-        },
-      ]
+      href: "/admin/course",
     },
     {
       icon: MenuUnfoldOutlined,

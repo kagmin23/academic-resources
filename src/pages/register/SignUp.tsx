@@ -1,23 +1,31 @@
-import { CheckCircleOutlined, GoogleOutlined } from '@ant-design/icons';
-import { Button, Checkbox, Form, Input, Radio, DatePicker, notification } from 'antd';
+import { CheckCircleOutlined, GoogleOutlined, UploadOutlined } from '@ant-design/icons';
+
+import { Button, Checkbox, Form, Input, Radio, Upload, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
-import { useState } from 'react';
+import { User } from 'models/types';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { registerUser, RegisterUser } from '../../services/registerApiService';
-import FileUploader from './UploadFile';
+import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
+import customUpload from 'utils/upLoad';
+import { registerUser } from '../../services/registerApiService';
 
 const SignUp: React.FC = () => {
   const [form] = Form.useForm();
   const [value, setValue] = useState<string>('student');
   const [current, setCurrent] = useState<number>(0);
-  const [formData, setFormData] = useState<any>({});
-  const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false]);
+  const [formData, setFormData] = useState<User>();
+  const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false, false, false, false]);
   const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
-  const [preview, setPreview] = useState<{ avatarUrl?: string; videoUrl?: string }>({});
+  const [uploadStatus, setUploadStatus] = useState<string>('uploading');
   const navigate = useNavigate();
 
+  
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
+  };
+
+  const onPrev = () => {
+    setCurrent(current - 1);
   };
 
   const onNext = async () => {
@@ -35,65 +43,39 @@ const SignUp: React.FC = () => {
       console.log('Validation Failed:', error);
     }
   };
-
-  const onPrev = () => {
-    setCurrent(current - 1);
-  };
-
-  const handleVideoUploadSuccess = (url: string) => {
-    form.setFieldsValue({ videoUrl: url });
-    setPreview(prev => ({ ...prev, videoUrl: url }));
-  };
-
-  const handleAvatarUploadSuccess = (url: string) => {
-    form.setFieldsValue({ avatarUrl: url });
-    setPreview(prev => ({ ...prev, avatarUrl: url }));
-  };
-
+  
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
+      const updatedCompletedSteps = [...completedSteps];
+      updatedCompletedSteps[current] = true;
+      setCompletedSteps(updatedCompletedSteps);
+      const finalFormData = { ...formData, ...values, role: value };
+  
 
-      let userData: RegisterUser;
-
-      if (value === 'student') {
-        userData = {
-          email: values.email,
-          password: values.password,
-          name: values.name,
-          role: 'student',
-          avatar: values.avatarUrl || '',
-          phone_number: '',
-        };
-      } else if (value === 'instructor') {
-        userData = {
-          email: values.email,
-          password: values.password,
-          name: values.name,
-          role: 'instructor',
-          avatar: values.avatarUrl || '',
-          video: values.videoUrl || '',
-          phone_number: values.phoneNumber || '',
-        };
-      } else {
-        throw new Error('Invalid role');
-      }
-
-      const response = await registerUser(userData);
+      setFormData(finalFormData);
+  
+      localStorage.setItem("user", JSON.stringify(finalFormData));
+      console.log('Final Form Data:', finalFormData);
+  
+      const response = await registerUser(finalFormData);
       console.log('Registration successful:', response);
-
       notification.success({
         message: 'Success',
-        description: 'Registration successful. Please check your email.',
-      });
-
+        description: 'You have signed up successfully!',
+      })
       navigate('/verify-email');
+      ;
+  
+      if (value === 'instructor') {
+        await reviewProfileInstructor();
+        console.log('Instructor profile review submitted');
+      }
     } catch (error) {
-      console.error('Registration failed:', error);
-
+      console.error('Registration error:', error);
       notification.error({
         message: 'Registration Error',
-        description: 'There was an error with your registration. Please try again.',
+        description: 'There was an error during the registration process. Please try again.',
       });
     }
   };
@@ -156,11 +138,7 @@ const SignUp: React.FC = () => {
               Next
             </Button>
           </div>
-          <Link to="/sign-up-google">
-            <Button type="primary" className="w-full h-10 my-2">
-              <GoogleOutlined /> Continue with Google
-            </Button>
-          </Link>
+          <Link to="/sign-up-google"><Button type="primary" className="w-full h-10 my-2"><GoogleOutlined />Continue with Google</Button></Link>
         </Form>
       ),
     },
@@ -168,53 +146,43 @@ const SignUp: React.FC = () => {
       title: 'Update',
       content: (
         <Form form={form} className="space-y-4">
-          <div className="flex gap-4 flex-wrap">
-            {value === 'instructor' && (
-              <Form.Item
-                name="videoUrl"
-                rules={[{ required: true, message: 'Please upload a video!' }]}
-              >
-                <FileUploader type="video" onUploadSuccess={handleVideoUploadSuccess} />
-              </Form.Item>
-            )}
-            <Form.Item
-              name="avatarUrl"
-              rules={[{ required: true, message: 'Please upload an avatar!' }]}
-            >
-              <FileUploader type="image" onUploadSuccess={handleAvatarUploadSuccess} />
-            </Form.Item>
-          </div>
+          <Form.Item name="video">
+            <Upload customRequest={() => customUpload} listType="picture" maxCount={1}>
+              <Button icon={uploadStatus === 'done' ? <CheckCircleOutlined style={{ color: 'green' }} /> : <UploadOutlined />}>
+                {uploadStatus === 'done' ? 'Upload Completed' : 'Upload Video'}
+              </Button>
+            </Upload>
+          </Form.Item>
+
+
           <Form.Item
             name="description"
-            rules={[{ required: true, message: 'Please enter the description' }]}
+            rules={[{ required: false, message: 'Please enter the description' }]}
           >
             <Input.TextArea placeholder="Update description" size="large" rows={4} />
           </Form.Item>
           <Form.Item
-            name="dateOfBirth"
-            rules={[{ required: true, message: 'Please select your date of birth!' }]}
-          >
-            <DatePicker placeholder="Select Date of Birth" style={{ width: '100%' }} />
-          </Form.Item>
-          <Form.Item
-            name="phoneNumber"
+            name="phone_number"
             label="Phone Number"
-            rules={[{ required: true, message: 'Please enter the phone number' }]}
+            rules={[{ required: false, message: 'Please enter the phone number' }]}
           >
-            <Input placeholder="Update Phone Number" size="middle" />
+            <Input placeholder="Update Phone Number" size="small" />
           </Form.Item>
           <div className="flex justify-between">
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
-            <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
-              Finish
-            </Button>
+
+              <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
+                Finish
+              </Button>
+
           </div>
         </Form>
       ),
     },
   ];
+  
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gray-100">
@@ -241,10 +209,28 @@ const SignUp: React.FC = () => {
           {steps.map((_, index) => (
             <div
               key={index}
-              className={`w-4 h-4 rounded-full ${completedSteps[index] ? 'bg-green-600' : 'bg-gray-300'}`}
-            ></div>
+              className={`w-3 h-3 rounded-full cursor-pointer ${
+                current === index
+                  ? 'bg-blue-500'
+                  : completedSteps[index]
+                  ? 'bg-green-500'
+                  : 'bg-gray-400'
+              }`}
+            />
           ))}
         </div>
+
+        <div className="mt-4 text-center text-gray-600">
+          <p>By signing up, you agree to our <a href="#" className="text-blue-600">Terms of Use</a> and <a href="#" className="text-blue-600">Privacy Policy</a>.</p>
+        </div>
+
+        <div className="text-center text-gray-600">
+          <p>Already have an account? <Link to="/log-in" className="text-blue-600">Login</Link></p>
+        </div>
+
+        <footer className="mt-4 text-center text-gray-600">
+          <p>© 2024 Academic. All Rights Reserved.</p>
+        </footer>
       </div>
     </div>
   );

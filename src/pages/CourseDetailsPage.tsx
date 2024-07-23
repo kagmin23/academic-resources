@@ -1,24 +1,75 @@
-import React, { useState } from 'react';
-import { Button, Modal, Tabs, Avatar, Badge, message } from 'antd';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { ExclamationCircleOutlined, HeartOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
+import { Avatar, Button, Modal, Tabs, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import { createCart } from 'services/All/CartApiService';
-import {
-    CommentOutlined,
-    DislikeOutlined,
-    ExclamationCircleOutlined,
-    EyeOutlined,
-    HeartOutlined,
-    LikeOutlined,
-    PlayCircleOutlined,
-    ShareAltOutlined,
-    StarOutlined
-} from '@ant-design/icons';
+import { createOrUpdate } from 'services/All/subcriptionApiService';
+import { getCourseDetail } from 'services/User/clientApiService';
 
 const { TabPane } = Tabs;
 
+interface Lesson {
+    _id: string;
+    name: string;
+    lession_type: string;
+    position_order: number;
+    full_time: number;
+}
+
+interface Session {
+    _id: string;
+    name: string;
+    position_order: number;
+    lession_list: Lesson[];
+}
+
+interface CourseDetailType {
+    _id: string;
+    name: string;
+    description: string;
+    category_id: string;
+    category_name: string;
+    status: string;
+    video_url: string;
+    image_url: string;
+    price_paid: number;
+    price: number;
+    discount: number;
+    average_rating: number;
+    review_count: number;
+    instructor_id: string;
+    instructor_name: string;
+    full_time: number;
+    session_list: Session[];
+    is_in_cart: boolean;
+    is_purchased: boolean;
+    created_at: Date;
+    updated_at: Date;
+    is_deleted: boolean;
+}
+
 const CourseDetail: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>();
+    const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!courseId) {
+            console.error('Course ID is not available');
+            return;
+        }
+        const fetchCourseDetail = async () => {
+            try {
+                const response = await getCourseDetail(courseId);
+                setCourseDetail(response.data);
+            } catch (error) {
+                console.error('Failed to fetch course details:', error);
+            }
+        };
+        fetchCourseDetail();
+    }, [courseId]);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -29,16 +80,35 @@ const CourseDetail: React.FC = () => {
     };
 
     const handleAddToCart = async () => {
+        if (!courseId) {
+            message.error('Course ID is not available');
+            return;
+        }
         try {
-            const response = await createCart({
-                course_id: 'courseId',
-            });
+            const response = await createCart({ course_id: courseId });
             console.log('Cart item added successfully:', response.data);
             message.success('Course added to cart successfully!');
         } catch (error) {
             console.error('Failed to add course to cart:', error);
             message.error('Failed to add course to cart');
         }
+    };
+
+    const handleSubscribe = async () => {
+        if (!courseDetail) return;
+        try {
+            await createOrUpdate(courseDetail.instructor_id);
+            setIsSubscribed(true);
+            message.success('Subscription successful!');
+        } catch (error) {
+            console.error('Failed to subscribe:', error);
+            message.error('Failed to subscribe');
+        }
+    };
+
+    const toggleSession = (sessionId: string) => {
+        // If the clicked session is already expanded, collapse it; otherwise, expand it
+        setExpandedSessionId(expandedSessionId === sessionId ? null : sessionId);
     };
 
     const renderStars = (starCount: number) => {
@@ -53,13 +123,9 @@ const CourseDetail: React.FC = () => {
         return stars;
     };
 
-    const ratings = [
-        { stars: 5, percentage: 70 },
-        { stars: 4, percentage: 40 },
-        { stars: 3, percentage: 5 },
-        { stars: 2, percentage: 2 },
-        { stars: 1, percentage: 0 },
-    ];
+    if (!courseDetail) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="text-white bg-gray-900 wrapper">
@@ -89,26 +155,31 @@ const CourseDetail: React.FC = () => {
                         </div>
 
                         <div className="w-full mt-8 lg:w-2/3 lg:ml-8 lg:mt-0">
-                            <h2 className="text-2xl font-bold">The Web Developer Bootcamp</h2>
-                            <p className="mt-3 text-lg">The only course you need to learn web development - HTML, CSS, JS, Node, and More!</p>
+                            <h2 className="text-2xl font-bold">{courseDetail.name}</h2>
+                            <p className="mt-3 text-lg">{courseDetail.description}</p>
                             <div className="flex items-center mt-4 text-lg ">
                                 <div className='p-1 bg-yellow-500 rounded-lg'>
                                     <StarOutlined className="font-semibold text-white " />
-                                    <span className="ml-2 ">5.3.2</span>
+                                    <span className="ml-2 ">{courseDetail.average_rating}</span>
                                 </div>
-                                <span className="ml-2">(81,665 ratings)</span>
+                                <span className="ml-2">({courseDetail.average_rating} Ratings)</span>
                             </div>
-                            <p className="mt-3 text-lg">114,521 students enrolled</p>
+                            <p className="mt-3 text-lg">{courseDetail.review_count} students enrolled</p>
                             <div className="flex items-center mt-4 mb-3 text-lg">
-                                <CommentOutlined className="" />
-                                <span className="ml-2">English</span>
+                                {courseDetail.category_name}
+                            
                             </div>
-                            <p className="mt-2 text-lg">Last updated 1/2024</p>
+                            <p className="mt-2 text-lg">Last updated {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                             <div className="mt-4 ">
                                 <Button type="primary" className="p-5 mr-2 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
-                                <Link to={`/student/buy-now`}><Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>Buy Now</Button></Link>
+
+                                <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
+                                    <Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>
+                                        Buy Now
+                                    </Button>
+                                </Link>
+
                             </div>
-                            
                             <p className="mt-2 text-lg">30-Day Money-Back Guarantee</p>
                         </div>
                     </div>
@@ -118,69 +189,58 @@ const CourseDetail: React.FC = () => {
                 <div className="container px-3 mx-auto">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
-                            <Avatar src="images/left-imgs/img-1.jpg" size="large" />
+                            <Avatar src={courseDetail.instructor_id} size="large" />
                             <div className="flex flex-col ml-4">
-                                <a href="#" className="mb-3 text-lg font-semibold text-black">Johnson Smith</a>
-                                <Button type="default" className="p-5 ml-2 text-lg font-semibold text-white bg-red-600">Subscribe</Button>
+                                <a href="#" className="mb-3 text-lg font-semibold text-black">{courseDetail.instructor_name}</a>
+                                <Button onClick={handleSubscribe} type="primary" className="mr-2">
+                                    {isSubscribed ? 'Subscribed' : 'Subscribe'}
+                                </Button>
+                                <span className="text-gray-600">69,025 students</span>
                             </div>
                         </div>
-                        <div className="flex flex-wrap items-center p-2">
-                            <div className="flex justify-center w-full sm:w-auto sm:justify-start">
-                                <Badge showZero className="flex flex-col items-center p-4 border border-gray-300 rounded-lg">
-                                    <EyeOutlined className="mb-2 mr-1 text-2xl" />
-                                    <span>1452</span>
-                                </Badge>
-                            </div>
-                            <div className="flex justify-center w-full mt-2 sm:w-auto sm:justify-start sm:mt-0">
-                                <Badge showZero className="flex flex-col items-center p-4 ml-0 border border-gray-300 rounded-lg sm:ml-2">
-                                    <LikeOutlined className="mb-2 mr-1 text-2xl" />
-                                    <span>100</span>
-                                </Badge>
-                            </div>
-                            <div className="flex justify-center w-full mt-2 sm:w-auto sm:justify-start sm:mt-0">
-                                <Badge showZero className="flex flex-col items-center p-4 ml-0 border border-gray-300 rounded-lg sm:ml-2">
-                                    <DislikeOutlined className="mb-2 mr-1 text-2xl" />
-                                    <span>20</span>
-                                </Badge>
-                            </div>
-                            <div className="flex justify-center w-full mt-2 sm:w-auto sm:justify-start sm:mt-0">
-                                <Badge showZero className="flex flex-col items-center p-4 ml-0 border border-gray-300 rounded-lg sm:ml-2">
-                                    <ShareAltOutlined className="mb-2 text-2xl" />
-                                    <span>9</span>
-                                </Badge>
-                            </div>
+                        <div className="flex space-x-4">
+                            <Button type="link" icon={<PlayCircleOutlined />}>Preview this course</Button>
+                            <Button type="link" icon={<HeartOutlined />}>Add to Wishlist</Button>
                         </div>
-
                     </div>
-                    <Tabs defaultActiveKey="1" className="mt-4">
-                        <TabPane tab={<span className='text-xl font-semibold'>About</span>} key="1">
-                            <div>
-                                <h3 className='mb-2 text-2xl font-semibold'>Requirements</h3>
-                                <ul className="ml-6 text-xl text-gray-600 list-disc">
-                                    <li>Have a computer with Internet</li>
-                                    <li>Be ready to learn an insane amount of awesome stuff</li>
-                                    <li>Prepare to build real web apps!</li>
-                                </ul>
-                            </div>
-                        </TabPane>
-                        <TabPane tab={<span className='text-xl font-semibold'>Instructor</span>} key="2">
-                            <div>
-                                <h3 className='mb-2 text-2xl font-semibold'>Johnson Smith</h3>
-                                <p className="text-xl text-gray-600">Lorem ipsum dolor sit amet consectetur adipisicing elit. At maiores quam doloribus ullam quasi. Expedita sapiente aut sit natus autem et voluptates labore, ipsa molestias tempora reiciendis illo nostrum magnam!</p>
-                            </div>
-                        </TabPane>
-                        <TabPane tab={<span className='text-xl font-semibold'>Reviews</span>} key="3">
-                            <div>
-                                <h3 className='mb-2 text-2xl font-semibold'>Reviews</h3>
-                                {ratings.map((rating, index) => (
-                                    <div key={index} className="flex items-center mb-2">
-                                        <div className="flex-shrink-0 w-1/5">{renderStars(rating.stars)}</div>
-                                        <div className="flex-grow w-4/5 bg-gray-200">
-                                            <div className="h-4 bg-yellow-500" style={{ width: `${rating.percentage}%` }}></div>
-                                        </div>
-                                        <div className="ml-2">{rating.percentage}%</div>
+                </div>
+            </div>
+            <div className="py-4 bg-gray-100">
+                <div className="container px-4 mx-auto">
+                    <Tabs defaultActiveKey="1">
+                        <TabPane tab="Curriculum" key="1">
+                            {courseDetail.session_list && courseDetail.session_list.length > 0 ? (
+                                courseDetail.session_list.map((session) => (
+                                    <div key={session._id} className="p-4 mb-4 bg-white rounded shadow-md">
+                                        <h3 className="text-xl font-semibold cursor-pointer" onClick={() => toggleSession(session._id)}>
+                                            {session.name}
+                                        </h3>
+                                        {expandedSessionId === session._id && (
+                                            <ul>
+                                                {session.lession_list && session.lession_list.length > 0 ? (
+                                                    session.lession_list.map((lesson) => (
+                                                        <li key={lesson._id} className="flex items-center py-2">
+                                                            <div className="flex-shrink-0 w-8 h-8 bg-gray-200 rounded-full"></div>
+                                                            <div className="ml-4">
+                                                                <div className="text-lg font-medium">{lesson.name}</div>
+                                                                <div className="text-gray-600">{lesson.lession_type} - {lesson.full_time} mins</div>
+                                                            </div>
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <li>No lessons available</li>
+                                                )}
+                                            </ul>
+                                        )}
                                     </div>
-                                ))}
+                                ))
+                            ) : (
+                                <div>No sessions available</div>
+                            )}
+                        </TabPane>
+                        <TabPane tab="Reviews" key="2">
+                            <div className="p-4">
+                                {/* Review content goes here */}
                             </div>
                         </TabPane>
                     </Tabs>

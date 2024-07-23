@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, ConfigProvider } from 'antd';
+import { Button, Card, ConfigProvider, message, Checkbox, Modal } from 'antd';
 import sp from '../assets/sp.jpg';
-import { getCarts, deleteCart } from 'services/All/CartApiService';
+import { getCarts, deleteCart, updateCartStatus } from 'services/All/CartApiService';
 import { TinyColor } from '@ctrl/tinycolor';
 
 // Color Button
@@ -22,18 +22,27 @@ const cardTitleStyle: React.CSSProperties = {
   fontWeight: 'bold',
 };
 
+const statusColors: { [key: string]: string } = {
+  new: 'blue',
+  waiting_paid: 'orange',
+  cancel: 'red',
+  completed: 'green',
+};
+
 export default function ShoppingCart() {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchCarts() {
       setLoading(true);
       try {
         const response = await getCarts('', 1, 10);
-        // Ensure response.data is an array
-        if (Array.isArray(response.data)) {
-          setCourses(response.data); // Update with actual data path
+        if (response.data && Array.isArray(response.data.pageData)) {
+          setCourses(response.data.pageData);
         } else {
           console.error('Response data is not an array:', response.data);
         }
@@ -47,21 +56,45 @@ export default function ShoppingCart() {
     fetchCarts();
   }, []);
 
-  const handleDelete = async (courseId: string) => {
-    try {
-      await deleteCart(courseId);
-      setCourses((prevCourses) =>
-        prevCourses.filter((course) => course.id !== courseId)
-      );
-    } catch (error) {
-      console.error('Failed to delete cart item:', error);
+  const showDeleteModal = (courseId: string) => {
+    setCourseToDelete(courseId);
+    setIsModalVisible(true);
+  };
+
+  const handleDelete = async () => {
+    if (courseToDelete) {
+      try {
+        await deleteCart(courseToDelete);
+        setCourses((prevCourses) =>
+          prevCourses.filter((course) => course._id !== courseToDelete)
+        );
+        setSelectedCourses((prevSelected) =>
+          prevSelected.filter((id) => id !== courseToDelete)
+        );
+        setIsModalVisible(false);
+        setCourseToDelete(null);
+      } catch (error) {
+        console.error('Failed to delete cart item:', error);
+      }
     }
   };
 
-  // Check if courses is an array before using reduce
-  const totalPrice: number = Array.isArray(courses) ? courses.reduce((total, course) => total + parseFloat(course.price.replace('.', '')), 0) : 0;
-  const discount: number = Array.isArray(courses) && courses.length >= 2 ? 0.1 : 0;
-  const finalPrice: number = (totalPrice * (1 - discount));
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setCourseToDelete(null);
+  };
+
+  const handleCheckboxChange = (courseId: string) => {
+    setSelectedCourses((prevSelected) =>
+      prevSelected.includes(courseId)
+        ? prevSelected.filter((id) => id !== courseId)
+        : [...prevSelected, courseId]
+    );
+  };
+
+  const selectedTotalPrice = courses
+    .filter((course) => selectedCourses.includes(course._id))
+    .reduce((total, course) => total + course.price * (1 - course.discount), 0);
 
   return (
     <div className="w-full min-h-screen mx-auto bg-gray-200">
@@ -74,8 +107,12 @@ export default function ShoppingCart() {
             {loading ? (
               <div>Loading...</div>
             ) : (
-              courses.map((course, index) => (
-                <Card.Grid key={index} style={gridStyle} className="md:flex">
+              courses.map((course) => (
+                <Card.Grid key={course._id} style={gridStyle} className="md:flex">
+                  <Checkbox className='mr-4'
+                    checked={selectedCourses.includes(course._id)}
+                    onChange={() => handleCheckboxChange(course._id)}
+                  />
                   <img
                     src={course.image || sp}
                     alt="Product"
@@ -84,20 +121,29 @@ export default function ShoppingCart() {
                   <div className="w-full md:flex md:w-2/3">
                     <div className="flex-grow mx-4">
                       <div className="w-full font-bold text-center md:text-lg sm:text-sm md:text-left">
-                        {course.name}
+                        {course.course_name}
                       </div>
                       <div className="w-full font-medium text-center md:text-base sm:text-xs text-slate-500 md:text-left">
-                        By: {course.author}
+                        By: {course.instructor_name}
+                      </div>
+                      <div
+                        style={{ color: statusColors[course.status] }}
+                        className="mt-2 font-semibold"
+                      >
+                        {course.status.replace('_', ' ')}
                       </div>
                     </div>
                     <div className="md:w-1/5">
                       <div className="font-semibold text-center md:text-lg sm:text-sm">
-                        <p>{course.price} VNĐ</p>
+                        <div>
+                          <span style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} VNĐ</span> <span>({course.discount * 100}%)</span>
+                        </div>
+                        <div>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} VNĐ</div>
                       </div>
                       <Button
                         danger
                         className="w-full mt-5 font-bold text-center md:mt-16"
-                        onClick={() => handleDelete(course.id)}
+                        onClick={() => showDeleteModal(course._id)}
                       >
                         Delete
                       </Button>
@@ -115,15 +161,11 @@ export default function ShoppingCart() {
             </div>
             <div className="flex justify-between my-4 text-base font-medium">
               <div>Original Price</div>
-              <div>{totalPrice.toLocaleString('vi-VN')}</div>
-            </div>
-            <div className="flex justify-between my-4 text-base font-medium">
-              <div>Discount Price</div>
-              <div>{(totalPrice * discount).toLocaleString('vi-VN')}</div>
+              <div>{selectedTotalPrice.toLocaleString('vi-VN')} VNĐ</div>
             </div>
             <div className="flex justify-between py-5 text-xl font-bold border-t border-gray-500">
               <div>Total:</div>
-              <div>{finalPrice.toLocaleString('vi-VN')} VNĐ</div>
+              <div>{selectedTotalPrice.toLocaleString('vi-VN')} VNĐ</div>
             </div>
             <ConfigProvider
               theme={{
@@ -139,13 +181,24 @@ export default function ShoppingCart() {
             >
               <a href="">
                 <Button type="primary" size="large" className="w-full">
-                  Checkout Now
+                  Proceed to Checkout
                 </Button>
               </a>
             </ConfigProvider>
           </Card>
         </div>
       </div>
+
+      <Modal
+        title="Confirm Delete"
+        visible={isModalVisible}
+        onOk={handleDelete}
+        onCancel={handleCancel}
+        okText="Delete"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete this course?</p>
+      </Modal>
     </div>
   );
 }

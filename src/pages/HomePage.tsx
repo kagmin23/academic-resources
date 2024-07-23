@@ -185,6 +185,9 @@ const HomePage: React.FC = () => {
       navigate(`/course-details/${courseId}`);
     }
   };
+
+
+  
   return (
     <div className="bg-gray-100 homepage">
       <header className="hero-image">
@@ -237,6 +240,7 @@ const HomePage: React.FC = () => {
             arrows
             autoplay
             dotPosition="bottom"
+            
             className="px-6"
             slidesToShow={4}
             prevArrow={<div><CustomPrevArrow /></div>}
@@ -267,11 +271,11 @@ const HomePage: React.FC = () => {
                 {/* <Link to={`course-details/${course._id}`}>
                   <img className="rounded-xl" src={course.image_url} alt={course.name} />
                 </Link> */}
-                 <div onClick={() => handleNavigateToCourseDetails(course._id)}>
-                  <img className="rounded-xl" src={course.image_url} alt={course.name} />
+                 <div  onClick={() => handleNavigateToCourseDetails(course._id)}>
+                  <img className="rounded-xl lg:h-48 w-full h-40 object-fill" src={course.image_url}  alt={course.name} />
                 </div>
-                <div className="flex justify-between items-center">
-                  <h1 className="text-xl font-bold truncate lg:text-2xl">{course.name}</h1>
+                <div className="flex justify-between space-x-10 items-center">
+                  <h1 className="text-lg` font-bold truncate lg:text-2xl">{course.name}</h1>
                   <div className="flex">
                     <Button size="small" title="Save this course" className="p-2 text-white bg-red-500">
                       <HeartOutlined />
@@ -281,7 +285,7 @@ const HomePage: React.FC = () => {
                     </Button>
                   </div>
                 </div>
-                <p className="lg:text-lg">{course.price}.000 VND</p>
+                <p className="lg:text-xl font-bold">{course.price} VND</p>
               </div>
             ))}
           </Carousel>
@@ -368,14 +372,14 @@ const HomePage: React.FC = () => {
                 <Card
                   bordered={false}
                   className="w-full h-48 transition duration-300 ease-in-out hover:shadow-md"
-                  cover={<img alt={category.name} src={category.img} className="object-cover h-32 p-3" />}
+                  cover={<img alt={category.name}  src={category.img} className="object-cover h-32 p-3" />}
                 >
                   <div className="text-center">{category.name}</div>
                 </Card>
               </Col>
             ))
           ) : (
-            <div className="text-center">Loading categories...</div>
+            <div className="text-center text-xl">Loading categories...</div>
           )}
         </Row>
 
