@@ -122,13 +122,13 @@ const SettingStudent: React.FC = () => {
                 <Input />
               </Form.Item>
 
-              <Form.Item
+              {/* <Form.Item
                 name="email"
                 label="Email"
                 rules={[{ required: true, message: 'Please input your Email!' }]}
               >
                 <Input />
-              </Form.Item>
+              </Form.Item> */}
 
             
               <Form.Item
