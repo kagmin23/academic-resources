@@ -1,9 +1,9 @@
-import { ExclamationCircleOutlined, HeartOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
+import { ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
 import { Avatar, Button, Modal, Tabs, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { createCart } from 'services/All/CartApiService';
-import { createOrUpdate } from 'services/All/subcriptionApiService';
+import { createOrUpdate, getItemBySubcriber } from 'services/All/subcriptionApiService';
 import { getCourseDetail } from 'services/User/clientApiService';
 
 const { TabPane } = Tabs;
@@ -71,6 +71,20 @@ const CourseDetail: React.FC = () => {
         fetchCourseDetail();
     }, [courseId]);
 
+    useEffect(() => {
+        if (courseDetail) {
+            const fetchSubscriptionStatus = async () => {
+                try {
+                    const response = await getItemBySubcriber(courseDetail.instructor_id, 1, 1);
+                    setIsSubscribed(response.data.length > 0 && response.data[0].is_subscribed);
+                } catch (error) {
+                    console.error('Failed to fetch subscription status:', error);
+                }
+            };
+            fetchSubscriptionStatus();
+        }
+    }, [courseDetail]);
+
     const showModal = () => {
         setIsModalVisible(true);
     };
@@ -98,16 +112,15 @@ const CourseDetail: React.FC = () => {
         if (!courseDetail) return;
         try {
             await createOrUpdate(courseDetail.instructor_id);
-            setIsSubscribed(true);
-            message.success('Subscription successful!');
+            setIsSubscribed(!isSubscribed);
+            message.success(isSubscribed ? 'Unsubscribed successfully!' : 'Subscribed successfully!');
         } catch (error) {
             console.error('Failed to subscribe:', error);
-            message.error('Failed to subscribe');
+            message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
         }
     };
 
     const toggleSession = (sessionId: string) => {
-        // If the clicked session is already expanded, collapse it; otherwise, expand it
         setExpandedSessionId(expandedSessionId === sessionId ? null : sessionId);
     };
 
@@ -117,96 +130,99 @@ const CourseDetail: React.FC = () => {
             if (i < starCount) {
                 stars.push(<span key={i} role="img" aria-label="star" className="text-yellow-600">⭐️</span>);
             } else {
-                stars.push(<span key={i} role="img" aria-label="star" className="text-3xl text-yellow-600">☆</span>);
+                stars.push(<span key={i} role="img" aria-label="star" className="text-gray-300">⭐️</span>);
             }
         }
         return stars;
     };
 
     if (!courseDetail) {
-        return <div>Loading...</div>;
+        return <div className="text-center text-white">Loading...</div>;
     }
 
     return (
-        <div className="text-white bg-gray-900 wrapper">
+        <div className="text-white bg-gray-900">
             <div className="py-8">
-                <div className="container px-4 mx-auto">
-                    <div className="flex flex-col items-center justify-center lg:flex-row lg:space-x-8">
-                        <div className="relative w-full mb-4 lg:w-1/3 lg:mb-0">
+                <div className="container mx-auto px-4">
+                    <div className="flex flex-col lg:flex-row lg:space-x-8">
+                        <div className="w-full lg:w-1/3 mb-4 lg:mb-0">
                             <div className="relative">
-                                <a onClick={showModal} className="block">
-                                    <img src="https://img.youtube.com/vi/hqBjda_bf3I/maxresdefault.jpg" alt="" className="w-full p-2 bg-white" />
-                                    <div className="absolute inset-0 flex flex-col items-center justify-center bg-black bg-opacity-50">
-                                        <div className="absolute top-0 right-0 p-1 m-2 mt-3 text-lg font-semibold text-white bg-orange-500 rounded">Bestseller</div>
+                                <a onClick={showModal} className="block cursor-pointer">
+                                    <img src={courseDetail.image_url} alt={courseDetail.name} className="w-full rounded-lg" />
+                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
                                         <PlayCircleOutlined className="text-4xl text-white" />
                                         <span className="absolute bottom-0 w-full py-2 text-xl font-semibold text-center text-white bg-black bg-opacity-75">Preview this course</span>
                                     </div>
                                 </a>
-                                <Modal visible={isModalVisible} onCancel={handleCancel} footer={null}>
-                                    <video width="100%" controls>
-                                        <source src="your-video-url.mp4" type="video/mp4" />
-                                    </video>
+                                <Modal
+                                    visible={isModalVisible}
+                                    onCancel={handleCancel}
+                                    footer={null}
+                                    centered
+                                >
+                                    <iframe
+                                        width="100%"
+                                        height="400px"
+                                        src={courseDetail.video_url}
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
                                 </Modal>
                             </div>
-                            <div className="mt-4 mr-5">
-                                <Button type="link" className="text-lg text-white" icon={<HeartOutlined />}>Save</Button>
+                            <div className="mt-4">
                                 <Button type="link" className="text-lg text-white" icon={<ExclamationCircleOutlined />}>Report abuse</Button>
                             </div>
                         </div>
 
-                        <div className="w-full mt-8 lg:w-2/3 lg:ml-8 lg:mt-0">
+                        <div className="w-full lg:w-2/3">
                             <h2 className="text-2xl font-bold">{courseDetail.name}</h2>
                             <p className="mt-3 text-lg">{courseDetail.description}</p>
-                            <div className="flex items-center mt-4 text-lg ">
-                                <div className='p-1 bg-yellow-500 rounded-lg'>
-                                    <StarOutlined className="font-semibold text-white " />
-                                    <span className="ml-2 ">{courseDetail.average_rating}</span>
+                            <div className="flex items-center mt-4 text-lg">
+                                <div className="p-1 bg-yellow-500 rounded-lg">
+                                    <StarOutlined className="font-semibold text-white" />
+                                    <span className="ml-2">{courseDetail.average_rating}</span>
                                 </div>
-                                <span className="ml-2">({courseDetail.average_rating} Ratings)</span>
+                                <span className="ml-2">({courseDetail.review_count} Ratings)</span>
                             </div>
                             <p className="mt-3 text-lg">{courseDetail.review_count} students enrolled</p>
                             <div className="flex items-center mt-4 mb-3 text-lg">
                                 {courseDetail.category_name}
-                            
                             </div>
-                            <p className="mt-2 text-lg">Last updated {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
-                            <div className="mt-4 ">
-                                <Button type="primary" className="p-5 mr-2 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
-
+                            <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
+                            <div className="mt-4 flex space-x-4">
+                                <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
                                 <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
-                                    <Button type="default" className='p-5 text-lg font-semibold text-white bg-gray-800'>
-                                        Buy Now
-                                    </Button>
+                                    <Button type="default" className="p-5 text-lg font-semibold text-white bg-gray-800">Buy Now</Button>
                                 </Link>
-
                             </div>
-                            <p className="mt-2 text-lg">30-Day Money-Back Guarantee</p>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="py-4 bg-white shadow-md">
-                <div className="container px-3 mx-auto">
+                <div className="container mx-auto px-4">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <Avatar src={courseDetail.instructor_id} size="large" />
-                            <div className="flex flex-col ml-4">
-                                <a href="#" className="mb-3 text-lg font-semibold text-black">{courseDetail.instructor_name}</a>
-                                <Button onClick={handleSubscribe} type="primary" className="mr-2">
-                                    {isSubscribed ? 'Subscribed' : 'Subscribe'}
+                            <div className="ml-4 flex flex-col">
+                                <a href="#" className="text-lg font-semibold text-black">{courseDetail.instructor_name}</a>
+                                <Button
+                                    onClick={handleSubscribe}
+                                    type="primary"
+                                    className={`mr-2 mt-2 p-1 text-lg font-semibold ${isSubscribed ? 'bg-green-500' : 'bg-red-500'}`}
+                                    style={{ fontSize: '16px', height: 'auto' }}
+                                >
+                                    {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
                                 </Button>
                                 <span className="text-gray-600">69,025 students</span>
                             </div>
-                        </div>
-                        <div className="flex space-x-4">
-                            <Button type="link" icon={<PlayCircleOutlined />}>Preview this course</Button>
-                            <Button type="link" icon={<HeartOutlined />}>Add to Wishlist</Button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="py-4 bg-gray-100">
-                <div className="container px-4 mx-auto">
+                <div className="container mx-auto px-4">
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="Curriculum" key="1">
                             {courseDetail.session_list && courseDetail.session_list.length > 0 ? (

@@ -113,11 +113,7 @@ export default function ShoppingCart() {
                     checked={selectedCourses.includes(course._id)}
                     onChange={() => handleCheckboxChange(course._id)}
                   />
-                  <img
-                    src={course.image || sp}
-                    alt="Product"
-                    className="w-4/5 h-24 mx-auto md:w-1/3 md:h-36"
-                  />
+                  <img src={course.image_url || sp} alt="Image" className="w-4/5 h-24 mx-auto md:w-1/3 md:h-36" />
                   <div className="w-full md:flex md:w-2/3">
                     <div className="flex-grow mx-4">
                       <div className="w-full font-bold text-center md:text-lg sm:text-sm md:text-left">
@@ -127,17 +123,15 @@ export default function ShoppingCart() {
                         By: {course.instructor_name}
                       </div>
                       <div className='flex flex-row font-medium text-slate-500'>Status:
-                      <div className='ml-1' style={{ color: statusColors[course.status] }}>
-                         {course.status.replace('_', ' ')}
-                      </div>
+                        <div className='ml-1' style={{ color: statusColors[course.status] }}>
+                          {course.status.replace('_', ' ')}
+                        </div>
                       </div>
                     </div>
                     <div className="md:w-1/5">
-                      <div className="font-semibold text-center md:text-lg sm:text-sm">
-                        <div>
-                          <span style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} VNĐ</span> <span>({course.discount * 100}%)</span>
-                        </div>
-                        <div>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} VNĐ</div>
+                      <div className="font-semibold md:text-lg sm:text-sm">
+                        <span style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} đ</span> <span>({course.discount * 100}%)</span>
+                        <div>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} đ</div>
                       </div>
                       <Button
                         danger

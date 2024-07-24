@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Card, Carousel, Col, message, Row,notification } from 'antd';
+import { Button, Card, Carousel, Col, message, Row, notification } from 'antd';
 import {
   ArrowRightOutlined,
   FlagOutlined,
@@ -60,35 +60,35 @@ interface ApiResponse {
 
 const HomePage: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [courses, setCourses] = useState<Course[]>([]); 
+  const [courses, setCourses] = useState<Course[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
 
   useEffect(() => {
-      const fetchCurrentUser = async () => {
-        try {
-          const response = await getCurrentUser();
-          if (response.success) {
-            setCurrentUser(response.data);
-          } else {
-            notification.error({
-              message: 'Error',
-              description: 'Failed to fetch current user information',
-            });
-          }
-        } catch (error) {
-          // notification.error({
-          //   message: 'Error',
-          //   description: 'Failed to fetch current user information',
-          // });
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await getCurrentUser();
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          notification.error({
+            message: 'Error',
+            description: 'Failed to fetch current user information',
+          });
         }
-      };
-  
-      fetchCurrentUser();
-    }, []);
-    
+      } catch (error) {
+        // notification.error({
+        //   message: 'Error',
+        //   description: 'Failed to fetch current user information',
+        // });
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+
 
 
   useEffect(() => {
@@ -181,13 +181,13 @@ const HomePage: React.FC = () => {
       navigate(`/student/course-details/${courseId}`);
     } else if (currentUser.role === 'instructor') {
       navigate(`/instructor/course-details/${courseId}`);
-    }else {
+    } else {
       navigate(`/course-details/${courseId}`);
     }
   };
 
 
-  
+
   return (
     <div className="bg-gray-100 homepage">
       <header className="hero-image">
@@ -240,7 +240,7 @@ const HomePage: React.FC = () => {
             arrows
             autoplay
             dotPosition="bottom"
-            
+
             className="px-6"
             slidesToShow={4}
             prevArrow={<div><CustomPrevArrow /></div>}
@@ -271,22 +271,17 @@ const HomePage: React.FC = () => {
                 {/* <Link to={`course-details/${course._id}`}>
                   <img className="rounded-xl" src={course.image_url} alt={course.name} />
                 </Link> */}
-                 <div  onClick={() => handleNavigateToCourseDetails(course._id)}>
-                  <img className="rounded-xl lg:h-48 w-full h-40 object-fill" src={course.image_url}  alt={course.name} />
+                <div onClick={() => handleNavigateToCourseDetails(course._id)}>
+                  <img className="rounded-xl lg:h-48 w-full h-40 object-fill" src={course.image_url} alt={course.name} />
                 </div>
                 <div className=" ">
-                  <h1 className="text-lg` font-bold truncate lg:text-2xl flex justify-start">{course.name}</h1>
-                 
+                  <h1 className="text-lg font-bold truncate lg:text-xl flex justify-start p-3">{course.name}</h1>
+
                 </div>
-                <div className='flex justify-between'>
-                <p className="lg:text-base font-semibold flex  text-gray-600 justify-start">{course.price} VND</p>
-                <div className="flex">
-                    <Button size="small" title="Save this course" className="p-2 text-white bg-red-500">
-                      <HeartOutlined />
-                    </Button>
-                    <Button size="small" title="Report this course" className="p-2 text-white bg-blue-500">
-                      <FlagOutlined />
-                    </Button>
+                <div className='flex justify-between ml-3'>
+                  <div className="font-semibold md:text-lg sm:text-sm flex flex-row ">
+                    <span style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} đ</span> <span>({course.discount * 100}%)</span>
+                    <div className='ml-3 text-orange-600'>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} đ</div>
                   </div>
                 </div>
               </div>
@@ -375,7 +370,7 @@ const HomePage: React.FC = () => {
                 <Card
                   bordered={false}
                   className="w-full h-48 transition duration-300 ease-in-out hover:shadow-md"
-                  cover={<img alt={category.name}  src={category.img} className="object-cover h-32 p-3" />}
+                  cover={<img alt={category.name} src={category.img} className="object-cover h-32 p-3" />}
                 >
                   <div className="text-center">{category.name}</div>
                 </Card>
