@@ -3,7 +3,7 @@ import {
   PieChartOutlined,
   ShoppingCartOutlined,
   ScheduleOutlined,
-  DeploymentUnitOutlined
+  DeploymentUnitOutlined,EyeOutlined
 } from "@ant-design/icons";
 import { Avatar, Menu, Typography } from "antd";
 import 'antd/dist/reset.css';
@@ -60,6 +60,11 @@ const SidebarStudent: React.FC = () => {
       icon: ScheduleOutlined,
       heading: 'Assignments',
       href: "/student/profile-student/*",
+    },
+    {
+      icon: EyeOutlined,
+      heading: "Manager Subcription",
+      href: "/student/profile-student/subcription-student",
     },
   ];
 
