@@ -160,7 +160,7 @@ export default function ShoppingCart() {
               Total:
             </div>
             <div className="flex justify-between my-4 text-base font-medium">
-              <div>Original Price</div>
+              <div>Price</div>
               <div>{selectedTotalPrice.toLocaleString('vi-VN')} VNĐ</div>
             </div>
             <div className="flex justify-between py-5 text-xl font-bold border-t border-gray-500">

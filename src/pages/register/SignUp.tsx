@@ -1,12 +1,10 @@
-import { CheckCircleOutlined, GoogleOutlined, UploadOutlined } from '@ant-design/icons';
-
-import { Button, Checkbox, Form, Input, Radio, Upload, notification } from 'antd';
+import { CheckCircleOutlined, GoogleOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, Radio, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import { User } from 'models/types';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
-import customUpload from 'utils/upLoad';
 import { registerUser } from '../../services/registerApiService';
 
 const SignUp: React.FC = () => {
@@ -16,10 +14,8 @@ const SignUp: React.FC = () => {
   const [formData, setFormData] = useState<User>();
   const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false, false, false, false]);
   const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
-  const [uploadStatus, setUploadStatus] = useState<string>('uploading');
   const navigate = useNavigate();
 
-  
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
   };
@@ -51,7 +47,6 @@ const SignUp: React.FC = () => {
       updatedCompletedSteps[current] = true;
       setCompletedSteps(updatedCompletedSteps);
       const finalFormData = { ...formData, ...values, role: value };
-  
 
       setFormData(finalFormData);
   
@@ -63,9 +58,8 @@ const SignUp: React.FC = () => {
       notification.success({
         message: 'Success',
         description: 'You have signed up successfully!',
-      })
+      });
       navigate('/verify-email');
-      ;
   
       if (value === 'instructor') {
         await reviewProfileInstructor();
@@ -108,7 +102,7 @@ const SignUp: React.FC = () => {
             rules={[
               { required: true, message: 'Please input your password!' },
               {
-                pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
+                // pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
                 message: 'Your password must be from 8 to 16 characters long, must contain at least 1 uppercase character, lowercase character and numeric character',
               },
             ]}
@@ -146,15 +140,12 @@ const SignUp: React.FC = () => {
       title: 'Update',
       content: (
         <Form form={form} className="space-y-4">
-          <Form.Item name="video">
-            <Upload customRequest={() => customUpload} listType="picture" maxCount={1}>
-              <Button icon={uploadStatus === 'done' ? <CheckCircleOutlined style={{ color: 'green' }} /> : <UploadOutlined />}>
-                {uploadStatus === 'done' ? 'Upload Completed' : 'Upload Video'}
-              </Button>
-            </Upload>
+          <Form.Item
+            name="video"
+            rules={[{ required: false, message: 'Please enter the video URL' }]}
+          >
+            <Input placeholder="Video URL" size="middle" />
           </Form.Item>
-
-
           <Form.Item
             name="description"
             rules={[{ required: false, message: 'Please enter the description' }]}

@@ -13,7 +13,6 @@ import {
   DetailBlogPage,
   HomePage,
   ResendVerifyToken,
-  SavePage,
   TopInstructorPage,
   VerityToken
 } from 'pages';
@@ -58,7 +57,6 @@ const AppRouter: React.FC = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/top-instructor" element={<TopInstructorPage />} />
-          <Route path="/save" element={<SavePage />} />
           <Route path="/all-instructor" element={<AllInstructor />} />
           <Route path="/verify-email" element={<VerityToken />} />
           <Route path="/resend-email" element={<ResendVerifyToken />} />
