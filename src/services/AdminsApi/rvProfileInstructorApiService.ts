@@ -2,23 +2,25 @@ import { message } from 'antd';
 import axios from 'axios';
 import { HOST_MAIN } from 'services/apiService';
 
-export const reviewProfileInstructor = async () => {
+export const reviewProfileInstructor = async (userId: string, status: "approve" | "reject", comment: string = "") => {
   try {
     const token = localStorage.getItem("token");
-    console.log("token", token);
-    const response = await axios.put(`${HOST_MAIN}/api/users/review-profile-instructor`, {
-        "user_id": "",
-        "status": "approve",
-        "comment": "",
-
-      headers: {
-        Authorization: `Bearer ${token}`,
+    const response = await axios.put(
+      `${HOST_MAIN}/api/users/review-profile-instructor`, 
+      {
+        user_id: userId,
+        status,
+        comment,
       },
-    });
-    console.log("Response", response)
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
     return response.data;
   } catch (error: any) {
-    message.error("Error fetching API purchases")
-    throw new Error(`Error searching purchases: ${error.message}`);
+    message.error(`Error ${status === "approve" ? "approving" : "rejecting"} instructor profile`);
+    throw new Error(`Error ${status === "approve" ? "approving" : "rejecting"} instructor profile: ${error.message}`);
   }
 };

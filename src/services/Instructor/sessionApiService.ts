@@ -35,7 +35,7 @@ export const createSession = async (sessionData: {
 };
 
 
-export const getSessions = async (keyword: string, pageNum: number, pageSize: number, course_id: string) => {
+export const getSessions = async (keyword: string, pageNum: number, pageSize: number,totalItems: number,totalPages: number, course_id: string) => {
   const token = localStorage.getItem('token');
 
   return apiRequest('/api/session/search', {
@@ -52,6 +52,8 @@ export const getSessions = async (keyword: string, pageNum: number, pageSize: nu
       },
       pageInfo: {
         pageNum,
+        totalItems,
+        totalPages,
         pageSize,
       },
     },

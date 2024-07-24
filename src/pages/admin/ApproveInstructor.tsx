@@ -3,11 +3,11 @@ import { Button, Input, Layout, Modal, Table, message } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment, { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
-import { changeStatus } from 'services/AdminsApi/changeStatusApiService';
 import { getUsers } from 'services/AdminsApi/getUserApiService';
 import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
 
 const { Content } = Layout;
+const { TextArea } = Input;
 
 interface ApproveIns {
   _id: string;
@@ -21,24 +21,35 @@ interface ApproveIns {
   description: string;
   avatar: string;
   video: string;
+  isRejected?: boolean;
+  isApproved?: boolean;
+  rejectComment?: string;
 }
 
 const ApproveInstructor: React.FC = () => {
   const [data, setData] = useState<ApproveIns[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
-  const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
-  const [lockItemId, setLockItemId] = useState<string | undefined>(undefined);
-  const [confirmMessage, setConfirmMessage] = useState<string>("");
+  const [confirmVisible, setConfirmVisible] = useState<boolean>(false);
+  const [confirmItemId, setConfirmItemId] = useState<string | undefined>(undefined);
+  const [confirmAction, setConfirmAction] = useState<string>("");
+  const [rejectComment, setRejectComment] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getUsers({
-          searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false },
-          pageInfo: { pageNum: 1, pageSize: 10 },
+          searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false, is_verified: false },
+          pageInfo: { pageNum: 1, pageSize: 10,totalItems: 6, totalPages: 1 },
         });
         if (response.success) {
-          setData(response.data.pageData);
+          const storedRejected = JSON.parse(localStorage.getItem('rejectedInstructors') || '[]');
+          const storedApproved = JSON.parse(localStorage.getItem('approvedInstructors') || '[]');
+          const updatedData = response.data.pageData.map((instructor: ApproveIns) => {
+            const rejectedInstructor = storedRejected.find((rej: ApproveIns) => rej._id === instructor._id);
+            const approvedInstructor = storedApproved.find((app: ApproveIns) => app._id === instructor._id);
+            return rejectedInstructor ? { ...instructor, ...rejectedInstructor } : approvedInstructor ? { ...instructor, ...approvedInstructor } : instructor;
+          });
+          setData(updatedData);
         } else {
           message.error("Failed to fetch users");
         }
@@ -54,47 +65,55 @@ const ApproveInstructor: React.FC = () => {
     setSearchTerm(event.target.value);
   };
 
-  const handleStatusChange = async (checked: boolean, item: ApproveIns) => {
-    try {
-      await changeStatus(item._id, checked);
-      const updatedData = data.map((dataItem) =>
-        dataItem._id === item._id ? { ...dataItem, status: checked } : dataItem
-      );
-      setData(updatedData);
-      message.success(`User status ${checked ? 'activated' : 'deactivated'} successfully`);
-    } catch (error) {
-      message.error('Error changing user status');
-    }
-  };
-
-  const handleLockStatus = async () => {
-    if (lockItemId) {
-      try {
-        await changeStatus(lockItemId, false);
-        const updatedData = data.map((item) =>
-          item._id === lockItemId ? { ...item, status: false } : item
-        );
-        setData(updatedData);
-        setLockItemId(undefined);
-        setLockConfirmVisible(false);
-        message.success("User status locked successfully");
-      } catch (error) {
-        message.error('Error locking user status');
-      }
-    }
-  };
-
   const handleApproveInstructor = async (item: ApproveIns) => {
     try {
-      await reviewProfileInstructor();
+      await reviewProfileInstructor(item._id, "approve");
       message.success("Instructor profile approved successfully");
       const updatedData = data.map((dataItem) =>
-        dataItem._id === item._id ? { ...dataItem, status: true } : dataItem
+        dataItem._id === item._id ? { ...dataItem, isApproved: true } : dataItem
       );
       setData(updatedData);
+      localStorage.setItem('approvedInstructors', JSON.stringify(updatedData.filter(instructor => instructor.isApproved)));
     } catch (error) {
       message.error('Error approving instructor profile');
     }
+  };
+
+  const handleRejectInstructor = async (item: ApproveIns, comment: string) => {
+    try {
+      await reviewProfileInstructor(item._id, "reject", comment);
+      message.success("Instructor profile rejected successfully");
+      const updatedData = data.map((dataItem) =>
+        dataItem._id === item._id ? { ...dataItem, isRejected: true, rejectComment: comment } : dataItem
+      );
+      setData(updatedData);
+      localStorage.setItem('rejectedInstructors', JSON.stringify(updatedData.filter(instructor => instructor.isRejected)));
+    } catch (error) {
+      message.error('Error rejecting instructor profile');
+    }
+  };
+
+  const handleConfirmAction = async () => {
+    if (confirmItemId) {
+      const item = data.find((dataItem) => dataItem._id === confirmItemId);
+      if (!item) return;
+      
+      if (confirmAction === "approve") {
+        await handleApproveInstructor(item);
+      } else if (confirmAction === "reject") {
+        await handleRejectInstructor(item, rejectComment);
+      }
+      setConfirmVisible(false);
+      setConfirmItemId(undefined);
+      setConfirmAction("");
+      setRejectComment("");
+    }
+  };
+
+  const handleConfirm = (action: string, itemId: string) => {
+    setConfirmItemId(itemId);
+    setConfirmAction(action);
+    setConfirmVisible(true);
   };
 
   const filteredData = data.filter((item) =>
@@ -103,12 +122,6 @@ const ApproveInstructor: React.FC = () => {
 
   const columns: ColumnsType<ApproveIns> = [
     { title: 'ID', dataIndex: '_id', key: '_id' },
-    // {
-    //   title: 'Avatar',
-    //   dataIndex: 'avatar',
-    //   key: 'avatar',
-    //   render: (avatar: string) => <iframe src={avatar} title="Avatar"></iframe>,
-    // },
     { title: 'Username', dataIndex: 'name', key: 'name' },
     {
       title: 'Date Of Birth',
@@ -117,8 +130,8 @@ const ApproveInstructor: React.FC = () => {
       render: (dob: Moment) => moment(dob).format("YYYY-MM-DD"),
     },
     { title: 'Phone', dataIndex: 'phone_number', key: 'phone_number' },
-    { title: 'Email', dataIndex: 'email', key: 'email',},
-    { title: 'Video', dataIndex: 'video', key: 'video', width: 50 },
+    { title: 'Email', dataIndex: 'email', key: 'email' },
+    { title: 'Video', dataIndex: 'video', key: 'video', width: 30 },
     { title: 'Description', dataIndex: 'description', key: 'description', width: 200 },
 
     {
@@ -126,22 +139,28 @@ const ApproveInstructor: React.FC = () => {
       key: 'action',
       render: (_, item: ApproveIns) => (
         <div className="flex flex-row gap-1">
-        <Button
-          className="text-white bg-blue-500"
-          size="small"
-          icon={<CheckOutlined />}
-          onClick={() => handleApproveInstructor(item)}
-        >
-        </Button>
-
-        <Button
-          className="text-white bg-red-500"
-          size="small"
-          icon={<CloseOutlined />}
-          onClick={() => handleApproveInstructor(item)}
-        >
-        </Button>
-        
+          {!item.isRejected && !item.isApproved && (
+            <>
+              <Button
+                className="text-white bg-blue-500"
+                size="small"
+                icon={<CheckOutlined />}
+                onClick={() => handleConfirm("approve", item._id)}
+              />
+              <Button
+                className="text-white bg-red-500"
+                size="small"
+                icon={<CloseOutlined />}
+                onClick={() => handleConfirm("reject", item._id)}
+              />
+            </>
+          )}
+          {item.isRejected && (
+            <span className="text-red-500">Rejected</span>
+          )}
+          {item.isApproved && (
+            <span className="text-green-500">Approved</span>
+          )}
         </div>
       ),
     },
@@ -156,20 +175,36 @@ const ApproveInstructor: React.FC = () => {
             placeholder="Search"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-1/3"
+            className="w-full sm:w-1/3"
             onSearch={(value) => setSearchTerm(value)}
           />
         </div>
 
-        <Table dataSource={filteredData} columns={columns} rowKey="_id" />
+        <Table
+          dataSource={filteredData}
+          columns={columns}
+          rowKey="_id"
+          pagination={{ pageSize: 10 }}
+          scroll={{ x: 'max-content' }}
+        />
 
         <Modal
-          title="CONFIRM INSTRUCTOR ACCOUNT VALID?"
-          visible={lockConfirmVisible}
-          onOk={handleLockStatus}
-          onCancel={() => setLockConfirmVisible(false)}
+          title={confirmAction === "approve" ? "Approve Instructor" : "Reject Instructor"}
+          visible={confirmVisible}
+          onOk={handleConfirmAction}
+          onCancel={() => setConfirmVisible(false)}
         >
-          <p>{confirmMessage}</p>
+          {confirmAction === "reject" && (
+            <TextArea
+              value={rejectComment}
+              onChange={(e) => setRejectComment(e.target.value)}
+              placeholder="Enter rejection comment"
+              rows={4}
+            />
+          )}
+          <p>
+            Are you sure you want to {confirmAction === "approve" ? "approve" : "reject"} this instructor?
+          </p>
         </Modal>
       </Content>
     </Layout>

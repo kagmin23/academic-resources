@@ -131,11 +131,10 @@ export default function ShoppingCart() {
                       <div className="w-full font-medium text-center md:text-base sm:text-xs text-slate-500 md:text-left">
                         By: {course.instructor_name}
                       </div>
-                      <div
-                        style={{ color: statusColors[course.status] }}
-                        className="mt-2 font-semibold"
-                      >
-                        {course.status.replace('_', ' ')}
+                      <div className='flex flex-row font-medium text-slate-500'>Status:
+                      <div className='ml-1' style={{ color: statusColors[course.status] }}>
+                         {course.status.replace('_', ' ')}
+                      </div>
                       </div>
                     </div>
                     <div className="md:w-1/5">

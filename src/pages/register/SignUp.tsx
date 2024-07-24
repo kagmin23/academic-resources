@@ -47,12 +47,13 @@ const SignUp: React.FC = () => {
       updatedCompletedSteps[current] = true;
       setCompletedSteps(updatedCompletedSteps);
       const finalFormData = { ...formData, ...values, role: value };
-
       setFormData(finalFormData);
   
+      // Save user data to localStorage
       localStorage.setItem("user", JSON.stringify(finalFormData));
       console.log('Final Form Data:', finalFormData);
   
+      // Register the user
       const response = await registerUser(finalFormData);
       console.log('Registration successful:', response);
       notification.success({
@@ -61,8 +62,12 @@ const SignUp: React.FC = () => {
       });
       navigate('/verify-email');
   
+      // Handle instructor profile review if applicable
       if (value === 'instructor') {
-        await reviewProfileInstructor();
+        const userId = finalFormData._id; 
+        const status: "approve" | "reject" = "approve";
+  
+        await reviewProfileInstructor(userId, status, "Profile review submitted for instructor.");
         console.log('Instructor profile review submitted');
       }
     } catch (error) {
@@ -72,8 +77,8 @@ const SignUp: React.FC = () => {
         description: 'There was an error during the registration process. Please try again.',
       });
     }
-  };
-
+  };  
+  
   const steps = [
     {
       title: 'Sign Up',
