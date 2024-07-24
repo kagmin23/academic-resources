@@ -250,6 +250,12 @@ const ManagerLessonInstructor: React.FC = () => {
         onCancel={() => setIsModalVisible(false)}
       >
         <Form form={form} layout="vertical">
+
+        {/* <Form.Item name="course_name" label="Course Name" rules={[{ required: true, message: 'Please enter Lesson Name' }]}>
+          <Select
+            ></Select>
+            <Input />
+          </Form.Item> */}
           <Form.Item name="name" label="Lesson Name" rules={[{ required: true, message: 'Please enter Lesson Name' }]}>
             <Input />
           </Form.Item>
