@@ -38,7 +38,7 @@ const ApproveInstructor: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await getUsers({
-          searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false, is_verified: true },
+          searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false, is_verified: false },
           pageInfo: { pageNum: 1, pageSize: 10,totalItems: 6, totalPages: 1 },
         });
         if (response.success) {
