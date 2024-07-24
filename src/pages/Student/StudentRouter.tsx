@@ -10,7 +10,6 @@ import {
   CoursePage,
   HomePage,
   LessonStudent,
-  SavePage,
   Setting,
   ShoppingCart,
   TopInstructorPage
@@ -22,8 +21,12 @@ import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import Certificate from './Certificate';
 import RouterLesson from './RouterLesson';
+
+import Checkout from 'pages/Checkout';
+
 import ManagerStudentPurchase from './ManagerPurchase';
 import StudentSubscription from './Subscription';
+
 
 export default function StudentRouter() {
 
@@ -67,12 +70,15 @@ export default function StudentRouter() {
                     <Route path={`add-blog`} element={<ProtectedRouter allowedRoles={["student"]}><AddBlog /></ProtectedRouter>} />
                     <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={["student"]}><LessonStudent /></ProtectedRouter>} />
                     <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={["student"]}><RouterLesson /></ProtectedRouter>} />
-                    <Route path={`save`} element={<ProtectedRouter allowedRoles={["student"]}><SavePage /></ProtectedRouter>} />
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["student"]}><TopInstructorPage /></ProtectedRouter>} />
                     <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={["student"]}><Certificate /></ProtectedRouter>} />
+
+                    <Route path={`checkout`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
+
                     <Route path={`manager-student-purchase`} element={<ProtectedRouter allowedRoles={["student"]}><ManagerStudentPurchase /></ProtectedRouter>} />
                     <Route path={`student-subscription`} element={<ProtectedRouter allowedRoles={["student"]}><StudentSubscription /></ProtectedRouter>} />
+
 
                     </Route>
                </Routes>

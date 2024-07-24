@@ -9,7 +9,6 @@ import {
   CoursePage,
   HomePage,
   LessonStudent,
-  SavePage,
   Setting,
   ShoppingCart,
   TopInstructorPage
@@ -68,7 +67,6 @@ export default function InstructorRouter() {
          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} />
          {/* <Route path={`lesson-student/:id`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} /> */}
          <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={["instructor"]}><RouterLesson /></ProtectedRouter>} />
-         <Route path={`save`} element={<ProtectedRouter allowedRoles={["instructor"]}><SavePage /></ProtectedRouter>} />
          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
          <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["instructor"]}><TopInstructorPage /></ProtectedRouter>} />
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}

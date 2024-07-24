@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Button, Card, ConfigProvider, Select, message, Checkbox } from 'antd';
+import { Button, Card, ConfigProvider, message, Checkbox, Modal } from 'antd';
 import sp from '../assets/sp.jpg';
 import { getCarts, deleteCart, updateCartStatus } from 'services/All/CartApiService';
-import { getCourse } from 'services/Instructor/courseApiService';
 import { TinyColor } from '@ctrl/tinycolor';
-
-const { Option } = Select;
 
 // Color Button
 const colors1 = ['#6253E1', '#04BEFE'];
@@ -25,7 +22,7 @@ const cardTitleStyle: React.CSSProperties = {
   fontWeight: 'bold',
 };
 
-const statusColors = {
+const statusColors: { [key: string]: string } = {
   new: 'blue',
   waiting_paid: 'orange',
   cancel: 'red',
@@ -36,6 +33,8 @@ export default function ShoppingCart() {
   const [courses, setCourses] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
 
   useEffect(() => {
     async function fetchCarts() {
@@ -57,37 +56,32 @@ export default function ShoppingCart() {
     fetchCarts();
   }, []);
 
-  const handleDelete = async (courseId: string) => {
-    try {
-      await deleteCart(courseId);
-      setCourses((prevCourses) =>
-        prevCourses.filter((course) => course._id !== courseId)
-      );
-      setSelectedCourses((prevSelected) =>
-        prevSelected.filter((id) => id !== courseId)
-      );
-    } catch (error) {
-      console.error('Failed to delete cart item:', error);
+  const showDeleteModal = (courseId: string) => {
+    setCourseToDelete(courseId);
+    setIsModalVisible(true);
+  };
+
+  const handleDelete = async () => {
+    if (courseToDelete) {
+      try {
+        await deleteCart(courseToDelete);
+        setCourses((prevCourses) =>
+          prevCourses.filter((course) => course._id !== courseToDelete)
+        );
+        setSelectedCourses((prevSelected) =>
+          prevSelected.filter((id) => id !== courseToDelete)
+        );
+        setIsModalVisible(false);
+        setCourseToDelete(null);
+      } catch (error) {
+        console.error('Failed to delete cart item:', error);
+      }
     }
   };
 
-  const handleStatusChange = (value: string, courseId: string) => {
-    setCourses((prevCourses) =>
-      prevCourses.map((course) =>
-        course._id === courseId ? { ...course, status: value } : course
-      )
-    );
-  };
-
-  const handleUpdateStatus = async (courseId: string, cartNo: string, status: string) => {
-    try {
-      const items = [{ _id: courseId, cart_no: cartNo }];
-      await updateCartStatus(status, items);
-      message.success('Status updated successfully');
-    } catch (error) {
-      console.error('Failed to update cart status:', error);
-      message.error('Failed to update status');
-    }
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setCourseToDelete(null);
   };
 
   const handleCheckboxChange = (courseId: string) => {
@@ -132,23 +126,12 @@ export default function ShoppingCart() {
                       <div className="w-full font-medium text-center md:text-base sm:text-xs text-slate-500 md:text-left">
                         By: {course.instructor_name}
                       </div>
-                      <Select
-                        value={course.status}
-                        onChange={(value) => handleStatusChange(value, course._id)}
-                        className="mt-2"
+                      <div
+                        style={{ color: statusColors[course.status] }}
+                        className="mt-2 font-semibold"
                       >
-                        <Option value="new">New</Option>
-                        <Option value="waiting_paid">Waiting Paid</Option>
-                        <Option value="cancel">Cancel</Option>
-                        <Option value="completed">Completed</Option>
-                      </Select>
-                      <Button
-                        type="primary"
-                        className="mt-2"
-                        onClick={() => handleUpdateStatus(course._id, course.cart_no, course.status)}
-                      >
-                        Update Status
-                      </Button>
+                        {course.status.replace('_', ' ')}
+                      </div>
                     </div>
                     <div className="md:w-1/5">
                       <div className="font-semibold text-center md:text-lg sm:text-sm">
@@ -160,7 +143,7 @@ export default function ShoppingCart() {
                       <Button
                         danger
                         className="w-full mt-5 font-bold text-center md:mt-16"
-                        onClick={() => handleDelete(course._id)}
+                        onClick={() => showDeleteModal(course._id)}
                       >
                         Delete
                       </Button>
@@ -177,7 +160,7 @@ export default function ShoppingCart() {
               Total:
             </div>
             <div className="flex justify-between my-4 text-base font-medium">
-              <div>Original Price</div>
+              <div>Price</div>
               <div>{selectedTotalPrice.toLocaleString('vi-VN')} VNĐ</div>
             </div>
             <div className="flex justify-between py-5 text-xl font-bold border-t border-gray-500">
@@ -205,6 +188,17 @@ export default function ShoppingCart() {
           </Card>
         </div>
       </div>
+
+      <Modal
+        title="Confirm Delete"
+        visible={isModalVisible}
+        onOk={handleDelete}
+        onCancel={handleCancel}
+        okText="Delete"
+        cancelText="Cancel"
+      >
+        <p>Are you sure you want to delete this course?</p>
+      </Modal>
     </div>
   );
 }

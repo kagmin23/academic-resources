@@ -1,7 +1,6 @@
 import axios from 'axios';
 import { HOST_MAIN } from './apiService';
 
-// Định nghĩa kiểu dữ liệu
 export interface RegisterUser {
   email: string;
   password: string;
