@@ -1,5 +1,6 @@
 import ChangepasswordIns from 'pages/Instructor/ChangePasswordIns';
 import DashboardInstructor from 'pages/Instructor/DashboardInstructor';
+import ViewLesson from 'pages/Instructor/ViewLesson';
 import Setting from 'pages/Setting';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
@@ -7,10 +8,9 @@ import LessonInstructor from '../Instructor/LessonInstructor';
 import ManagerInstructor from '../Instructor/ManagerInstructor';
 import SidebarInstructor from '../Instructor/SidebarInstructor';
 import ManagerCertificate from './ManagerCertificate';
+import ManagerInstructorPurchase from './ManagerInstructorPurchase';
 import SessionInstructor from './SessionInstructor';
 import ViewSession from './ViewSession';
-import ManagerInstructorPurchase from './ManagerInstructorPurchase';
-import ViewLesson from 'pages/Instructor/ViewLesson';
 
 const InstructorPage: React.FC = () => {
   return (

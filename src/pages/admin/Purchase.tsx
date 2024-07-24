@@ -2,7 +2,7 @@ import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@
 import { Button, DatePicker, Input, Layout, Select, Space, Table, Typography, message } from "antd";
 import { Purchase } from "models/types";
 import { useEffect, useState } from "react";
-import { searchPurchase } from "services/AdminsApi/purchaseApiService";
+import { getPurchases } from "services/AdminsApi/purchaseApiService";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -77,17 +77,17 @@ function PurchaseAdmin() {
       dataIndex: "updated_at",
       key: "updated_at",
     },
-    {
-      title: "Is Deleted",
-      dataIndex: "is_deleted",
-      key: "is_deleted",
-    },
+    // {
+    //   title: "Is Deleted",
+    //   dataIndex: "is_deleted",
+    //   key: "is_deleted",
+    // },
   ];
 
   useEffect(() => {
     const fetchPurchase = async () => {
       try {
-        const response = await searchPurchase();
+        const response = await getPurchases();
         console.log("response", response)
         setPurchase(response.data.pageData);
         setData(response.data.pageData);
