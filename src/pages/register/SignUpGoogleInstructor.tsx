@@ -1,6 +1,5 @@
-import { UploadOutlined } from '@ant-design/icons';
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import { Button, Form, Input, Radio, Upload, message } from 'antd';
+import { Button, Form, Input, Radio, message } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import { User } from 'models/types';
 import React, { useState } from 'react';
@@ -12,7 +11,6 @@ const SignUp: React.FC = () => {
   const [value, setValue] = useState<string>("");
   const [formData, setFormData] = useState<User>();
   const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
-  const [uploadStatus, setUploadStatus] = useState<string>('uploading');
   const navigate = useNavigate();
 
   const onChangeRole = (e: RadioChangeEvent) => {
@@ -23,21 +21,21 @@ const SignUp: React.FC = () => {
 
   const handleRegisterGoogle = async (credentialResponse: CredentialResponse) => {
     try {
-        if (value === 'instructor') {
-            console.log("value",value)
-            const fieldsValue = form.getFieldsValue();
-            const { description, phone_number, video } = fieldsValue;
-    
-            if (!description || !phone_number || !video) {
-              message.error("Please provide all required fields for instructor registration.");
-              return;
-            }
-          }
+      if (value === 'instructor') {
+        console.log("value", value)
+        const fieldsValue = form.getFieldsValue();
+        const { description, phone_number, video } = fieldsValue;
+
+        if (!description || !phone_number || !video) {
+          message.error("Please provide all required fields for instructor registration.");
+          return;
+        }
+      }
       const { credential } = credentialResponse;
       console.log("credential", credential)
       if (!credential) throw new Error("Google credential is missing");
 
-      
+
 
       const dataUser = await registerViaGoogle(credential, value);
       console.log("dataUser", dataUser)
@@ -53,13 +51,13 @@ const SignUp: React.FC = () => {
     console.error();
   };
 
-//   const handleVideoChange = (file: RcFile) => {
-//     setFormData(prev => ({
-//       ...prev,
-//       video: file
-//     }));
-//     return false; // Prevent automatic upload
-//   };
+  //   const handleVideoChange = (file: RcFile) => {
+  //     setFormData(prev => ({
+  //       ...prev,
+  //       video: file
+  //     }));
+  //     return false; // Prevent automatic upload
+  //   };
 
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gray-100">
@@ -90,10 +88,10 @@ const SignUp: React.FC = () => {
                 <Form.Item name="phone_number" label="Phone Number" rules={[{ required: true, message: 'Please input your phone number!' }]}>
                   <Input />
                 </Form.Item>
-                <Form.Item name="video" label="Upload Video" rules={[{ required: true, message: 'Please upload a video!' }]}>
-                  <Upload showUploadList={false}>
-                    <Button icon={<UploadOutlined />}>Upload Video</Button>
-                  </Upload>
+                <Form.Item
+                  name="video"
+                  rules={[{ required: false, message: 'Please enter the video URL' }]}>
+                  <Input placeholder="Video URL" size="middle" />
                 </Form.Item>
                 <p className="text-xs italic font-bold text-red-500">* Please enter the information for Instructor required before!</p>
               </>

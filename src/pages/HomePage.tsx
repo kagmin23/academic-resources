@@ -267,16 +267,20 @@ const HomePage: React.FC = () => {
             ]}
           >
             {courses.map((course, index) => (
-              <div className="p-2 my-5 sm:my-10" key={index}>
+              <div className="py-2 px-3 my-5 sm:my-10" key={index}>
                 {/* <Link to={`course-details/${course._id}`}>
                   <img className="rounded-xl" src={course.image_url} alt={course.name} />
                 </Link> */}
                  <div  onClick={() => handleNavigateToCourseDetails(course._id)}>
                   <img className="rounded-xl lg:h-48 w-full h-40 object-fill" src={course.image_url}  alt={course.name} />
                 </div>
-                <div className="flex justify-between space-x-10 items-center">
-                  <h1 className="text-lg` font-bold truncate lg:text-2xl">{course.name}</h1>
-                  <div className="flex">
+                <div className=" ">
+                  <h1 className="text-lg` font-bold truncate lg:text-2xl flex justify-start">{course.name}</h1>
+                 
+                </div>
+                <div className='flex justify-between'>
+                <p className="lg:text-base font-semibold flex  text-gray-600 justify-start">{course.price} VND</p>
+                <div className="flex">
                     <Button size="small" title="Save this course" className="p-2 text-white bg-red-500">
                       <HeartOutlined />
                     </Button>
@@ -285,7 +289,6 @@ const HomePage: React.FC = () => {
                     </Button>
                   </div>
                 </div>
-                <p className="lg:text-xl font-bold">{course.price} VND</p>
               </div>
             ))}
           </Carousel>

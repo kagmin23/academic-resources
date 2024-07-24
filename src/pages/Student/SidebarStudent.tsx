@@ -4,7 +4,8 @@ import {
   ShoppingCartOutlined,
   ScheduleOutlined,
   UserSwitchOutlined,
-  DeploymentUnitOutlined
+  DeploymentUnitOutlined,
+  EyeOutlined
 } from "@ant-design/icons";
 import { Avatar, Menu, Typography, Button } from "antd";
 import 'antd/dist/reset.css';
@@ -66,6 +67,11 @@ const SidebarStudent: React.FC = () => {
       icon: ScheduleOutlined,
       heading: 'Assignments',
       href: "/student/profile-student/*",
+    },
+    {
+      icon: EyeOutlined,
+      heading: "Manager Subcription",
+      href: "/student/profile-student/subcription-student",
     },
   ];
 

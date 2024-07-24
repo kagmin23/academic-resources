@@ -5,6 +5,7 @@ import { Divider,Button } from 'antd';
 import { Flex, Radio } from 'antd';
 import Paypal from '../assets/Paypal2.png'
 import VNPay from '../assets/VNPay2.jpg'
+import { Link } from 'react-router-dom';
 const products = [
   {
     id: 1,
@@ -12,6 +13,8 @@ const products = [
     price: '10000',
     image_url: 'https://i.pinimg.com/564x/86/de/25/86de25bf5b2b497bb8be816e43e60bc0.jpg',
     user_name: 'Annette',
+    category:'CSS'
+
   },
   {
     id: 2,
@@ -19,6 +22,7 @@ const products = [
     price: '20000',
     image_url: 'https://i.pinimg.com/564x/86/de/25/86de25bf5b2b497bb8be816e43e60bc0.jpg',
     user_name: 'Annette',
+     category:'CSS'
   },
   {
     id: 3,
@@ -26,6 +30,7 @@ const products = [
     price: '20000',
     image_url: 'https://i.pinimg.com/564x/86/de/25/86de25bf5b2b497bb8be816e43e60bc0.jpg',
     user_name: 'Annette',
+     category:'CSS'
   },
   {
     id: 4,
@@ -33,6 +38,7 @@ const products = [
     price: '20000',
     image_url: 'https://i.pinimg.com/564x/86/de/25/86de25bf5b2b497bb8be816e43e60bc0.jpg',
     user_name: 'Annette',
+     category:'CSS'
   },
 ];
 
@@ -59,7 +65,8 @@ export default function Checkout() {
                     </div>
                     <div className='ml-4 '>
                       <div className='text-lg font-medium'>{product.name}</div>
-                      <div className='font-medium text-gray-700'>By: {product.user_name}</div>
+                      <div className='font-medium text-gray-700 mt-4'>By: {product.user_name}</div>
+                      <div className='font-medium text-gray-700'>Category: {product.category}</div>
                     </div>
                   </div>
                 </Col>
@@ -90,8 +97,11 @@ export default function Checkout() {
           </Radio.Group></div>
           <Divider />
           <div className='flex justify-end'>
-          <Button className='bg-red-600 text-white font-medium mr-10'>Cancel Orders</Button>
-          <Button className='bg-blue-600 text-white font-medium'>Complete Orders</Button></div>
+          <Link to="/student/shopping-cart">
+          <Button className='bg-red-600 text-white font-medium mr-10'>Cancel Orders</Button></Link>
+          <Link to="/student/payment-successfully">
+          <Button className='bg-blue-600 text-white font-medium'>Complete Orders</Button></Link>
+          </div>
           </div>
         </Card>
       </div>

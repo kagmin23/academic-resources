@@ -2,9 +2,8 @@ import {
   ContainerOutlined,
   DeploymentUnitOutlined,
   PieChartOutlined,
-  TrophyOutlined,
-  UserSwitchOutlined,
-  ShoppingOutlined 
+  ShoppingOutlined,
+  UserSwitchOutlined
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import React, { useState } from "react";
@@ -48,11 +47,11 @@ const SidebarAdmin: React.FC = () => {
           heading: "Manager Lesson",
           href: "/instructor/profile-instructor/manager-instructor-lesson",
         },
-        {
-          icon: TrophyOutlined,
-          heading: "Manager Certificate",
-          href: "/instructor/profile-instructor/manager-instructor-certificate",
-        },
+        // {
+        //   icon: TrophyOutlined,
+        //   heading: "Manager Certificate",
+        //   href: "/instructor/profile-instructor/manager-instructor-certificate",
+        // },
         {
           icon: ShoppingOutlined,
           heading: "Manager Purchase",
