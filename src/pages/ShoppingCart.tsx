@@ -59,7 +59,11 @@ const ShoppingCart: React.FC = () => {
       setLoading(true);
       try {
         const response = await getCarts('', 1, 10);
-        setCarts(response.data);
+        if (Array.isArray(response.data)) {
+          setCarts(response.data);
+        } else {
+          console.error('Response data is not an array:', response.data);
+        }
       } catch (error) {
         console.error('Failed to fetch cart items:', error);
       } finally {

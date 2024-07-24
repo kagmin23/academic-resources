@@ -148,7 +148,7 @@ const CourseDetail: React.FC = () => {
                         <div className="w-full lg:w-1/3 mb-4 lg:mb-0">
                             <div className="relative">
                                 <a onClick={showModal} className="block cursor-pointer">
-                                    <img src={courseDetail.image_url} alt={courseDetail.name} className="w-full rounded-lg" />
+                                    <img src={courseDetail.image_url}  alt={courseDetail.name} className="w-full rounded-lg" />
                                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
                                         <PlayCircleOutlined className="text-4xl text-white" />
                                         <span className="absolute bottom-0 w-full py-2 text-xl font-semibold text-center text-white bg-black bg-opacity-75">Preview this course</span>
