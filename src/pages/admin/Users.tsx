@@ -19,7 +19,7 @@ interface Item {
   name: string;
   dob: Moment;
   email: string;
-  password:string;
+  password: string;
   phone_number: string;
   status: boolean;
   role: string;
@@ -43,8 +43,8 @@ const UsersAdmin: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await getUsers({
-          searchCondition: { keyword: "", role: "all", status: true, is_delete: false },
-          pageInfo: { pageNum: 1, pageSize: 10 },
+          searchCondition: { keyword: "", role: "all", status: true, is_delete: false, is_verified: true },
+          pageInfo: { pageNum: 1, pageSize: 10, totalItems: 6, totalPages: 1 },
         });
         if (response.success) {
           setData(response.data.pageData);
@@ -112,15 +112,13 @@ const UsersAdmin: React.FC = () => {
           } catch (error) {
             message.error("Error adding user");
           }
-        }
-         else {
+        } else {
           message.error("Please fill in the password field");
         }
       }
       setEditingItem({});
       setModalOpen(false);
-    } 
-    else {
+    } else {
       message.error("Please fill in all fields");
     }
   };
@@ -257,14 +255,13 @@ const UsersAdmin: React.FC = () => {
         />
       ),
     },
-    
     {
       title: 'Actions',
       key: 'actions',
       render: (_, item) => (
-        <div className="flex flex-row ">
-          <Button size="small" type="primary" icon={<EditOutlined />} onClick={() => handleEdit(item)} className="mr-2"></Button>
-          <Button size="small" type="primary" icon={<DeleteOutlined />} danger onClick={() => { setDeleteItemId(item._id); setDeleteConfirmVisible(true); }}></Button>
+        <div className="flex space-x-2">
+          <Button size="small" type="primary" icon={<EditOutlined />} onClick={() => handleEdit(item)} />
+          <Button size="small" type="primary" icon={<DeleteOutlined />} danger onClick={() => { setDeleteItemId(item._id); setDeleteConfirmVisible(true); }} />
         </div>
       ),
     },
@@ -274,20 +271,19 @@ const UsersAdmin: React.FC = () => {
     <Layout>
       <Content className="p-4">
         <h2 className="mb-4 text-xl font-bold">Manage Accounts</h2>
-        <div className="flex items-center mb-4 space-x-2">
+        <div className="flex flex-col md:flex-row md:items-center md:space-x-2 mb-4">
           <Input.Search
             placeholder="Search"
             value={searchTerm}
             onChange={handleSearchChange}
-            className="w-1/3"
+            className="w-full md:w-1/3"
             onSearch={value => setSearchTerm(value)}
           />
           <Select
             placeholder="Filter by Role"
-
             value={filteredRole}
             onChange={handleRoleFilterChange}
-            className="w-1/6"
+            className="w-full md:w-1/6 mt-2 md:mt-0"
           >
             <Option value="all">All</Option>
             <Option value="admin">Admin</Option>
@@ -298,6 +294,7 @@ const UsersAdmin: React.FC = () => {
             type="primary"
             icon={<PlusCircleOutlined />}
             onClick={() => setModalOpen(true)}
+            className="mt-2 md:mt-0"
           >
             Add New User
           </Button>
@@ -311,60 +308,59 @@ const UsersAdmin: React.FC = () => {
         />
 
         <Modal
-              title={`${editingItem._id ? 'Edit' : 'Add'} User`}
-            visible={isModalOpen}
-            onOk={handleAdd}
-            onCancel={() => {
-              setEditingItem({});
-              setModalOpen(false);
-            }}
-          >
-            <Form layout="vertical">
-              <Form.Item label="Username">
-                <Input
-                  value={editingItem.name}
-                  onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+          title={`${editingItem._id ? 'Edit' : 'Add'} User`}
+          visible={isModalOpen}
+          onOk={handleAdd}
+          onCancel={() => {
+            setEditingItem({});
+            setModalOpen(false);
+          }}
+        >
+          <Form layout="vertical">
+            <Form.Item label="Username">
+              <Input
+                value={editingItem.name}
+                onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
+              />
+            </Form.Item>
+            <Form.Item label="Date of Birth">
+              <DatePicker
+                value={editingItem.dob ? moment(editingItem.dob) : undefined}
+                onChange={(date) => setEditingItem({ ...editingItem, dob: date })}
+              />
+            </Form.Item>
+            <Form.Item label="Phone">
+              <Input
+                value={editingItem.phone_number}
+                onChange={(e) => setEditingItem({ ...editingItem, phone_number: e.target.value })}
+              />
+            </Form.Item>
+            <Form.Item label="Email">
+              <Input
+                value={editingItem.email}
+                onChange={(e) => setEditingItem({ ...editingItem, email: e.target.value })}
+              />
+            </Form.Item>
+            <Form.Item label="Role">
+              <Select
+                value={editingItem.role}
+                onChange={(value) => setEditingItem({ ...editingItem, role: value })}
+              >
+                <Option value="admin">Admin</Option>
+                <Option value="student">Student</Option>
+                <Option value="instructor">Instructor</Option>
+              </Select>
+            </Form.Item>
+            {!editingItem._id && (
+              <Form.Item label="Password">
+                <Input.Password
+                  value={editingItem.password}
+                  onChange={(e) => setEditingItem({ ...editingItem, password: e.target.value })}
                 />
               </Form.Item>
-              <Form.Item label="Date of Birth">
-                <DatePicker
-                  value={editingItem.dob ? moment(editingItem.dob) : undefined}
-                  onChange={(date) => setEditingItem({ ...editingItem, dob: date })}
-                />
-              </Form.Item>
-              <Form.Item label="Phone">
-                <Input
-                  value={editingItem.phone_number}
-                  onChange={(e) => setEditingItem({ ...editingItem, phone_number: e.target.value })}
-                />
-              </Form.Item>
-              <Form.Item label="Email">
-                <Input
-                  value={editingItem.email}
-                  onChange={(e) => setEditingItem({ ...editingItem, email: e.target.value })}
-                />
-              </Form.Item>
-              <Form.Item label="Role">
-                <Select
-                  value={editingItem.role}
-                  onChange={(value) => setEditingItem({ ...editingItem, role: value })}
-                >
-                  <Option value="admin">Admin</Option>
-                  <Option value="student">Student</Option>
-                  <Option value="instructor">Instructor</Option>
-                </Select>
-              </Form.Item>
-              {!editingItem._id && (
-                <Form.Item label="Password">
-                  <Input.Password
-                    value={editingItem.password}
-                    onChange={(e) => setEditingItem({ ...editingItem, password: e.target.value })}
-                  />
-                </Form.Item>
-              )}
-            </Form>
-          </Modal>
-
+            )}
+          </Form>
+        </Modal>
 
         <Modal
           title="Confirm Delete"

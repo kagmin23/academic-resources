@@ -3,12 +3,10 @@ import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, Plu
 import { Editor } from '@tinymce/tinymce-react';
 import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Switch, Table, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
-
 import { Category, Course, LogStatus } from "models/types";
 import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
 import { useNavigate } from 'react-router-dom';
-
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { changeCourseStatus } from "services/All/changerStatusApiService";
 import { getCourses } from "services/All/getCoursesApiService";

@@ -38,8 +38,8 @@ const ApproveInstructor: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await getUsers({
-          searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false },
-          pageInfo: { pageNum: 1, pageSize: 10 },
+          searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false, is_verified: true },
+          pageInfo: { pageNum: 1, pageSize: 10,totalItems: 6, totalPages: 1 },
         });
         if (response.success) {
           const storedRejected = JSON.parse(localStorage.getItem('rejectedInstructors') || '[]');
