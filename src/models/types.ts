@@ -277,3 +277,12 @@ export class Course {
     updated_at:	Date,
     is_deleted:	boolean,
   }
+
+  export interface Cart {
+    id: number;
+    name: string;
+    price: string;
+    image_url: string;
+    instructor_name: string;
+    category_name: string;
+  }

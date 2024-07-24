@@ -1,7 +1,7 @@
 import { TinyColor } from '@ctrl/tinycolor';
 import { Button, Card, Checkbox, ConfigProvider, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { deleteCart, getCarts } from 'services/All/cartApiService';
 import sp from '../assets/sp.jpg';
 
@@ -93,9 +93,9 @@ export default function ShoppingCart() {
     );
   };
 
-  const handleCheckout = () => {
-    navigate('/checkout', { state: { courses: selectedCourses } });
-  };
+  // const handleCheckout = () => {
+  //   navigate('/checkout', { state: { courses: selectedCourses } });
+  // };
 
   const selectedTotalPrice = courses
     .filter((course) => selectedCourses.includes(course._id))
@@ -119,10 +119,11 @@ export default function ShoppingCart() {
                     onChange={() => handleCheckboxChange(course._id)}
                   />
                   <img
-                    src={course.image || sp}
+                    src={course.image_url || sp}
                     alt="Product"
                     className="w-4/5 h-24 mx-auto md:w-1/3 md:h-36"
                   />
+
                   <div className="w-full md:flex md:w-2/3">
                     <div className="flex-grow mx-4">
                       <div className="w-full font-bold text-center md:text-lg sm:text-sm md:text-left">
@@ -131,7 +132,7 @@ export default function ShoppingCart() {
                       <div className="w-full font-medium text-center md:text-base sm:text-xs text-slate-500 md:text-left">
                         By: {course.instructor_name}
                       </div>
-                      <div className='flex flex-row font-medium text-slate-500'>Status:
+                      <div className='flex flex-row font-medium text-slate-500'>
                       <div className='ml-1' style={{ color: statusColors[course.status] }}>
                          {course.status.replace('_', ' ')}
                       </div>
@@ -183,14 +184,16 @@ export default function ShoppingCart() {
                 },
               }}
             >
-            <Button
-                type="primary"
-                size="large"
-                className="w-full"
-                onClick={handleCheckout}
-              >
-                Proceed to Checkout
-            </Button>
+            <Link to={`check-out`}>
+                <Button
+                    type="primary"
+                    size="large"
+                    className="w-full"
+                    // onClick={handleCheckout}
+                  >
+                    Proceed to Checkout
+                </Button>
+            </Link>
             </ConfigProvider>
           </Card>
         </div>

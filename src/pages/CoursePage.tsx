@@ -2,7 +2,7 @@ import { Button, Card, Col, Drawer, Input, Menu, Pagination, Row } from 'antd';
 import { ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import clientCoursesApiService from 'services/clientCoursesApiService';
+import getClientCourses from 'services/clientCoursesApiService';
 
 
 
@@ -18,7 +18,7 @@ const CoursePage: React.FC = () => {
       setLoading(true);
       setError(null);
       try {
-        const response = await clientCoursesApiService.fetchCourses();
+        const response = await getClientCourses.fetchCourses();
         setCourses(response.data);
       } catch (err) {
         setError('Failed to fetch courses.');

@@ -8,7 +8,7 @@ interface ApiResponse {
   message?: string;
 }
 
-const clientCoursesApiService = {
+const getClientCourses = {
   fetchCourses: async (): Promise<ApiResponse> => {
     try {
       const response = await axios.post(`${HOST_MAIN}/api/client/course/search`);
@@ -20,4 +20,4 @@ const clientCoursesApiService = {
   }
 };
 
-export default clientCoursesApiService;
+export default getClientCourses;
