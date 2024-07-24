@@ -1,7 +1,7 @@
 import { Button, Card, Col, Divider, Radio, Row } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getCarts } from 'services/All/cartApiService';
+import { getCarts } from 'services/All/CartApiService';
 import Paypal from '../assets/Paypal2.png';
 import VNPay from '../assets/VNPay2.jpg';
 
@@ -54,8 +54,9 @@ const Checkout: React.FC = () => {
   return (
     <div className="w-full min-h-screen pb-5 bg-gray-200">
       <div className="p-3 mb-4 font-bold md:text-2xl sm:text-lg bg-stone-50 md:px-32">Checkout</div>
-      <div className='w-4/5 pt-5 mx-auto'>
-        <Card>
+      <div className="flex flex-col flex-grow w-5/6 pt-5 pb-20 mx-auto lg:flex-row">
+      <div className="w-full p-4 mr-3 item lg:w-2/3">
+      <Card>
           <Row>
             <Col span={16} className='text-lg font-bold'>Products</Col>
             <Col span={8} className='text-lg font-bold'>Price</Col>
@@ -86,9 +87,12 @@ const Checkout: React.FC = () => {
             <Col span={8} className='text-lg font-medium'>Total Price: {totalPrice} VNĐ</Col>
           </Row>
         </Card>
+      
+      
+      
       </div>
-      <div className='w-4/5 m-10 mx-auto'>
-        <Card>
+      <div className="w-full p-4 item lg:w-1/3">
+      <Card>
           <div className='text-lg font-bold'>
             <div>
               Payment methods:
@@ -96,8 +100,8 @@ const Checkout: React.FC = () => {
             <Divider />
             <div>
               <Radio.Group name="radiogroup" defaultValue={1}>
-                <Radio value={1}><img src={VNPay} alt="VNPay" className='w-32 h-32 mr-10'/></Radio>
-                <Radio value={2}><img src={Paypal} alt="Paypal" className='w-32 h-32'/></Radio>
+                <Radio value={1}><img src={VNPay} alt="VNPay" className='w-28 h-28 mr-4'/></Radio>
+                <Radio value={2}><img src={Paypal} alt="Paypal" className='w-28 h-28'/></Radio>
               </Radio.Group>
             </div>
             <Divider />
@@ -111,7 +115,18 @@ const Checkout: React.FC = () => {
             </div>
           </div>
         </Card>
+      
+      
+      
       </div>
+
+
+
+
+
+      </div>
+      
+      
     </div>
   );
 };

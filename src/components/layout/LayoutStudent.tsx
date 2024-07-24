@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
-import { getCarts } from '../../services/All/cartApiService'; // Adjust path as per your project structure
+import { getCarts } from '../../services/All/CartApiService'; // Adjust path as per your project structure
 
 const { Header, Content } = Layout;
 const { Search } = Input;
