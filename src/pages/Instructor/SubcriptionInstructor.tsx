@@ -1,8 +1,6 @@
-
-import React, { useState } from 'react';
-import { Tabs, Table, Input, Layout, Button, message, Modal } from 'antd';
-import { ColumnsType } from 'antd/es/table';
-import { UserOutlined, SearchOutlined, DeleteOutlined, ExclamationCircleOutlined } from '@ant-design/icons';
+import { DeleteOutlined, ExclamationCircleOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Input, Layout, Modal, Table, message } from 'antd';
+import { useState } from 'react';
 
 interface DataType {
   key: string;
@@ -17,12 +15,6 @@ const initialData: DataType[] = [
   { key: '2', name: 'Trần Thị B' },
   { key: '3', name: 'Lê Văn C' },
   { key: '4', name: 'Nguyễn Văn A' },
-  { key: '5', name: 'Trần Thị B' },
-  { key: '6', name: 'Nguyễn Văn A' },
-  { key: '7', name: 'Trần Thị B' },
-  { key: '8', name: 'Lê Văn C' },
-  { key: '9', name: 'Nguyễn Văn A' },
-  { key: '10', name: 'Trần Thị B' },
 ];
 
 export default function SubcriptionStudent() {
@@ -75,7 +67,7 @@ export default function SubcriptionStudent() {
       width: 200,
       render: (text: string) => (
         <div className="">
-          <Button size="small" type="primary" className="text-white text-xl">
+          <Button size="small" type="primary" className="text-xl text-white">
             <UserOutlined />
           </Button>
         </div>
@@ -90,7 +82,7 @@ export default function SubcriptionStudent() {
           <Button
             size="small"
             type="primary"
-            className="text-white text-xl"
+            className="text-xl text-white"
             danger
             onClick={() => handleDeleteTab1(record.key)}
           >
@@ -106,9 +98,9 @@ export default function SubcriptionStudent() {
       <div className='px-5'>
       <div className='flex'>
         <div className='w-1/2'>
-          <span className='font-semibold text-lg'>Total Subcribers: {getTotalSubcribers()}</span>
+          <span className='text-lg font-semibold'>Total Subcribers: {getTotalSubcribers()}</span>
         </div>
-        <div className='w-1/2'>
+        <div className='w-1/3'>
           <Input
             placeholder="Search..."
             prefix={<SearchOutlined />}

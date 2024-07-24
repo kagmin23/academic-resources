@@ -1,6 +1,7 @@
 import {
   ContainerOutlined,
   DeploymentUnitOutlined,
+  EyeOutlined,
   PieChartOutlined,
   ShoppingOutlined,
   UserSwitchOutlined
@@ -60,6 +61,11 @@ const SidebarAdmin: React.FC = () => {
         
         
       ],
+    },
+    {
+      icon: EyeOutlined,
+      heading: "Manager Subcription",
+      href: "/instructor/profile-instructor/subcription-instructor",
     },
   ];
 
