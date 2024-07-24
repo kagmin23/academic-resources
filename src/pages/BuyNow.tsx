@@ -1,8 +1,8 @@
 import { TinyColor } from '@ctrl/tinycolor';
-import { Button, Card, ConfigProvider, message } from 'antd';
+import { Button, Card, ConfigProvider, Image, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import {createCart} from 'services/All/CartApiService';
+import { createCart } from 'services/All/cartApiService';
 import { getCourseDetail } from 'services/User/clientApiService';
 
 const colors1 = ['#6253E1', '#04BEFE'];
@@ -61,7 +61,7 @@ const BuyNow: React.FC = () => {
                 <div className="w-full p-4 mr-3 item lg:w-2/3">
                     <Card title={<div style={{ fontSize: '24px', fontWeight: 'bold' }}>Your Course</div>}>
                         <Card.Grid style={{ width: '100%' }} className='md:flex'>
-                            <img className='w-4/5 h-24 mx-auto md:w-1/3 md:h-36'
+                            <Image className='w-4/5 h-24 mx-auto md:w-1/3 md:h-36'
                                 src={courseDetail.image_url}
                             />
                             <div className="flex flex-col flex-grow w-5/6 pt-5 pb-20 mx-auto lg:flex-row">
