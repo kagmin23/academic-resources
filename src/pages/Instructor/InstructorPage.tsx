@@ -2,7 +2,6 @@ import ChangepasswordIns from 'pages/Instructor/ChangePasswordIns';
 import DashboardInstructor from 'pages/Instructor/DashboardInstructor';
 import ViewLesson from 'pages/Instructor/ViewLesson';
 import Setting from 'pages/Setting';
-import SubcriptionInstructor from 'pages/SubcriptionInstructor';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LessonInstructor from '../Instructor/LessonInstructor';
@@ -11,6 +10,7 @@ import SidebarInstructor from '../Instructor/SidebarInstructor';
 import ManagerCertificate from './ManagerCertificate';
 import ManagerInstructorPurchase from './ManagerInstructorPurchase';
 import SessionInstructor from './SessionInstructor';
+import SubcriptionInstructor from './SubcriptionInstructor';
 import ViewSession from './ViewSession';
 
 const InstructorPage: React.FC = () => {
@@ -36,7 +36,7 @@ const InstructorPage: React.FC = () => {
           <Route path={`view-session/:courseId/`} element={<ViewSession />} />
           {/* <Route path={`manager-lession/:sessionId`} element={<ManagerLession/>}/>  */}
           <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/>
-          <Route path={`subcription-instructor`} element={<SubcriptionInstructor/>}/>
+          <Route path={`subcription-instructor`} element={<SubcriptionInstructor />}/>
           
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>

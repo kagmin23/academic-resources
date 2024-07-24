@@ -279,10 +279,15 @@ export class Course {
   }
 
   export interface Cart {
-    id: number;
-    name: string;
-    price: string;
-    image_url: string;
-    instructor_name: string;
-    category_name: string;
+    _id:	string,
+    cart_no:	string,
+    status:	string,
+    price:	number,
+    discount:	number,
+    course_id:	string,
+    student_id:	string,
+    instructor_id:	string,
+    created_at:	Date,
+    updated_at:	Date,
+    is_deleted:	boolean,
   }

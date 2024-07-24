@@ -1,10 +1,23 @@
 import { Button, Card, Col, Divider, Radio, Row } from 'antd';
-import { Cart } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { getCarts } from 'services/All/cartApiService';
 import Paypal from '../assets/Paypal2.png';
 import VNPay from '../assets/VNPay2.jpg';
+
+export interface Cart {
+  _id: string;
+  cart_no: string;
+  status: string;
+  price: number;
+  discount: number;
+  course_id: string;
+  student_id: string;
+  instructor_id: string;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
+}
 
 const Checkout: React.FC = () => {
   const [carts, setCarts] = useState<Cart[]>([]);
@@ -15,11 +28,13 @@ const Checkout: React.FC = () => {
     const fetchCarts = async () => {
       try {
         const response = await getCarts('', 1, 10);
-        console.log(response.data); // Check the structure of the response data
-        if (Array.isArray(response.data)) {
-          setCarts(response.data);
+        const data = response.data;
+
+        if (Array.isArray(data)) {
+          setCarts(data as Cart[]);
         } else {
-          console.error('Expected an array but received:', response.data);
+          console.error('Expected an array but received:', data);
+          setCarts([]);
         }
         setLoading(false);
       } catch (err) {
@@ -31,9 +46,7 @@ const Checkout: React.FC = () => {
     fetchCarts();
   }, []);
 
-  const totalPrice = Array.isArray(carts) ? 
-    carts.reduce((total, product) => total + parseFloat(product.price), 0) 
-    : 0;
+  const totalPrice = carts.reduce((total, product) => total + product.price, 0);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -49,17 +62,17 @@ const Checkout: React.FC = () => {
           </Row>
           <Divider />
           {carts.map(product => (
-            <React.Fragment key={product.id}>
+            <React.Fragment key={product._id}>
               <Row>
                 <Col span={16}>
                   <div className='flex'>
-                    <div>
-                      <img src={product.image_url} alt={product.name} className='w-40 h-24'/>
-                    </div>
+                    {/* <div>
+                      <img src={product.image_url} alt={product.course_id} className='w-40 h-24'/>
+                    </div> */}
                     <div className='ml-4'>
-                      <div className='text-lg font-medium'>{product.name}</div>
-                      <div className='mt-4 font-medium text-gray-700'>By: {product.instructor_name}</div>
-                      <div className='font-medium text-gray-700'>Category: {product.category_name}</div>
+                      <div className='text-lg font-medium'>{product.course_id}</div>
+                      <div className='mt-4 font-medium text-gray-700'>By: {product.instructor_id}</div>
+                      <div className='font-medium text-gray-700'>Category: {product.course_id}</div>
                     </div>
                   </div>
                 </Col>

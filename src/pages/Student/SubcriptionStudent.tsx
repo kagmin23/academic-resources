@@ -14,13 +14,7 @@ const initialData: DataType[] = [
   { key: '1', name: 'Nguyễn Văn A' },
   { key: '2', name: 'Trần Thị B' },
   { key: '3', name: 'Lê Văn C' },
-  { key: '4', name: 'Nguyễn Văn A' },
-  { key: '5', name: 'Trần Thị B' },
-  { key: '6', name: 'Nguyễn Văn A' },
-  { key: '7', name: 'Trần Thị B' },
-  { key: '8', name: 'Lê Văn C' },
-  { key: '9', name: 'Nguyễn Văn A' },
-  { key: '10', name: 'Trần Thị B' },
+
 ];
 
 export default function SubcriptionStudent() {
@@ -104,9 +98,9 @@ export default function SubcriptionStudent() {
       <div className='px-5'>
       <div className='flex'>
         <div className='w-1/2'>
-          <span className='text-lg font-semibold'>Total Subcribers: {getTotalSubcribers()}</span>
+          <span className='text-lg font-semibold'>Total Subcribers: alenfles{getTotalSubcribers()}</span>
         </div>
-        <div className='w-1/2'>
+        <div className='w-1/3'>
           <Input
             placeholder="Search..."
             prefix={<SearchOutlined />}
