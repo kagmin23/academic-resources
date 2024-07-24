@@ -2,7 +2,7 @@ import { TinyColor } from '@ctrl/tinycolor';
 import { Button, Card, Checkbox, ConfigProvider, Modal } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { deleteCart, getCarts } from 'services/All/cartApiService';
+import { deleteCart, getCarts } from 'services/All/CartApiService';
 import sp from '../assets/sp.jpg';
 
 const colors1 = ['#6253E1', '#04BEFE'];
