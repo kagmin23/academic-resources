@@ -2,10 +2,11 @@ import { message } from 'antd';
 import axios from 'axios';
 import { HOST_MAIN } from 'services/apiService';
 
-export const searchPurchase = async () => {
+export const getPurchases = async () => {
   try {
     const token = localStorage.getItem("token");
     console.log("token", token);
+    
     const response = await axios.post(`${HOST_MAIN}/api/purchase/search`, {
         "searchCondition": {
             "purchase_no": "",

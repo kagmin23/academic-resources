@@ -135,16 +135,17 @@ const ManagerInstructorPurchase = () => {
 
   return (
     <Layout style={{ minHeight: '100vh' }}>
-      <Layout className="site-layout">
+      {/* <Layout className="site-layout"> */}
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
           <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+            <p className="text-xl font-bold">Purchase Manager</p>
             <Card style={{ margin: 20 }}>
-              <Title level={4}>Purchase Manager</Title>
+              {/* <Title level={4}>Purchase Manager</Title> */}
               <Table dataSource={purchaseData} columns={columns} />
             </Card>
           </div>
         </Content>
-      </Layout>
+      {/* </Layout> */}
     </Layout>
   );
 };
