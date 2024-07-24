@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, ConfigProvider, message } from 'antd';
-import { Link, useLocation } from 'react-router-dom';
-import { getCourseDetail } from 'services/User/clientApiService';
-import { createCart } from 'services/All/CartApiService';
 import { TinyColor } from '@ctrl/tinycolor';
+import { Button, Card, ConfigProvider, message } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { createCart } from 'services/All/cartApiService';
+import { getCourseDetail } from 'services/User/clientApiService';
 
 const colors1 = ['#6253E1', '#04BEFE'];
 const getHoverColors = (colors: string[]) => colors.map(color => new TinyColor(color).lighten(5).toString());
@@ -57,7 +57,7 @@ const BuyNow: React.FC = () => {
     return (
         <div className="w-full min-h-screen mx-auto bg-gray-200">
             <div className="p-3 mb-4 font-bold md:text-2xl sm:text-lg bg-stone-50 md:px-32">Checkout</div>
-            <div className="flex flex-col lg:flex-row w-5/6 mx-auto lg:space-x-8 lg:pt-5 lg:pb-20">
+            <div className="flex flex-col w-5/6 mx-auto lg:flex-row lg:space-x-8 lg:pt-5 lg:pb-20">
                 <div className="w-full p-4 mr-3 item lg:w-2/3">
                     <Card title={<div style={{ fontSize: '24px', fontWeight: 'bold' }}>Your Course</div>}>
                         <Card.Grid style={{ width: '100%' }} className='md:flex'>

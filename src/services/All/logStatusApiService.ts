@@ -4,7 +4,6 @@ import { HOST_MAIN } from "services/apiService";
 export const logStatus = async(course_id: string, keyword: string, pageNum: number, pageSize: number) => {
     try {
         const token = localStorage.getItem('token');
-        console.log("Token", token);
         
         const response = await axios.post(`${HOST_MAIN}/api/course/log/search`, {
                 "searchCondition": {

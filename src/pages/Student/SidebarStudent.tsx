@@ -1,9 +1,8 @@
 import {
   ContainerOutlined,
+  DeploymentUnitOutlined, EyeOutlined,
   PieChartOutlined,
-  ShoppingCartOutlined,
-  ScheduleOutlined,
-  DeploymentUnitOutlined,EyeOutlined
+  ShoppingCartOutlined
 } from "@ant-design/icons";
 import { Avatar, Menu, Typography } from "antd";
 import 'antd/dist/reset.css';
@@ -21,7 +20,6 @@ interface SidebarDataType {
 
 const aboutData = {
   avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
-  name: 'David Doe',
   email: 'davidd09@gmail.com',
   dob: 'January 1, 2003',
   gender: 'Female',
@@ -46,21 +44,13 @@ const SidebarStudent: React.FC = () => {
       heading: 'My Course',
       href: "/student/profile-student/course-student",
     },
-    {
-      icon: ContainerOutlined,
-      heading: 'Certificates',
-      href: "/student/profile-student/certificate-student",
-    },
+
     {
       icon: ShoppingCartOutlined,
       heading: 'Orders',
       href: "/student/profile-student/manager-student-purchase",
     },
-    {
-      icon: ScheduleOutlined,
-      heading: 'Assignments',
-      href: "/student/profile-student/*",
-    },
+
     {
       icon: EyeOutlined,
       heading: "Manager Subcription",
@@ -72,7 +62,7 @@ const SidebarStudent: React.FC = () => {
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-full min-h-screen bg-[#475a75] shadow-lg`}>
       <div className="flex flex-col items-center justify-between p-4">
         <Avatar size={64} src={aboutData.avatarSrc} />
-        <Title level={4} style={{ marginLeft: 16, color: "white" }}>{aboutData.name}</Title>
+        {/* <Title level={4} style={{ marginLeft: 16, color: "white" }}>{aboutData.name}</Title> */}
       </div>
       <Menu
         mode="inline"

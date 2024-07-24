@@ -2,6 +2,7 @@ import ChangepasswordIns from 'pages/Instructor/ChangePasswordIns';
 import DashboardInstructor from 'pages/Instructor/DashboardInstructor';
 import ViewLesson from 'pages/Instructor/ViewLesson';
 import Setting from 'pages/Setting';
+import SubcriptionInstructor from 'pages/SubcriptionInstructor';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LessonInstructor from '../Instructor/LessonInstructor';
@@ -17,7 +18,7 @@ const InstructorPage: React.FC = () => {
     <div className="flex">
       <div className='h-[91vh] '>
     <SidebarInstructor /></div>
-      <div className="flex-grow ml-4 h-screen overflow-auto hide-scrollbar" >
+      <div className="flex-grow h-screen ml-4 overflow-auto hide-scrollbar" >
         <Routes>
           <Route path={`/`} element={<DashboardInstructor />} />
           <Route path={`manager-instructor-course/`} element={<ManagerInstructor />} />
@@ -34,7 +35,9 @@ const InstructorPage: React.FC = () => {
           
           <Route path={`view-session/:courseId/`} element={<ViewSession />} />
           {/* <Route path={`manager-lession/:sessionId`} element={<ManagerLession/>}/>  */}
-          <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/> 
+          <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/>
+          <Route path={`subcription-instructor`} element={<SubcriptionInstructor/>}/>
+          
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>
       </div>

@@ -21,7 +21,7 @@ import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import InstructorPage from './InstructorPage';
 
-import ViewSession from './ViewSession';
+import Checkout from 'pages/Checkout';
 export default function InstructorRouter() {
 
   // const LayoutInstructor = React.lazy(() => import("../../components/layout/LayoutInstructor"));
@@ -69,6 +69,8 @@ export default function InstructorRouter() {
          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
          <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["instructor"]}><TopInstructorPage /></ProtectedRouter>} />
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}
+         <Route path={`checkout`} element={<ProtectedRouter allowedRoles={["instructor"]}><Checkout /></ProtectedRouter>} />
+
 
          </Route>
     </Routes>

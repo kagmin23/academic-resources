@@ -1,11 +1,11 @@
-import { BellOutlined, BookOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { BookOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
-import { getCarts } from '../../services/All/CartApiService'; // Adjust path as per your project structure
+import { getCarts } from '../../services/All/cartApiService'; // Adjust path as per your project structure
 
 const { Header, Content } = Layout;
 const { Search } = Input;

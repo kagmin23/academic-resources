@@ -1,22 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Card, ConfigProvider, message, Checkbox, Modal } from 'antd';
-import sp from '../assets/sp.jpg';
-import { getCarts, deleteCart, updateCartStatus } from 'services/All/CartApiService';
 import { TinyColor } from '@ctrl/tinycolor';
+import { Button, Card, Checkbox, ConfigProvider, Modal } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { deleteCart, getCarts } from 'services/All/cartApiService';
+import sp from '../assets/sp.jpg';
 
-// Color Button
 const colors1 = ['#6253E1', '#04BEFE'];
 const getHoverColors = (colors: string[]) =>
   colors.map((color) => new TinyColor(color).lighten(5).toString());
 const getActiveColors = (colors: string[]) =>
   colors.map((color) => new TinyColor(color).darken(5).toString());
 
-// Style Card
+
 const gridStyle: React.CSSProperties = {
   width: '100%',
 };
 
-// Style Card Total
 const cardTitleStyle: React.CSSProperties = {
   fontSize: '24px',
   fontWeight: 'bold',
@@ -35,6 +34,8 @@ export default function ShoppingCart() {
   const [selectedCourses, setSelectedCourses] = useState<string[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [courseToDelete, setCourseToDelete] = useState<string | null>(null);
+  const navigate = useNavigate();
+
 
   useEffect(() => {
     async function fetchCarts() {
@@ -92,6 +93,10 @@ export default function ShoppingCart() {
     );
   };
 
+  const handleCheckout = () => {
+    navigate('/checkout', { state: { courses: selectedCourses } });
+  };
+
   const selectedTotalPrice = courses
     .filter((course) => selectedCourses.includes(course._id))
     .reduce((total, course) => total + course.price * (1 - course.discount), 0);
@@ -136,13 +141,13 @@ export default function ShoppingCart() {
                     <div className="md:w-1/5">
                       <div className="font-semibold text-center md:text-lg sm:text-sm">
                         <div>
-                          <span style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} VNĐ</span> <span>({course.discount * 100}%)</span>
+                          <span className="text-sm" style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} VNĐ</span> <span>({course.discount * 100}%)</span>
                         </div>
-                        <div>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} VNĐ</div>
+                        <div className="text-red-500">{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} VNĐ</div>
                       </div>
                       <Button
                         danger
-                        className="w-full mt-5 font-bold text-center md:mt-16"
+                        className="w-full mt-5 text-xs font-bold text-center md:mt-16"
                         onClick={() => showDeleteModal(course._id)}
                       >
                         Delete
@@ -179,11 +184,14 @@ export default function ShoppingCart() {
                 },
               }}
             >
-              <a href="">
-                <Button type="primary" size="large" className="w-full">
-                  Proceed to Checkout
-                </Button>
-              </a>
+            <Button
+                type="primary"
+                size="large"
+                className="w-full"
+                onClick={handleCheckout}
+              >
+                Proceed to Checkout
+            </Button>
             </ConfigProvider>
           </Card>
         </div>
