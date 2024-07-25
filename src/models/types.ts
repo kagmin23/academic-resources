@@ -291,3 +291,40 @@ export class Course {
     updated_at:	Date,
     is_deleted:	boolean,
   }
+
+  export interface Subcription {
+    _id:	string,
+    subscriber_id:	string,
+    subscriber_name:	string,
+    instructor_id:	string,
+    instructor_name:	string,
+    is_subscribed:	boolean,
+    created_at:	Date,
+    updated_at:	Date,
+    is_deleted:	boolean,
+  }
+
+  interface CourseDetailType {
+    _id: string;
+    name: string;
+    description: string;
+    category_id: string;
+    category_name: string;
+    status: string;
+    video_url: string;
+    image_url: string;
+    price_paid: number;
+    price: number;
+    discount: number;
+    average_rating: number;
+    review_count: number;
+    instructor_id: string;
+    instructor_name: string;
+    full_time: number;
+    session_list: Session[];
+    is_in_cart: boolean;
+    is_purchased: boolean;
+    created_at: Date;
+    updated_at: Date;
+    is_deleted: boolean;
+}
