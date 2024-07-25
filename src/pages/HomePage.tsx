@@ -12,7 +12,7 @@ import {
 import { Button, Card, Carousel, Col, Row, message, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCategories, getCourses } from 'services/User/clientApiService';
+import { getCategories, getCourses } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 import './styles.css';
 
@@ -76,10 +76,7 @@ const HomePage: React.FC = () => {
           });
         }
       } catch (error) {
-        // notification.error({
-        //   message: 'Error',
-        //   description: 'Failed to fetch current user information',
-        // });
+        console.error("Error to fetch Current User!")
       }
     };
 

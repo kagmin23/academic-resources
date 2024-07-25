@@ -1,30 +1,41 @@
-import { Button, Card, Col, Drawer, Input, Menu, Pagination, Row } from 'antd';
+import { Button, Card, Col, Drawer, Input, Menu, Pagination, Row, message } from 'antd';
 import { ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import getClientCourses from 'services/clientCoursesApiService';
+import { getCourses } from 'services/UserClient/clientApiService';
 
-
+interface ApiResponse {
+  success: boolean;
+  data: {
+    pageData: any[];
+  };
+}
 
 const CoursePage: React.FC = () => {
   const [courses, setCourses] = useState<ClientCourses[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [keyword, setKeyword] = useState('');
+  const [categoryId, setCategoryId] = useState('');
   const pageSize = 6;
 
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
-      setError(null);
       try {
-        const response = await getClientCourses.fetchCourses();
-        setCourses(response.data);
-      } catch (err) {
-        setError('Failed to fetch courses.');
-      } finally {
-        setLoading(false);
-      }
+        const response: ApiResponse = await getCourses('', '', 1, 10);
+        if (response.success) {
+          setCourses(response.data.pageData);
+        } else {
+          message.error('Failed to fetch courses');
+        }
+      } catch (error) {
+        console.error('Error fetching courses:', error);
+        message.error('An error occurred. Please try again later.');
+      }finally {
+      setLoading(false);
+    }
     };
 
     fetchCourses();
@@ -49,7 +60,7 @@ const CoursePage: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto h-fit ">
+    <div className="mx-auto h-fit">
       <Row gutter={[16, 16]}>
         <Col xs={0} sm={0} md={6} lg={6} xl={6}>
           <div className="flex flex-col h-full">
@@ -93,10 +104,10 @@ const CoursePage: React.FC = () => {
               placeholder="Search..."
               enterButton="Search"
               size="middle"
-              onSearch={(value) => console.log(value)}
+              onSearch={(value) => setKeyword(value)}
             />
           </div>
-          
+
           {loading ? (
             <div>Loading...</div>
           ) : error ? (
@@ -113,7 +124,7 @@ const CoursePage: React.FC = () => {
                       >
                         <Card.Meta title={course.name} description={course.description} />
                         <div className="flex items-center justify-between mt-4 text-lg font-bold">
-                          <span>{course.price}.000 VND</span>
+                          <span>{course.price}</span>
                           <div className='flex'>
                             <Button className='p-3 mr-2 text-white bg-red-500'>Favorite</Button>
                             <Button className='p-3 text-white bg-blue-500'>Add to Cart</Button>

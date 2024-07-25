@@ -2,7 +2,7 @@ import { BellOutlined, ExclamationCircleOutlined, PlayCircleOutlined, StarOutlin
 import { Avatar, Button, Modal, Tabs, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { getCourseDetail } from 'services/User/clientApiService';
+import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { createCart } from '../services/All/cartApiService';
 import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
 
