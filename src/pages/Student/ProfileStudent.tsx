@@ -1,11 +1,11 @@
 
-import { Button, Form, Input, Typography, notification, message, Modal } from 'antd';
-import React, { useState, useEffect } from 'react';
-import 'tailwindcss/tailwind.css';
+import { Button, Form, Input, Modal, Typography, message, notification } from 'antd';
+import { User } from 'models/types';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getUserDetail } from 'services/All/getUserDetailApiService';
 import { updateUser } from 'services/All/updateUserApiService';
-import { User } from 'models/types';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import 'tailwindcss/tailwind.css';
 
 const { Text } = Typography;
 
@@ -104,7 +104,7 @@ const SettingStudent: React.FC = () => {
 
   return (
     <div className="flex h-screen">
-      <main className="flex-1 p-6 overflow-auto hide-scrollbar mx-12">
+      <main className="flex-1 p-6 mx-12 overflow-auto hide-scrollbar">
         <h1 className="text-2xl font-bold">Edit My Profile</h1>
         <div className="mt-4">
           
@@ -167,11 +167,11 @@ const SettingStudent: React.FC = () => {
                 <Input />
               </Form.Item>
 
-              <Form.Item className='pt-7 pb-10 w-full flex justify-center'>
-                <Button type="primary" htmlType="submit">Save Change</Button>
+              <Form.Item className='flex flex-row justify-end w-full pb-10 pt-7'>
                 <Link to="/student/profile-student">
-                  <Button className='bg-red-600 text-white ml-10'>Cancel Change</Button>
+                  <Button className='text-white bg-red-600'>Cancel</Button>
                 </Link>
+                <Button className="ml-2" type="primary" htmlType="submit">Save</Button>
               </Form.Item>
             </Form>
             <Modal title="Confirm Change" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>

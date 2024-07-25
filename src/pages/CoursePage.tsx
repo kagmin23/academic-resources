@@ -49,9 +49,8 @@ const CoursePage: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto h-fit">
+    <div className="mx-auto h-fit ">
       <Row gutter={[16, 16]}>
-        {/* Menu for larger screens */}
         <Col xs={0} sm={0} md={6} lg={6} xl={6}>
           <div className="flex flex-col h-full">
             <div className='h-[90vh] w-full flex-grow'>
@@ -60,8 +59,8 @@ const CoursePage: React.FC = () => {
                 defaultSelectedKeys={['1']}
                 defaultOpenKeys={['sub1']}
                 mode="inline"
-                theme="dark"
-                className='w-2/3 h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
+                theme="light"
+                className='w-2/3 h-full p-2 overflow-y-auto lg:text-base xl:text-lg bg-slate-500'
               />
             </div>
           </div>

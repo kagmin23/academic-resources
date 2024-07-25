@@ -1,33 +1,32 @@
+import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { Button, Form, Input, message, notification } from 'antd';
 import React, { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { loginUser } from 'services/loginApiService';
-// import GoogleLogin from '../../services/googleApiLogin';
-import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { getCurrentLogin, loginViaGoogle } from 'services/googleApiLogin';
+import { loginUser } from 'services/loginApiService';
 import './stylesLogin.css';
 
 const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const formRef = useRef<any>(null);
-  const [loading, setLoading] = useState(false); // State to manage loading state
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (values: { email: string, password: string }) => {
-    setLoading(true); // Start loading state
+    setLoading(true);
     try {
       await loginUser(values.email, values.password);
       const storeUser: any = localStorage.getItem('user');
 
       if (!storeUser) {
         console.log('Failed to get data local');
-        setLoading(false); // Stop loading state
+        setLoading(false);
         return;
       }
 
       const user = JSON.parse(storeUser);
-      console.log(user);
-      console.log(user.data.role);
+      // console.log(user);
+      // console.log(user.data.role);
       if (user && user.data) {
         switch (user.data.role) {
           case 'admin':
@@ -54,7 +53,7 @@ const Login: React.FC = () => {
   const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
     try {
       const { credential } = credentialResponse;
-      console.log(credential);
+      // console.log(credential);
       if (!credential) {
         throw new Error("Google credential is missing");
       }

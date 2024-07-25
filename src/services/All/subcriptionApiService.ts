@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { HOST_MAIN, apiRequest } from 'services/apiService';
+import { HOST_MAIN } from 'services/apiService';
 
 export const createOrUpdate = async (instructor_id: string) => {
   const token = localStorage.getItem('token');
@@ -53,24 +53,32 @@ export const getItemBySubscriber = async (keyword: string, pageNum: number, page
   }
 };
 
-
-export const getItemByInstructor = async ( keyword: string, pageNum: number, pageSize: number ) => {
-    const token = localStorage.getItem('token');
+export const getItemByInstructor = async (keyword: string, pageNum: number, pageSize: number) => {
+  const token = localStorage.getItem('token');
   
-    return apiRequest('/api/subscription/search-for-instructor', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      data: {
-          searchCondition: {
-            keyword,
-            is_delete: false,
-          },
-          pageInfo: {
-            pageNum,
-            pageSize,
-          },
+  try {
+    const response = await axios.post(
+      `${HOST_MAIN}/api/subscription/search-for-instructor`,
+      {
+        "searchCondition": {
+            "keyword": keyword,
+            "is_delete": false,
         },
-    });
-  };
+        "pageInfo": {
+            "pageNum": pageNum,
+            "pageSize": pageSize,
+        }
+    },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }
+    );
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching items by instructor:', error);
+    throw error;
+  }
+};
