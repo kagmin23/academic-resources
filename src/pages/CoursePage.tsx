@@ -65,6 +65,7 @@ const CoursePage: React.FC = () => {
               />
             </div>
           </div>
+          
         </Col>
 
         <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto -mx-10'>
@@ -136,6 +137,7 @@ const CoursePage: React.FC = () => {
           )}
         </Col>
       </Row>
+      
     </div>
   );
 };

@@ -147,7 +147,7 @@ const ViewSession: React.FC = () => {
   };
 
   const handleViewLesson = (sessionId: string) => {
-    navigate(`/instructor/profile-instructor/view-session/${courseId}/manager-lession/${sessionId}`);
+    navigate(`/instructor/profile-instructor/manager-lession/${sessionId}`);
   };
 
   const columns = [

@@ -21,7 +21,7 @@ import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import Certificate from './Certificate';
 import RouterLesson from './RouterLesson';
-
+import InstructorDetail from 'pages/InstructorDetail';
 import Checkout from 'pages/Checkout';
 
 import ManagerStudentPurchase from './ManagerPurchase';
@@ -75,7 +75,7 @@ export default function StudentRouter() {
                     <Route path={`/check-out`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
                     <Route path={`manager-student-purchase`} element={<ProtectedRouter allowedRoles={["student"]}><ManagerStudentPurchase /></ProtectedRouter>} />
                     <Route path={`shopping-cart/check-out`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
-                    
+                    <Route path={`instructor-detail/:userId`} element={<ProtectedRouter allowedRoles={["student"]}><InstructorDetail /></ProtectedRouter>} />
 
                     </Route>
                </Routes>
