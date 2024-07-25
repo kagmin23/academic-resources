@@ -1,4 +1,4 @@
-import { Button, Card, Col, Drawer, Input, Menu, Pagination, Row, message } from 'antd';
+import { Button, Card, Col, Drawer, Input, Menu, Pagination, Row, Spin, message } from 'antd';
 import { ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -33,9 +33,9 @@ const CoursePage: React.FC = () => {
       } catch (error) {
         console.error('Error fetching courses:', error);
         message.error('An error occurred. Please try again later.');
-      }finally {
-      setLoading(false);
-    }
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchCourses();
@@ -60,7 +60,13 @@ const CoursePage: React.FC = () => {
   };
 
   return (
-    <div className="mx-auto h-fit">
+    <div className="relative mx-auto h-fit">
+      {loading && (
+        <div className="absolute inset-0 z-50 flex items-center justify-center bg-white opacity-80">
+          <Spin size="large" />
+        </div>
+      )}
+
       <Row gutter={[16, 16]}>
         <Col xs={0} sm={0} md={6} lg={6} xl={6}>
           <div className="flex flex-col h-full">
@@ -72,7 +78,11 @@ const CoursePage: React.FC = () => {
                 mode="inline"
                 theme="light"
                 className='w-2/3 h-full p-2 overflow-y-auto lg:text-base xl:text-lg bg-slate-500'
-              />
+              >
+                <Menu.Item key="1">
+                  {categoryId}
+                </Menu.Item>
+              </Menu>
             </div>
           </div>
         </Col>
@@ -99,18 +109,17 @@ const CoursePage: React.FC = () => {
             />
           </Drawer>
 
-          <div className="mb-10 md:w-1/3">
+          <div className="flex justify-end my-5">
             <Input.Search
               placeholder="Search..."
-              enterButton="Search"
-              size="middle"
+              enterButton
+              size="small"
               onSearch={(value) => setKeyword(value)}
+              className='w-full md:w-1/3'
             />
           </div>
 
-          {loading ? (
-            <div>Loading...</div>
-          ) : error ? (
+          {error ? (
             <div>{error}</div>
           ) : (
             <>
@@ -120,15 +129,17 @@ const CoursePage: React.FC = () => {
                     <Col key={course._id} xs={24} sm={12} md={12} lg={8} xl={8}>
                       <Card
                         hoverable
-                        cover={<img alt={course.name} src={course.image_url} />}
+                        cover={<img className="object-cover w-full h-48"
+                                    alt={course.name} src={course.image_url} />}
                       >
                         <Card.Meta title={course.name} description={course.description} />
-                        <div className="flex items-center justify-between mt-4 text-lg font-bold">
-                          <span>{course.price}</span>
-                          <div className='flex'>
-                            <Button className='p-3 mr-2 text-white bg-red-500'>Favorite</Button>
-                            <Button className='p-3 text-white bg-blue-500'>Add to Cart</Button>
-                          </div>
+                        <div className="flex items-center justify-between mt-4 text-lg">
+                          <span className="text-sm" style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} đ</span>
+                          <span>({course.discount * 100}%)</span>
+                        </div>
+                        <div className='flex justify-between'>
+                          <div className='text-lg text-orange-600'>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} đ</div>
+                          <Button className='text-xs text-white bg-red-500'>Add to Cart</Button>
                         </div>
                       </Card>
                     </Col>
