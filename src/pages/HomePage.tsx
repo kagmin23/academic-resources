@@ -72,7 +72,7 @@ const HomePage: React.FC = () => {
         } else {
           notification.error({
             message: 'Error',
-            description: 'Failed to fetch current user information',
+            description: 'user dont login',
           });
         }
       } catch (error) {
