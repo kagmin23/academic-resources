@@ -60,7 +60,7 @@ function PurchaseAdmin() {
       width: 120,
     },
     {
-      title: "Discount",
+      title: "Discount(%)",
       dataIndex: "discount",
       key: "discount",
       align: 'center' as AlignType,
