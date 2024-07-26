@@ -35,7 +35,6 @@ const CourseAdmin: React.FC = () => {
   const fetchSessions = async () => {
     try {
       const response = await getCourses('', 1, 10);
-      console.log("reponse", response)
       setDataSource(response.data.pageData);
     } catch (error) {
       message.error('Failed to fetch sessions');

@@ -123,7 +123,7 @@ const CoursePage: React.FC = () => {
             <div>{error}</div>
           ) : (
             <>
-              <Link to={`course-details`}>
+              <Link to={`course-details/`}>
                 <Row gutter={[15, 15]} className='xl:px-1'>
                   {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
                     <Col key={course._id} xs={24} sm={12} md={12} lg={8} xl={8}>
