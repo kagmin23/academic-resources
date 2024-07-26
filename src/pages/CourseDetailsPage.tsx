@@ -89,7 +89,7 @@ const CourseDetail: React.FC = () => {
         } else if (currentUser.role === 'instructor') {
           navigate(`/instructor/instructor-detail/${userId}`);
         } else {
-          navigate(`/course-details/${courseId}`);
+          navigate(`/instructor-detail/${courseId}`);
         }
       };
     
