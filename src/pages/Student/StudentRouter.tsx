@@ -21,7 +21,7 @@ import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import Certificate from './Certificate';
 import RouterLesson from './RouterLesson';
-
+import InstructorDetail from 'pages/InstructorDetail';
 import Checkout from 'pages/Checkout';
 
 import ManagerStudentPurchase from './ManagerPurchase';
@@ -61,7 +61,7 @@ export default function StudentRouter() {
                     <Route path={`course/course-details`} element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`category`} element={<ProtectedRouter allowedRoles={["student"]}><CategoryPage /></ProtectedRouter>} />
                     <Route path={`course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />
-                    <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={["student"]}><ShoppingCart /></ProtectedRouter>} />
+                    <Route path={`shopping-cart/*`} element={<ProtectedRouter allowedRoles={["student"]}><ShoppingCart /></ProtectedRouter>} />
                     <Route path={`profile-student/*`} element={<ProtectedRouter allowedRoles={["student"]}><StudentPage /></ProtectedRouter>} />
                     <Route path={`buy-now`} element={<ProtectedRouter allowedRoles={["student"]}><BuyNow /></ProtectedRouter>} />
                     <Route path={`contact`} element={<ProtectedRouter allowedRoles={["student"]}><Contact /></ProtectedRouter>} />
@@ -73,12 +73,10 @@ export default function StudentRouter() {
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["student"]}><TopInstructorPage /></ProtectedRouter>} />
                     <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={["student"]}><Certificate /></ProtectedRouter>} />
-
-                    <Route path={`checkout`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
-
+                    <Route path={`/check-out`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
                     <Route path={`manager-student-purchase`} element={<ProtectedRouter allowedRoles={["student"]}><ManagerStudentPurchase /></ProtectedRouter>} />
-                    <Route path={`student-subscription`} element={<ProtectedRouter allowedRoles={["student"]}><StudentSubscription /></ProtectedRouter>} />
-
+                    <Route path={`shopping-cart/check-out`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
+                    <Route path={`instructor-detail/:userId`} element={<ProtectedRouter allowedRoles={["student"]}><InstructorDetail /></ProtectedRouter>} />
 
                     </Route>
                </Routes>

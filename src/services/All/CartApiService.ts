@@ -1,4 +1,5 @@
-import { apiRequest } from 'services/apiService';
+import axios from 'axios';
+import { HOST_MAIN, apiRequest } from 'services/apiService';
 
 export const createCart = async (courseData: {
   course_id: string,
@@ -15,18 +16,19 @@ export const createCart = async (courseData: {
   });
 };
 
-  export const getCarts = async (keyword: string, pageNum: number, pageSize: number) => {
+  export const getCarts = async (status: string, pageNum: number, pageSize: number) => {
     const token = localStorage.getItem('token');
-  
+    
+    try {
     return apiRequest('/api/cart/search', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
-      }, 
+      },
       data: {
         searchCondition: {
-          keyword,
+          status,
           is_delete: false,
         },
         pageInfo: {
@@ -34,7 +36,9 @@ export const createCart = async (courseData: {
           pageSize,
         },
       },
-    });
+    })} catch (error){
+      console.error("Error!")
+    }
   };
 
   export const deleteCart = async (courseId: string) => {
@@ -48,19 +52,28 @@ export const createCart = async (courseData: {
     });
   };
 
-  
+
   export const updateCartStatus = async (status: string, items: { _id: string, cart_no: string }[]) => {
     const token = localStorage.getItem('token');
   
-    return apiRequest('/api/cart/update-status', {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      data: {
-        status,
-        items,
-      },
-    });
+    try {
+      const response = await axios.put(`${HOST_MAIN}/api/cart/update-status`,
+        {
+          status,
+          items,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      console.error("ERROR: ", error);
+      throw error;
+    }
   };
+  
+  

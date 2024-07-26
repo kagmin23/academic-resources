@@ -34,7 +34,7 @@ const ManagerLessonInstructor: React.FC = () => {
 
   const fetchLessons = async () => {
     try {
-      const response = await getLessons('', 1, 10, '');
+      const response = await getLessons('', 1, 10, 10, 1, '');
       setLessons(response.data.pageData);
     } catch (error) {
       message.error('Failed to fetch lessons');

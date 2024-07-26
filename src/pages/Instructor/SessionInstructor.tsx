@@ -36,7 +36,7 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const fetchSessions = async () => {
     try {
-      const response = await getSessions('', 1, 10, '');
+      const response = await getSessions('', 1, 10, 5, 1, '');
       console.log("reponse", response)
       setSessions(response.data.pageData);
       setDataSource(response.data.pageData);

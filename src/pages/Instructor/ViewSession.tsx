@@ -54,7 +54,7 @@ const ViewSession: React.FC = () => {
     const fetchSessions = async () => {
       if (courseId) {
         try {
-          const response = await getSessions('', 1, 10, courseId);
+          const response = await getSessions('', 1, 10,5, 1, courseId);
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {
@@ -147,7 +147,7 @@ const ViewSession: React.FC = () => {
   };
 
   const handleViewLesson = (sessionId: string) => {
-    navigate(`/instructor/profile-instructor/view-session/${courseId}/manager-lession/${sessionId}`);
+    navigate(`/instructor/profile-instructor/manager-lession/${sessionId}`);
   };
 
   const columns = [

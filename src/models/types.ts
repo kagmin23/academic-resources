@@ -20,20 +20,6 @@ export interface RegisterResponseData extends RegisterUser {
   pendingApproval?: boolean;
 }
 
-// export interface User {
-//   _id: string;
-//   name: string;
-//   dob: Moment;
-//   email: string;
-//   password:string;
-//   phone_number: string;
-//   status: boolean;
-//   role: string;
-//   description: string;
-//   avatar: string;
-//   image: string;
-//   video: string;
-// }
 export interface Category {
   _id: string;
   name: string;
@@ -138,7 +124,6 @@ export class Course {
     video = "video",
     image = "image"
   }
-
 
   export class User {
     _id: string;
@@ -272,3 +257,74 @@ export class Course {
     created_at:	Date,
     is_deleted:	boolean,
   }
+
+  export interface Checkout {
+    _id:	string,
+    purchase_no:	string,
+    status:	string,
+    price_paid:	number,
+    price:	number,
+    discount:	number,
+    cart_id:	string,
+    cart_no:	string,
+    course_id:	string,
+    course_name:	string,
+    student_id:	string,
+    student_name:	string,
+    instructor_id:	string,
+    instructor_name:	string,
+    created_at:	Date,
+    updated_at:	Date,
+    is_deleted:	boolean,
+  }
+
+  export interface Cart {
+    _id:	string,
+    cart_no:	string,
+    status:	string,
+    price:	number,
+    discount:	number,
+    course_id:	string,
+    student_id:	string,
+    instructor_id:	string,
+    created_at:	Date,
+    updated_at:	Date,
+    is_deleted:	boolean,
+  }
+
+  export interface Subcription {
+    _id:	string,
+    subscriber_id:	string,
+    subscriber_name:	string,
+    instructor_id:	string,
+    instructor_name:	string,
+    is_subscribed:	boolean,
+    created_at:	Date,
+    updated_at:	Date,
+    is_deleted:	boolean,
+  }
+
+//   interface CoursesClient {
+//     _id: string;
+//     name: string;
+//     description: string;
+//     category_id: string;
+//     category_name: string;
+//     status: string;
+//     video_url: string;
+//     image_url: string;
+//     price_paid: number;
+//     price: number;
+//     discount: number;
+//     average_rating: number;
+//     review_count: number;
+//     instructor_id: string;
+//     instructor_name: string;
+//     full_time: number;
+//     session_list: Session[];
+//     is_in_cart: boolean;
+//     is_purchased: boolean;
+//     created_at: Date;
+//     updated_at: Date;
+//     is_deleted: boolean;
+// }

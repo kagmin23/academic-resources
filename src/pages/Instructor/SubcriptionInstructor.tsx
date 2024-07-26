@@ -1,85 +1,224 @@
-import React, { useState } from 'react';
-import { Card, Table, Typography, Button } from 'antd';
+import { BellOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Input, Layout, Table, Tabs, message } from 'antd';
+import { AlignType } from 'rc-table/lib/interface';
+import React, { useEffect, useState } from 'react';
+import { createOrUpdate, getItemByInstructor, getItemBySubscriber } from 'services/All/subcriptionApiService';
 
-const { Title } = Typography;
+const { Header, Content } = Layout;
+const { TabPane } = Tabs;
 
-const subscriptionData = [
-  {
-    key: '1',
-    instructor_name: 'Jane Smith',
-    subscription_date: 'April 20, 2023 10:04 pm',
-  },
-  {
-    key: '2',
-    instructor_name: 'Bob Brown',
-    subscription_date: 'March 3, 2023 7:15 am',
-  },
-  {
-    key: '3',
-    instructor_name: 'Eve White',
-    subscription_date: 'June 24, 2023 11:12 am',
-  },
-  {
-    key: '4',
-    instructor_name: 'Dwight Schrute',
-    subscription_date: 'November 27, 2023 5:46 am',
-  },
-];
+export interface Subcription {
+  _id: string;
+  subscriber_id: string;
+  subscriber_name: string;
+  instructor_id: string;
+  instructor_name: string;
+  is_subscribed: boolean;
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
+}
 
-const InstructorSubscription = () => {
-  const [title, setTitle] = useState('Subscribed');
+const SubcriptionStudent: React.FC = () => {
+  const [subcriptionStudent, setSubcriptionStudent] = useState<Subcription[]>([]);
+  const [subcriptionInstructor, setSubcriptionInstructor] = useState<Subcription[]>([]);
+  const [filteredData, setFilteredData] = useState<Subcription[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [isSubscribed, setIsSubscribed] = useState(true);
 
-  const handleTitleChange = (newTitle: string) => {
-    setTitle(newTitle);
+  const fetchSubscribers = async () => {
+    setLoading(true);
+    try {
+      const response = await getItemByInstructor("", 1, 10);
+      console.log('Fetched subscribers data:', response);
+      setSubcriptionInstructor(response);
+    } catch (error) {
+      message.error('Error fetching subscription data!');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const studentColumns = [
+  useEffect(() => {
+    fetchSubscribers();
+  }, []);
+
+  const fetchSubscriptionStatus = async () => {
+    setLoading(true);
+    try {
+      const response = await getItemBySubscriber("", 1, 10, 1, 1);
+      console.log('Fetched instructor data:', response);
+    } catch (error) {
+      message.error('Error fetching subscription data');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchSubscriptionStatus();
+  }, []);
+
+  const handleSearch = (value: string) => {
+    const filtered = subcriptionStudent.filter((item) =>
+      item.instructor_name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredData(filtered);
+  };
+
+  const getTotalSubcribers = (): number => {
+    return filteredData.length;
+  };
+
+  const handleSubscribe = async (instructor_id: string, isSubscribed: boolean) => {
+    setLoading(true);
+    try {
+      await createOrUpdate(instructor_id);
+      fetchSubscriptionStatus();
+      message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
+    } catch (error) {
+      console.error('Failed to subscribe:', error);
+      message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const columns1 = [
+    {
+      title: 'STT',
+      dataIndex: 'stt',
+      width: 50,
+      key: 'stt',
+      render: (text: any, record: Subcription, index: number) => index + 1,
+    },
+    {
+      title: 'Subscribers Name',
+      dataIndex: 'subscriber_name',
+      key: 'subscriber_name',
+    },
+    {
+      title: 'View',
+      key: 'detail',
+      width: 100,
+      align: "center" as AlignType,
+      render: (text: string) => (
+        <div>
+          <Button size="small" type="primary" className="text-sm text-white">
+            <UserOutlined />
+          </Button>
+        </div>
+      ),
+    },
+  ];
+
+  const columns2 = [
+    {
+      title: 'STT',
+      dataIndex: 'stt',
+      width: 50,
+      key: 'stt',
+      render: (text: any, record: Subcription, index: number) => index + 1,
+    },
     {
       title: 'Instructor Name',
       dataIndex: 'instructor_name',
       key: 'instructor_name',
     },
     {
-      title: 'Subscription Date',
-      dataIndex: 'subscription_date',
-      key: 'subscription_date',
+      title: 'View',
+      key: 'detail',
+      width: 100,
+      align: "center" as AlignType,
+      render: (text: string) => (
+        <div>
+          <Button size="small" type="primary" className="text-sm text-white">
+            <UserOutlined />
+          </Button>
+        </div>
+      ),
     },
     {
-      title: 'Action',
-      key: 'action',
-      render: () => <Button type="primary" danger>Unsubscribe</Button>,
+      title: 'Status',
+      key: 'status',
+      width: 250,
+      align: "center" as AlignType,
+      render: (text: string, record: Subcription) => (
+        <div>
+          <Button
+            onClick={() => handleSubscribe(record.instructor_id, record.is_subscribed)}
+            type="primary"
+            loading={loading}
+            className={`text-xs font-semibold w-1/2 ${
+              record.is_subscribed ? 'bg-red-500' : 'bg-blue-500'
+            }`}
+          >
+            {record.is_subscribed ? (
+              <>
+                <BellOutlined /> Subscribed
+              </>
+            ) : (
+              'Subscribe'
+            )}
+          </Button>
+        </div>
+      ),
     },
   ];
 
   return (
-    <div className="flex flex-col h-screen bg-[#ffffff] p-4">
-      <div className="flex-1 overflow-y-auto">
-        <div style={{ marginBottom: 16, display: 'flex', alignItems: 'center' }}>
-          <Button
-            type={title === 'Subscribed' ? 'primary' : 'default'}
-            onClick={() => handleTitleChange('Subscribed')}
-            style={{ marginRight: 10 }}
-          >
-            Subscribed
-          </Button>
-          <Button
-            type={title === 'Subscriber' ? 'primary' : 'default'}
-            onClick={() => handleTitleChange('Subscriber')}
-          >
-            Subscriber
-          </Button>
-        </div>
-        <Title level={4}>{title}</Title>
-        <Card>
-          <Table
-            dataSource={subscriptionData}
-            columns={studentColumns}
-            pagination={false} // Disable pagination if needed
-          />
-        </Card>
+    <Layout style={{ height: 'fit-content', minHeight: '100vh' }}>
+      <div className='px-5'>
+        <Tabs defaultActiveKey="1">
+          <TabPane tab="Subscribers" key="1">
+            <div className='flex justify-between'>
+              <div className='w-1/2'>
+                <span className='text-lg font-semibold'>Total Subscribers: {getTotalSubcribers()}</span>
+              </div>
+              <div className='w-1/4'>
+                <Input
+                  placeholder="Search..."
+                  prefix={<SearchOutlined />}
+                  className='mb-5'
+                  onChange={e => handleSearch(e.target.value)}
+                />
+              </div>
+            </div>
+            <Table
+              className='custom-table'
+              columns={columns1}
+              dataSource={filteredData}
+              rowKey="_id"
+              loading={loading}
+            />
+          </TabPane>
+
+          <TabPane tab="Subscriber" key="2">
+            <div className='flex justify-between'>
+              <div className='w-1/2'>
+                <span className='text-lg font-semibold'>Total Subscribers: {getTotalSubcribers()}</span>
+              </div>
+              <div className='w-1/4'>
+                <Input
+                  placeholder="Search..."
+                  prefix={<SearchOutlined />}
+                  className='mb-5'
+                  onChange={e => handleSearch(e.target.value)}
+                />
+              </div>
+            </div>
+            <Table
+              className='custom-table'
+              columns={columns2}
+              dataSource={filteredData}
+              rowKey="_id"
+              loading={loading}
+            />
+          </TabPane>
+        </Tabs>
       </div>
-    </div>
+    </Layout>
   );
 };
 
-export default InstructorSubscription;
+export default SubcriptionStudent;

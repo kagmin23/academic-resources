@@ -1,59 +1,11 @@
-import React from 'react';
-import { Card, Table, Typography } from 'antd';
-import { useNavigate } from 'react-router-dom';
-import SidebarStudent from './SidebarStudent'; // Giả sử SidebarStudent vẫn được sử dụng
+import { Alert, Card, Layout, Spin, Table, Typography } from 'antd';
+import { useEffect, useState } from 'react';
+import { getItemsbyStudent } from 'services/Student/getpurchaseApiService';
 
 const { Title } = Typography;
 
-const purchaseData = [
-  {
-    key: '1',
-    purchase_no: '1001',
-    status: 'completed',
-    price_paid: '$200',
-    price: '$250',
-    discount: '$50',
-    created_at: 'April 20, 2023 10:04 pm',
-    course_name: 'How To Teach Online Course Effectively',
-    instructor_name: 'Jane Smith',
-  },
-  {
-    key: '2',
-    purchase_no: '1002',
-    status: 'request_paid',
-    price_paid: '$150',
-    price: '$200',
-    discount: '$50',
-    created_at: 'March 3, 2023 7:15 am',
-    course_name: 'Create an LMS Website with LearnPress',
-    instructor_name: 'Bob Brown',
-  },
-  {
-    key: '3',
-    purchase_no: '1003',
-    status: 'new',
-    price_paid: '$0',
-    price: '$100',
-    discount: '$0',
-    created_at: 'June 24, 2023 11:12 am',
-    course_name: 'Introduction LearnPress - LMS plugin',
-    instructor_name: 'Eve White',
-  },
-  {
-    key: '4',
-    purchase_no: '1004',
-    status: 'completed',
-    price_paid: '$100',
-    price: '$100',
-    discount: '$0',
-    created_at: 'November 27, 2023 5:46 am',
-    course_name: 'New Headway',
-    instructor_name: 'Dwight Schrute',
-  },
-];
-
 const columns = [
-   
+  // Columns definition as provided
   {
     title: 'Course Name',
     dataIndex: 'course_name',
@@ -79,7 +31,6 @@ const columns = [
     dataIndex: 'discount',
     key: 'discount',
   },
-
   {
     title: 'Instructor Name',
     dataIndex: 'instructor_name',
@@ -90,7 +41,6 @@ const columns = [
     dataIndex: 'created_at',
     key: 'created_at',
   },
-
   {
     title: 'Status',
     dataIndex: 'status',
@@ -117,57 +67,50 @@ const columns = [
       return <span style={{ color }}>{text}</span>;
     },
   },
-  {
-    title: 'Price Paid',
-    dataIndex: 'price_paid',
-    key: 'price_paid',
-  },
-  {
-    title: 'Price',
-    dataIndex: 'price',
-    key: 'price',
-  },
-  {
-    title: 'Discount',
-    dataIndex: 'discount',
-    key: 'discount',
-  },
-  {
-    title: 'Created At',
-    dataIndex: 'created_at',
-    key: 'created_at',
-  },
-  {
-    title: 'Course Name',
-    dataIndex: 'course_name',
-    key: 'course_name',
-  },
-  {
-    title: 'Student Name',
-    dataIndex: 'student_name',
-    key: 'student_name',
-  },
-  {
-    title: 'Instructor Name',
-    dataIndex: 'instructor_name',
-    key: 'instructor_name',
-  },
 ];
 
 const ManagerStudentPurchase = () => {
-  const navigate = useNavigate();
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const result = await getItemsbyStudent(1, 10);
+        console.log('API Response:', result);
+        if (Array.isArray(result)) {
+          setData(result);
+        } else {
+          console.error("Unexpected data format:", result);
+          setError("Unexpected data format");
+        }
+      } catch (error) {
+        setError("Failed to load purchase data");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (loading) return <Spin size="large" />;
+  if (error) return <Alert message={error} type="error" />;
 
   return (
-    <div className="flex h-screen bg-[#ffffff]">
-      <div style={{ flex: '0 0 250px', background: '#f0f2f5', overflowY: 'auto' }}>
-      </div>
-      <div style={{ flex: '1', overflowY: 'auto', padding: '24px' }}>
-        <Card style={{ margin: '20px' }}>
-          <Title level={4}>Purchase Manager</Title>
-          <Table dataSource={purchaseData} columns={columns} />
-        </Card>
-      </div>
-    </div>
+    <Layout style={{ minHeight: '100vh' }}>
+      <Layout className="site-layout">
+        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
+          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+            <Card style={{ margin: 20 }}>
+              <Title level={4}>Purchase Manager</Title>
+              <Table dataSource={data} columns={columns} />
+            </Card>
+          </div>
+        </Content>
+      </Layout>
+    </Layout>
   );
 };
 

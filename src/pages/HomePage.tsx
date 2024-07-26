@@ -1,23 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Button, Card, Carousel, Col, message, Row,notification } from 'antd';
 import {
   ArrowRightOutlined,
-  FlagOutlined,
-  HeartOutlined,
-  LeftOutlined,
-  RightOutlined,
-  SketchOutlined,
-  OpenAIOutlined,
-  LinuxOutlined,
-  JavaOutlined,
   DotNetOutlined,
   DownOutlined,
+  JavaOutlined,
+  LeftOutlined,
+  LinuxOutlined,
+  OpenAIOutlined,
+  RightOutlined,
+  SketchOutlined
 } from '@ant-design/icons';
-import { getCourses, getCategories } from 'services/User/clientApiService';
+import { Button, Card, Carousel, Col, Row, message, notification } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { getCategories, getCourses } from 'services/UserClient/clientApiService';
+import { getCurrentUser } from '../services/AdminsApi/UserService';
 import './styles.css';
-import { useNavigate } from 'react-router-dom';
-import { getCurrentUser } from '../services/AdminsApi/UserService'
 
 interface Course {
   _id: string;
@@ -60,36 +57,31 @@ interface ApiResponse {
 
 const HomePage: React.FC = () => {
   const [email, setEmail] = useState('');
-  const [courses, setCourses] = useState<Course[]>([]); 
+  const [courses, setCourses] = useState<Course[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
 
   useEffect(() => {
-      const fetchCurrentUser = async () => {
-        try {
-          const response = await getCurrentUser();
-          if (response.success) {
-            setCurrentUser(response.data);
-          } else {
-            notification.error({
-              message: 'Error',
-              description: 'Failed to fetch current user information',
-            });
-          }
-        } catch (error) {
-          // notification.error({
-          //   message: 'Error',
-          //   description: 'Failed to fetch current user information',
-          // });
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await getCurrentUser();
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          notification.error({
+            message: 'Error',
+            description: 'user dont login',
+          });
         }
-      };
-  
-      fetchCurrentUser();
-    }, []);
-    
+      } catch (error) {
+        console.error("Error to fetch Current User!")
+      }
+    };
 
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -181,13 +173,13 @@ const HomePage: React.FC = () => {
       navigate(`/student/course-details/${courseId}`);
     } else if (currentUser.role === 'instructor') {
       navigate(`/instructor/course-details/${courseId}`);
-    }else {
+    } else {
       navigate(`/course-details/${courseId}`);
     }
   };
 
 
-  
+
   return (
     <div className="bg-gray-100 homepage">
       <header className="hero-image">
@@ -240,7 +232,7 @@ const HomePage: React.FC = () => {
             arrows
             autoplay
             dotPosition="bottom"
-            
+
             className="px-6"
             slidesToShow={4}
             prevArrow={<div><CustomPrevArrow /></div>}
@@ -267,26 +259,22 @@ const HomePage: React.FC = () => {
             ]}
           >
             {courses.map((course, index) => (
-              <div className="py-2 px-3 my-5 sm:my-10" key={index}>
+              <div className="px-3 py-2 my-5 sm:my-10" key={index}>
                 {/* <Link to={`course-details/${course._id}`}>
                   <img className="rounded-xl" src={course.image_url} alt={course.name} />
                 </Link> */}
-                 <div  onClick={() => handleNavigateToCourseDetails(course._id)}>
-                  <img className="rounded-xl lg:h-48 w-full h-40 object-fill" src={course.image_url}  alt={course.name} />
+                <div onClick={() => handleNavigateToCourseDetails(course._id)}>
+                  <img className="object-fill w-full h-40 rounded-xl lg:h-48" src={course.image_url} alt={course.name} />
                 </div>
-                <div className=" ">
-                  <h1 className="text-lg` font-bold truncate lg:text-2xl flex justify-start">{course.name}</h1>
-                 
+                <div className="">
+                  <h1 className="flex justify-start p-3 text-lg font-bold truncate lg:text-xl">{course.name}</h1>
+
                 </div>
-                <div className='flex justify-between'>
-                <p className="lg:text-base font-semibold flex  text-gray-600 justify-start">{course.price} VND</p>
-                <div className="flex">
-                    <Button size="small" title="Save this course" className="p-2 text-white bg-red-500">
-                      <HeartOutlined />
-                    </Button>
-                    <Button size="small" title="Report this course" className="p-2 text-white bg-blue-500">
-                      <FlagOutlined />
-                    </Button>
+                <div className='flex justify-between ml-3'>
+                  <div className="flex flex-row md:text-lg sm:text-sm ">
+                    <span className="mr-1 text-sm" style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} đ</span>
+                    <span>({course.discount * 100}%)</span>
+                    <div className='ml-3 text-orange-600'>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} đ</div>
                   </div>
                 </div>
               </div>
@@ -325,7 +313,7 @@ const HomePage: React.FC = () => {
           <button className="text-2xl text-white">Join for free <ArrowRightOutlined /></button>
         </div>
 
-        <div className="w-full text-center">
+        {/* <div className="w-full text-center">
           <h2 className="mt-10 ml-4 text-2xl font-bold sm:text-4xl">New Courses</h2>
           <Carousel
             arrows
@@ -356,15 +344,14 @@ const HomePage: React.FC = () => {
               },
             ]}
           >
-            {/* Render new courses */}
           </Carousel>
-        </div>
-
+        </div> */}
+{/* 
         <Link to="/course-details">
           <p className="text-center pt-2.5 sm:text-sm">View More <ArrowRightOutlined /></p>
-        </Link>
+        </Link> */}
 
-        <div className="flex items-center justify-center h-24 mt-8 sm:text-4xl font-bold">
+        <div className="flex items-center justify-center h-24 mt-8 font-bold sm:text-4xl">
           Top Categories
         </div>
 
@@ -375,14 +362,14 @@ const HomePage: React.FC = () => {
                 <Card
                   bordered={false}
                   className="w-full h-48 transition duration-300 ease-in-out hover:shadow-md"
-                  cover={<img alt={category.name}  src={category.img} className="object-cover h-32 p-3" />}
+                  cover={<img alt={category.name} src={category.img} className="object-cover h-32 p-3" />}
                 >
                   <div className="text-center">{category.name}</div>
                 </Card>
               </Col>
             ))
           ) : (
-            <div className="text-center text-xl">Loading categories...</div>
+            <div className="text-xl text-center">Loading categories...</div>
           )}
         </Row>
 

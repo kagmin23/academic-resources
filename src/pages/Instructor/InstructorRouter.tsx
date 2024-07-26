@@ -20,9 +20,11 @@ import LayoutInstructor from '../../components/layout/LayoutInstructor';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import InstructorPage from './InstructorPage';
+import InstructorDetail from 'pages/InstructorDetail';
 
 import ViewSession from './ViewSession';
 import InstructorSubscription from './SubcriptionInstructor';
+import Checkout from 'pages/Checkout';
 export default function InstructorRouter() {
 
   // const LayoutInstructor = React.lazy(() => import("../../components/layout/LayoutInstructor"));
@@ -72,6 +74,8 @@ export default function InstructorRouter() {
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}
          <Route path={`instructor-subscription`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorSubscription /></ProtectedRouter>} />
 
+         <Route path={`check-out`} element={<ProtectedRouter allowedRoles={["instructor"]}><Checkout /></ProtectedRouter>} />
+         <Route path={`instructor-detail/:userId`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorDetail /></ProtectedRouter>} />
 
          </Route>
     </Routes>

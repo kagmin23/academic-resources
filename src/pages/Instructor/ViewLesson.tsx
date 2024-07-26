@@ -58,7 +58,7 @@ const ViewLesson: React.FC = () => {
     const fetchLessons = async () => {
       if (sessionId) {
         try {
-          const response = await getLessons(sessionId, 1, 10, '');
+          const response = await getLessons(sessionId, 1, 10,10, 1, '');
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {

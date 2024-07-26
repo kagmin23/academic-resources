@@ -2,13 +2,11 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
 import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Switch, Table, Typography, message } from "antd";
-import React, { useEffect, useState } from "react";
-
 import { Category, Course, LogStatus } from "models/types";
 import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
-
 import { getCategories } from "services/AdminsApi/categoryApiService";
 import { changeCourseStatus } from "services/All/changerStatusApiService";
 import { getCourses } from "services/All/getCoursesApiService";
@@ -269,16 +267,12 @@ const ManagerCourseInstructor: React.FC = () => {
       key: "category_name",
       align: "center" as AlignType
     },
-    // {
-    //   title: "Description",
-    //   dataIndex: "description",
-    //   key: "description",
-    // },
 
     {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      align: "end" as AlignType
     },
     {
       title: "Discount (%)",
