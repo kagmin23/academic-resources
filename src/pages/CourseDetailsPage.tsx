@@ -95,9 +95,7 @@ const CourseDetail: React.FC = () => {
             try {
                 const response = await getCourseDetail(courseId);
                 setCourseDetail(response.data);
-                // Nếu đã đăng nhập, kiểm tra xem người dùng đã đăng ký khóa học chưa
                 if (isLoggedIn) {
-                    // Tạm thời cho là `subscriptionInfo` sẽ chứa thông tin đăng ký từ API
                     const response = await fetch(`/api/subscription-status/${courseId}`);
                     const data = await response.json();
                     setIsSubscribed(data.is_subscribed);
@@ -125,7 +123,6 @@ const CourseDetail: React.FC = () => {
             const wasSubscribed = isSubscribed;
             setIsSubscribed(response.data.is_subscribed);
 
-            // Hiển thị thông báo tương ứng với hành động
             if (wasSubscribed && !response.data.is_subscribed) {
                 message.success('Unsubscribed Successfully!');
             } else if (!wasSubscribed && response.data.is_subscribed) {

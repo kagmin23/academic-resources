@@ -1,7 +1,7 @@
-import { Button, Card, Col, Divider, Radio, Row } from 'antd';
+import { Button, Card, Col, Divider, Modal, Radio, Row, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { getCarts } from 'services/All/cartApiService';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { getCarts, updateCartStatus } from 'services/All/cartApiService';
 import Paypal from '../assets/Paypal2.png';
 import VNPay from '../assets/VNPay2.jpg';
 
@@ -12,27 +12,54 @@ export interface Cart {
   price: number;
   discount: number;
   course_id: string;
+  course_name: string;
   student_id: string;
+  category_name: string;
   instructor_id: string;
+  instructor_name: string;
   created_at: Date;
   updated_at: Date;
   is_deleted: boolean;
 }
 
+interface CheckoutLocationState {
+  cartsToCheckout: { _id: string; cart_no: string }[];
+}
+
+const statusColors: { [key: string]: string } = {
+  new: 'blue',
+  waiting_paid: 'orange',
+  cancel: 'red',
+  completed: 'green',
+};
+
 const Checkout: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const state = location.state as CheckoutLocationState;
   const [carts, setCarts] = useState<Cart[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
+  const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [actionType, setActionType] = useState<'cancel' | 'complete' | null>(null);
 
   useEffect(() => {
-    const status = '';
-    const pageNum = 1;
-    const pageSize = 10;
+    if (!state || !state.cartsToCheckout) {
+      console.error('No carts selected for checkout');
+      return;
+    }
 
     const fetchCarts = async () => {
       try {
-        const response = await getCarts(status, pageNum, pageSize);
-        console.log('API Response:', response);
+        const response = await getCarts('waiting_paid', 1, 10);
+        if (response.data && Array.isArray(response.data.pageData)) {
+          const filteredCarts = response.data.pageData.filter((cart: Cart) =>
+            state.cartsToCheckout.some((selectedCart: { _id: string }) => selectedCart._id === cart._id)
+          );
+          setCarts(filteredCarts);
+        } else {
+          console.error('Response data is not an array:', response.data);
+        }
       } catch (err) {
         setError(err as Error);
       } finally {
@@ -41,9 +68,43 @@ const Checkout: React.FC = () => {
     };
 
     fetchCarts();
-  }, []);
+  }, [state]);
 
-  const totalPrice = carts.reduce((total, product) => total + product.price, 0);
+  const handleAction = async () => {
+    if (actionType) {
+      try {
+        const status = actionType === 'cancel' ? 'cancel' : 'completed';
+
+        // Prepare items for update
+        const itemsToUpdate = carts.map(cart => ({
+          _id: cart._id,
+          cart_no: cart.cart_no
+        }));
+
+        // Call updateCartStatus with the status and items
+        await updateCartStatus(status, itemsToUpdate);
+
+        // Navigate based on actionType
+        if (actionType === 'cancel') {
+          navigate('/student/shopping-cart');
+        } else {
+          navigate('/student/payment-successfully');
+        }
+      } catch (error) {
+        console.error('Failed to update cart status:', error);
+      } finally {
+        setIsModalVisible(false);
+        setActionType(null);
+      }
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalVisible(false);
+    setActionType(null);
+  };
+
+  const totalPrice = carts.reduce((total, cart) => total + cart.price * (1 - cart.discount), 0);
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>Error: {error.message}</div>;
@@ -64,24 +125,26 @@ const Checkout: React.FC = () => {
                 <Row>
                   <Col span={16}>
                     <div className='flex'>
-                      {/* <div>
-                        <img src={product.image_url} alt={product.course_id} className='w-40 h-24'/>
-                      </div> */}
                       <div className='ml-4'>
-                        <div className='text-lg font-medium'>{product.course_id}</div>
-                        <div className='mt-4 font-medium text-gray-700'>By: {product.instructor_id}</div>
-                        <div className='font-medium text-gray-700'>Category: {product.course_id}</div>
+                        <div className='text-lg font-medium'>{product.course_name}</div>
+                        <div className='mt-4 font-medium text-gray-700'>By: {product.instructor_name}</div>
+                        <div className='font-medium text-gray-700'>Category: {product.category_name}</div>
+                        <div className='flex flex-row mt-5 font-medium text-slate-500'>
+                          <Tag color={statusColors[product.status]}>
+                            {product.status.replace('_', ' ')}
+                          </Tag>
+                        </div>
                       </div>
                     </div>
                   </Col>
-                  <Col span={8} className='flex items-center font-medium'>{product.price} đ</Col>
+                  <Col span={8} className='flex items-center font-medium'>{(product.price * (1 - product.discount)).toLocaleString('vi-VN')} đ</Col>
                 </Row>
                 <Divider />
               </React.Fragment>
             ))}
             <Row>
               <Col span={16} className='text-lg font-medium'>Total products: {carts.length}</Col>
-              <Col span={8} className='text-lg font-medium'>Total Price: {totalPrice} đ</Col>
+              <Col span={8} className='text-lg font-medium'>Total Price: {totalPrice.toLocaleString('vi-VN')} đ</Col>
             </Row>
           </Card>
         </div>
@@ -94,18 +157,40 @@ const Checkout: React.FC = () => {
               <Divider />
               <div>
                 <Radio.Group name="radiogroup" defaultValue={1}>
-                  <Radio value={1}><img src={VNPay} alt="VNPay" className='mr-4 w-28 h-28'/></Radio>
-                  <Radio value={2}><img src={Paypal} alt="Paypal" className='w-28 h-28'/></Radio>
+                  <Radio value={1}><img src={VNPay} alt="VNPay" className='mr-4 w-28 h-28' /></Radio>
+                  <Radio value={2}><img src={Paypal} alt="Paypal" className='w-28 h-28' /></Radio>
                 </Radio.Group>
               </div>
               <Divider />
               <div className='flex justify-end'>
-                <Link to="/student/shopping-cart">
-                  <Button className='mr-3 font-medium text-white bg-red-600'>Cancel</Button>
-                </Link>
-                <Link to="/student/payment-successfully">
-                  <Button className='font-medium text-white bg-blue-600'>Complete</Button>
-                </Link>
+                <Modal
+                  title="Confirm Action"
+                  visible={isModalVisible}
+                  onOk={handleAction}
+                  onCancel={handleCancel}
+                  okText={actionType === 'cancel' ? "Cancel" : "Complete"}
+                  cancelText="Cancel"
+                >
+                  <p>{actionType === 'cancel' ? 'Are you sure you want to cancel these items?' : 'Are you sure you want to complete the payment?'}</p>
+                </Modal>
+                <Button
+                  className='mr-3 font-medium text-white bg-red-600'
+                  onClick={() => {
+                    setActionType('cancel');
+                    setIsModalVisible(true);
+                  }}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  className='font-medium text-white bg-blue-600'
+                  onClick={() => {
+                    setActionType('complete');
+                    setIsModalVisible(true);
+                  }}
+                >
+                  Complete
+                </Button>
               </div>
             </div>
           </Card>
