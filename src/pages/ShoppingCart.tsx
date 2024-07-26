@@ -1,5 +1,3 @@
-import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, DeleteOutlined, SyncOutlined } from '@ant-design/icons';
-import { TinyColor } from '@ctrl/tinycolor';
 import { Button, Card, Checkbox, Modal, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,21 +15,6 @@ interface Cart {
   cart_no: string;
 }
 
-const colors1 = ['#6253E1', '#04BEFE'];
-const getHoverColors = (colors: string[]) =>
-  colors.map((color) => new TinyColor(color).lighten(5).toString());
-const getActiveColors = (colors: string[]) =>
-  colors.map((color) => new TinyColor(color).darken(5).toString());
-
-const gridStyle: React.CSSProperties = {
-  width: '100%',
-};
-
-const cardTitleStyle: React.CSSProperties = {
-  fontSize: '24px',
-  fontWeight: 'bold',
-};
-
 const statusColors: { [key: string]: string } = {
   new: 'blue',
   waiting_paid: 'orange',
@@ -39,17 +22,10 @@ const statusColors: { [key: string]: string } = {
   completed: 'green',
 };
 
-const statusIcons: { [key: string]: React.ReactNode } = {
-  new: <CheckCircleOutlined />,
-  waiting_paid: <ClockCircleOutlined />,
-  cancel: <CloseCircleOutlined />,
-  completed: <SyncOutlined spin />,
-};
-
 const ShoppingCart: React.FC = () => {
   const [carts, setCarts] = useState<Cart[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [selectedCarts, setSelectedCarts] = useState<string[]>([]);
+  const [selectedCarts, setSelectedCarts] = useState<{ _id: string, cart_no: string }[]>([]);
   const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
   const [cartToDelete, setCartToDelete] = useState<string | null>(null);
   const navigate = useNavigate();
@@ -60,7 +36,8 @@ const ShoppingCart: React.FC = () => {
       try {
         const response = await getCarts('', 1, 10);
         if (response.data && Array.isArray(response.data.pageData)) {
-          setCarts(response.data.pageData);
+          const filteredCarts = response.data.pageData.filter((cart: Cart) => cart.status !== 'completed');
+          setCarts(filteredCarts);
         } else {
           console.error('Response data is not an array:', response.data);
         }
@@ -82,13 +59,12 @@ const ShoppingCart: React.FC = () => {
   const handleDelete = async () => {
     if (cartToDelete) {
       try {
-        await updateCartStatus('cancel', [{ _id: cartToDelete, cart_no: '' }]);
         await deleteCart(cartToDelete);
         setCarts((prevCarts) =>
           prevCarts.filter((cart) => cart._id !== cartToDelete)
         );
         setSelectedCarts((prevSelected) =>
-          prevSelected.filter((id) => id !== cartToDelete)
+          prevSelected.filter((id) => id._id !== cartToDelete)
         );
         setIsModalVisible(false);
         setCartToDelete(null);
@@ -106,8 +82,14 @@ const ShoppingCart: React.FC = () => {
   const handleCheckboxChange = async (courseId: string, checked: boolean, cart_no: string) => {
     setSelectedCarts((prevSelected) =>
       checked
-        ? [...prevSelected, courseId]
-        : prevSelected.filter((id) => id !== courseId)
+        ? [...prevSelected, { _id: courseId, cart_no }]
+        : prevSelected.filter((id) => id._id !== courseId)
+    );
+
+    setCarts((prevCarts) =>
+      prevCarts.map((cart) =>
+        cart._id === courseId ? { ...cart, status: checked ? 'waiting_paid' : 'new' } : cart
+      )
     );
 
     try {
@@ -120,19 +102,27 @@ const ShoppingCart: React.FC = () => {
 
   const handleProceedToCheckout = async () => {
     try {
-      await updateCartStatus('completed',
-        carts
-          .filter((cart) => selectedCarts.includes(cart._id))
-          .map((cart) => ({ _id: cart._id, cart_no: cart.cart_no }))
-      );
-      navigate('/check-out');
+      const cartsToCheckout = selectedCarts
+        .filter((selectedCart) => {
+          const cart = carts.find((cart) => cart._id === selectedCart._id);
+          return cart && cart.status === 'waiting_paid';
+        });
+
+      if (cartsToCheckout.length === 0) {
+        console.error('No carts are selected or have incorrect status.');
+        return;
+      }
+
+      // Proceed to checkout and pass selected carts data
+      navigate('/student/check-out', { state: { cartsToCheckout } });
+
     } catch (error) {
-      console.error('Failed to update cart status:', error);
+      console.error('Failed to proceed to checkout:', error);
     }
   };
 
   const selectedTotalPrice = carts
-    .filter((cart) => selectedCarts.includes(cart._id))
+    .filter((cart) => selectedCarts.some((selectedCart) => selectedCart._id === cart._id))
     .reduce((total, cart) => total + cart.price * (1 - cart.discount), 0);
 
   return (
@@ -142,15 +132,15 @@ const ShoppingCart: React.FC = () => {
       </div>
       <div className="flex flex-col flex-grow w-5/6 pt-5 pb-20 mx-auto lg:flex-row">
         <div className="w-full p-4 mr-3 item lg:w-2/3">
-          <Card title={<div style={cardTitleStyle}>Your carts</div>}>
+          <Card title={<div style={{ fontSize: '24px', fontWeight: 'bold' }}>Your carts</div>}>
             {loading ? (
               <div>Loading...</div>
             ) : (
               carts.map((cart) => (
-                <Card.Grid key={cart._id} style={gridStyle} className="md:flex">
+                <Card.Grid key={cart._id} style={{ width: '100%' }} className="md:flex">
                   <Checkbox
                     className="mr-4"
-                    checked={selectedCarts.includes(cart._id)}
+                    checked={selectedCarts.some((selectedCart) => selectedCart._id === cart._id)}
                     onChange={(e) => handleCheckboxChange(cart._id, e.target.checked, cart.cart_no)}
                   />
                   <img
@@ -168,7 +158,7 @@ const ShoppingCart: React.FC = () => {
                         By: {cart.instructor_name}
                       </div>
                       <div className='flex flex-row mt-5 font-medium text-slate-500'>
-                        <Tag color={statusColors[cart.status]} icon={statusIcons[cart.status]}>
+                        <Tag color={statusColors[cart.status]}>
                           {cart.status.replace('_', ' ')}
                         </Tag>
                       </div>
@@ -188,7 +178,7 @@ const ShoppingCart: React.FC = () => {
                         className="w-full mt-5 text-xs font-bold text-center md:mt-16"
                         onClick={() => showDeleteModal(cart._id)}
                       >
-                        <DeleteOutlined />
+                        Delete
                       </Button>
                     </div>
                   </div>
@@ -199,7 +189,7 @@ const ShoppingCart: React.FC = () => {
         </div>
         <div className="w-full p-4 item lg:w-1/3">
           <Card>
-            <Card.Grid style={gridStyle}>
+            <Card.Grid style={{ width: '100%' }}>
               <div className="flex flex-col">
                 <div className="font-bold text-center md:text-lg sm:text-base">
                   Total Price:

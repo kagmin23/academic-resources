@@ -55,7 +55,7 @@ export const createCart = async (courseData: {
 
   export const updateCartStatus = async (status: string, items: { _id: string, cart_no: string }[]) => {
     const token = localStorage.getItem('token');
-
+  
     try {
       const response = await axios.put(`${HOST_MAIN}/api/cart/update-status`,
         {
@@ -75,4 +75,5 @@ export const createCart = async (courseData: {
       throw error;
     }
   };
+  
   
