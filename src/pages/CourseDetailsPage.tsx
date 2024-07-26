@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { createCart } from '../services/All/cartApiService';
-import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
+import { createOrUpdate } from '../services/All/subcriptionApiService';
 
 const { TabPane } = Tabs;
 
@@ -78,7 +78,7 @@ const CourseDetail: React.FC = () => {
 
         try {
             await createOrUpdate(courseDetail.instructor_id);
-            fetchSubscriptionStatus();
+            // fetchSubscriptionStatus();
             message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
         } catch (error) {
             console.error('Failed to subscribe:', error);
@@ -87,14 +87,14 @@ const CourseDetail: React.FC = () => {
             setLoading(false);
         }
     };
-    const fetchSubscriptionStatus = async () => {
-        const response = await getItemBySubscriber("", 1, 10);
-        setIsSubscribed(response[0].is_subscribed);
-    };
-    useEffect(() => {
-        fetchSubscriptionStatus();
-        },
-    []);
+    // const fetchSubscriptionStatus = async () => {
+    //     const response = await getItemBySubscriber("", 1, 10);
+    //     setIsSubscribed(response[0].is_subscribed);
+    // };
+    // useEffect(() => {
+    //     fetchSubscriptionStatus();
+    //     },
+    // []);
 
     const showModal = () => {
         setIsModalVisible(true);
