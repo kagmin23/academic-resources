@@ -71,7 +71,7 @@ const BuyNow: React.FC = () => {
                                         <div className='w-full font-medium text-center md:text-base sm:text-xs text-slate-500 md:text-left'>By: {courseDetail.price}</div>
                                     </div>
                                     <div className='font-semibold text-center md:text-lg sm:text-sm md:w-1/4'>
-                                        <p className="mt-4 text-lg font-semibold">Price: {formattedPrice} VNĐ</p>
+                                        <p className="mt-4 text-lg font-semibold">Price: {formattedPrice} đ</p>
                                         {courseDetail.discount > 0 && (
                                             <p className="mt-2 text-lg font-semibold text-red-600">
                                                 Discounted Price: {discountedPrice} %
@@ -89,7 +89,7 @@ const BuyNow: React.FC = () => {
                     <div className='pb-3 text-2xl font-medium text-center border-b border-gray-500'>Total</div>
                     <div className='flex justify-between my-4 text-base font-medium'>
                         <div>Orignal Price:</div>
-                        <div className='ml-10'>{formattedPrice} VNĐ</div>
+                        <div className='ml-10'>{formattedPrice} đ</div>
                     </div>
                     <div className='flex justify-between my-4 text-base font-medium'>
                         <div>Discount Price</div>
@@ -97,7 +97,7 @@ const BuyNow: React.FC = () => {
                     </div>
                     <div className='flex justify-between py-5 text-xl font-bold border-t border-gray-500'>
                         <div>Total:</div>
-                        <div className='ml-10'>{formattedPrice} VNĐ</div>
+                        <div className='ml-10'>{formattedPrice} đ</div>
                     </div>
                     <ConfigProvider
                         theme={{

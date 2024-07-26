@@ -1,10 +1,11 @@
-import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, SyncOutlined } from '@ant-design/icons';
+import { CheckCircleOutlined, ClockCircleOutlined, CloseCircleOutlined, DeleteOutlined, SyncOutlined } from '@ant-design/icons';
 import { TinyColor } from '@ctrl/tinycolor';
 import { Button, Card, Checkbox, Modal, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteCart, getCarts, updateCartStatus } from 'services/All/cartApiService';
 import sp from '../assets/sp.jpg';
+import { Link } from 'react-router-dom';
 
 interface Cart {
   _id: string;
@@ -14,7 +15,7 @@ interface Cart {
   price: number;
   discount: number;
   status: string;
-  cart_no: string; // Added this line
+  cart_no: string;
 }
 
 const colors1 = ['#6253E1', '#04BEFE'];
@@ -59,8 +60,8 @@ const ShoppingCart: React.FC = () => {
       setLoading(true);
       try {
         const response = await getCarts('', 1, 10);
-        if (Array.isArray(response.data)) {
-          setCarts(response.data);
+        if (response.data && Array.isArray(response.data.pageData)) {
+          setCarts(response.data.pageData);
         } else {
           console.error('Response data is not an array:', response.data);
         }
@@ -82,6 +83,7 @@ const ShoppingCart: React.FC = () => {
   const handleDelete = async () => {
     if (cartToDelete) {
       try {
+        await updateCartStatus('cancel', [{ _id: cartToDelete, cart_no: '' }]);
         await deleteCart(cartToDelete);
         setCarts((prevCarts) =>
           prevCarts.filter((cart) => cart._id !== cartToDelete)
@@ -112,6 +114,19 @@ const ShoppingCart: React.FC = () => {
     try {
       const status = checked ? 'waiting_paid' : 'new';
       await updateCartStatus(status, [{ _id: courseId, cart_no }]);
+    } catch (error) {
+      console.error('Failed to update cart status:', error);
+    }
+  };
+
+  const handleProceedToCheckout = async () => {
+    try {
+      await updateCartStatus('completed',
+        carts
+          .filter((cart) => selectedCarts.includes(cart._id))
+          .map((cart) => ({ _id: cart._id, cart_no: cart.cart_no }))
+      );
+      navigate('/check-out');
     } catch (error) {
       console.error('Failed to update cart status:', error);
     }
@@ -159,19 +174,22 @@ const ShoppingCart: React.FC = () => {
                         </Tag>
                       </div>
                     </div>
-                    <div className="md:w-1/5">
-                      <div className="font-semibold text-center md:text-lg sm:text-sm">
-                        <div>
-                          <span className="text-sm" style={{ textDecoration: 'line-through' }}>{cart.price.toLocaleString('vi-VN')} VNĐ</span> <span>({cart.discount * 100}%)</span>
+                    <div className="justify-center">
+                      <div className="font-semibold">
+                        <div className="flex justify-center md:justify-end">
+                          <span className="text-lg mr-2 line-through">{cart.price.toLocaleString('vi-VN')} đ</span>
+                          <span className="text-lg">({cart.discount * 100}%)</span>
                         </div>
-                        <div className="text-red-500">{(cart.price * (1 - cart.discount)).toLocaleString('vi-VN')} VNĐ</div>
+                        <div className="text-red-500 text-lg">
+                          {(cart.price * (1 - cart.discount)).toLocaleString('vi-VN')} đ
+                        </div>
                       </div>
                       <Button
                         danger
                         className="w-full mt-5 text-xs font-bold text-center md:mt-16"
                         onClick={() => showDeleteModal(cart._id)}
                       >
-                        Delete
+                        <DeleteOutlined />
                       </Button>
                     </div>
                   </div>
@@ -187,15 +205,15 @@ const ShoppingCart: React.FC = () => {
                 <div className="font-bold text-center md:text-lg sm:text-base">
                   Total Price:
                 </div>
-                <div className="text-xl font-bold text-center text-red-500 md:text-xl sm:text-lg">
-                  {selectedTotalPrice.toLocaleString('vi-VN')} VNĐ
+                <div className="text-xl font-bold text-center text-red-500 md:text-xl sm:text-lg m-3">
+                  {selectedTotalPrice.toLocaleString('vi-VN')} đ
                 </div>
                 <Button
                   type="primary"
-                  className="w-full mt-5"
-                  onClick={() => navigate('/checkout')}
+                  className="w-full"
+                  onClick={handleProceedToCheckout}
                 >
-                  Checkout
+                  Proceed to Checkout
                 </Button>
               </div>
             </Card.Grid>
