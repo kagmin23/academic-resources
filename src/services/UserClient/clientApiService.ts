@@ -1,21 +1,11 @@
 import axios from 'axios';
 import { HOST_MAIN, apiRequest } from 'services/apiService';
 
-export const getCourses = async (
-  keyword: string,
-  category_id: string,
-  pageNum: number,
-  pageSize: number
-) => {
-  const token = localStorage.getItem('token');
+export const getCourses = async ( keyword: string, category_id: string, pageNum: number, pageSize: number) => {
 
   const headers: { [key: string]: string } = {
     'Content-Type': 'application/json',
   };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
 
   try {
     const response = await axios.post(
@@ -41,21 +31,8 @@ export const getCourses = async (
 };
 
 export const getCourseDetail = async (courseId: string) => {
-  const token = localStorage.getItem('token');
-
-  const headers: { [key: string]: string } = {
-    'Content-Type': 'application/json',
-  };
-
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-  }
-
   try {
-    const response = await axios.get(
-      `${HOST_MAIN}/api/client/course/${courseId}`,
-      { headers }
-    );
+    const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`);
     return response.data;
   } catch (error) {
     console.error('Error fetching course detail:', error);
