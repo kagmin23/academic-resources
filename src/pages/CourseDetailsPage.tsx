@@ -4,7 +4,7 @@ import { Avatar, Button, Modal, Tabs, message,notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
-import { createCart } from '../services/All/cartApiService';
+import { createCart } from '../services/All/CartApiService';
 import { createOrUpdate } from '../services/All/subcriptionApiService';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from '../services/AdminsApi/UserService'
