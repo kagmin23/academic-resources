@@ -14,6 +14,8 @@ import {
   ShoppingCart,
   TopInstructorPage
 } from 'pages';
+import Checkout from 'pages/Checkout';
+import InstructorDetail from 'pages/InstructorDetail';
 import PaymentSuccess from 'pages/PaymentSuccess';
 import StudentPage from 'pages/Student/StudentPage';
 import { Route, Routes } from 'react-router-dom';
@@ -21,10 +23,8 @@ import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import Certificate from './Certificate';
 import RouterLesson from './RouterLesson';
-import InstructorDetail from 'pages/InstructorDetail';
-import Checkout from 'pages/Checkout';
 
-import ManagerStudentPurchase from './ManagerPurchase';
+import ManagerStudentPurchase from './PurchasesStudent';
 
 
 export default function StudentRouter() {

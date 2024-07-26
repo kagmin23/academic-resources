@@ -6,7 +6,7 @@ import ProfileStudent from 'pages/Student/ProfileStudent';
 import SidebarStudent from 'pages/Student/SidebarStudent';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import ManagerStudentPurchase from './ManagerPurchase';
+import ManagerStudentPurchase from './PurchasesStudent';
 import SubcriptionStudent from './SubcriptionStudent';
 const StudentPage: React.FC = () => {
   return (

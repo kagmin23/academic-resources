@@ -328,3 +328,29 @@ export class Course {
 //     updated_at: Date;
 //     is_deleted: boolean;
 // }
+
+// payoutInterfaces.ts
+
+export interface Transaction {
+  _id: string;
+  price_paid: number;
+  price: number;
+  discount: number;
+  purchase_id: string;
+  created_at: Date;
+}
+
+export interface Payout {
+  _id: string;
+  payout_no: string;
+  status: string;
+  instructor_id: string;
+  instructor_ratio: number;
+  balance_origin: number;
+  balance_instructor_paid: number;
+  balance_instructor_received: number;
+  transactions: Transaction[];
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
+}

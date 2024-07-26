@@ -69,15 +69,6 @@ const LayoutStudent: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    // const result = await logoutApiService();
-    // if (result.success) {
-    //   navigate('/log-in');
-    // } else {
-    //   notification.error({
-    //     message: 'Error',
-    //     description: result.message,
-    //   });
-    // }
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("exp token");
@@ -118,22 +109,6 @@ const LayoutStudent: React.FC = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          
-          {/* <Badge count={notificationCountBell} offset={[2, 5]}>
-            <div className="flex items-center space-x-4 text-xl text-white">
-              <Link to={'#'}>
-                <BellOutlined />
-              </Link>
-            </div>
-          </Badge>
-
-          <Badge count={notificationCountCart} offset={[5, 5]}>
-            <div className="flex items-center space-x-4 text-xl text-white">
-              <Link to={`#`}>
-                <MailOutlined className="text-xl" />
-              </Link>
-            </div>
-          </Badge> */}
 
           <Badge count={notificationCountCart} offset={[5, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">
@@ -145,7 +120,7 @@ const LayoutStudent: React.FC = () => {
           {currentUser && (
             <Dropdown overlay={profileMenu} trigger={['click']}>
               <Avatar
-                src={currentUser.avatar} // Assuming `avatar` is the correct field in your API response
+                src={currentUser.avatar}
                 className="text-4xl text-white"
                 style={{ width: 35, height: 35 }}
               />

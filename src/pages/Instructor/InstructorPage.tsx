@@ -8,7 +8,7 @@ import LessonInstructor from '../Instructor/LessonInstructor';
 import ManagerInstructor from '../Instructor/ManagerInstructor';
 import SidebarInstructor from '../Instructor/SidebarInstructor';
 import ManagerCertificate from './ManagerCertificate';
-import ManagerInstructorPurchase from './ManagerInstructorPurchase';
+import ManagerInstructorPurchase from './PurchasesInstructor';
 import SessionInstructor from './SessionInstructor';
 import SubcriptionInstructor from './SubcriptionInstructor';
 import ViewSession from './ViewSession';

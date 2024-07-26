@@ -7,7 +7,6 @@ import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
 import { getPurchases } from "services/AdminsApi/getPurchasesApiService";
 import { createPayout } from "services/All/createPayoutApiService";
-import './stylesAdmin.css';
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
