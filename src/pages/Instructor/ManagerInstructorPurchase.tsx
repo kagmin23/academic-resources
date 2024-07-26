@@ -1,4 +1,5 @@
-import { Card, Layout, Table, Typography } from 'antd';
+import React from 'react';
+import { Card, Table, Typography, Layout } from 'antd';
 import { useNavigate } from 'react-router-dom';
 
 const { Content } = Layout;
@@ -14,8 +15,6 @@ const purchaseData = [
     discount: '$50',
     created_at: 'April 20, 2023 10:04 pm',
     course_name: 'How To Teach Online Course Effectively',
-    // student_name: 'John Doe',
-    // instructor_name: 'Jane Smith',
   },
   {
     key: '2',
@@ -26,9 +25,6 @@ const purchaseData = [
     discount: '$50',
     created_at: 'March 3, 2023 7:15 am',
     course_name: 'Create an LMS Website with LearnPress',
-    // student_name: 'Alice Johnson',
-    // instructor_name: 'Bob Brown',
-  
   },
   {
     key: '3',
@@ -39,9 +35,6 @@ const purchaseData = [
     discount: '$0',
     created_at: 'June 24, 2023 11:12 am',
     course_name: 'Introduction LearnPress - LMS plugin',
-    // student_name: 'Charlie Davis',
-    // instructor_name: 'Eve White',
-   
   },
   {
     key: '4',
@@ -52,9 +45,6 @@ const purchaseData = [
     discount: '$0',
     created_at: 'November 27, 2023 5:46 am',
     course_name: 'New Headway',
-    // student_name: 'Michael Scott',
-    // instructor_name: 'Dwight Schrute',
-    
   },
 ];
 
@@ -63,13 +53,13 @@ const columns = [
     title: 'Course Name',
     dataIndex: 'course_name',
     key: 'course_name',
+    ellipsis: true, // Cắt bớt nội dung khi quá dài
   },
   {
     title: 'Purchase No',
     dataIndex: 'purchase_no',
     key: 'purchase_no',
   },
-  
   {
     title: 'Price Paid',
     dataIndex: 'price_paid',
@@ -90,17 +80,6 @@ const columns = [
     dataIndex: 'created_at',
     key: 'created_at',
   },
-
-  // {
-  //   title: 'Student Name',
-  //   dataIndex: 'student_name',
-  //   key: 'student_name',
-  // },
-  // {
-  //   title: 'Instructor Name',
-  //   dataIndex: 'instructor_name',
-  //   key: 'instructor_name',
-  // },
   {
     title: 'Status',
     dataIndex: 'status',
@@ -127,26 +106,26 @@ const columns = [
       return <span style={{ color }}>{text}</span>;
     },
   },
- 
 ];
 
 const ManagerInstructorPurchase = () => {
   const navigate = useNavigate();
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      {/* <Layout className="site-layout"> */}
-        <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div style={{ padding: 24, background: '#fff', minHeight: 360 }}>
-            <p className="text-xl font-bold">Purchase Manager</p>
-            <Card style={{ margin: 20 }}>
-              {/* <Title level={4}>Purchase Manager</Title> */}
-              <Table dataSource={purchaseData} columns={columns} />
-            </Card>
+    <Content style={{overflow: 'initial' }}>
+      <div style={{ paddingRight: 12, background: '#fff', minHeight: 360 }}>
+        <p className="text-xl font-bold" style={{ marginLeft: 20 }}>Purchase Manager</p>
+        <Card style={{ margin: 20 }}>
+          <div style={{ overflowX: 'auto' }}>
+            <Table
+              dataSource={purchaseData}
+              columns={columns}
+              scroll={{ x: true }} // Cho phép cuộn ngang nếu bảng quá rộng
+            />
           </div>
-        </Content>
-      {/* </Layout> */}
-    </Layout>
+        </Card>
+      </div>
+    </Content>
   );
 };
 

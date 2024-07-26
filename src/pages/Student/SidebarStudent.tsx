@@ -71,7 +71,7 @@ const SidebarStudent: React.FC = () => {
     {
       icon: EyeOutlined,
       heading: "Manager Subcription",
-      href: "/student/profile-student/subcription-student",
+      href: "/student/profile-student/student-subscription",
     },
   ];
 

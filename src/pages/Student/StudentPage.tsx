@@ -7,7 +7,7 @@ import SidebarStudent from 'pages/Student/SidebarStudent';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import ManagerStudentPurchase from './ManagerPurchase';
-import SubcriptionStudent from 'pages/SubcriptionStudent';
+import SubcriptionStudent from 'pages/Student/Subscription'
 const StudentPage: React.FC = () => {
   return (
     <div className="flex min-h-screen">
@@ -22,6 +22,7 @@ const StudentPage: React.FC = () => {
           <Route path={`subcription-student`} element={<SubcriptionStudent />} />
           <Route path={`student-changepassword`} element={<ChangepasswordStu />} />
           <Route path={`certificate-student`} element={<Certificate />} />
+          <Route path={`student-subscription`} element={<SubcriptionStudent/>} />
           <Route path={`manager-student-purchase`} element={<ManagerStudentPurchase />} />
         </Routes>
       </div>
