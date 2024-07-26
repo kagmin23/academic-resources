@@ -74,14 +74,14 @@ const Checkout: React.FC = () => {
                       </div>
                     </div>
                   </Col>
-                  <Col span={8} className='flex items-center font-medium'>{product.price} VNĐ</Col>
+                  <Col span={8} className='flex items-center font-medium'>{product.price} đ</Col>
                 </Row>
                 <Divider />
               </React.Fragment>
             ))}
             <Row>
               <Col span={16} className='text-lg font-medium'>Total products: {carts.length}</Col>
-              <Col span={8} className='text-lg font-medium'>Total Price: {totalPrice} VNĐ</Col>
+              <Col span={8} className='text-lg font-medium'>Total Price: {totalPrice} đ</Col>
             </Row>
           </Card>
         </div>

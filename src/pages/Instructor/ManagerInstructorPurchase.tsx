@@ -91,16 +91,6 @@ const columns = [
     key: 'created_at',
   },
 
-  // {
-  //   title: 'Student Name',
-  //   dataIndex: 'student_name',
-  //   key: 'student_name',
-  // },
-  // {
-  //   title: 'Instructor Name',
-  //   dataIndex: 'instructor_name',
-  //   key: 'instructor_name',
-  // },
   {
     title: 'Status',
     dataIndex: 'status',
