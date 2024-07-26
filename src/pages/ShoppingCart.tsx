@@ -3,9 +3,8 @@ import { TinyColor } from '@ctrl/tinycolor';
 import { Button, Card, Checkbox, Modal, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteCart, getCarts, updateCartStatus } from 'services/All/CartApiService';
+import { deleteCart, getCarts, updateCartStatus } from 'services/All/cartApiService';
 import sp from '../assets/sp.jpg';
-import { Link } from 'react-router-dom';
 
 interface Cart {
   _id: string;
@@ -177,10 +176,10 @@ const ShoppingCart: React.FC = () => {
                     <div className="justify-center">
                       <div className="font-semibold">
                         <div className="flex justify-center md:justify-end">
-                          <span className="text-lg mr-2 line-through">{cart.price.toLocaleString('vi-VN')} đ</span>
+                          <span className="mr-2 text-lg line-through">{cart.price.toLocaleString('vi-VN')} đ</span>
                           <span className="text-lg">({cart.discount * 100}%)</span>
                         </div>
-                        <div className="text-red-500 text-lg">
+                        <div className="text-lg text-red-500">
                           {(cart.price * (1 - cart.discount)).toLocaleString('vi-VN')} đ
                         </div>
                       </div>
@@ -205,7 +204,7 @@ const ShoppingCart: React.FC = () => {
                 <div className="font-bold text-center md:text-lg sm:text-base">
                   Total Price:
                 </div>
-                <div className="text-xl font-bold text-center text-red-500 md:text-xl sm:text-lg m-3">
+                <div className="m-3 text-xl font-bold text-center text-red-500 md:text-xl sm:text-lg">
                   {selectedTotalPrice.toLocaleString('vi-VN')} đ
                 </div>
                 <Button

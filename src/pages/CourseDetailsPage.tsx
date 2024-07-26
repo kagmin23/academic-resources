@@ -1,13 +1,12 @@
 
 import { BellOutlined, ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, Button, Modal, Tabs, message,notification } from 'antd';
+import { Avatar, Button, Modal, Tabs, message, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
-import { createCart } from '../services/All/CartApiService';
+import { getCurrentUser } from '../services/AdminsApi/UserService';
+import { createCart } from '../services/All/cartApiService';
 import { createOrUpdate } from '../services/All/subcriptionApiService';
-import { useNavigate } from 'react-router-dom';
-import { getCurrentUser } from '../services/AdminsApi/UserService'
 
 const { TabPane } = Tabs;
 
@@ -292,7 +291,7 @@ const CourseDetail: React.FC = () => {
                         <div className="flex items-center">
                             <Avatar src={courseDetail.instructor_id} size="large" />
 
-                            <div className="ml-4 flex flex-col">
+                            <div className="flex flex-col ml-4">
                                 <div  onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
                                 <a href="#" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
 

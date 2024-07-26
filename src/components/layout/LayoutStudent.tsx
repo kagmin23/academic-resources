@@ -3,9 +3,9 @@ import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { getCarts } from 'services/All/CartApiService';
+import { getCarts } from 'services/All/cartApiService';
 import 'tailwindcss/tailwind.css';
-import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
+import { getCurrentUser } from '../../services/AdminsApi/UserService';
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -14,7 +14,7 @@ const { SubMenu } = Menu;
 const LayoutStudent: React.FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null); // Define type based on your API response
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [notificationCountCart, setNotificationCountCart] = useState<number>(0);
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const LayoutStudent: React.FC = () => {
 
   const fetchCurrentUser = async () => {
     try {
-      const response = await getCurrentUser(); // Fetch current user data including avatar
+      const response = await getCurrentUser();
       if (response.success) {
         setCurrentUser(response.data);
       } else {
@@ -35,7 +35,7 @@ const LayoutStudent: React.FC = () => {
 
   const fetchCartData = async () => {
     try {
-      const response = await getCarts('', 1, 100); // Fetch cart data with a large page size to get all items
+      const response = await getCarts('', 1, 100);
       if (response.success) {
         setNotificationCountCart(response.data.length);
       } else {
