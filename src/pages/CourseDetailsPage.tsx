@@ -48,13 +48,43 @@ interface CourseDetailType {
     is_deleted: boolean;
 }
 
+interface SubscriptionResponse {
+    success: boolean;
+    data: {
+        subscriber_id: string;
+        instructor_id: string;
+        is_subscribed: boolean;
+        is_deleted: boolean;
+        _id: string;
+        created_at: Date;
+        updated_at: Date;
+        __v: number;
+    }
+}
+
 const CourseDetail: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(true);
+    const [isSubscribed, setIsSubscribed] = useState(false);
     const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
+    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+
+    useEffect(() => {
+        const checkLoginStatus = async () => {
+            try {
+                const response = await fetch('/api/check-login-status');
+                const data = await response.json();
+                setIsLoggedIn(data.isLoggedIn);
+            } catch (error) {
+                console.error('Failed to check login status:', error);
+            }
+        };
+
+        checkLoginStatus();
+    }, []);
 
     useEffect(() => {
         if (!courseId) {
@@ -65,15 +95,28 @@ const CourseDetail: React.FC = () => {
             try {
                 const response = await getCourseDetail(courseId);
                 setCourseDetail(response.data);
+                // Nếu đã đăng nhập, kiểm tra xem người dùng đã đăng ký khóa học chưa
+                if (isLoggedIn) {
+                    // Tạm thời cho là `subscriptionInfo` sẽ chứa thông tin đăng ký từ API
+                    const response = await fetch(`/api/subscription-status/${courseId}`);
+                    const data = await response.json();
+                    setIsSubscribed(data.is_subscribed);
+                }
             } catch (error) {
                 console.error('Failed to fetch course details:', error);
             }
         };
         fetchCourseDetail();
-    }, [courseId]);
+    }, [courseId, isLoggedIn]);
 
     const handleSubscribe = async () => {
         if (!courseDetail) return;
+
+        if (!isLoggedIn) {
+            message.warning('Please log in to subscribe.');
+            return;
+        }
+
         setLoading(true);
 
         try {
@@ -147,7 +190,7 @@ const CourseDetail: React.FC = () => {
                         <div className="w-full mb-4 lg:w-1/3 lg:mb-0">
                             <div className="relative">
                                 <a onClick={showModal} className="block cursor-pointer">
-                                    <img src={courseDetail.image_url}  alt={courseDetail.name} className="w-full rounded-lg" />
+                                    <img src={courseDetail.image_url} alt={courseDetail.name} className="w-full rounded-lg" />
                                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
                                         <PlayCircleOutlined className="text-4xl text-white" />
                                         <span className="absolute bottom-0 w-full py-2 text-xl font-semibold text-center text-white bg-black bg-opacity-75">Preview this course</span>
@@ -210,11 +253,11 @@ const CourseDetail: React.FC = () => {
                                     onClick={handleSubscribe}
                                     type="primary"
                                     loading={loading}
-                                    className={`mr-2 mt-2 p-1 text-sm font-semibold w-full bg-red-500`}
+                                    className={`mr-2 mt-2 p-1 text-sm font-semibold w-full ${isSubscribed ? 'bg-gray-200 text-black' : 'bg-red-500 text-white'}`}
                                 >
                                     {isSubscribed ? (
                                         <>
-                                            <BellOutlined /> Subscribed
+                                            <BellOutlined /> Unsubscribe
                                         </>
                                     ) : (
                                         'Subscribe'
@@ -260,6 +303,7 @@ const CourseDetail: React.FC = () => {
                         </TabPane>
                         <TabPane tab="Reviews" key="2">
                             <div className="p-4">
+                                {/* Render reviews here */}
                             </div>
                         </TabPane>
                     </Tabs>
