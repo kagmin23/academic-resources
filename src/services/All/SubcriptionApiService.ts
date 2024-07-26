@@ -1,58 +1,84 @@
-import { apiRequest } from 'services/apiService';
+import axios from 'axios';
+import { HOST_MAIN } from 'services/apiService';
 
 export const createOrUpdate = async (instructor_id: string) => {
   const token = localStorage.getItem('token');
 
-  return apiRequest('/api/subscription', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    data: {
-        instructor_id,
-      },
-  });
+  try {
+    const response = await axios.post(`${HOST_MAIN}/api/subscription`,
+      { instructor_id },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error('Error in Subcriber!', error);
+    throw error;
+  }
 };
 
-export const getItemBySubcriber = async ( keyword: string, pageNum: number, pageSize: number ) => {
+export const getItemBySubscriber = async (keyword: string, pageNum: number, pageSize: number) => {
   const token = localStorage.getItem('token');
 
-  return apiRequest('/api/subscription/search-for-subscriber', {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${token}`,
+  try {
+    const response = await axios.post(
+      `${HOST_MAIN}/api/subscription/search-for-subscriber`,
+      {
+        "searchCondition": {
+            "keyword": keyword,
+            "is_delete": false,
+        },
+        "pageInfo": {
+            "pageNum": pageNum,
+            "pageSize": pageSize,
+        }
     },
-    data: {
-        searchCondition: {
-          keyword,
-          is_delete: false,
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
-        pageInfo: {
-          pageNum,
-          pageSize,
-        },
-      },
-  });
+      }
+    );
+    if (response) {
+      return response.data.data.pageData;
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
 };
 
-export const getItemByInstructor = async ( keyword: string, pageNum: number, pageSize: number ) => {
-    const token = localStorage.getItem('token');
+export const getItemByInstructor = async (keyword: string, pageNum: number, pageSize: number) => {
+  const token = localStorage.getItem('token');
   
-    return apiRequest('/api/subscription/search-for-instructor', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-      },
-      data: {
-          searchCondition: {
-            keyword,
-            is_delete: false,
-          },
-          pageInfo: {
-            pageNum,
-            pageSize,
-          },
+  try {
+    const response = await axios.post(
+      `${HOST_MAIN}/api/subscription/search-for-instructor`,
+      {
+        "searchCondition": {
+            "keyword": keyword,
+            "is_delete": false,
         },
-    });
-  };
+        "pageInfo": {
+            "pageNum": pageNum,
+            "pageSize": pageSize,
+        }
+    },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }
+    );
+    
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching items by instructor:', error);
+    throw error;
+  }
+};

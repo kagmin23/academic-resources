@@ -1,6 +1,7 @@
 import {
+  BellOutlined,
   ContainerOutlined,
-  DeploymentUnitOutlined, EyeOutlined,
+  DeploymentUnitOutlined,
   PieChartOutlined,
   ShoppingCartOutlined
 } from "@ant-design/icons";
@@ -52,7 +53,7 @@ const SidebarStudent: React.FC = () => {
     },
 
     {
-      icon: EyeOutlined,
+      icon: BellOutlined,
       heading: "Manager Subcription",
       href: "/student/profile-student/subcription-student",
     },

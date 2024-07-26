@@ -1,7 +1,7 @@
 import {
+  BellOutlined,
   ContainerOutlined,
   DeploymentUnitOutlined,
-  EyeOutlined,
   PieChartOutlined,
   ShoppingOutlined,
   UserSwitchOutlined
@@ -30,40 +30,31 @@ const SidebarAdmin: React.FC = () => {
     },
     {
       icon: ContainerOutlined,
-      heading: "Manager Content",
-      href: "/instructor/profile-instructor/",
-      children: [
-        {
-          icon: ContainerOutlined,
-          heading: "Manager Course",
-          href: "/instructor/profile-instructor/manager-instructor-course",
-        },
-        {
-          icon: ContainerOutlined,
-          heading: "Manager Session",
-          href: "/instructor/profile-instructor/manager-instructor-session",
-        },
-        {
-          icon: ContainerOutlined,
-          heading: "Manager Lesson",
-          href: "/instructor/profile-instructor/manager-instructor-lesson",
-        },
-        // {
-        //   icon: TrophyOutlined,
-        //   heading: "Manager Certificate",
-        //   href: "/instructor/profile-instructor/manager-instructor-certificate",
-        // },
-        {
-          icon: ShoppingOutlined,
-          heading: "Manager Purchase",
-          href: "/instructor/profile-instructor/manager-instructor-purchase",
-        },
-        
-        
-      ],
+      heading: "Manager Course",
+      href: "/instructor/profile-instructor/manager-instructor-course",
     },
     {
-      icon: EyeOutlined,
+      icon: ContainerOutlined,
+      heading: "Manager Session",
+      href: "/instructor/profile-instructor/manager-instructor-session",
+    },
+    {
+      icon: ContainerOutlined,
+      heading: "Manager Lesson",
+      href: "/instructor/profile-instructor/manager-instructor-lesson",
+    },
+    // {
+    //   icon: TrophyOutlined,
+    //   heading: "Manager Certificate",
+    //   href: "/instructor/profile-instructor/manager-instructor-certificate",
+    // },
+    {
+      icon: ShoppingOutlined,
+      heading: "Manager Purchase",
+      href: "/instructor/profile-instructor/manager-instructor-purchase",
+    },
+    {
+      icon: BellOutlined,
       heading: "Manager Subcription",
       href: "/instructor/profile-instructor/subcription-instructor",
     },

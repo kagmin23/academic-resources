@@ -1,10 +1,10 @@
-import { ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
+import { BellOutlined, ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
 import { Avatar, Button, Modal, Tabs, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { createOrUpdate, getItemBySubcriber } from 'services/All/subcriptionApiService';
-import { getCourseDetail } from 'services/User/clientApiService';
+import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { createCart } from '../services/All/cartApiService';
+import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
 
 const { TabPane } = Tabs;
 
@@ -52,8 +52,9 @@ const CourseDetail: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState(true);
     const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (!courseId) {
@@ -71,19 +72,29 @@ const CourseDetail: React.FC = () => {
         fetchCourseDetail();
     }, [courseId]);
 
-    useEffect(() => {
-        if (courseDetail) {
-            const fetchSubscriptionStatus = async () => {
-                try {
-                    const response = await getItemBySubcriber(courseDetail.instructor_id, 1, 1);
-                    setIsSubscribed(response.data.length > 0 && response.data[0].is_subscribed);
-                } catch (error) {
-                    console.error('Failed to fetch subscription status:', error);
-                }
-            };
+    const handleSubscribe = async () => {
+        if (!courseDetail) return;
+        setLoading(true);
+
+        try {
+            await createOrUpdate(courseDetail.instructor_id);
             fetchSubscriptionStatus();
+            message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
+        } catch (error) {
+            console.error('Failed to subscribe:', error);
+            message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+        } finally {
+            setLoading(false);
         }
-    }, [courseDetail]);
+    };
+    const fetchSubscriptionStatus = async () => {
+        const response = await getItemBySubscriber("", 1, 10);
+        setIsSubscribed(response[0].is_subscribed);
+    };
+    useEffect(() => {
+        fetchSubscriptionStatus();
+        },
+    []);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -105,18 +116,6 @@ const CourseDetail: React.FC = () => {
         } catch (error) {
             console.error('Failed to add course to cart:', error);
             message.error('Failed to add course to cart');
-        }
-    };
-
-    const handleSubscribe = async () => {
-        if (!courseDetail) return;
-        try {
-            await createOrUpdate(courseDetail.instructor_id);
-            setIsSubscribed(!isSubscribed);
-            message.success(isSubscribed ? 'Unsubscribed successfully!' : 'Subscribed successfully!');
-        } catch (error) {
-            console.error('Failed to subscribe:', error);
-            message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
         }
     };
 
@@ -143,9 +142,9 @@ const CourseDetail: React.FC = () => {
     return (
         <div className="text-white bg-gray-900">
             <div className="py-8">
-                <div className="container mx-auto px-4">
+                <div className="container px-4 mx-auto">
                     <div className="flex flex-col lg:flex-row lg:space-x-8">
-                        <div className="w-full lg:w-1/3 mb-4 lg:mb-0">
+                        <div className="w-full mb-4 lg:w-1/3 lg:mb-0">
                             <div className="relative">
                                 <a onClick={showModal} className="block cursor-pointer">
                                     <img src={courseDetail.image_url}  alt={courseDetail.name} className="w-full rounded-lg" />
@@ -190,7 +189,7 @@ const CourseDetail: React.FC = () => {
                                 {courseDetail.category_name}
                             </div>
                             <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
-                            <div className="mt-4 flex space-x-4">
+                            <div className="flex mt-4 space-x-4">
                                 <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
                                 <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
                                     <Button type="default" className="p-5 text-lg font-semibold text-white bg-gray-800">Buy Now</Button>
@@ -201,28 +200,33 @@ const CourseDetail: React.FC = () => {
                 </div>
             </div>
             <div className="py-4 bg-white shadow-md">
-                <div className="container mx-auto px-4">
+                <div className="container px-4 mx-auto">
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <Avatar src={courseDetail.instructor_id} size="large" />
-                            <div className="ml-4 flex flex-col">
+                            <div className="flex flex-col ml-4">
                                 <a href="#" className="text-lg font-semibold text-black">{courseDetail.instructor_name}</a>
                                 <Button
                                     onClick={handleSubscribe}
                                     type="primary"
-                                    className={`mr-2 mt-2 p-1 text-lg font-semibold ${isSubscribed ? 'bg-green-500' : 'bg-red-500'}`}
-                                    style={{ fontSize: '16px', height: 'auto' }}
+                                    loading={loading}
+                                    className={`mr-2 mt-2 p-1 text-sm font-semibold w-full bg-red-500`}
                                 >
-                                    {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+                                    {isSubscribed ? (
+                                        <>
+                                            <BellOutlined /> Subscribed
+                                        </>
+                                    ) : (
+                                        'Subscribe'
+                                    )}
                                 </Button>
-                                <span className="text-gray-600">69,025 students</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div className="py-4 bg-gray-100">
-                <div className="container mx-auto px-4">
+                <div className="container px-4 mx-auto">
                     <Tabs defaultActiveKey="1">
                         <TabPane tab="Curriculum" key="1">
                             {courseDetail.session_list && courseDetail.session_list.length > 0 ? (
@@ -256,7 +260,6 @@ const CourseDetail: React.FC = () => {
                         </TabPane>
                         <TabPane tab="Reviews" key="2">
                             <div className="p-4">
-                                {/* Review content goes here */}
                             </div>
                         </TabPane>
                     </Tabs>

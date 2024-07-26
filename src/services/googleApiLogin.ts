@@ -35,7 +35,6 @@ export const loginViaGoogle = async (
 
     const token =
       res.data.token || res.data.accessToken || res.data.data?.token;
-    console.log(token);
     if (token) {
       localStorage.setItem("token", token);
       return token;
