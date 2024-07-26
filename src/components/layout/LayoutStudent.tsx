@@ -3,7 +3,7 @@ import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { getCarts } from 'services/All/cartApiService';
+import { getCarts } from 'services/All/CartApiService';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
 

@@ -1,10 +1,13 @@
+
 import { BellOutlined, ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, Button, Modal, Tabs, message } from 'antd';
+import { Avatar, Button, Modal, Tabs, message,notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
-import { createCart } from '../services/All/cartApiService';
+import { createCart } from '../services/All/CartApiService';
 import { createOrUpdate } from '../services/All/subcriptionApiService';
+import { useNavigate } from 'react-router-dom';
+import { getCurrentUser } from '../services/AdminsApi/UserService'
 
 const { TabPane } = Tabs;
 
@@ -68,6 +71,46 @@ const CourseDetail: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+
+    const navigate = useNavigate();
+    const [currentUser, setCurrentUser] = useState<any>(null);
+    useEffect(() => {
+        const fetchCurrentUser = async () => {
+          try {
+            const response = await getCurrentUser();
+            if (response.success) {
+              setCurrentUser(response.data);
+            } else {
+              notification.error({
+                message: 'Error',
+                description: 'Failed to fetch current user information',
+              });
+            }
+          } catch (error) {
+            // notification.error({
+            //   message: 'Error',
+            //   description: 'Failed to fetch current user information',
+            // });
+          }
+        };
+    
+        fetchCurrentUser();
+      }, []);
+
+
+    const handleInstructorProfile = (userId: string) => {
+        if (!currentUser) {
+          navigate(`/instructor-detail/${userId}`);
+        } else if (currentUser.role === 'student') {
+          navigate(`/student/instructor-detail/${userId}`);
+        } else if (currentUser.role === 'instructor') {
+          navigate(`/instructor/instructor-detail/${userId}`);
+        } else {
+          navigate(`/instructor-detail/${courseId}`);
+        }
+      };
+    
+
     const [loading, setLoading] = useState(false);
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
@@ -85,6 +128,7 @@ const CourseDetail: React.FC = () => {
 
         checkLoginStatus();
     }, []);
+
 
     useEffect(() => {
         if (!courseId) {
@@ -247,8 +291,11 @@ const CourseDetail: React.FC = () => {
                     <div className="flex items-center justify-between">
                         <div className="flex items-center">
                             <Avatar src={courseDetail.instructor_id} size="large" />
-                            <div className="flex flex-col ml-4">
-                                <a href="#" className="text-lg font-semibold text-black">{courseDetail.instructor_name}</a>
+
+                            <div className="ml-4 flex flex-col">
+                                <div  onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
+                                <a href="#" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
+
                                 <Button
                                     onClick={handleSubscribe}
                                     type="primary"

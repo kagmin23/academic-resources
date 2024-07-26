@@ -3,7 +3,7 @@ import { TinyColor } from '@ctrl/tinycolor';
 import { Button, Card, Checkbox, Modal, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteCart, getCarts, updateCartStatus } from 'services/All/cartApiService';
+import { deleteCart, getCarts, updateCartStatus } from 'services/All/CartApiService';
 import sp from '../assets/sp.jpg';
 import { Link } from 'react-router-dom';
 

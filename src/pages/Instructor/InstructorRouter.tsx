@@ -20,6 +20,7 @@ import LayoutInstructor from '../../components/layout/LayoutInstructor';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import InstructorPage from './InstructorPage';
+import InstructorDetail from 'pages/InstructorDetail';
 
 import Checkout from 'pages/Checkout';
 export default function InstructorRouter() {
@@ -70,7 +71,7 @@ export default function InstructorRouter() {
          <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["instructor"]}><TopInstructorPage /></ProtectedRouter>} />
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}
          <Route path={`check-out`} element={<ProtectedRouter allowedRoles={["instructor"]}><Checkout /></ProtectedRouter>} />
-
+         <Route path={`instructor-detail/:userId`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorDetail /></ProtectedRouter>} />
 
          </Route>
     </Routes>

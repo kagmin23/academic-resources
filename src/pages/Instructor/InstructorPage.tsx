@@ -34,8 +34,8 @@ const InstructorPage: React.FC = () => {
           {/* <Route path={`view-session`} element={<ViewSession/>}/> */}
           
           <Route path={`view-session/:courseId/`} element={<ViewSession />} />
-          {/* <Route path={`manager-lession/:sessionId`} element={<ManagerLession/>}/>  */}
-          <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/>
+          <Route path={`manager-lession/:sessionId`} element={<ViewLesson/>}/> 
+          {/* <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/> */}
           <Route path={`subcription-instructor`} element={<SubcriptionInstructor />}/>
           
           <Route path={`*`} element={<h1>404</h1>} />
