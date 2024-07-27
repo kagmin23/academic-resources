@@ -1,9 +1,9 @@
 import { Button, Card, Col, Drawer, Input, Menu, Pagination, Row, Spin, message } from 'antd';
 import { ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getCourses } from 'services/UserClient/clientApiService';
-
+import { getCurrentUser } from '../services/AdminsApi/UserService';
 interface ApiResponse {
   success: boolean;
   data: {
@@ -19,7 +19,30 @@ const CoursePage: React.FC = () => {
   const [keyword, setKeyword] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const pageSize = 6;
+  const navigate = useNavigate();
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  
 
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await getCurrentUser();
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          // notification.error({
+          //   message: 'Error',
+          //   description: 'user dont login',
+          // });
+        }
+      } catch (error) {
+        console.error("Error to fetch Current User!")
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
@@ -57,6 +80,17 @@ const CoursePage: React.FC = () => {
 
   const onClose = () => {
     setOpen(false);
+  };
+  const handleNavigateToCourseDetails = (courseId: string) => {
+    if (!currentUser) {
+      navigate(`/course-details/${courseId}`);
+    } else if (currentUser.role === 'student') {
+      navigate(`/student/course-details/${courseId}`);
+    } else if (currentUser.role === 'instructor') {
+      navigate(`/instructor/course-details/${courseId}`);
+    } else {
+      navigate(`/course-details/${courseId}`);
+    }
   };
 
   return (
@@ -124,7 +158,7 @@ const CoursePage: React.FC = () => {
             <div>{error}</div>
           ) : (
             <>
-              <Link to={`course-details/`}>
+              {/* <Link to={`course-details/`}> */}
                 <Row gutter={[15, 15]} className='xl:px-1'>
                   {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
                     <Col key={course._id} xs={24} sm={12} md={12} lg={8} xl={8}>
@@ -132,6 +166,7 @@ const CoursePage: React.FC = () => {
                         hoverable
                         cover={<img className="object-cover w-full h-48"
                                     alt={course.name} src={course.image_url} />}
+                                    onClick={() => handleNavigateToCourseDetails(course._id)}
                       >
                         <Card.Meta title={course.name} description={course.description} />
                         <div className="flex items-center justify-between mt-4 text-lg">
@@ -146,7 +181,7 @@ const CoursePage: React.FC = () => {
                     </Col>
                   ))}
                 </Row>
-              </Link>
+              {/* </Link> */}
               <Pagination
                 current={currentPage}
                 pageSize={pageSize}

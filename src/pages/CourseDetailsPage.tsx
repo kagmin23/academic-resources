@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
-import { createCart } from '../services/All/cartApiService';
+import { createCart } from '../services/All/CartApiService';
 import { createOrUpdate } from '../services/All/subcriptionApiService';
 
 const { TabPane } = Tabs;
