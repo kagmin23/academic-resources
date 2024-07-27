@@ -1,11 +1,11 @@
 import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
+import { Button, Checkbox, DatePicker, Input, Layout, Modal, Select, Space, Spin, Table, Typography, message } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Payout } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
-import { getPayouts } from "services/All/payoutApiService";
+import { getPayouts, updateStatusPayout } from "services/All/payoutApiService";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -19,12 +19,12 @@ function PayoutsInstructor() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [comment, setComment] = useState('');
 
   const fetchPayouts = async () => {
     setLoading(true);
     try {
       const response = await getPayouts(1, 10);
-      console.log("Fetched Payouts:", response);
       // setData(Array.isArray(response) ? response : []);
       setData(response);
     } catch (error) {
@@ -56,6 +56,26 @@ function PayoutsInstructor() {
       : prev.filter(key => key !== id));
   };
 
+  const onUpdateStatusPayout = async (payoutId: string, newStatus: string, comment: string) => {
+    try {
+      console.log(`Changing status of payout with ID ${payoutId} to ${newStatus}`);
+      const response = await updateStatusPayout(payoutId, newStatus, '');
+      console.log("Response:", response);
+  
+      if (response) {
+        message.success('Changed Status Successfully!');
+        setData(prevData =>
+          prevData.map(payout =>
+            payout._id === payoutId ? { ...payout, status: newStatus } : payout
+          )
+        );
+      }
+    } catch (error) {
+      message.error('Failed to update payout status!');
+      console.error('Error:', error);
+    }
+  };
+
   const refreshData = () => {
     setFilterText('');
     setFilterStatus('');
@@ -65,11 +85,11 @@ function PayoutsInstructor() {
 
   const handleFilter = () => {
     let filteredData = data;
-
+  
     if (filterStatus) {
       filteredData = filteredData.filter((item) => item.status === filterStatus);
     }
-
+  
     if (filterDate) {
       filteredData = filteredData.filter((item) => {
         const [startDate, endDate] = filterDate;
@@ -77,7 +97,7 @@ function PayoutsInstructor() {
         return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
       });
     }
-
+  
     setData(filteredData);
   };
 
@@ -134,8 +154,41 @@ function PayoutsInstructor() {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: 120,
-      align: 'center' as AlignType,
+      width: 200,
+      align: "center" as AlignType,
+      render: (status: string, record: Payout) => (
+        <div>
+          <Select
+            size="small"
+            className="items-start w-32 text-xs"
+            showSearch
+            optionFilterProp="label"
+            defaultValue={status}
+            value={status}
+            onChange={(newStatus) => {
+              Modal.confirm({
+                title: "Change Status Confirmation!",
+                content: (
+                  <>
+                    <p className="mb-3">Are you sure you want to change the status to "{newStatus}"?</p>
+                    <Input.TextArea
+                      rows={4}
+                      placeholder="Enter a comment (optional)"
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </>
+                ),
+                onOk: () => onUpdateStatusPayout(record._id, newStatus, comment),
+                onCancel: () => {},
+              });
+            }}
+            options={[
+              { value: 'new', label: 'New' },
+              { value: 'request_payout', label: 'Request Payout' },
+            ]}
+          />
+        </div>
+      ),
     },
     {
       title: "Created At",
@@ -187,7 +240,7 @@ function PayoutsInstructor() {
                   placeholder="Status"
                   options={[
                     { value: 'new', label: 'New' },
-                    { value: 'request_paid', label: 'Request Paid' },
+                    { value: 'request_payout', label: 'Request Payout' },
                     { value: 'completed', label: 'Completed' },
                   ]}
                   onChange={(value) => setFilterStatus(value)}

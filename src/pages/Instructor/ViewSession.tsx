@@ -160,6 +160,7 @@ const ViewSession: React.FC = () => {
       title: 'Desciption',
       dataIndex: 'description',
       key: 'description',
+      width: 400,
     },
     {
       title: 'Position Order',

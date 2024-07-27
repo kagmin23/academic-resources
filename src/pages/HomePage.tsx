@@ -9,7 +9,7 @@ import {
   RightOutlined,
   SketchOutlined
 } from '@ant-design/icons';
-import { Button, Card, Carousel, Col, Row, message, notification } from 'antd';
+import { Button, Card, Carousel, Col, Row, Spin, message, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCategories, getCourses } from 'services/UserClient/clientApiService';
@@ -61,7 +61,8 @@ const HomePage: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
-
+  const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
+  const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -95,6 +96,8 @@ const HomePage: React.FC = () => {
       } catch (error) {
         console.error('Error fetching courses:', error);
         message.error('An error occurred. Please try again later.');
+      }finally {
+        setLoadingCourses(false);
       }
     };
 
@@ -109,6 +112,8 @@ const HomePage: React.FC = () => {
       } catch (error) {
         console.error('Error fetching categories:', error);
         message.error('An error occurred. Please try again later.');
+      }finally {
+        setLoadingCategories(false);
       }
     };
 
@@ -228,6 +233,11 @@ const HomePage: React.FC = () => {
       <div id="content">
         <div className="w-full text-center">
           <h2 className="ml-4 text-2xl font-bold sm:mt-20 sm:text-4xl">Popular Courses</h2>
+          {loadingCourses ? (
+            <div className="flex items-center justify-center h-64">
+              <Spin size="large" />
+            </div>
+          ) : (
           <Carousel
             arrows
             autoplay
@@ -260,9 +270,6 @@ const HomePage: React.FC = () => {
           >
             {courses.map((course, index) => (
               <div className="px-3 py-2 my-5 sm:my-10" key={index}>
-                {/* <Link to={`course-details/${course._id}`}>
-                  <img className="rounded-xl" src={course.image_url} alt={course.name} />
-                </Link> */}
                 <div onClick={() => handleNavigateToCourseDetails(course._id)}>
                   <img className="object-fill w-full h-40 rounded-xl lg:h-48" src={course.image_url} alt={course.name} />
                 </div>
@@ -280,6 +287,7 @@ const HomePage: React.FC = () => {
               </div>
             ))}
           </Carousel>
+          )}
         </div>
 
         <Link to="/course">
@@ -313,66 +321,33 @@ const HomePage: React.FC = () => {
           <button className="text-2xl text-white">Join for free <ArrowRightOutlined /></button>
         </div>
 
-        {/* <div className="w-full text-center">
-          <h2 className="mt-10 ml-4 text-2xl font-bold sm:text-4xl">New Courses</h2>
-          <Carousel
-            arrows
-            slidesToShow={4}
-            autoplay
-            className="px-6"
-            dotPosition="bottom"
-            prevArrow={<div className="flex flex-row"><CustomPrevArrow /></div>}
-            nextArrow={<div className="flex flex-row"><CustomNextArrow /></div>}
-            responsive={[
-              {
-                breakpoint: 1280,
-                settings: {
-                  slidesToShow: 4,
-                },
-              },
-              {
-                breakpoint: 1024,
-                settings: {
-                  slidesToShow: 3,
-                },
-              },
-              {
-                breakpoint: 768,
-                settings: {
-                  slidesToShow: 2,
-                },
-              },
-            ]}
-          >
-          </Carousel>
-        </div> */}
-{/* 
-        <Link to="/course-details">
-          <p className="text-center pt-2.5 sm:text-sm">View More <ArrowRightOutlined /></p>
-        </Link> */}
-
         <div className="flex items-center justify-center h-24 mt-8 font-bold sm:text-4xl">
           Top Categories
         </div>
-
-        <Row gutter={[16, 16]} className="justify-center">
+        {loadingCategories ? (
+            <div className="flex items-center justify-center h-64">
+              <Spin size="large" />
+            </div>
+          ) : (
+        <Row gutter={[20, 20]} className="justify-center px-8">
           {categories.length > 0 ? (
             categories.map((category, index) => (
-              <Col key={index} xs={12} sm={8} md={6} lg={4}>
+              <Col key={index} xs={12} sm={8} md={6} lg={5}>
                 <Card
-                  bordered={false}
-                  className="w-full h-48 transition duration-300 ease-in-out hover:shadow-md"
-                  cover={<img alt={category.name} src={category.img} className="object-cover h-32 p-3" />}
+                  bordered={true}
+                  className="w-full transition duration-300 ease-in-out h-36 hover:shadow-md"
+                  cover={<img alt={category.name} src={category.img} className="object-cover h-20 p-3" />}
                 >
                   <div className="text-center">{category.name}</div>
                 </Card>
               </Col>
             ))
           ) : (
-            <div className="text-xl text-center">Loading categories...</div>
+            <div className="text-xl text-center">Loading...</div>
           )}
         </Row>
-
+          )}
+          
         <div className="bg-gray-100 contact-home">
           <h1 className="text-xl font-bold sm:text-2xl">Subscribe</h1>
           <p className="text-sm sm:text-base">Receive weekly newsletter with educational materials, new courses, interesting posts, popular books and much more!</p>

@@ -1,11 +1,11 @@
 import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
+import { Button, Checkbox, DatePicker, Input, Layout, Modal, Select, Space, Spin, Table, Typography, message } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Payout } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
-import { getPayouts } from "services/All/payoutApiService";
+import { getPayouts, updateStatusPayout } from "services/All/payoutApiService";
 import './stylesAdmin.css';
 
 const { Title, Text } = Typography;
@@ -20,12 +20,13 @@ function PayoutsAdmin() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [comment, setComment] = useState('');
+  const [payout, setPayout] = useState<Payout[]>([]);
 
   const fetchPayouts = async () => {
     setLoading(true);
     try {
       const response = await getPayouts(1, 10);
-      console.log("Fetched Payouts:", response);
       // setData(Array.isArray(response) ? response : []);
       setData(response);
     } catch (error) {
@@ -50,6 +51,26 @@ function PayoutsAdmin() {
     setSelectAll(checked);
   };
 
+  const onUpdateStatusPayout = async (payoutId: string, newStatus: string, comment: string) => {
+    try {
+      console.log(`Changing status of payout with ID ${payoutId} to ${newStatus}`);
+      const response = await updateStatusPayout(payoutId, newStatus, '');
+      console.log("Response:", response);
+  
+      if (response) {
+        message.success('Changed Status Successfully!');
+        setData(prevData =>
+          prevData.map(payout =>
+            payout._id === payoutId ? { ...payout, status: newStatus } : payout
+          )
+        );
+      }
+    } catch (error) {
+      message.error('Failed to update payout status!');
+      console.error('Error:', error);
+    }
+  };
+  
   const handleCheckboxChange = (e: CheckboxChangeEvent, id: React.Key) => {
     const { checked } = e.target;
     setSelectedRowKeys(prev => checked
@@ -135,14 +156,51 @@ function PayoutsAdmin() {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: 120,
-      align: 'center' as AlignType,
+      width: 200,
+      align: "center" as AlignType,
+      render: (status: string, record: Payout) => (
+        <div>
+          <Select
+            size="small"
+            className="items-start w-32 text-xs"
+            showSearch
+            optionFilterProp="label"
+            defaultValue={status}
+            value={status}
+            onChange={(newStatus) => {
+              Modal.confirm({
+                title: "Change Status Confirmation!",
+                content: (
+                  <>
+                    <p className="mb-3">Are you sure you want to change the status to "{newStatus}"?</p>
+                    <Input.TextArea
+                      name="comment"
+                      // value="comment"
+                      rows={4}
+                      placeholder="Enter a comment (optional)"
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </>
+                ),
+                onOk: () => onUpdateStatusPayout(record._id, newStatus, comment),
+                onCancel: () => {},
+              });
+            }}
+            options={[
+              { value: 'new', label: 'New' },
+              { value: 'request_payout', label: 'Request Payout' },
+              { value: 'completed', label: 'Completed' },
+              { value: 'rejected', label: 'Rejected' },
+            ]}
+          />
+        </div>
+      ),
     },
     {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
-      width: 200,
+      width: 150,
       align: 'center' as AlignType,
       render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
@@ -150,7 +208,7 @@ function PayoutsAdmin() {
       title: "Updated At",
       dataIndex: "updated_at",
       key: "updated_at",
-      width: 200,
+      width: 150,
       align: 'center' as AlignType,
       render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },

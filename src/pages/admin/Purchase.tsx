@@ -1,4 +1,4 @@
-import { FilterOutlined, HistoryOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
+import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, message } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Purchase } from "models/types";
@@ -220,8 +220,6 @@ function PurchasesAdmin() {
               </div>
             </Space>
           </div>
-          <Button className="my-2 text-white bg-blue-600" onClick={handleCreatePayout}><PlusCircleOutlined /> Create Payout</Button>
-
           <div className="overflow-x-auto">
             {loading ?
               (<div className="flex items-center justify-center h-64">

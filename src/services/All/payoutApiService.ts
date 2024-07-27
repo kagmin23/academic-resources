@@ -1,6 +1,5 @@
 import { message } from "antd";
 import axios from "axios";
-import { Payout } from "models/types";
 import { HOST_MAIN } from "services/apiService";
 
 export const createPayout = async (instructor_id: string, transactions: { purchase_id: string }[]) => {
@@ -44,7 +43,6 @@ export const createPayout = async (instructor_id: string, transactions: { purcha
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log("getPayouts response:", response.data);
         return response.data.data.pageData || [];
 
     } catch (error) {
@@ -53,15 +51,13 @@ export const createPayout = async (instructor_id: string, transactions: { purcha
     }
 }
 
-
-
-export const updateStatusPayout = async (status: string): Promise<Payout | void> => {
+export const updateStatusPayout = async (payoutId: string, status: string, comment: string) => {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await axios.put<Payout>(`${HOST_MAIN}/api/payout/update-status/:id`, {
+        const response = await axios.put(`${HOST_MAIN}/api/payout/update-status/${payoutId}`, {
             "status": status,
-            "comment": ""
+            "comment": comment
 
         }, {
             headers: {
@@ -75,4 +71,3 @@ export const updateStatusPayout = async (status: string): Promise<Payout | void>
         message.error("Update Status Payout failed!");
     }
 }
-

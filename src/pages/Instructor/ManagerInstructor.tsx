@@ -72,8 +72,6 @@ const ManagerCourseInstructor: React.FC = () => {
   const fetchCourses = async () => {
     try {
       const response = await getCourses('', 1, 10);
-      console.log("courses", response);
-
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
@@ -304,7 +302,7 @@ const ManagerCourseInstructor: React.FC = () => {
         <div>
           <Select
             size="small"
-            className="text-xs"
+            className="w-24 text-xs"
             showSearch
             optionFilterProp="label"
             defaultValue={status}

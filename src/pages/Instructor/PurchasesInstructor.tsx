@@ -1,5 +1,5 @@
 import { FilterOutlined, HistoryOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, message } from "antd";
+import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Tag, Typography, message } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Purchase } from "models/types";
 import moment from "moment";
@@ -167,6 +167,23 @@ function PurchasesInstructor() {
       key: "status",
       width: 120,
       align: 'center' as AlignType,
+      render: (status: string) => {
+        let color: string;
+        switch (status) {
+          case 'new':
+            color = '#999999';
+            break;
+          case 'request_paid':
+            color = 'blue';
+            break;
+          case 'completed':
+            color = 'green';
+            break;
+          default:
+            color = 'default';
+        }
+        return <Tag color={color}>{status}</Tag>;
+      },
     },
     {
       title: "Created At",

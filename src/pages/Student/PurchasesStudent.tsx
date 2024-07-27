@@ -1,5 +1,5 @@
 import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, message } from "antd";
+import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Tag, Typography, message } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Purchase } from "models/types";
 import moment from "moment";
@@ -156,18 +156,35 @@ function PurchasesInstructor() {
       width: 120,
     },
     {
-      title: "Student Name",
-      dataIndex: "student_name",
-      key: "student_name",
+      title: "Instructor Name",
+      dataIndex: "instructor_name",
+      key: "instructor_name",
       width: 150,
     },
     {
-      title: "Status",
-      dataIndex: "status",
-      key: "status",
-      width: 120,
-      align: 'center' as AlignType,
-    },
+        title: "Status",
+        dataIndex: "status",
+        key: "status",
+        width: 120,
+        align: 'center' as AlignType,
+        render: (status: string) => {
+          let color: string;
+          switch (status) {
+            case 'new':
+              color = '#999999';
+              break;
+            case 'request_paid':
+              color = 'blue';
+              break;
+            case 'completed':
+              color = 'green';
+              break;
+            default:
+              color = 'default';
+          }
+          return <Tag color={color}>{status}</Tag>;
+        },
+      },
     {
       title: "Created At",
       dataIndex: "created_at",
@@ -231,6 +248,7 @@ function PurchasesInstructor() {
                 columns={columns}
                 dataSource={data}
                 pagination={{ pageSize: 10 }}
+                // scroll={{x: 'max-content'}}
               />)
             }
           </div>
