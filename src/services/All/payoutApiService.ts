@@ -23,29 +23,36 @@ export const createPayout = async (instructor_id: string, transactions: { purcha
     }
   };
 
-export const getPayouts = async (instructor_id: string, purchase_id: string): Promise<Payout | void> => {
+  export const getPayouts = async (pageNum: number, pageSize: number) => {
     const token = localStorage.getItem("token");
 
     try {
-        const response = await axios.post<Payout>(`${HOST_MAIN}/api/payout/search`, {
-            instructor_id,
-            transactions: [
-                {
-                    purchase_id,
+        const response = await axios.post(`${HOST_MAIN}/api/payout/search`, {
+                "searchCondition": {
+                    "payout_no": "",
+                    "instructor_id": "",
+                    "status": "",
+                    "is_instructor": false,
+                    "is_delete": false
+                },
+                "pageInfo": {
+                    "pageNum": pageNum,
+                    "pageSize": pageSize
                 }
-            ]
-        }, {
+            }, {
             headers: {
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log("createPayout", response)
-        return response.data;
+        console.log("getPayouts response:", response.data);
+        return response.data.data.pageData || [];
 
     } catch (error) {
-        message.error("Create Payout failed!");
+        message.error("Get Payout API failed!");
+        return [];
     }
 }
+
 
 
 export const updateStatusPayout = async (status: string): Promise<Payout | void> => {

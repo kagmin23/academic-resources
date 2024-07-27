@@ -5,7 +5,7 @@ import { Payout } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
-import { getPurchasesAll } from "services/AdminsApi/getPurchasesApiService";
+import { getPayouts } from "services/All/payoutApiService";
 import './stylesAdmin.css';
 
 const { Title, Text } = Typography;
@@ -21,20 +21,23 @@ function PurchasesAdmin() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
 
-  const fetchPurchases = async () => {
+  const fetchPayouts = async () => {
     setLoading(true);
     try {
-      const payouts = await getPurchasesAll(1, 10);
-      setData(payouts);
+      const response = await getPayouts(1, 10);
+      console.log("Fetched Payouts:", response);
+      // setData(Array.isArray(response) ? response : []);
+      setData(response);
     } catch (error) {
-      console.error('Error fetching purchases:', error);
+      console.error('Error fetching payouts:', error);
+      setData([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPurchases();
+    fetchPayouts();
   }, []);
 
   const handleSelectAll = (e: CheckboxChangeEvent) => {
@@ -58,7 +61,7 @@ function PurchasesAdmin() {
     setFilterText('');
     setFilterStatus('');
     setFilterDate(null);
-    fetchPurchases();
+    fetchPayouts();
   };
 
   const handleFilter = () => {
@@ -79,14 +82,6 @@ function PurchasesAdmin() {
     setData(filteredData);
   };
 
-  // useEffect(() => {
-  //   const filteredData = data.filter((item) =>
-  //     item.payout_no.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-
-  //   setData(filteredData);
-  // }, [searchTerm]);
-
   const columns = [
     {
       title: <Checkbox
@@ -103,22 +98,10 @@ function PurchasesAdmin() {
         />
       ),
     },
-    // {
-    //   title: "ID",
-    //   dataIndex: "_id",
-    //   key: "_id",
-    //   width: 100,
-    // },
     {
-      title: "Purchase No",
-      dataIndex: "purchase_no",
-      key: "purchase_no",
-      width: 150,
-    },
-    {
-      title: "Cart No",
-      dataIndex: "cart_no",
-      key: "cart_no",
+      title: "Payout No",
+      dataIndex: "payout_no",
+      key: "payout_no",
       width: 150,
     },
     {
@@ -128,6 +111,12 @@ function PurchasesAdmin() {
       width: 200,
     },
     {
+      title: "Instructor Name",
+      dataIndex: "instructor_name",
+      key: "instructor_name",
+      width: 150,
+    },
+    {
       title: "Price Paid",
       dataIndex: "price_paid",
       key: "price_paid",
@@ -135,16 +124,18 @@ function PurchasesAdmin() {
       width: 120,
     },
     {
-      title: "Instructor Name",
-      dataIndex: "instructor_id",
-      key: "instructor_name",
-      width: 150,
+      title: "Balance Instructor Paid",
+      dataIndex: "balance_instructor_paid",
+      key: "balance_instructor_paid",
+      width: 200,
+      align: 'end' as AlignType,
     },
     {
-      title: "Student Name",
-      dataIndex: "student_id",
-      key: "student_name",
-      width: 150,
+      title: "Balance Instructor Received",
+      dataIndex: "balance_instructor_received",
+      key: "balance_instructor_received",
+      width: 200,
+      align: 'end' as AlignType,
     },
     {
       title: "Status",
@@ -205,20 +196,20 @@ function PurchasesAdmin() {
               </div>
             </Space>
           </div>
-          {/* <Button className="my-2 text-white bg-blue-600" onClick={()=>{}}><PlusCircleOutlined /> Create Payout</Button> */}
-
           <div className="overflow-x-auto">
             {loading ?
-              (<div className="flex items-center justify-center h-64">
-                <Spin size="large" />
-              </div>) :
-              (<Table
-                rowKey="_id"
-                columns={columns}
-                dataSource={data}
-                pagination={{ pageSize: 10 }}
-              />)
-            }
+            ( <div className="flex items-center justify-center h-64">
+              <Spin size="large"></Spin>
+              </div>) : (
+          <Table
+            columns={columns}
+            dataSource={Array.isArray(data) ? data : []}
+            rowKey="_id"
+            loading={loading}
+            pagination={{ pageSize: 10 }}
+            scroll={{x: 'max-content'}}
+          />
+        )}
           </div>
         </div>
       </div>

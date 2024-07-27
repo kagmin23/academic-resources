@@ -7,6 +7,7 @@ import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
 import { getPurchasesAll } from "services/AdminsApi/getPurchasesApiService";
 import { createPayout } from "services/All/payoutApiService";
+import './stylesAdmin.css';
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
@@ -79,14 +80,6 @@ function PurchasesAdmin() {
     setData(filteredData);
   };
 
-  // useEffect(() => {
-  //   const filteredData = data.filter((item) =>
-  //     item.payout_no.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-
-  //   setData(filteredData);
-  // }, [searchTerm]);
-
   const handleCreatePayout = async () => {
     if (selectedRowKeys.length === 0) {
       message.warning("Please select at least one payout to create!");
@@ -96,17 +89,16 @@ function PurchasesAdmin() {
     try {
       const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
       console.log("transactions", transactions)
-      const response = await createPayout('',transactions);
+      const response = await createPayout('', transactions);
       console.log('Payout response:', response);
       setSelectedRowKeys([]);
     } catch (error) {
       message.error("Failed to create payout");
       console.error('Failed to create payout:', error);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
-
 
   const columns = [
     {
@@ -124,12 +116,6 @@ function PurchasesAdmin() {
         />
       ),
     },
-    // {
-    //   title: "ID",
-    //   dataIndex: "_id",
-    //   key: "_id",
-    //   width: 100,
-    // },
     {
       title: "Purchase No",
       dataIndex: "purchase_no",
@@ -159,6 +145,12 @@ function PurchasesAdmin() {
       title: "Student Name",
       dataIndex: "student_name",
       key: "student_name",
+      width: 150,
+    },
+    {
+      title: "Instructor Name",
+      dataIndex: "instructor_name",
+      key: "instructor_name",
       width: 150,
     },
     {
@@ -232,6 +224,7 @@ function PurchasesAdmin() {
                 columns={columns}
                 dataSource={data}
                 pagination={{ pageSize: 10 }}
+                scroll={{ x: 'max-content' }}
               />)
             }
           </div>
