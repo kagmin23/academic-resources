@@ -11,7 +11,7 @@ import './stylesAdmin.css';
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
-function PurchasesAdmin() {
+function PayoutsAdmin() {
   const [data, setData] = useState<Payout[]>([]);
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
@@ -105,21 +105,15 @@ function PurchasesAdmin() {
       width: 150,
     },
     {
-      title: "Course Name",
-      dataIndex: "course_name",
-      key: "course_name",
-      width: 200,
-    },
-    {
       title: "Instructor Name",
       dataIndex: "instructor_name",
       key: "instructor_name",
       width: 150,
     },
     {
-      title: "Price Paid",
-      dataIndex: "price_paid",
-      key: "price_paid",
+      title: "Balance Origin",
+      dataIndex: "balance_origin",
+      key: "balance_origin",
       align: 'end' as AlignType,
       width: 120,
     },
@@ -148,6 +142,14 @@ function PurchasesAdmin() {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
+      width: 200,
+      align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+    },
+    {
+      title: "Updated At",
+      dataIndex: "updated_at",
+      key: "updated_at",
       width: 200,
       align: 'center' as AlignType,
       render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
@@ -217,4 +219,4 @@ function PurchasesAdmin() {
   );
 }
 
-export default PurchasesAdmin;
+export default PayoutsAdmin;

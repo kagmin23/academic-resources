@@ -168,6 +168,14 @@ function PurchasesAdmin() {
       align: 'center' as AlignType,
       render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
     },
+    {
+      title: "Updated At",
+      dataIndex: "updated_at",
+      key: "updated_at",
+      width: 200,
+      align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+    },
   ];
 
   return (
