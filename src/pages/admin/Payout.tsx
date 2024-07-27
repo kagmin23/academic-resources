@@ -1,18 +1,18 @@
-import { FilterOutlined, HistoryOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, message } from "antd";
+import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { Purchase } from "models/types";
+import { Payout } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
 import { getPurchasesAll } from "services/AdminsApi/getPurchasesApiService";
-import { createPayout } from "services/All/payoutApiService";
+import './stylesAdmin.css';
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
 function PurchasesAdmin() {
-  const [data, setData] = useState<Purchase[]>([]);
+  const [data, setData] = useState<Payout[]>([]);
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
   const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
@@ -87,27 +87,6 @@ function PurchasesAdmin() {
   //   setData(filteredData);
   // }, [searchTerm]);
 
-  const handleCreatePayout = async () => {
-    if (selectedRowKeys.length === 0) {
-      message.warning("Please select at least one payout to create!");
-      return;
-    }
-    setLoading(true);
-    try {
-      const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
-      console.log("transactions", transactions)
-      const response = await createPayout('',transactions);
-      console.log('Payout response:', response);
-      setSelectedRowKeys([]);
-    } catch (error) {
-      message.error("Failed to create payout");
-      console.error('Failed to create payout:', error);
-    }finally {
-      setLoading(false);
-    }
-  };
-
-
   const columns = [
     {
       title: <Checkbox
@@ -156,8 +135,14 @@ function PurchasesAdmin() {
       width: 120,
     },
     {
+      title: "Instructor Name",
+      dataIndex: "instructor_id",
+      key: "instructor_name",
+      width: 150,
+    },
+    {
       title: "Student Name",
-      dataIndex: "student_name",
+      dataIndex: "student_id",
       key: "student_name",
       width: 150,
     },
@@ -183,7 +168,7 @@ function PurchasesAdmin() {
       <div className="p-5">
         <div className="py-5">
           <h1 className="text-lg font-bold float-start sm:text-2xl">
-            <HistoryOutlined className="mr-2" /> Purchases History
+            <HistoryOutlined className="mr-2" /> Payout History
           </h1>
         </div>
 
@@ -220,7 +205,7 @@ function PurchasesAdmin() {
               </div>
             </Space>
           </div>
-          <Button className="my-2 text-white bg-blue-600" onClick={handleCreatePayout}><PlusCircleOutlined /> Create Payout</Button>
+          {/* <Button className="my-2 text-white bg-blue-600" onClick={()=>{}}><PlusCircleOutlined /> Create Payout</Button> */}
 
           <div className="overflow-x-auto">
             {loading ?

@@ -2,7 +2,7 @@ import { BellOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input, Layout, Table, Tabs, message } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { createOrUpdate, getItemByInstructor, getItemBySubscriber } from 'services/All/subcriptionApiService';
+import { createOrUpdate, getItemByInstructorSubcription, getItemBySubscriber } from 'services/All/subcriptionApiService';
 
 const { Header, Content } = Layout;
 const { TabPane } = Tabs;
@@ -29,7 +29,7 @@ const SubcriptionStudent: React.FC = () => {
   const fetchSubscribers = async () => {
     setLoading(true);
     try {
-      const response = await getItemByInstructor("", 1, 10);
+      const response = await getItemByInstructorSubcription("", 1, 10);
       console.log('Fetched subscribers data:', response);
       setSubcriptionInstructor(response);
     } catch (error) {

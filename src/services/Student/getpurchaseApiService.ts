@@ -2,7 +2,7 @@ import { message } from 'antd';
 import axios from 'axios';
 import { HOST_MAIN } from 'services/apiService';
 
-export const getItemsbyStudent = async (
+export const getItemsbyStudentPurchases = async (
     pageNum: number,
     pageSize: number
   ) => {

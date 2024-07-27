@@ -2,9 +2,9 @@ import { message } from 'antd';
 import axios from 'axios';
 import { HOST_MAIN } from 'services/apiService';
 
-export const getItemsbyInstructor = async (
-    pageNum: number,
-    pageSize: number
+export const getItemsbyInstructorPurchases = async (
+    pageNum:	number,
+    pageSize:	number,
   ) => {
   try {
     const token = localStorage.getItem("token");
@@ -21,7 +21,7 @@ export const getItemsbyInstructor = async (
         },
         pageInfo: {
           pageNum,
-          pageSize
+          pageSize,
         }
       },
       {

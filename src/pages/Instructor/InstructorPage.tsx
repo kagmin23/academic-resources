@@ -8,6 +8,7 @@ import LessonInstructor from '../Instructor/LessonInstructor';
 import ManagerInstructor from '../Instructor/ManagerInstructor';
 import SidebarInstructor from '../Instructor/SidebarInstructor';
 import ManagerCertificate from './ManagerCertificate';
+import PayoutInstructor from './PayoutInstructor';
 import ManagerInstructorPurchase from './PurchasesInstructor';
 import SessionInstructor from './SessionInstructor';
 import SubcriptionInstructor from './SubcriptionInstructor';
@@ -37,6 +38,7 @@ const InstructorPage: React.FC = () => {
           <Route path={`manager-lession/:sessionId`} element={<ViewLesson/>}/> 
           {/* <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/> */}
           <Route path={`subcription-instructor`} element={<SubcriptionInstructor />}/>
+          <Route path={`manager-instructor-payout`} element={<PayoutInstructor />}/>
           
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>

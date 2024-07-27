@@ -2,6 +2,7 @@ import {
   BellOutlined,
   ContainerOutlined,
   DeploymentUnitOutlined,
+  MoneyCollectOutlined,
   PieChartOutlined,
   ShoppingOutlined,
   UserSwitchOutlined
@@ -43,15 +44,15 @@ const SidebarAdmin: React.FC = () => {
       heading: "Manager Lesson",
       href: "/instructor/profile-instructor/manager-instructor-lesson",
     },
-    // {
-    //   icon: TrophyOutlined,
-    //   heading: "Manager Certificate",
-    //   href: "/instructor/profile-instructor/manager-instructor-certificate",
-    // },
     {
       icon: ShoppingOutlined,
       heading: "Manager Purchase",
       href: "/instructor/profile-instructor/manager-instructor-purchase",
+    },
+    {
+      icon: MoneyCollectOutlined,
+      heading: "Manager Payout",
+      href: "/instructor/profile-instructor/manager-instructor-payout",
     },
     {
       icon: BellOutlined,

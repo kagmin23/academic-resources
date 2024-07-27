@@ -55,7 +55,7 @@ export const getItemBySubscriber = async (keyword: string, pageNum: number, page
   }
 };
 
-export const getItemByInstructor = async (keyword: string, pageNum: number, pageSize: number) => {
+export const getItemByInstructorSubcription = async (keyword: string, pageNum: number, pageSize: number) => {
   const token = localStorage.getItem('token');
   
   try {

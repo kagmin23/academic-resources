@@ -1,18 +1,18 @@
 import { FilterOutlined, HistoryOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, message } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { Payout } from "models/types";
+import { Purchase } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
-import { getPurchases } from "services/AdminsApi/getPurchasesApiService";
-import { createPayout } from "services/All/createPayoutApiService";
+import { createPayout } from "services/All/payoutApiService";
+import { getItemsbyInstructorPurchases } from "services/Instructor/getPurchasesApiService";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
-function PurchasesAdmin() {
-  const [data, setData] = useState<Payout[]>([]);
+function PurchasesInstructor() {
+  const [data, setData] = useState<Purchase[]>([]);
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
   const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
@@ -24,7 +24,7 @@ function PurchasesAdmin() {
   const fetchPurchases = async () => {
     setLoading(true);
     try {
-      const payouts = await getPurchases(1, 10);
+      const payouts = await getItemsbyInstructorPurchases(1, 10);
       setData(payouts);
     } catch (error) {
       console.error('Error fetching purchases:', error);
@@ -79,13 +79,13 @@ function PurchasesAdmin() {
     setData(filteredData);
   };
 
-  useEffect(() => {
-    const filteredData = data.filter((item) =>
-      item.payout_no.toLowerCase().includes(searchTerm.toLowerCase())
-    );
+  // useEffect(() => {
+  //   const filteredData = data.filter((item) =>
+  //     item.payout_no.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
 
-    setData(filteredData);
-  }, [searchTerm]);
+  //   setData(filteredData);
+  // }, [searchTerm]);
 
   const handleCreatePayout = async () => {
     if (selectedRowKeys.length === 0) {
@@ -94,15 +94,19 @@ function PurchasesAdmin() {
     }
     setLoading(true);
     try {
-      await createPayout("", "");
-      message.success("Payout created successfully!");
-      fetchPurchases();
+      const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
+      console.log("transactions", transactions)
+      const response = await createPayout('',transactions);
+      console.log('Payout response:', response);
+      setSelectedRowKeys([]);
     } catch (error) {
-      message.error("Failed to create payout!");
-    } finally {
+      message.error("Failed to create payout");
+      console.error('Failed to create payout:', error);
+    }finally {
       setLoading(false);
     }
   };
+
 
   const columns = [
     {
@@ -120,12 +124,12 @@ function PurchasesAdmin() {
         />
       ),
     },
-    {
-      title: "ID",
-      dataIndex: "_id",
-      key: "_id",
-      width: 100,
-    },
+    // {
+    //   title: "ID",
+    //   dataIndex: "_id",
+    //   key: "_id",
+    //   width: 100,
+    // },
     {
       title: "Purchase No",
       dataIndex: "purchase_no",
@@ -151,12 +155,12 @@ function PurchasesAdmin() {
       align: 'end' as AlignType,
       width: 120,
     },
-    // {
-    //   title: "Instructor Name",
-    //   dataIndex: "instructor_id",
-    //   key: "instructor_name",
-    //   width: 150,
-    // },
+    {
+      title: "Student Name",
+      dataIndex: "student_name",
+      key: "student_name",
+      width: 150,
+    },
     {
       title: "Status",
       dataIndex: "status",
@@ -179,7 +183,7 @@ function PurchasesAdmin() {
       <div className="p-5">
         <div className="py-5">
           <h1 className="text-lg font-bold float-start sm:text-2xl">
-            <HistoryOutlined className="mr-2" /> Payout History
+            <HistoryOutlined className="mr-2" /> Purchases History
           </h1>
         </div>
 
@@ -237,4 +241,4 @@ function PurchasesAdmin() {
   );
 }
 
-export default PurchasesAdmin;
+export default PurchasesInstructor;

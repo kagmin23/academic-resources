@@ -11,6 +11,7 @@ import Sidebar from './Sidebar';
 import ChangepasswordAd from 'pages/admin/ChangePasswordAd';
 import ApproveInstructor from './ApproveInstructor';
 import CategoryAdmin from './Category';
+import Payout from './Payout';
 import ReportAdmin from './Report';
 import UsersAdmin from './Users';
 
@@ -32,11 +33,11 @@ const AdminPage: React.FC = () => {
   return (
     <div>
       <LayoutAdmin />
-      <div className="flex h-svh  overflow-hidden ">
+      <div className="flex overflow-hidden h-svh ">
       <div className=''>
         <Sidebar />
       </div>
-      <div className="flex-grow p-4 overflow-auto h-full bg-white rounded ">
+      <div className="flex-grow h-full p-4 overflow-auto bg-white rounded ">
         <Routes>
         <Route path={`/`} element={<Dashboard />} />
         <Route path={`dashboard`} element={<Dashboard />} />
@@ -48,6 +49,7 @@ const AdminPage: React.FC = () => {
           <Route path={`info-admin`} element={<ProfileAdmin />} />
           <Route path={`admin-changepassword`} element={<ChangepasswordAd />} />
           <Route path={`transaction-history`} element={<TransactionHistory />} />
+          <Route path={`payout`} element={<Payout />} />
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>
         <Outlet />
