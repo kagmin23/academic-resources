@@ -1,153 +1,205 @@
-import { Typography } from 'antd';
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import 'tailwindcss/tailwind.css';
+import {
+  EyeOutlined,
+  FileOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  ReadOutlined,
+  VideoCameraOutlined
+} from '@ant-design/icons';
+import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
+// import parse from 'html-react-parser';
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { getLesson } from 'services/Instructor/lessonApiService';
+import { getCourseDetail } from "services/UserClient/clientApiService";
+import "tailwindcss/tailwind.css";
 
-const { Title, Text } = Typography;
+const { Sider, Content, Header } = Layout;
 
 interface Lesson {
-  id: number;
-  key: string;
-  title: string;
-  videoUrl: string;
-  assignment: Assignment;
-  
+    _id: string;
+    name: string;
+    lesson_type: string;
+    full_time: number;
+    position_order: number;
+    video_url?: string;
+    image_url?: string;
+    description?: string;
 }
 
-interface Assignment {
-  key: string;
-  title: string;
-  duration: string;
+interface Session {
+    _id: string;
+    name: string;
+    position_order: number;
+    full_time: number;
+    lesson_list: Lesson[];
 }
 
-interface Chapter {
-  chapter: string;
-  id: number;
-//   href: string;
-  lessons: Lesson[];
+interface Course {
+    _id: string;
+    name: string;
+    session_list: Session[];
 }
 
-const chapters: Chapter[] = [
-  { id:1,
+const LearnCourseDetail: React.FC = () => {
+    const { id, lessonId } = useParams<{ id: string, lessonId?: string }>();
     
-    chapter: 'Mở đầu',
-    lessons: [
-      { 
-        id:1,
-        key: 'intro_1',
-        title: '[Phải xem] Hướng dẫn cách học đúng',
-        videoUrl: 'https://www.youtube.com/embed/ysjJlvQ3FFc?si=CkBTYOE7ExS8QmQY',
-        assignment: {
-          key: 'assignment_1',
-          title: 'Assignment: Phản hồi về bài học mở đầu',
-          duration: '60 minutes'
-        }
-      }
-    ]
-  },
-  { id:2,
-    chapter: 'Ôn tập kiến thức JavaScript cần thiết',
-    lessons: [
-      { id:2,
-        key: 'js_1',
-        title: 'Ôn tập kiến thức JavaScript cần thiết',
-        videoUrl: 'https://www.youtube.com/embed/9QeNLypIiZs?si=5UtvJSlp2Z0n1a80',
-        assignment: {
-          key: 'assignment_2',
-          title: 'Assignment: Kiểm tra kiến thức JavaScript cần thiết',
-          duration: '60 minutes'
-        }
-      }
-    ]
-  },
-  { id:3,
-    chapter: 'TypeScript',
-    lessons: [
-      { id:3,
-        key: 'ts_1',
-        title: 'Tất cả kiến thức TypeScript cần dùng trong React',
-        videoUrl: 'https://www.youtube.com/embed/sl3vJrgvU-U?si=qk15vIpibKttZvCr',
-        assignment: {
-          key: 'assignment_3',
-          title: 'Assignment: Làm bài tập về TypeScript',
-          duration: '60 minutes'
-        }
-      }
-    ]
-  },
-  { id:4,
-    chapter: 'Kiến thức về developer tool, Postman và API',
-    lessons: [
-      { id:4,
-        key: 'dev_1',
-        title: 'REST API là gì?',
-        videoUrl: 'https://www.youtube.com/embed/TxW5bX4cYKk?si=u9Rh7tKwDbJLF-Af',
-        assignment: {
-          key: 'assignment_4',
-          title: 'Assignment: Thực hành sử dụng Postman',
-          duration: '60 minutes'
-        }
-      },
-      { id:5,
-        key: 'dev_2',
-        title: 'Gọi API với XmlHttpRequest, Fetch, Axios',
-        videoUrl: 'https://www.youtube.com/embed/mKxhexeVg50?si=j7NICFLdihawzkeA',
-        assignment: {
-          key: 'assignment_5',
-          title: 'Assignment: Gọi API sử dụng Axios',
-          duration: '60 minutes'
-        }
-      }
-    ]
-  },
-];
+    const [course, setCourse] = useState<Course | null>(null);
+    const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+    const [collapsed, setCollapsed] = useState(false);
+    const navigate = useNavigate();
 
-const LessonDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+    useEffect(() => {
+        const fetchCourseDetail = async () => {
+            if (!id) {
+                message.error("Course ID is missing");
+                return;
+            }
 
-  useEffect(() => {
-    const lesson = chapters.flatMap(chapter => chapter.lessons).find(lesson => lesson.id.toString() === id);
-    setSelectedLesson(lesson || null);
-  }, [id]);
+            try {
+                const data = await getCourseDetail(id);
+                setCourse(data);
+                if (lessonId) {
+                    fetchLessonDetail(lessonId);
+                } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
+                    const firstLessonId = data.session_list[0].lesson_list[0]._id;
+                    fetchLessonDetail(firstLessonId);
+                    navigate(`/learn-course-detail/${id}/lesson/${firstLessonId}`);
+                }
+            } catch (error) {
+                message.error("Error fetching course details");
+                console.error("Error fetching course details:", error);
+            }
+        };
 
-  const renderContent = (lesson: Lesson) => {
+        fetchCourseDetail();
+    }, [id, lessonId, navigate]);
+
+    const fetchLessonDetail = async (lessonId: string) => {
+        try {
+            const lesson = await getLesson(lessonId);
+            setSelectedLesson(lesson);
+        } catch (error) {
+            message.error("Error fetching lesson details");
+            console.error("Error fetching lesson details:", error);
+        }
+    };
+
+    const handleLessonClick = (lesson: Lesson) => {
+        fetchLessonDetail(lesson._id);
+        navigate(`/learn-course-detail/${id}/lesson/${lesson._id}`);
+    };
+
+    const getLessonIcon = (lessonType: string) => {
+        switch (lessonType) {
+            case "video":
+                return <VideoCameraOutlined />;
+            case "reading":
+                return <ReadOutlined />;
+            case "image":
+                return <FileOutlined />;
+            default:
+                return <EyeOutlined />;
+        }
+    };
+
+    if (!course) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
+    }
+
     return (
-      <div>
-        <iframe
-          width="100%"
-          height="470"
-          src={lesson.videoUrl}
-          title={`YouTube video player`}
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          className="mb-6"
-        ></iframe>
-        <div className="mt-4 text-lg font-bold">Thông tin khóa học:</div>
-        <ul className="pl-4 mt-2 list-disc">
-          {/* Other content */}
-        </ul>
-      </div>
+        <Layout className="min-h-screen overflow-auto">
+            <Header className="flex items-center px-4 bg-white shadow-md">
+                <Button
+                    type="text"
+                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="mr-4"
+                />
+                <div className="flex-1">
+                    {selectedLesson && (
+                        <Breadcrumb>
+                            <Breadcrumb.Item>Home</Breadcrumb.Item>
+                            <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
+                            <Breadcrumb.Item>{selectedLesson.name}</Breadcrumb.Item>
+                        </Breadcrumb>
+                    )}
+                </div>
+            </Header>
+            <Layout>
+                <Sider
+                    collapsible
+                    collapsed={collapsed}
+                    width={300}
+                    className="overflow-auto bg-white shadow-md"
+                    trigger={null}
+                >
+                    <Menu
+                        mode="inline"
+                        defaultOpenKeys={[course.session_list[0]?._id]}
+                        style={{ height: "100%" }}
+                    >
+                        {course.session_list.map((session) => (
+                            <Menu.SubMenu key={session._id} title={session.name}>
+                                {session.lesson_list.map((lesson) => (
+                                    <Menu.Item
+                                        key={lesson._id}
+                                        icon={getLessonIcon(lesson.lesson_type)}
+                                        onClick={() => handleLessonClick(lesson)}
+                                    >
+                                        {lesson.name}
+                                    </Menu.Item>
+                                ))}
+                            </Menu.SubMenu>
+                        ))}
+                    </Menu>
+                </Sider>
+                <Layout>
+                    <Content className="p-6 bg-gray-100">
+                        {selectedLesson ? (
+                            <div className="p-6 bg-white rounded-lg shadow-lg">
+                                <h2 className="mb-4 text-3xl font-bold">{selectedLesson.name}</h2>
+                                {selectedLesson.lesson_type === "video" && selectedLesson.video_url && (
+                                    <div className="mb-4">
+                                        <iframe
+                                            width="100%"
+                                            height="400px"
+                                            src={selectedLesson.video_url}
+                                            title={selectedLesson.name}
+                                            frameBorder="0"
+                                            allowFullScreen
+                                            className="rounded-lg"
+                                        ></iframe>
+                                    </div>
+                                )}
+                                {selectedLesson.lesson_type === "image" && selectedLesson.image_url && (
+                                    <div className="mb-4">
+                                        <img
+                                            src={selectedLesson.image_url}
+                                            alt={selectedLesson.name}
+                                            className="h-auto max-w-full rounded-lg"
+                                        />
+                                    </div>
+                                )}
+                                {selectedLesson.description && (
+                                    <div className="mt-4 text-lg">
+                                        {/* {parse(selectedLesson.description)} */}
+                                        {selectedLesson.description}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div>No lesson selected</div>
+                        )}
+                    </Content>
+                </Layout>
+            </Layout>
+        </Layout>
     );
-  };
-
-  return (
-    <div>
-      <div className="w-full px-6">
-        {/* <Title level={2}>NodeJs Super</Title> */}
-        
-        <div className="my-4">
-          <div>
-            <h1 className="mb-4 text-2xl font-bold">{selectedLesson?.title}</h1>
-            {selectedLesson && renderContent(selectedLesson)}
-          </div>
-        </div>
-        <Text>Bởi: Du Thanh Dược</Text> <br />
-        <Text>Cập nhật: 06/2024</Text>
-      </div>
-    </div>
-  );
 };
 
-export default LessonDetail;
+export default LearnCourseDetail;

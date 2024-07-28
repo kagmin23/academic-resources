@@ -29,7 +29,6 @@ const SettingStudent: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
-        console.error("userId is undefined");
         message.error('userId is undefined');
         return;
       }
@@ -121,16 +120,6 @@ const SettingStudent: React.FC = () => {
               >
                 <Input />
               </Form.Item>
-
-              {/* <Form.Item
-                name="email"
-                label="Email"
-                rules={[{ required: true, message: 'Please input your Email!' }]}
-              >
-                <Input />
-              </Form.Item> */}
-
-            
               <Form.Item
                 name="phone_number"
                 label="Phone Number"
@@ -183,7 +172,5 @@ const SettingStudent: React.FC = () => {
     </div>
   );
 };
-
-
 
 export default SettingStudent;

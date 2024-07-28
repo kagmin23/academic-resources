@@ -22,7 +22,7 @@ interface Session {
     _id: string;
     name: string;
     position_order: number;
-    lession_list: Lesson[];
+    lesson_list: Lesson[];
 }
 
 interface CourseDetailType {
@@ -293,7 +293,7 @@ const CourseDetail: React.FC = () => {
 
                             <div className="flex flex-col ml-4">
                                 <div  onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
-                                <a href="#" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
+                                <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
 
                                 <Button
                                     onClick={handleSubscribe}
@@ -326,13 +326,13 @@ const CourseDetail: React.FC = () => {
                                         </h3>
                                         {expandedSessionId === session._id && (
                                             <ul>
-                                                {session.lession_list && session.lession_list.length > 0 ? (
-                                                    session.lession_list.map((lesson) => (
+                                                {session.lesson_list && session.lesson_list.length > 0 ? (
+                                                    session.lesson_list.map((lesson) => (
                                                         <li key={lesson._id} className="flex items-center py-2">
                                                             <div className="flex-shrink-0 w-8 h-8 bg-gray-200 rounded-full"></div>
                                                             <div className="ml-4">
                                                                 <div className="text-lg font-medium">{lesson.name}</div>
-                                                                <div className="text-gray-600">{lesson.lession_type} - {lesson.full_time} mins</div>
+                                                                <div className="text-gray-600">{lesson.lession_type} {lesson.full_time} mins</div>
                                                             </div>
                                                         </li>
                                                     ))

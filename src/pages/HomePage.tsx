@@ -336,10 +336,10 @@ const HomePage: React.FC = () => {
               <Col key={index} xs={12} sm={8} md={6} lg={6}>
                 <Card
                   bordered={true}
-                  className="w-full h-16 transition duration-300 ease-in-out bg-blue-200 hover:shadow-md"
+                  className="w-full h-16 transition duration-300 ease-in-out bg-blue-200 shadow-lg hover:shadow-md"
                   // cover={<div className="object-cover">{category.name}</div>}
                 >
-                  <div className="text-center">{category.name}</div>
+                  <div className="text-center ">{category.name}</div>
                 </Card>
               </Col>
             ))

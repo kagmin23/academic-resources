@@ -1,28 +1,18 @@
 
 import {
+  BellOutlined,
   CalendarOutlined,
-  CaretRightOutlined,
-  DislikeOutlined,
-  EyeOutlined,
-  GiftOutlined ,
+  DoubleLeftOutlined,
+  GiftOutlined,
+  MailOutlined,
   PhoneOutlined,
   SignatureOutlined,
-  FacebookOutlined,
-  LikeOutlined,
-  LinkedinOutlined,
-  MailOutlined,
-  ManOutlined,
-  ShareAltOutlined,
-  WomanOutlined,
-  YoutubeOutlined,
-  VideoCameraOutlined,
-  EditOutlined,
-  BellOutlined,ReadOutlined 
+  VideoCameraOutlined
 } from '@ant-design/icons';
-import React, { useState, useEffect } from 'react';
-import { Avatar, Button, Typography, notification,Card, Divider } from 'antd';
-import { getUserDetail } from 'services/All/getUserDetailApiService';
+import { Avatar, Button, Card, Divider, Typography, message, notification } from 'antd';
+import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { getUserDetail } from 'services/All/getUserDetailApiService';
 
 
 const { Title, Text } = Typography;
@@ -40,10 +30,6 @@ export default function InstructorDetail() {
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) {
-        // notification.error({
-        //   message: 'Error',
-        //   description: 'User ID is not available',
-        // });
         return;
       }
 
@@ -58,10 +44,8 @@ export default function InstructorDetail() {
           });
         }
       } catch (error) {
-        // notification.error({
-        //   message: 'Error',
-        //   description: 'Failed to fetch current user information',
-        // });
+        message.error("Get Failed Instructor detail!")
+        console.error("Get Failed Instructor detail!", error);
       }
     };
 
@@ -69,56 +53,60 @@ export default function InstructorDetail() {
   }, [userId]);
   if (!currentInstructor) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-white text-lg">Loading...</div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-lg text-white">Loading...</div>
       </div>
     );
   }
+  
   const formattedCreatedAt = new Date(currentInstructor.created_at).toLocaleDateString('en-GB');
   const formattedDob = new Date(currentInstructor.dob).toLocaleDateString('en-GB');
+
   return (
     <div className='min-h-screen'>
-      <div className='w-full min-h-56 bg-gradient-to-br from-gray-800 to-blue-900 flex h-fit pt-6 pb-4 px-5'>
-        
-        <div className="w-1/5 flex justify-center ">
+        <div className="pb-2">
+          <Button className="bg-slate-100"><DoubleLeftOutlined />Back</Button>
+        </div>
+      <div className='flex w-full px-5 pt-6 pb-4 min-h-56 bg-gradient-to-br from-gray-800 to-blue-900 h-fit'>
+        <div className="flex justify-center w-1/5 ">
           <Avatar
             size={170}
             src={currentInstructor?.avatar || 'https://www.webiconio.com/_upload/255/image_255.svg'}
             className="border-4 border-white"
           />
         </div>
-        <div className=" w-3/5">
+        <div className="w-3/5 ">
            <div className='flex'>
             <div className='text-[#82b3ff] font-semibold text-3xl mr-2'>
             Instructor:</div>
  
-          <div className='text-white text-3xl font-semibold'> {currentInstructor?.name }</div>
+          <div className='text-3xl font-semibold text-white'> {currentInstructor?.name }</div>
           </div>
           <div className='flex mt-7'>
           <div className='w-1/2'>
           <div className=''>
-          <MailOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
-          <Text className="text-white text-lg  ">Email: {currentInstructor.email}</Text>
+          <MailOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
+          <Text className="text-lg text-white ">Email: {currentInstructor.email}</Text>
           </div>
           <div className='mt-4'>
-          <PhoneOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
-          <Text className="text-white text-lg  ">Phone Number: {currentInstructor.phone_number}</Text>
+          <PhoneOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
+          <Text className="text-lg text-white ">Phone Number: {currentInstructor.phone_number}</Text>
           </div>
           </div>
           <div>
           <div className=''>
-          <GiftOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
-          <Text className=" text-white text-lg ">Date Of Birthday: {formattedDob}</Text>
+          <GiftOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
+          <Text className="text-lg text-white ">Date Of Birthday: {formattedDob}</Text>
           </div>
           <div className='mt-4'>
-          <CalendarOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
-          <Text className=" text-white text-lg ">Joining Date: {formattedCreatedAt}</Text>
+          <CalendarOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
+          <Text className="text-lg text-white ">Joining Date: {formattedCreatedAt}</Text>
           </div>
           </div>
           </div>
           
         </div>
-        <div className="w-1/6 flex justify-center my-auto">
+        <div className="flex justify-center w-1/6 my-auto">
           <Button
             onClick={handleSubscribe}
             type="primary"
@@ -129,12 +117,12 @@ export default function InstructorDetail() {
           </Button>
         </div>
       </div>
-      <Card className='my-4 py-2'style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
+      <Card className='py-2 my-4'style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>
       
-       <div className='w-full px-14 flex justify-between '>
+       <div className='flex justify-between w-full px-14 '>
        
         <div className='w-1/2 '>
-        <Text className='text-xl font-bold '><VideoCameraOutlined className=" text-blue-500" style={{ marginRight: 8,fontSize: '25px'}}/>Introductory Video: </Text>    
+        <Text className='text-xl font-bold '><VideoCameraOutlined className="text-blue-500 " style={{ marginRight: 8,fontSize: '25px'}}/>Introductory Video: </Text>    
         <div className='mt-6 '>
             <div className='w-full '>
               <iframe 
@@ -154,10 +142,10 @@ export default function InstructorDetail() {
           <Divider style={{ backgroundColor: 'black', width: '1px', height:'100%' }} type="vertical" />
           </div>
         <div className=' w-[40%]'>
-           <Text className='text-xl font-bold '><SignatureOutlined className=" text-blue-500" style={{ marginRight: 8,fontSize: '25px'}}/>Bio: </Text>
+           <Text className='text-xl font-bold '><SignatureOutlined className="text-blue-500 " style={{ marginRight: 8,fontSize: '25px'}}/>Bio: </Text>
 
           <div className='mt-6'>
-          <Text className=" text-black text-base font-medium "> {currentInstructor.description} </Text></div>
+          <Text className="text-base font-medium text-black "> {currentInstructor.description} </Text></div>
         </div>
          
           </div>

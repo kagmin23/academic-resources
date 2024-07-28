@@ -13,8 +13,7 @@ import Lottie from "lottie-react";
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import animation from '../../assets/111.json';
-import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
-// const { TabPane } = Tabs;
+import { getCurrentUser } from '../../services/AdminsApi/UserService';
 const { Title, Text } = Typography;
 
 const DashboardInstructor: React.FC = () => {
@@ -53,14 +52,12 @@ const DashboardInstructor: React.FC = () => {
     const formattedDob = new Date(currentUser.dob).toLocaleDateString('en-GB');
     const formattedCreatedAt = new Date(currentUser.created_at).toLocaleDateString('en-GB');
     const handleEdit = (userId: string) => {
-      // navigate(`/instructor/profile-instructor/view-session/${courseId}`);
       navigate(`/instructor/profile-instructor/instructor-setting/${userId}`);
      
     };
 
 
     return (
-        // <div className="text-white bg-[#D6E0FF] wrapper">
         <div className="text-white wrappers ">
          
             <div className='relative w-full h-56 bg-gradient-to-br from-blue-300 to-purple-200'>
@@ -90,7 +87,7 @@ const DashboardInstructor: React.FC = () => {
                         </div>  
                         <div className="mb-6">
                              < GiftOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
-                             <Text className="text-lg text-gray-700 ">Date Of Birth:  {formattedDob}</Text>
+                             <Text className="text-lg text-gray-700 ">Date Of Birth:  {formattedDob || "update"}</Text>
                         </div>
                     </div>
                     
@@ -131,7 +128,7 @@ const DashboardInstructor: React.FC = () => {
                     allowFullScreen>
                 </iframe></div>
             </div>
-            <div className='flex justify-center w-full  my-7'>
+            <div className='flex justify-center w-full my-7'>
             {/* <Link to="/instructor/profile-instructor/instructor-setting"> */}
             <Button className='w-1/4 p-5 text-lg text-white rounded-full bg-gradient-to-br from-blue-400 to-purple-300'
              onClick={() => handleEdit(currentUser._id)}>

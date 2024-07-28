@@ -1,4 +1,4 @@
-import { BellOutlined, BookOutlined, LoginOutlined, LogoutOutlined, MailOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { BookOutlined, LoginOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
@@ -101,9 +101,9 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             {/* <Menu.Item key="4" className="mx-2">
               <Link to="/log-in">Category</Link>
             </Menu.Item> */}
-            <Menu.Item key="5" className="mx-2">
+            {/* <Menu.Item key="5" className="mx-2">
               <Link to="/top-instructor">Rakings</Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="6" className="mx-2">
               <Link to="/about">About</Link>
             </Menu.Item>

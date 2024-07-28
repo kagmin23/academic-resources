@@ -151,9 +151,9 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             <Menu.Item key="3" className="mx-2">
               <Link to={`blog`}>Blog</Link>
             </Menu.Item>
-            <Menu.Item key="5" className="mx-2">
+            {/* <Menu.Item key="5" className="mx-2">
               <Link to={`top-instructor`}>Rankings</Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="6" className="mx-2">
               <Link to={`about`}>About</Link>
             </Menu.Item>

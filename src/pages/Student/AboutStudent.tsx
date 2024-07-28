@@ -1,31 +1,19 @@
 
 import {
   CalendarOutlined,
-  CaretRightOutlined,
-  DislikeOutlined,
-  EyeOutlined,
-  GiftOutlined ,
+  EditOutlined,
+  GiftOutlined,
+  MailOutlined,
   PhoneOutlined,
   SignatureOutlined,
-  FacebookOutlined,
-  LikeOutlined,
-  LinkedinOutlined,
-  MailOutlined,
-  ManOutlined,
-  ShareAltOutlined,
-  WomanOutlined,
-  YoutubeOutlined,
-  VideoCameraOutlined,
-  EditOutlined,
+  VideoCameraOutlined
 } from '@ant-design/icons';
-import { Avatar, Badge, Button, Card, Col, Row, Tabs, Typography, notification, Divider} from 'antd';
-import React, { useEffect, useState } from 'react';
-import { getCurrentUser } from '../../services/AdminsApi/UserService' // Adjust path as per your project structure
-import { Link } from 'react-router-dom';
+import { Avatar, Button, Divider, Typography, notification } from 'antd';
 import Lottie from "lottie-react";
-import animation from '../../assets/111.json'
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// const { TabPane } = Tabs;
+import animation from '../../assets/111.json';
+import { getCurrentUser } from '../../services/AdminsApi/UserService';
 const { Title, Text } = Typography;
 
 const AboutStudent: React.FC = () => {
@@ -36,7 +24,7 @@ const AboutStudent: React.FC = () => {
   useEffect(() => {
       const fetchCurrentUser = async () => {
         try {
-          const response = await getCurrentUser(); // Replace with your API call
+          const response = await getCurrentUser();
           if (response.success) {
             setCurrentUser(response.data);
           } else {
@@ -71,18 +59,16 @@ const AboutStudent: React.FC = () => {
 
 
   return (
-      // <div className="text-white bg-[#D6E0FF] wrapper">
-      <div className="text-white  wrappers ">
-       
-          <div className='w-full h-56 bg-gradient-to-br from-blue-300 to-purple-200 relative'>
-              <div className='absolute -top-6 left-0 w-full h-full'>
+      <div className="text-white wrappers ">
+          <div className='relative w-full h-56 bg-gradient-to-br from-blue-300 to-purple-200'>
+              <div className='absolute left-0 w-full h-full -top-6'>
                   <Lottie animationData={animation} className='w-[400px] h-[400px] m-auto' loop={true} />
               </div>
               <div className='absolute inset-0 flex flex-col items-center justify-center'>
-                  <div className='text-white pt-14 text-center text-3xl font-bold'>
+                  <div className='text-3xl font-bold text-center text-white pt-14'>
                       Welcome to Academic Resource, {currentUser.name}
                   </div>
-                  <div className="transform translate-y-1/4 flex justify-center mt-3">
+                  <div className="flex justify-center mt-3 transform translate-y-1/4">
                       <Avatar
                           size={160}
                           src={currentUser.avatar}
@@ -91,48 +77,42 @@ const AboutStudent: React.FC = () => {
                   </div>
               </div>
           </div>
-          <div className='mt-14 w-3/4  font-medium mx-auto'>
+          <div className='w-3/4 mx-auto font-medium mt-14'>
               
               <div className='flex justify-between'>
                   <div>
                       <div className="mb-5">
-                           <MailOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
-                           <Text className=" text-gray-700 text-lg">Email: {currentUser.email}</Text>
-                      </div>  
+                           <MailOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
+                           <Text className="text-lg text-gray-700 ">Email: {currentUser.email}</Text>
+                      </div>
                       <div className="mb-6">
-                           < GiftOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
-                           <Text className=" text-gray-700 text-lg">Date Of Birth:  {formattedDob}</Text>
+                           < GiftOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
+                           <Text className="text-lg text-gray-700 ">Date Of Birth:  {formattedDob || "update"}</Text>
                       </div>
                   </div>
-                  
-
                   <div>
                        <div className="mb-5">
-                              <PhoneOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
-                              <Text className=" text-gray-700 text-lg">Phone Number: {currentUser.phone_number}</Text>
+                              <PhoneOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
+                              <Text className="text-lg text-gray-700 ">Phone Number: {currentUser.phone_number || "update"}</Text>
                         </div>
                         <div className="mb-6">
-                              <CalendarOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500" />
-                              <Text className=" text-gray-700 text-lg">Joining Date: {formattedCreatedAt}</Text>
+                              <CalendarOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 " />
+                              <Text className="text-lg text-gray-700 ">Joining Date: {formattedCreatedAt}</Text>
                         </div>
                   </div>
                   
                   </div>
               
               <div className=''>
-                  <SignatureOutlined style={{ marginRight: 8,fontSize: '20px' }} className=" text-blue-500"/>
-                  <Text className=" text-gray-700 text-lg">Bio: {currentUser.description} </Text>
+                  <SignatureOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 "/>
+                  <Text className="text-lg text-gray-700 ">Bio: {currentUser.description || "update"} </Text>
 
               </div>
- 
-
-          
-
           </div>
           <Divider orientation="left"></Divider>
           <div className='w-3/4 mx-auto '>
-              <Text className='text-xl font-bold'><VideoCameraOutlined className=" text-blue-500" style={{ marginRight: 8,fontSize: '25px'}}/>Introductory Video:</Text>
-              <div className='mt-4 p-2'>
+              <Text className='text-xl font-bold'><VideoCameraOutlined className="text-blue-500 " style={{ marginRight: 8,fontSize: '25px'}}/>Introductory Video:</Text>
+              <div className='p-2 mt-4'>
               <iframe 
                   width="100%" 
                   height="400" 
@@ -142,9 +122,9 @@ const AboutStudent: React.FC = () => {
                   allowFullScreen>
               </iframe></div>
           </div>
-          <div className=' my-7 w-full flex justify-center'>
+          <div className='flex justify-center w-full my-7'>
           {/* <Link to="/instructor/profile-instructor/instructor-setting"> */}
-          <Button className='rounded-full bg-gradient-to-br  from-blue-400 p-5  to-purple-300 text-lg text-white  w-1/4'
+          <Button className='w-1/4 p-5 text-lg text-white rounded-full bg-gradient-to-br from-blue-400 to-purple-300'
            onClick={() => handleEdit(currentUser._id)}>
             
           <EditOutlined />Edit Profile</Button>

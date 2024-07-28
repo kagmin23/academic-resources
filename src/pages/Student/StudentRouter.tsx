@@ -17,15 +17,13 @@ import {
 import Checkout from 'pages/Checkout';
 import InstructorDetail from 'pages/InstructorDetail';
 import PaymentSuccess from 'pages/PaymentSuccess';
+import MyCourseStudent from 'pages/Student/MyCourseStudent';
 import StudentPage from 'pages/Student/StudentPage';
 import { Route, Routes } from 'react-router-dom';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import Certificate from './Certificate';
-import RouterLesson from './RouterLesson';
-
 import ManagerStudentPurchase from './PurchasesStudent';
-
 
 export default function StudentRouter() {
 
@@ -68,7 +66,7 @@ export default function StudentRouter() {
                     <Route path={`setting`} element={<ProtectedRouter allowedRoles={["student"]}><Setting /></ProtectedRouter>} />
                     <Route path={`add-blog`} element={<ProtectedRouter allowedRoles={["student"]}><AddBlog /></ProtectedRouter>} />
                     <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={["student"]}><LessonStudent /></ProtectedRouter>} />
-                    <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={["student"]}><RouterLesson /></ProtectedRouter>} />
+                    <Route path={`student-learning/:courseId/`} element={<ProtectedRouter allowedRoles={["student"]}><MyCourseStudent /></ProtectedRouter>} />
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["student"]}><TopInstructorPage /></ProtectedRouter>} />
                     <Route path={`certificate-student`} element={<ProtectedRouter allowedRoles={["student"]}><Certificate /></ProtectedRouter>} />
