@@ -1,10 +1,10 @@
 import {
-  EyeOutlined,
-  FileOutlined,
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  ReadOutlined,
-  VideoCameraOutlined
+    EyeOutlined,
+    FileOutlined,
+    MenuFoldOutlined,
+    MenuUnfoldOutlined,
+    ReadOutlined,
+    VideoCameraOutlined
 } from '@ant-design/icons';
 import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
 // import parse from 'html-react-parser';

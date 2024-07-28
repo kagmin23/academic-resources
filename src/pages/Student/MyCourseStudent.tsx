@@ -155,7 +155,7 @@ function ListCoursesStudent() {
       render: (course_id: string) => (
         <div className="text-xs">
           <Button className="text-xs bg-slate-200"
-              onClick={() => {navigate(`/student-learning/${course_id}`)}}
+              onClick={() => navigate(`/student-learning/${course_id}`)}
             >Learn Now<DoubleRightOutlined /></Button>
         </div>
       )
