@@ -53,6 +53,7 @@ const LearnCourseDetail: React.FC = () => {
         const fetchCourseDetail = async () => {
             if (!id) {
                 message.error("Course ID is missing");
+                
                 return;
             }
 

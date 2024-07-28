@@ -13,6 +13,7 @@ import ApproveInstructor from './ApproveInstructor';
 import CategoryAdmin from './Category';
 import Payout from './Payout';
 import ReportAdmin from './Report';
+import Review from './Review';
 import UsersAdmin from './Users';
 
 
@@ -49,6 +50,7 @@ const AdminPage: React.FC = () => {
           <Route path={`info-admin`} element={<ProfileAdmin />} />
           <Route path={`admin-changepassword`} element={<ChangepasswordAd />} />
           <Route path={`transaction-history`} element={<TransactionHistory />} />
+          <Route path={`review`} element={<Review />} />
           <Route path={`payout`} element={<Payout />} />
           <Route path={`*`} element={<h1>404</h1>} />
         </Routes>

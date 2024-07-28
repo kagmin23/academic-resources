@@ -5,6 +5,7 @@ import {
   MoneyCollectOutlined,
   PieChartOutlined,
   ShoppingOutlined,
+  StarOutlined,
   UserSwitchOutlined
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
@@ -57,7 +58,12 @@ const SidebarAdmin: React.FC = () => {
     {
       icon: BellOutlined,
       heading: "Manager Subcription",
-      href: "/instructor/profile-instructor/subcription-instructor",
+      href: "/instructor/profile-instructor/manager-subcription-instructor",
+    },
+    {
+      icon: StarOutlined,
+      heading: "Manager Review",
+      href: "/instructor/profile-instructor/manager-review-instructor",
     },
   ];
 

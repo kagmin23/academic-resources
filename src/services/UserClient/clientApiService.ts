@@ -33,7 +33,6 @@ export const getCourses = async ( keyword: string, category_id: string, pageNum:
 export const getCourseDetail = async (courseId: string) => {
   try {
     const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`);
-    console.log("data response", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching course detail:', error);

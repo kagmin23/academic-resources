@@ -1,14 +1,18 @@
 
 import { BellOutlined, ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, Button, Modal, Tabs, message, notification } from 'antd';
+import { Avatar, Button, Card, Modal, Rate, Tabs, Typography, message, notification } from 'antd';
+import { Review } from 'models/types';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { getReviews } from 'services/All/reviewApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 import { createCart } from '../services/All/cartApiService';
 import { createOrUpdate } from '../services/All/subcriptionApiService';
 
 const { TabPane } = Tabs;
+const { Title, Paragraph } = Typography;
 
 interface Lesson {
     _id: string;
@@ -109,10 +113,10 @@ const CourseDetail: React.FC = () => {
         }
       };
     
-
-    const [loading, setLoading] = useState(false);
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -127,7 +131,6 @@ const CourseDetail: React.FC = () => {
 
         checkLoginStatus();
     }, []);
-
 
     useEffect(() => {
         if (!courseId) {
@@ -152,6 +155,24 @@ const CourseDetail: React.FC = () => {
         fetchCourseDetail();
     }, [courseId, isLoggedIn]);
 
+    useEffect(() => {
+        if (courseId) {
+            const fetchReviews = async () => {
+                setLoading(true);
+                try {
+                    const response = await getReviews(courseId, 1, 10);
+                    console.log(response.data); // Check the structure here
+                    setReviews(Array.isArray(response.data) ? response.data : []);
+                } catch (error) {
+                    console.error('Failed to fetch reviews:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchReviews();
+        }
+    }, [courseId]);
+
     const handleSubscribe = async () => {
         if (!courseDetail) return;
 
@@ -159,7 +180,6 @@ const CourseDetail: React.FC = () => {
             message.warning('Please log in to subscribe.');
             return;
         }
-
         setLoading(true);
 
         try {
@@ -348,10 +368,32 @@ const CourseDetail: React.FC = () => {
                             )}
                         </TabPane>
                         <TabPane tab="Reviews" key="2">
-                            <div className="p-4">
-                                {/* Render reviews here */}
+    <div className="p-4">
+        {Array.isArray(reviews) && reviews.length > 0 ? (
+            reviews.map((review, index) => (
+                <Card
+                    key={index}
+                    className="mb-4"
+                    title={<Title level={4}>{review.course_name}</Title>}
+                    extra={
+                        <div>
+                            <Rate disabled value={review.rating} />
+                            <div className="text-sm text-gray-500">
+                                {moment(review.created_at).format('YYYY-MM-DD')} - {moment(review.updated_at).format('YYYY-MM-DD')}
                             </div>
-                        </TabPane>
+                        </div>
+                    }
+                >
+                    <Paragraph strong>{review.reviewer_name}</Paragraph>
+                    <Paragraph>{review.comment}</Paragraph>
+                </Card>
+            ))
+        ) : (
+            <p>No reviews available.</p>
+        )}
+    </div>
+</TabPane>
+
                     </Tabs>
                 </div>
             </div>
