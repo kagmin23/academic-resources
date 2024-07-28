@@ -1,7 +1,7 @@
 import { Button, Card, Col, Drawer, Input, Menu, Pagination, Row, Spin, message } from 'antd';
 import { ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getCourses } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 interface ApiResponse {
@@ -158,7 +158,6 @@ const CoursePage: React.FC = () => {
             <div>{error}</div>
           ) : (
             <>
-              {/* <Link to={`course-details/`}> */}
                 <Row gutter={[15, 15]} className='xl:px-1'>
                   {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
                     <Col key={course._id} xs={24} sm={12} md={12} lg={8} xl={8}>
@@ -168,7 +167,8 @@ const CoursePage: React.FC = () => {
                                     alt={course.name} src={course.image_url} />}
                                     onClick={() => handleNavigateToCourseDetails(course._id)}
                       >
-                        <Card.Meta title={course.name} description={course.description} />
+                        <Card.Meta title={course.name} description={<div className="truncate">{course.description}</div>} />
+                        
                         <div className="flex items-center justify-between mt-4 text-lg">
                           <span className="text-sm" style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} đ</span>
                           <span>({course.discount * 100}%)</span>
@@ -181,7 +181,6 @@ const CoursePage: React.FC = () => {
                     </Col>
                   ))}
                 </Row>
-              {/* </Link> */}
               <Pagination
                 current={currentPage}
                 pageSize={pageSize}

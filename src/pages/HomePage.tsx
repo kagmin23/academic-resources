@@ -45,7 +45,6 @@ interface Course {
 interface Category {
   _id: string;
   name: string;
-  img: string;
 }
 
 interface ApiResponse {
@@ -317,9 +316,11 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        <div className="box body-button sm:mb-2">
-          <button className="text-2xl text-white">Join for free <ArrowRightOutlined /></button>
-        </div>
+        <Link to="/course">
+          <div className="box body-button sm:mb-2">
+            <button className="text-2xl text-white">Join with us now <ArrowRightOutlined /></button>
+          </div>
+        </Link>
 
         <div className="flex items-center justify-center h-24 mt-8 font-bold sm:text-4xl">
           Top Categories
@@ -332,11 +333,11 @@ const HomePage: React.FC = () => {
         <Row gutter={[20, 20]} className="justify-center px-8">
           {categories.length > 0 ? (
             categories.map((category, index) => (
-              <Col key={index} xs={12} sm={8} md={6} lg={5}>
+              <Col key={index} xs={12} sm={8} md={6} lg={6}>
                 <Card
                   bordered={true}
-                  className="w-full transition duration-300 ease-in-out h-36 hover:shadow-md"
-                  cover={<img alt={category.name} src={category.img} className="object-cover h-20 p-3" />}
+                  className="w-full h-16 transition duration-300 ease-in-out bg-blue-200 hover:shadow-md"
+                  // cover={<div className="object-cover">{category.name}</div>}
                 >
                   <div className="text-center">{category.name}</div>
                 </Card>
