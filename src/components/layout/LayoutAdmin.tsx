@@ -95,7 +95,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
         </Link>
         <div className="flex items-center gap-8">
           {currentUser && (
-            <Dropdown overlay={settingsMenu} trigger={['click']}>
+            <Dropdown overlay={settingsMenu} trigger={['hover']}>
               <Avatar
                 src={currentUser.avatar}
                 className="text-4xl text-white"

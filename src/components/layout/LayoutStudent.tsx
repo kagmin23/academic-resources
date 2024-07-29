@@ -118,7 +118,7 @@ const LayoutStudent: React.FC = () => {
             </div>
           </Badge>
           {currentUser && (
-            <Dropdown overlay={profileMenu} trigger={['click']}>
+            <Dropdown overlay={profileMenu} trigger={['hover']}>
               <Avatar
                 src={currentUser.avatar}
                 className="text-4xl text-white"

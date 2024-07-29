@@ -96,7 +96,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
   );
 
   const notificationCountBell = 7;
-  const notificationCountCart = 9;
+  const notificationCountCart = 0;
 
   return (
     <Layout className="min-h-screen">
@@ -122,7 +122,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             </div>
           </Badge>
           {currentUser && (
-            <Dropdown overlay={profileMenu} trigger={['click']}>
+            <Dropdown overlay={profileMenu} trigger={['hover']}>
               <Avatar
                 src={currentUser.avatar}
                 className="text-4xl text-white"
