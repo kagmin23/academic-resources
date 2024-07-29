@@ -1,55 +1,49 @@
-import { SearchOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Spin, Table, Tabs } from 'antd';
+import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Input, Layout, Modal, Spin, Table, Tabs } from 'antd';
 import { Review } from 'models/types';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { deleteReview } from 'services/AdminsApi/reviewApiService';
-import { getReview } from 'services/Instructor/reviewApiService';
+import { getReviews } from 'services/All/reviewApiService';
 
-const { Header, Content } = Layout;
 const { TabPane } = Tabs;
 
 const AdminReview: React.FC = () => {
   const [filteredData, setFilteredData] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const { reviewId } = useParams<{ reviewId: string }>();
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState<boolean>(false);
+  const [deleteItemId, setDeleteItemId] = useState<string | undefined>();
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      if (!reviewId) {
-        console.error('No reviewId provided!');
-        return;
-      }
-      
-      setLoading(true);
-      try {
-        const data = await getReview(reviewId);
-        setFilteredData(data);
-      } catch (error) {
-        console.error('Error fetching reviews:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchReviews();
-  }, [reviewId]);
-
-  const handleDelete = async (reviewId: string) => {
+  const fetchReviews = async () => {
     setLoading(true);
     try {
-      await deleteReview(reviewId);
-      setFilteredData(filteredData.filter(review => review._id !== reviewId));
+      const response = await getReviews('', 1, 10);
+      setFilteredData(response);
     } catch (error) {
-      console.error('Error deleting review:', error);
+      console.error('Error fetching reviews:', error);
+      setFilteredData([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const getTotalSubscribers = (): number => {
-    return filteredData.length;
+  useEffect(() => {
+    fetchReviews();
+  }, []);
+
+  const handleDelete = async () => {
+    if (!deleteItemId) return;
+    setLoading(true);
+    try {
+      await deleteReview(deleteItemId);
+      setFilteredData(filteredData.filter(review => review._id !== deleteItemId));
+      setDeleteItemId(undefined);
+      setDeleteConfirmVisible(false);
+    } catch (error) {
+      console.error('Error deleting review:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const getTotalReview = (): number => {
@@ -58,62 +52,81 @@ const AdminReview: React.FC = () => {
 
   const columns1 = [
     {
-      title: 'User',
-      dataIndex: 'user_id',
-      width: 100,
-      key: 'user_id',
+      title: 'No.',
+      dataIndex: '_id',
+      key: '_id',
+      width: 50,
       render: (text: any, record: Review, index: number) => index + 1,
     },
     {
       title: 'Course',
-      dataIndex: 'course_id',
-      width: 100,
-      key: 'course_id',
-      render: (text: any, record: Review, index: number) => index + 1,
+      dataIndex: 'course_name',
+      width: 150,
+      key: 'course_name',
+    },
+    {
+      title: 'Reviewer',
+      dataIndex: 'reviewer_name',
+      width: 150,
+      key: 'reviewer_name',
     },
     {
       title: 'Comment',
       dataIndex: 'comment',
-      width: 200,
+      width: 300,
       key: 'comment',
-      render: (text: any, record: Review, index: number) => index + 1,
     },
     {
       title: 'Rating',
       dataIndex: 'rating',
       key: 'rating',
       width: 50,
-      align: 'center' as AlignType
+      align: 'center' as AlignType,
     },
     {
       title: 'Action',
       dataIndex: 'action',
       key: 'action',
-      width: 50,
+      width: 100,
       align: 'center' as AlignType,
       render: (text: any, record: Review) => (
-        <div>
-          <Button onClick={() => handleDelete(record._id)}>Delete</Button>
-        </div>
-      )
+        <Button
+          size="small"
+          type="primary"
+          icon={<DeleteOutlined />}
+          danger
+          onClick={() => { setDeleteItemId(record._id); setDeleteConfirmVisible(true); }}
+        />
+      ),
     },
   ];
 
   return (
     <Layout style={{ height: 'fit-content', minHeight: '100vh' }}>
       <div className='px-5'>
+        <Modal
+          title="Confirm Delete"
+          visible={deleteConfirmVisible}
+          onOk={handleDelete}
+          onCancel={() => {
+            setDeleteItemId(undefined);
+            setDeleteConfirmVisible(false);
+          }}
+          okButtonProps={{ danger: true }}
+        >
+          <p>Are you sure you want to delete this review?</p>
+        </Modal>
         <Tabs defaultActiveKey="1">
           <TabPane tab="Reviews" key="1">
             <div className='flex justify-between'>
               <div className='w-1/2'>
-                <span className='text-lg font-semibold'>Total Review: {getTotalSubscribers()}</span>
+                <span className='text-lg font-semibold'>Total Reviews: {getTotalReview()}</span>
               </div>
               <div className='w-1/4'>
                 <Input
                   placeholder="Search..."
                   prefix={<SearchOutlined />}
                   className='mb-5'
-                //   onChange={e => handleSearch(e.target.value)}
                 />
               </div>
             </div>

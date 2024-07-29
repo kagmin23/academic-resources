@@ -32,26 +32,49 @@ export const getReviews = async(course_id: string, pageNum: number, pageSize: nu
     }
 };
 
-export const createReview = async(course_id : string, comment : string, rating : number) => {
+export const createReview = async (course_id: string, comment: string, rating: number) => {
     try {
         const token = localStorage.getItem('token');
         
         const response = await axios.post(`${HOST_MAIN}/api/review`, {
-                "course_id": course_id,
-                "comment": comment,
-                "rating": rating
+            course_id,
+            comment,
+            rating
         }, {
             headers: {
-              Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
             }
-          });
-    console.log("createReview: ", response)
-    return response.data;
+        });
+        
+        console.log("createReview: ", response);
+        return response.data;
 
-    } catch (error){
-        console.error("Error to Log Api createReview!",error);
+    } catch (error) {
+        console.error("Error to Log Api createReview!", error);
         throw error;
     }
 };
 
+export const updateReview = async (reviewId: string, comment: string, rating: number) => {
+    try {
+        const token = localStorage.getItem('token');
+        
+        const response = await axios.put(`${HOST_MAIN}/api/review/${reviewId}`, {
+            comment,
+            rating
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
+        console.log("updateReview: ", response);
+        return response.data; // Ensure this matches the output data structure
+
+    } catch (error) {
+        console.error("Error in updateReview API call!", error);
+        throw error;
+    }
+};

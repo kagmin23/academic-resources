@@ -1,18 +1,19 @@
 
 import { BellOutlined, ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Modal, Rate, Tabs, Typography, message, notification } from 'antd';
+import { Avatar, Button, Card, Form, Input, Modal, Rate, Tabs, Typography, message, notification } from 'antd';
 import { Review } from 'models/types';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { getReviews } from 'services/All/reviewApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 import { createCart } from '../services/All/cartApiService';
 import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
+import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
+const { TextArea } = Input;
 
 interface Lesson {
     _id: string;
@@ -74,45 +75,55 @@ const CourseDetail: React.FC = () => {
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
     const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
+    const [reviewRating, setReviewRating] = useState<number>(0);
+    const [reviewComment, setReviewComment] = useState<string>('');
+    const [loadingReview, setLoadingReview] = useState<boolean>(false);
+    const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
+    const [updatedReviewRating, setUpdatedReviewRating] = useState<number>(0);
+    const [updatedReviewComment, setUpdatedReviewComment] = useState<string>('');
+    const [loadingUpdateReview, setLoadingUpdateReview] = useState<boolean>(false);
+
+
+    const [form] = Form.useForm();
 
     const navigate = useNavigate();
     const [currentUser, setCurrentUser] = useState<any>(null);
     useEffect(() => {
         const fetchCurrentUser = async () => {
-          try {
-            const response = await getCurrentUser();
-            if (response.success) {
-              setCurrentUser(response.data);
-            } else {
-              notification.error({
-                message: 'Error',
-                description: 'Failed to fetch current user information',
-              });
+            try {
+                const response = await getCurrentUser();
+                if (response.success) {
+                    setCurrentUser(response.data);
+                } else {
+                    notification.error({
+                        message: 'Error',
+                        description: 'Failed to fetch current user information',
+                    });
+                }
+            } catch (error) {
+                // notification.error({
+                //   message: 'Error',
+                //   description: 'Failed to fetch current user information',
+                // });
             }
-          } catch (error) {
-            // notification.error({
-            //   message: 'Error',
-            //   description: 'Failed to fetch current user information',
-            // });
-          }
         };
-    
+
         fetchCurrentUser();
-      }, []);
+    }, []);
 
 
     const handleInstructorProfile = (userId: string) => {
         if (!currentUser) {
-          navigate(`/instructor-detail/${userId}`);
+            navigate(`/instructor-detail/${userId}`);
         } else if (currentUser.role === 'student') {
-          navigate(`/student/instructor-detail/${userId}`);
+            navigate(`/student/instructor-detail/${userId}`);
         } else if (currentUser.role === 'instructor') {
-          navigate(`/instructor/instructor-detail/${userId}`);
+            navigate(`/instructor/instructor-detail/${userId}`);
         } else {
-          navigate(`/instructor-detail/${courseId}`);
+            navigate(`/instructor-detail/${courseId}`);
         }
-      };
-    
+    };
+
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
     const [reviews, setReviews] = useState<Review[]>([]);
@@ -172,6 +183,29 @@ const CourseDetail: React.FC = () => {
         }
     }, [courseId]);
 
+    const handleSubmitReview = async () => {
+        if (!courseId) return;
+
+        setLoadingReview(true);
+
+        try {
+            const response = await createReview(courseId, reviewComment, reviewRating);
+            notification.success({
+                message: 'Review Submitted',
+                description: 'Your review has been successfully submitted.',
+            });
+            setReviews([...reviews, response]); // Update the reviews list
+            form.resetFields(); // Reset the form fields
+        } catch (error) {
+            notification.error({
+                message: 'Error Submitting Review',
+                description: 'There was an error submitting your review. Please try again.',
+            });
+        } finally {
+            setLoadingReview(false);
+        }
+    };
+
     const handleSubscribe = async () => {
         if (!courseDetail) return;
 
@@ -198,8 +232,8 @@ const CourseDetail: React.FC = () => {
     };
     useEffect(() => {
         fetchSubscriptionStatus();
-        },
-    []);
+    },
+        []);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -208,6 +242,33 @@ const CourseDetail: React.FC = () => {
     const handleCancel = () => {
         setIsModalVisible(false);
     };
+
+    const handleUpdateReview = async () => {
+        if (!editingReviewId) return;
+
+        setLoadingUpdateReview(true);
+
+        try {
+            const response = await updateReview(editingReviewId, updatedReviewComment, updatedReviewRating);
+            notification.success({
+                message: 'Review Updated',
+                description: 'Your review has been successfully updated.',
+            });
+            setReviews(reviews.map((review) =>
+                review._id === editingReviewId ? { ...review, comment: updatedReviewComment, rating: updatedReviewRating } : review
+            ));
+            setEditingReviewId(null);
+            form.resetFields();
+        } catch (error) {
+            notification.error({
+                message: 'Error Updating Review',
+                description: 'There was an error updating your review. Please try again.',
+            });
+        } finally {
+            setLoadingUpdateReview(false);
+        }
+    };
+
 
     const handleAddToCart = async () => {
         if (!courseId) {
@@ -310,8 +371,8 @@ const CourseDetail: React.FC = () => {
                             <Avatar src={courseDetail.instructor_id} size="large" />
 
                             <div className="flex flex-col ml-4">
-                                <div  onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
-                                <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
+                                <div onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
+                                    <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
 
                                 <Button
                                     onClick={handleSubscribe}
@@ -367,12 +428,46 @@ const CourseDetail: React.FC = () => {
                         </TabPane>
                         <TabPane tab="Reviews" key="2">
                             <div className="p-4">
+                                <Form form={form} layout="vertical" onFinish={handleSubmitReview}>
+                                    <Form.Item
+                                        name="rating"
+                                        label="Rating"
+                                        rules={[{ required: true, message: 'Please select a rating!' }]}
+                                    >
+                                        <Rate
+                                            allowHalf
+                                            onChange={(value) => setReviewRating(value)}
+                                            value={reviewRating}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item
+                                        name="comment"
+                                        label="Comment"
+                                        rules={[{ required: true, message: 'Please enter your comment!' }]}
+                                    >
+                                        <TextArea
+                                            rows={4}
+                                            onChange={(e) => setReviewComment(e.target.value)}
+                                            value={reviewComment}
+                                        />
+                                    </Form.Item>
+                                    <Form.Item>
+                                        <Button
+                                            type="primary"
+                                            htmlType="submit"
+                                            loading={loadingReview}
+                                        >
+                                            Submit Review
+                                        </Button>
+                                    </Form.Item>
+                                </Form>
+
                                 {Array.isArray(reviews) && reviews.length > 0 ? (
-                                    reviews.map((review, index) => (
+                                    reviews.map((review) => (
                                         <Card
-                                            key={index}
+                                            key={review._id}
                                             className="mb-4"
-                                            title={<Title level={4}>{review.course_name}</Title>}
+                                            title={<Title level={4}>{courseDetail?.name}</Title>}
                                             extra={
                                                 <div>
                                                     <Rate disabled value={review.rating} />
@@ -384,13 +479,62 @@ const CourseDetail: React.FC = () => {
                                         >
                                             <Paragraph strong>{review.reviewer_name}</Paragraph>
                                             <Paragraph>{review.comment}</Paragraph>
+                                            {currentUser?._id === review.user_id && (
+                                                <Button
+                                                    type="link"
+                                                    onClick={() => {
+                                                        setEditingReviewId(review._id);
+                                                        setUpdatedReviewRating(review.rating);
+                                                        setUpdatedReviewComment(review.comment);
+                                                    }}
+                                                >
+                                                    Edit
+                                                </Button>
+                                            )}
                                         </Card>
                                     ))
                                 ) : (
                                     <p>No reviews available.</p>
                                 )}
+
+                                {editingReviewId && (
+                                    <Form layout="vertical" onFinish={handleUpdateReview}>
+                                        <Form.Item
+                                            name="rating"
+                                            label="Rating"
+                                            rules={[{ required: true, message: 'Please select a rating!' }]}
+                                        >
+                                            <Rate
+                                                allowHalf
+                                                onChange={(value) => setUpdatedReviewRating(value)}
+                                                value={updatedReviewRating}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item
+                                            name="comment"
+                                            label="Comment"
+                                            rules={[{ required: true, message: 'Please enter your comment!' }]}
+                                        >
+                                            <TextArea
+                                                rows={4}
+                                                onChange={(e) => setUpdatedReviewComment(e.target.value)}
+                                                value={updatedReviewComment}
+                                            />
+                                        </Form.Item>
+                                        <Form.Item>
+                                            <Button
+                                                type="primary"
+                                                htmlType="submit"
+                                                loading={loadingUpdateReview}
+                                            >
+                                                Update Review
+                                            </Button>
+                                        </Form.Item>
+                                    </Form>
+                                )}
                             </div>
                         </TabPane>
+
                     </Tabs>
                 </div>
             </div>
