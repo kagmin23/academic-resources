@@ -5,6 +5,7 @@ import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { getCourse } from 'services/Instructor/courseApiService';
 import { createLesson, deleteLesson, getLessons, updateLesson } from 'services/Instructor/lessonApiService';
 import { getSession } from 'services/Instructor/sessionApiService';
 
@@ -32,27 +33,27 @@ const ViewLesson: React.FC = () => {
     setFilteredDataSource(filteredData);
   };
 
-  // useEffect(() => {
-  //   const fetchCourse = async () => {
-  //     if (!courseId) {
-  //       console.error("courseId is undefined");
-  //       message.error('courseId is undefined');
-  //       return;
-  //     }
+  useEffect(() => {
+    const fetchCourse = async () => {
+      if (!courseId) {
+        console.error("courseId is undefined");
+        message.error('courseId is undefined');
+        return;
+      }
 
-  //     try {
-  //       const response = await getCourse(courseId);
-  //       setSession(response.data);
-  //     } catch (error) {
-  //       console.error("Failed to fetch session", error);
-  //       message.error('Failed to fetch session');
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+      try {
+        const response = await getCourse(courseId);
+        setSession(response.data);
+      } catch (error) {
+        console.error("Failed to fetch session", error);
+        message.error('Failed to fetch session');
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchCourse();
-  // }, [courseId]);
+    fetchCourse();
+  }, [courseId]);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -78,9 +79,9 @@ const ViewLesson: React.FC = () => {
 
   useEffect(() => {
     const fetchLessons = async () => {
-      if (sessionId) {
+      if (courseId && sessionId) {
         try {
-          const response = await getLessons(sessionId, 1, 10,10, 1, '');
+          const response = await getLessons(courseId, sessionId, 1, 10,10, 1, '');
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {
@@ -92,7 +93,7 @@ const ViewLesson: React.FC = () => {
     };
 
     fetchLessons();
-  }, [sessionId]);
+  }, [courseId,sessionId]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -340,20 +341,6 @@ const ViewLesson: React.FC = () => {
         onCancel={() => setModalVisible(false)}
       >
         <Form form={form} layout="vertical">
-        <Form.Item
-            name="course_id"
-            label="CourseId"
-            rules={[{ required: true, message: 'Please enter the Lesson Name!' }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="session_id"
-            label="SessionId"
-            rules={[{ required: true, message: 'Please enter the Lesson Name!' }]}
-          >
-            <Input />
-          </Form.Item>
           <Form.Item
             name="name"
             label="Name"

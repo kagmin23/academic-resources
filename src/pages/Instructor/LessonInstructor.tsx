@@ -50,8 +50,8 @@ const ManagerLessonInstructor: React.FC = () => {
 
   const fetchLessons = async () => {
     try {
-      if (sessionId) {
-        const response = await getLessons(sessionId, 1, 10, 10, 1, "");
+      if (courseId && sessionId) {
+        const response = await getLessons(courseId, sessionId, 1, 10, 10, 1, "");
         setLessons(response.data.pageData);
       }
     } catch (error) {
