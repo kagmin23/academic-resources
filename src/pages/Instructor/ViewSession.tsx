@@ -12,7 +12,7 @@ const { Header, Content } = Layout;
 const { confirm } = Modal;
 
 const ViewSession: React.FC = () => {
-  const { courseId } = useParams<{ courseId: string }>();
+  const { courseId } = useParams<{ courseId: string | undefined }>();
   const [course, setCourse] = useState<Course | null>(null);
   const [dataSource, setDataSource] = useState<Session[]>([]);
   const [filteredDataSource, setFilteredDataSource] = useState<Session[]>([]);
@@ -146,8 +146,8 @@ const ViewSession: React.FC = () => {
       });
   };
 
-  const handleViewLesson = (sessionId: string) => {
-    navigate(`/instructor/profile-instructor/manager-lesson/${sessionId}`);
+  const handleViewLesson = (courseId: string | undefined, sessionId: string) => {
+    navigate(`/instructor/profile-instructor/manager-instructor-course/${courseId}/manager-session/${sessionId}/manager-lesson`);
   };
 
   const columns = [
@@ -190,7 +190,7 @@ const ViewSession: React.FC = () => {
         <div className="flex flex-row justify-center gap-1">
           <Button size="small" className="text-blue-500" onClick={() => handleEditSession(session)} icon={<EditOutlined />}></Button>
           <Button size="small" className="text-red-500" danger onClick={() => handleDeleteSession(session._id)} icon={<DeleteOutlined />}></Button>
-          <Button size="small" onClick={() => handleViewLesson(session._id)} icon={<BarsOutlined />}></Button>
+          <Button size="small" onClick={() => handleViewLesson(courseId, session._id)} icon={<BarsOutlined />}></Button>
         </div>
       ),
     },

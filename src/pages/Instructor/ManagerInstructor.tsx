@@ -201,7 +201,7 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
   const handleViewSession = (courseId: string) => {
-    navigate(`/instructor/profile-instructor/view-session/${courseId}`);
+    navigate(`/instructor/profile-instructor/manager-instructor-course/${courseId}/manager-session`);
   };
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {

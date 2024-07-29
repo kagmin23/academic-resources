@@ -35,8 +35,8 @@ const InstructorPage: React.FC = () => {
           <Route path={`instructor-changepassword`} element={<ChangepasswordIns />} />
           {/* <Route path={`view-session`} element={<ViewSession/>}/> */}
           
-          <Route path={`view-session/:courseId/`} element={<ViewSession />} />
-          <Route path={`manager-lesson/:sessionId`} element={<ViewLesson/>}/> 
+          <Route path={`manager-instructor-course/:courseId/manager-session/`} element={<ViewSession />} />
+          <Route path={`manager-instructor-course/:courseId/manager-session/:sessionId/manager-lesson`} element={<ViewLesson/>}/>
           {/* <Route path={`view-session/:courseId/manager-lession/:sessionId`} element={<ViewLesson/>}/> */}
           <Route path={`manager-subcription-instructor`} element={<SubcriptionInstructor />}/>
           <Route path={`manager-instructor-payout`} element={<PayoutInstructor />}/>

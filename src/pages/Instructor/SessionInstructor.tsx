@@ -245,7 +245,6 @@ const ManagerCourseInstructor: React.FC = () => {
             </Select>
           </Form.Item>
 
-
           <Form.Item
             name="name"
             label="Name"

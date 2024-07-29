@@ -46,7 +46,7 @@ const ManagerLessonInstructor: React.FC = () => {
     fetchLessons();
     fetchSessions();
     fetchCourses();
-  }, [sessionId, courseId]); // Fetch data whenever sessionId or courseId changes
+  }, [sessionId, courseId]);
 
   const fetchLessons = async () => {
     try {

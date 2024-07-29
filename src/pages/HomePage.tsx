@@ -1,6 +1,7 @@
 import {
   ArrowRightOutlined,
   DotNetOutlined,
+  DoubleRightOutlined,
   DownOutlined,
   JavaOutlined,
   LeftOutlined,
@@ -350,23 +351,17 @@ const HomePage: React.FC = () => {
           )}
           
         <div className="bg-gray-100 contact-home">
-          <h1 className="text-xl font-bold sm:text-2xl">Subscribe</h1>
+          <h1 className="text-sm font-bold sm:text-sm">Subscribe</h1>
           <p className="text-sm sm:text-base">Receive weekly newsletter with educational materials, new courses, interesting posts, popular books and much more!</p>
           <div className="flex flex-col mt-4 md:flex-row md:items-center">
-            <input
-              className="w-full p-2 mb-4 border border-gray-300 rounded md:mb-0 md:mr-4"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <Button
-              className="w-full p-2 text-sm text-white bg-blue-600 rounded md:w-auto md:px-6 sm:text-base"
-              type="primary"
-              onClick={handleSubscribe}
-            >
-              Subscribe
-            </Button>
-          </div>
+              <div className="relative inline-flex items-center">
+                <span className="flex items-center space-x-2 text-3xl font-bold text-blue-600">
+                  <span className="px-1">Let's Start <DoubleRightOutlined /></span>
+                </span>
+                <span className="absolute inset-0 bg-gradient-to-r from-purple-500 to-pink-500 opacity-20 blur-sm -z-10"></span>
+                <div className="absolute inset-0 border border-blue-600 rounded-lg pointer-events-none"></div>
+              </div>
+            </div>
         </div>
       </div>
     </div>
