@@ -32,6 +32,28 @@ const ViewLesson: React.FC = () => {
     setFilteredDataSource(filteredData);
   };
 
+  // useEffect(() => {
+  //   const fetchCourse = async () => {
+  //     if (!courseId) {
+  //       console.error("courseId is undefined");
+  //       message.error('courseId is undefined');
+  //       return;
+  //     }
+
+  //     try {
+  //       const response = await getCourse(courseId);
+  //       setSession(response.data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch session", error);
+  //       message.error('Failed to fetch session');
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
+
+  //   fetchCourse();
+  // }, [courseId]);
+
   useEffect(() => {
     const fetchSession = async () => {
       if (!sessionId) {
@@ -131,6 +153,7 @@ const ViewLesson: React.FC = () => {
           course_id: courseId,
           session_id: sessionId,
         };
+        
         if (isEditMode && currentLesson) {
           updateLesson(currentLesson._id, newValues)
             .then(() => {
@@ -317,6 +340,20 @@ const ViewLesson: React.FC = () => {
         onCancel={() => setModalVisible(false)}
       >
         <Form form={form} layout="vertical">
+        <Form.Item
+            name="course_id"
+            label="CourseId"
+            rules={[{ required: true, message: 'Please enter the Lesson Name!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="session_id"
+            label="SessionId"
+            rules={[{ required: true, message: 'Please enter the Lesson Name!' }]}
+          >
+            <Input />
+          </Form.Item>
           <Form.Item
             name="name"
             label="Name"

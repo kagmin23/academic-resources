@@ -52,8 +52,8 @@ const LayoutStudent: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(fetchCartData, 5000); // Fetch cart data every 5 seconds
-    return () => clearInterval(interval); // Cleanup on unmount
+    const interval = setInterval(fetchCartData, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const handleMenuClick = (e: { key: string }) => {

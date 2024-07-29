@@ -1,9 +1,10 @@
-import { Button, Card, Col, Drawer, Input, Menu, Pagination, Row, Spin, message } from 'antd';
+import { Button, Card, Col, Input, Pagination, Row, Spin, message } from 'antd';
 import { ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCourses } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
+
 interface ApiResponse {
   success: boolean;
   data: {
@@ -17,12 +18,9 @@ const CoursePage: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [keyword, setKeyword] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const pageSize = 6;
+  const [pageSize] = useState(15); // Number of courses per page
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
-  
-
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -31,23 +29,21 @@ const CoursePage: React.FC = () => {
         if (response.success) {
           setCurrentUser(response.data);
         } else {
-          // notification.error({
-          //   message: 'Error',
-          //   description: 'user dont login',
-          // });
+          // Handle no user logged in case
         }
       } catch (error) {
-        console.error("Error to fetch Current User!")
+        console.error("Error fetching current user:", error);
       }
     };
 
     fetchCurrentUser();
   }, []);
+
   useEffect(() => {
     const fetchCourses = async () => {
       setLoading(true);
       try {
-        const response: ApiResponse = await getCourses('', '', 1, 10);
+        const response: ApiResponse = await getCourses('', '', currentPage, pageSize);
         if (response.success) {
           setCourses(response.data.pageData);
         } else {
@@ -62,25 +58,20 @@ const CoursePage: React.FC = () => {
     };
 
     fetchCourses();
-  }, []);
+  }, [currentPage, pageSize]);
+
+  const handleSearch = (value: string) => {
+    setKeyword(value);
+    const filteredCourses = courses.filter(course =>
+      course.name.toLowerCase().includes(value.toLowerCase())
+    );
+    setCourses(filteredCourses);
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
 
-  const onClick = (e: any) => {
-    console.log('click ', e);
-  };
-
-  const [open, setOpen] = useState(false);
-
-  const showDrawer = () => {
-    setOpen(true);
-  };
-
-  const onClose = () => {
-    setOpen(false);
-  };
   const handleNavigateToCourseDetails = (courseId: string) => {
     if (!currentUser) {
       navigate(`/course-details/${courseId}`);
@@ -100,99 +91,72 @@ const CoursePage: React.FC = () => {
           <Spin size="large" />
         </div>
       )}
+      <div className="flex justify-end my-5">
+        <Input.Search
+          placeholder="Search..."
+          enterButton
+          size="small"
+          onSearch={handleSearch}
+          className="w-full md:w-1/3"
+        />
+      </div>
 
-      <Row gutter={[16, 16]}>
-        <Col xs={0} sm={0} md={6} lg={6} xl={6}>
-          <div className="flex flex-col h-full">
-            <div className='h-[90vh] w-full flex-grow'>
-              <Menu
-                onClick={onClick}
-                defaultSelectedKeys={['1']}
-                defaultOpenKeys={['sub1']}
-                mode="inline"
-                theme="light"
-                className='w-2/3 h-full p-2 overflow-y-auto lg:text-base xl:text-lg bg-slate-500'
+      <Row gutter={[15,15]}>
+        {error ? (
+          <div>{error}</div>
+        ) : (
+          <>
+            {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
+              <Col
+                key={course._id}
+                xs={24} // Full width on extra-small screens
+                sm={12} // Half width on small screens
+                md={8}  // One-third width on medium screens
+                lg={6}  // One-fourth width on large screens
+                xl={4}  // One-fifth width on extra-large screens
               >
-                <Menu.Item key="1">
-                  {categoryId}
-                </Menu.Item>
-              </Menu>
-            </div>
-          </div>
-          
-        </Col>
-
-        <Col xs={24} sm={24} md={18} lg={18} xl={18} className='my-auto -mx-10'>
-          {/* Menu for smaller screens */}
-          <Button type="primary" onClick={showDrawer} className='mb-4 md:hidden'>
-            Menu
-          </Button>
-          <Drawer
-            placement={'left'}
-            closable={false}
-            onClose={onClose}
-            open={open}
-            bodyStyle={{ padding: 0, margin: 0 }}
-          >
-            <Menu
-              onClick={onClick}
-              defaultSelectedKeys={['1']}
-              defaultOpenKeys={['sub1']}
-              mode="inline"
-              theme="dark"
-              className='w-full h-full p-2 overflow-y-auto lg:text-base xl:text-lg'
+                <Card
+                  hoverable
+                  cover={
+                    <img
+                      className="object-cover w-full h-full"
+                      alt={course.name}
+                      src={course.image_url}
+                      style={{ aspectRatio: '1 / 1' }} // Makes the card square
+                    />
+                  }
+                  onClick={() => handleNavigateToCourseDetails(course._id)}
+                  className="w-full h-full"
+                >
+                  <Card.Meta
+                    title={course.name}
+                    description={<div className="truncate">{course.description}</div>}
+                  />
+                  <div className="flex items-center justify-between mt-4 text-lg">
+                    <span className="text-sm" style={{ textDecoration: 'line-through' }}>
+                      {course.price.toLocaleString('vi-VN')} đ
+                    </span>
+                    <span>({course.discount * 100}%)</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <div className="text-lg text-orange-600">
+                      {(course.price * (1 - course.discount)).toLocaleString('vi-VN')} đ
+                    </div>
+                    <Button className="text-xs text-white bg-red-500">Add to Cart</Button>
+                  </div>
+                </Card>
+              </Col>
+            ))}
+            <Pagination
+              current={currentPage}
+              pageSize={pageSize}
+              total={courses.length}
+              onChange={handlePageChange}
+              className="flex justify-center mt-8"
             />
-          </Drawer>
-
-          <div className="flex justify-end my-5">
-            <Input.Search
-              placeholder="Search..."
-              enterButton
-              size="small"
-              onSearch={(value) => setKeyword(value)}
-              className='w-full md:w-1/3'
-            />
-          </div>
-
-          {error ? (
-            <div>{error}</div>
-          ) : (
-            <>
-                <Row gutter={[15, 15]} className='xl:px-1'>
-                  {courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
-                    <Col key={course._id} xs={24} sm={12} md={12} lg={8} xl={8}>
-                      <Card
-                        hoverable
-                        cover={<img className="object-cover w-full h-48"
-                                    alt={course.name} src={course.image_url} />}
-                                    onClick={() => handleNavigateToCourseDetails(course._id)}
-                      >
-                        <Card.Meta title={course.name} description={<div className="truncate">{course.description}</div>} />
-                        
-                        <div className="flex items-center justify-between mt-4 text-lg">
-                          <span className="text-sm" style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} đ</span>
-                          <span>({course.discount * 100}%)</span>
-                        </div>
-                        <div className='flex justify-between'>
-                          <div className='text-lg text-orange-600'>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} đ</div>
-                          <Button className='text-xs text-white bg-red-500'>Add to Cart</Button>
-                        </div>
-                      </Card>
-                    </Col>
-                  ))}
-                </Row>
-              <Pagination
-                current={currentPage}
-                pageSize={pageSize}
-                total={courses.length}
-                onChange={handlePageChange}
-                className="flex justify-center mt-8"
-              />
-            </>
-          )}
-        </Col>
+          </>
+        )}
       </Row>
-      
     </div>
   );
 };
