@@ -21,7 +21,7 @@ export const createOrUpdate = async (instructor_id: string) => {
   }
 };
 
-export const getItemBySubscriber = async (keyword: string, pageNum: number, pageSize: number, totalItems: number, totalPages:number) => {
+export const getItemBySubscriber = async (keyword: string, pageNum: number, pageSize: number) => {
   const token = localStorage.getItem('token');
 
   try {
@@ -35,8 +35,6 @@ export const getItemBySubscriber = async (keyword: string, pageNum: number, page
         "pageInfo": {
             "pageNum": pageNum,
             "pageSize": pageSize,
-            "totalItems": pageSize,
-            "totalPages": totalPages,
         }
     },
       {

@@ -1,6 +1,5 @@
-import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Modal, Select, Space, Spin, Table, Typography, message } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { CheckOutlined, CloseOutlined, FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Input, Layout, Modal, Select, Space, Spin, Table, Tag, Typography, message } from "antd";
 import { Payout } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
@@ -18,8 +17,6 @@ function PayoutsAdmin() {
   const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [selectAll, setSelectAll] = useState<boolean>(false);
   const [comment, setComment] = useState('');
   const [payout, setPayout] = useState<Payout[]>([]);
 
@@ -41,16 +38,6 @@ function PayoutsAdmin() {
     fetchPayouts();
   }, []);
 
-  const handleSelectAll = (e: CheckboxChangeEvent) => {
-    const { checked } = e.target;
-    if (checked) {
-      setSelectedRowKeys(data.map(item => item._id));
-    } else {
-      setSelectedRowKeys([]);
-    }
-    setSelectAll(checked);
-  };
-
   const onUpdateStatusPayout = async (payoutId: string, newStatus: string, comment: string) => {
     try {
       console.log(`Changing status of payout with ID ${payoutId} to ${newStatus}`);
@@ -69,13 +56,6 @@ function PayoutsAdmin() {
       message.error('Failed to update payout status!');
       console.error('Error:', error);
     }
-  };
-  
-  const handleCheckboxChange = (e: CheckboxChangeEvent, id: React.Key) => {
-    const { checked } = e.target;
-    setSelectedRowKeys(prev => checked
-      ? [...prev, id]
-      : prev.filter(key => key !== id));
   };
 
   const refreshData = () => {
@@ -105,21 +85,6 @@ function PayoutsAdmin() {
 
   const columns = [
     {
-      title: <Checkbox
-        checked={selectAll}
-        onChange={handleSelectAll}
-      />,
-      key: "select",
-      width: 60,
-      align: 'center' as AlignType,
-      render: (_: any, record: any) => (
-        <Checkbox
-          checked={selectedRowKeys.includes(record._id)}
-          onChange={(e: CheckboxChangeEvent) => handleCheckboxChange(e, record._id)}
-        />
-      ),
-    },
-    {
       title: "Payout No",
       dataIndex: "payout_no",
       key: "payout_no",
@@ -136,20 +101,20 @@ function PayoutsAdmin() {
       dataIndex: "balance_origin",
       key: "balance_origin",
       align: 'end' as AlignType,
-      width: 120,
+      width: 150,
     },
     {
       title: "Balance Instructor Paid",
       dataIndex: "balance_instructor_paid",
       key: "balance_instructor_paid",
-      width: 200,
+      width: 220,
       align: 'end' as AlignType,
     },
     {
       title: "Balance Instructor Received",
       dataIndex: "balance_instructor_received",
       key: "balance_instructor_received",
-      width: 200,
+      width: 220,
       align: 'end' as AlignType,
     },
     {
@@ -157,44 +122,89 @@ function PayoutsAdmin() {
       dataIndex: "status",
       key: "status",
       width: 200,
-      align: "center" as AlignType,
-      render: (status: string, record: Payout) => (
-        <div>
-          <Select
-            size="small"
-            className="items-start w-32 text-xs"
-            showSearch
-            optionFilterProp="label"
-            defaultValue={status}
-            value={status}
-            onChange={(newStatus) => {
-              Modal.confirm({
-                title: "Change Status Confirmation!",
-                content: (
-                  <>
-                    <p className="mb-3">Are you sure you want to change the status to "{newStatus}"?</p>
-                    <Input.TextArea
-                      name="comment"
-                      // value="comment"
-                      rows={4}
-                      placeholder="Enter a comment (optional)"
-                      onChange={(e) => setComment(e.target.value)}
-                    />
-                  </>
-                ),
-                onOk: () => onUpdateStatusPayout(record._id, newStatus, comment),
-                onCancel: () => {},
-              });
-            }}
-            options={[
-              { value: 'new', label: 'New' },
-              { value: 'request_payout', label: 'Request Payout' },
-              { value: 'completed', label: 'Completed' },
-              { value: 'rejected', label: 'Rejected' },
-            ]}
-          />
-        </div>
-      ),
+      align: 'center' as AlignType,
+      render: (status: string, record: Payout) => {
+        let color: string;
+        let statusText: string;
+  
+        switch (status) {
+          case 'new':
+            color = '#999999';
+            statusText = 'New';
+            break;
+          case 'request_payout':
+            color = 'blue';
+            statusText = 'Request Paid';
+            break;
+          case 'completed':
+            color = 'green';
+            statusText = 'Completed';
+            break;
+          case 'rejected':
+            color = 'red';
+            statusText = 'Rejected';
+            break;
+          default:
+            color = 'default';
+            statusText = 'Unknown';
+        }
+  
+        return (
+          <div className="flex flex-row items-center justify-center">
+            <Tag color={color}>{statusText}</Tag>
+            {status === 'new' || status === 'request_payout' ? (
+              <div className="flex flex-row gap-1">
+                <Button
+                  type="primary"
+                  size="small"
+                  className="bg-blue-500"
+                  icon={<CheckOutlined />}
+                  onClick={() => {
+                    Modal.confirm({
+                      title: "Send Request Payout Confirmation!",
+                      content: (
+                        <>
+                        <p className="mb-3">Are you sure you want to <strong>Complete Request Payout</strong>?</p>
+                          <Input.TextArea
+                            rows={4}
+                            placeholder="Enter a comment (optional)"
+                            onChange={(e) => setComment(e.target.value)}
+                          />
+                        </>
+                      ),
+                      onOk: () => onUpdateStatusPayout(record._id, 'completed', comment),
+                      onCancel: () => setComment(''),
+                    });
+                  }}
+                />
+                <Button
+                  type="primary"
+                  size="small"
+                  className="bg-red-500"
+                  icon={<CloseOutlined />}
+                  onClick={() => {
+                    Modal.confirm({
+                      title: "Send Request Payout Confirmation!",
+                      content: (
+                        <>
+                        <p className="mb-3">Are you sure you want to <strong>Reject Request Payout</strong>?</p>
+                          <Input.TextArea
+                            rows={4}
+                            placeholder="Enter a comment (optional)"
+                            onChange={(e) => setComment(e.target.value)}
+                          />
+                        </>
+                      ),
+                      onOk: () => onUpdateStatusPayout(record._id, 'rejected', comment),
+                      onCancel: () => setComment(''),
+                    });
+                  }}
+                />
+              </div>
+            ) : null}
+          </div>
+        );
+      },
     },
     {
       title: "Created At",

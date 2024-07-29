@@ -19,7 +19,7 @@ const { Title, Text } = Typography;
 
 export default function InstructorDetail() {
   const { userId } = useParams<{ userId: string }>();
-  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubscribed, setIsSubscribed] = useState(true);
   const [currentInstructor, setCurrentInstructor] = useState<any>(null);
  
 
@@ -110,10 +110,10 @@ export default function InstructorDetail() {
           <Button
             onClick={handleSubscribe}
             type="primary"
-            className={` py-2 px-4 text-lg font-semibold ${isSubscribed ? 'bg-green-500' : 'bg-red-500'}`}
+            className={`bg-red-500 py-2 px-4 text-lg font-semibold`}
             style={{ fontSize: '16px', height: 'auto' }}
           >
-            <BellOutlined />{isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+            <BellOutlined />{isSubscribed ? 'Subscribed' : 'Subscribe'}
           </Button>
         </div>
       </div>

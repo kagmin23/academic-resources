@@ -1,11 +1,9 @@
 import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Tag, Typography, message } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
 import { Purchase } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
-import { createPayout } from "services/All/payoutApiService";
 import { getItemsbyStudentPurchases } from "services/Student/getpurchaseApiService";
 
 const { Title, Text } = Typography;
@@ -18,8 +16,6 @@ function PurchasesInstructor() {
   const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [selectAll, setSelectAll] = useState<boolean>(false);
 
   const fetchPurchases = async () => {
     setLoading(true);
@@ -36,23 +32,6 @@ function PurchasesInstructor() {
   useEffect(() => {
     fetchPurchases();
   }, []);
-
-  const handleSelectAll = (e: CheckboxChangeEvent) => {
-    const { checked } = e.target;
-    if (checked) {
-      setSelectedRowKeys(data.map(item => item._id));
-    } else {
-      setSelectedRowKeys([]);
-    }
-    setSelectAll(checked);
-  };
-
-  const handleCheckboxChange = (e: CheckboxChangeEvent, id: React.Key) => {
-    const { checked } = e.target;
-    setSelectedRowKeys(prev => checked
-      ? [...prev, id]
-      : prev.filter(key => key !== id));
-  };
 
   const refreshData = () => {
     setFilterText('');
@@ -87,49 +66,7 @@ function PurchasesInstructor() {
   //   setData(filteredData);
   // }, [searchTerm]);
 
-  const handleCreatePayout = async () => {
-    if (selectedRowKeys.length === 0) {
-      message.warning("Please select at least one payout to create!");
-      return;
-    }
-    setLoading(true);
-    try {
-      const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
-      console.log("transactions", transactions)
-      const response = await createPayout('',transactions);
-      console.log('Payout response:', response);
-      setSelectedRowKeys([]);
-    } catch (error) {
-      message.error("Failed to create payout");
-      console.error('Failed to create payout:', error);
-    }finally {
-      setLoading(false);
-    }
-  };
-
-
   const columns = [
-    {
-      title: <Checkbox
-        checked={selectAll}
-        onChange={handleSelectAll}
-      />,
-      key: "select",
-      width: 60,
-      align: 'center' as AlignType,
-      render: (_: any, record: any) => (
-        <Checkbox
-          checked={selectedRowKeys.includes(record._id)}
-          onChange={(e: CheckboxChangeEvent) => handleCheckboxChange(e, record._id)}
-        />
-      ),
-    },
-    // {
-    //   title: "ID",
-    //   dataIndex: "_id",
-    //   key: "_id",
-    //   width: 100,
-    // },
     {
       title: "Purchase No",
       dataIndex: "purchase_no",
@@ -161,30 +98,6 @@ function PurchasesInstructor() {
       key: "instructor_name",
       width: 150,
     },
-    {
-        title: "Status",
-        dataIndex: "status",
-        key: "status",
-        width: 120,
-        align: 'center' as AlignType,
-        render: (status: string) => {
-          let color: string;
-          switch (status) {
-            case 'new':
-              color = '#999999';
-              break;
-            case 'request_paid':
-              color = 'blue';
-              break;
-            case 'completed':
-              color = 'green';
-              break;
-            default:
-              color = 'default';
-          }
-          return <Tag color={color}>{status}</Tag>;
-        },
-      },
     {
       title: "Created At",
       dataIndex: "created_at",

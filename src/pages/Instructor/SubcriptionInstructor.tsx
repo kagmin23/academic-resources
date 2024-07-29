@@ -47,7 +47,7 @@ const SubcriptionStudent: React.FC = () => {
   const fetchSubscriptionStatus = async () => {
     setLoading(true);
     try {
-      const response = await getItemBySubscriber("", 1, 10, 1, 1);
+      const response = await getItemBySubscriber("", 1, 10);
       console.log('Fetched instructor data:', response);
       setInstructorSubcription(response);
     } catch (error) {

@@ -9,7 +9,7 @@ import { getReviews } from 'services/All/reviewApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 import { createCart } from '../services/All/cartApiService';
-import { createOrUpdate } from '../services/All/subcriptionApiService';
+import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
@@ -161,7 +161,7 @@ const CourseDetail: React.FC = () => {
                 setLoading(true);
                 try {
                     const response = await getReviews(courseId, 1, 10);
-                    console.log(response.data); // Check the structure here
+                    console.log(response.data);
                     setReviews(Array.isArray(response.data) ? response.data : []);
                 } catch (error) {
                     console.error('Failed to fetch reviews:', error);
@@ -193,14 +193,14 @@ const CourseDetail: React.FC = () => {
             setLoading(false);
         }
     };
-    // const fetchSubscriptionStatus = async () => {
-    //     const response = await getItemBySubscriber("", 1, 10);
-    //     setIsSubscribed(response[0].is_subscribed);
-    // };
-    // useEffect(() => {
-    //     fetchSubscriptionStatus();
-    //     },
-    // []);
+    const fetchSubscriptionStatus = async () => {
+        const response = await getItemBySubscriber("", 1, 10);
+        setIsSubscribed(response[0].is_subscribed);
+    };
+    useEffect(() => {
+        fetchSubscriptionStatus();
+        },
+    []);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -318,11 +318,11 @@ const CourseDetail: React.FC = () => {
                                     onClick={handleSubscribe}
                                     type="primary"
                                     loading={loading}
-                                    className={`mr-2 mt-2 p-1 text-sm font-semibold w-full ${isSubscribed ? 'bg-gray-200 text-black' : 'bg-red-500 text-white'}`}
+                                    className={`mr-2 mt-2 p-1 text-sm font-semibold w-full ${isSubscribed ? 'bg-gray-300 text-black' : 'bg-red-500 text-white'}`}
                                 >
                                     {isSubscribed ? (
                                         <>
-                                            <BellOutlined /> Unsubscribe
+                                            <BellOutlined /> Subscribed
                                         </>
                                     ) : (
                                         'Subscribe'
