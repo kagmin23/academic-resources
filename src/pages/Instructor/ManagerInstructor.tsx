@@ -19,6 +19,7 @@ const { confirm } = Modal;
 const { Header, Content } = Layout;
 const { Text } = Typography;
 const { TextArea } = Input;
+const { Option } = Select;
 
 const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Course[]>([]);
@@ -39,7 +40,7 @@ const ManagerCourseInstructor: React.FC = () => {
   const [logs, setLogs] = useState<LogStatus[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [course_id, setCourseId] = useState<string>("");
-
+  const [filteredStatus, setFilteredStatus] = useState<string>("all");
 
   const navigate = useNavigate();
 
@@ -71,8 +72,6 @@ const ManagerCourseInstructor: React.FC = () => {
   const fetchCourses = async () => {
     try {
       const response = await getCourses('', 1, 10);
-      console.log("courses", response);
-
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
@@ -179,7 +178,6 @@ const ManagerCourseInstructor: React.FC = () => {
         message.error('Validation failed');
       });
   };
-
 
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter((item) =>
@@ -304,7 +302,7 @@ const ManagerCourseInstructor: React.FC = () => {
         <div>
           <Select
             size="small"
-            className="text-xs"
+            className="w-24 text-xs"
             showSearch
             optionFilterProp="label"
             defaultValue={status}
@@ -331,7 +329,12 @@ const ManagerCourseInstructor: React.FC = () => {
               { value: 'waiting_approve', label: 'Waiting Approve' },
               { value: 'active', label: 'Active' },
               { value: 'inactive', label: 'Inactive' },
-            ]}
+            ].map(option => (
+              <Option key={option.value} value={option.value} className={`status-option ${option.value}`}>
+                {option.label}
+              </Option>
+            ))
+          }
           />
         </div>
       ),
@@ -367,6 +370,10 @@ const ManagerCourseInstructor: React.FC = () => {
     },
   ];
 
+  const handleStatusFilterChange = (value: string) => {
+    setFilteredStatus(value);
+  };
+
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Header className="p-0 bg-white">
@@ -391,8 +398,24 @@ const ManagerCourseInstructor: React.FC = () => {
             Add New Course
           </Button>
         </div>
+          <div className="">
+            <Select
+              placeholder="Filter by Status"
+              value={filteredStatus}
+              onChange={handleStatusFilterChange}
+              className="w-full mt-2 md:w-1/6 md:mt-0"
+            >
+              <Option value="all">All</Option>
+              <Option value="new">New</Option>
+              <Option value="waiting_approve">Waiting Approve</Option>
+              <Option value="approve">Approve</Option>
+              <Option value="reject">Reject</Option>
+              <Option value="active">Active</Option>
+              <Option value="inactive">Inactive</Option>
+            </Select>
+          </div>
       </Header>
-      <Content className="mx-4 my-4 overflow-y-auto xl:mx-6">
+      <Content className="mx-4 my-16 overflow-y-auto xl:mx-6">
         <Table
           style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 180px)' }}
           pagination={{ pageSize: 6 }}
@@ -456,12 +479,12 @@ const ManagerCourseInstructor: React.FC = () => {
                       <div className="flex mb-5 space-x-5">
                         <Button className="text-white bg-teal-600">All log</Button>
                         <Select className="w-40">
-                          <Select.Option value="New">New</Select.Option>
-                          <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-                          <Select.Option value="Approve">Approve</Select.Option>
-                          <Select.Option value="Reject">Reject</Select.Option>
-                          <Select.Option value="Active">Active</Select.Option>
-                          <Select.Option value="Inactive">Inactive</Select.Option>
+                          <Select.Option value="new">New</Select.Option>
+                          <Select.Option value="waiting_approve">Waiting approve</Select.Option>
+                          <Select.Option value="approve">Approve</Select.Option>
+                          <Select.Option value="reject">Reject</Select.Option>
+                          <Select.Option value="active">Active</Select.Option>
+                          <Select.Option value="inactive">Inactive</Select.Option>
                         </Select>
                         <Select className="w-40">
                           <Select.Option value="all">All</Select.Option>

@@ -1,5 +1,5 @@
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import { Button, Form, Input, Radio, message } from 'antd';
+import { Form, Input, Radio, message } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import { User } from 'models/types';
 import React, { useState } from 'react';
@@ -15,7 +15,6 @@ const SignUp: React.FC = () => {
 
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
-    // Reset form fields when role changes
     form.resetFields();
   };
 
@@ -51,14 +50,6 @@ const SignUp: React.FC = () => {
     console.error();
   };
 
-  //   const handleVideoChange = (file: RcFile) => {
-  //     setFormData(prev => ({
-  //       ...prev,
-  //       video: file
-  //     }));
-  //     return false; // Prevent automatic upload
-  //   };
-
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gray-100">
       <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 background-transition"></div>
@@ -90,7 +81,8 @@ const SignUp: React.FC = () => {
                 </Form.Item>
                 <Form.Item
                   name="video"
-                  rules={[{ required: false, message: 'Please enter the video URL' }]}>
+                  label="Video Url"
+                  rules={[{ required: true, message: 'Please enter the video URL' }]}>
                   <Input placeholder="Video URL" size="middle" />
                 </Form.Item>
                 <p className="text-xs italic font-bold text-red-500">* Please enter the information for Instructor required before!</p>

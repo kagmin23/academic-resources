@@ -1,106 +1,228 @@
-import React, { useState } from 'react';
-import { Card, Table, Typography, Image } from 'antd';
-import { useNavigate } from 'react-router-dom';
+import { DoubleRightOutlined, FilterOutlined, ReadOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
+import { CheckboxChangeEvent } from "antd/es/checkbox";
+import { Purchase } from "models/types";
+import { AlignType } from 'rc-table/lib/interface';
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { getItemsbyStudentPurchases } from "services/Student/getpurchaseApiService";
 
-const { Title } = Typography;
+const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
+const { Option } = Select;
 
-const coursesData = [
-  {
-    key: '1',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg',
-    name: 'How To Teach Online Course Effectively',
-    result: '100%',
-    expiration: 'April 20, 2023 10:04 pm',
-    endTime: 'February 9, 2023 10:04 pm',
-  },
-  {
-    key: '2',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/12/create-an-lms-website-with-learnpress-3-400x300.jpg',
-    name: 'Create an LMS Website with LeanPress',
-    result: '85.71%',
-    expiration: 'March 3, 2023 7:15 am',
-    endTime: 'January 3, 2023 3:15 pm',
-  },
-  {
-    key: '3',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/12/create-an-lms-website-with-learnpress-3-400x300.jpg',
-    name: 'Introduction LearnPress - LMS plugin',
-    result: '80%',
-    expiration: 'June 24, 2023 11:12 am',
-    endTime: 'April 21, 2023 9:16 am',
-  },
-  {
-    key: '4',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2022/12/create-an-lms-website-with-learnpress-3-400x300.jpg',
-    name: 'Introduction LearnPress - LMS plugin',
-    result: '0%',
-    expiration: 'November 27, 2023 5:46 am',
-    endTime: '-',
-  },
-  {
-    key: '5',
-    image: 'https://accountlp.thimpress.com/wp-content/uploads/2023/08/new-hEADWAY.png',
-    name: 'New Headway',
-    result: '100%',
-    expiration: 'July 3, 2024 1:43 pm',
-    endTime: 'April 11, 2024 8:22 am',
-  },
-];
+export interface Subcription {
+  _id:	string,
+  subscriber_id:	string,
+  subscriber_name:	string,
+  instructor_id:	string,
+  instructor_name:	string,
+  is_subscribed:	boolean,
+  created_at:	Date,
+  updated_at:	Date,
+  is_deleted:	boolean,
+}
 
-const columns = [
-  {
-    title: 'Image',
-    dataIndex: 'image',
-    key: 'image',
-    render: (text: string) => <Image src={text} width={100} />,
-  },
-  {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-  },
-  {
-    title: 'Result',
-    dataIndex: 'result',
-    key: 'result',
-  },
-  {
-    title: 'Expiration time',
-    dataIndex: 'expiration',
-    key: 'expiration',
-  },
-  {
-    title: 'End time',
-    dataIndex: 'endTime',
-    key: 'endTime',
-  },
-];
-
-const ProfileStudent = () => {
-  const [showMyCourses, setShowMyCourses] = useState(true); // Show My Courses section initially
-
+function ListCoursesStudent() {
+  const [data, setData] = useState<Purchase[]>([]);
+  const [filterText, setFilterText] = useState<string>('');
+  const [filterStatus, setFilterStatus] = useState<string>('');
+  const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
+  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
+  const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [statuses, setStatuses] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
 
-  const navigateToAssignments = () => {
-    navigate('/lesson-student');
+  const fetchPurchases = async () => {
+    setLoading(true);
+    try {
+      const payouts = await getItemsbyStudentPurchases(1, 10);
+      setData(payouts);
+    } catch (error) {
+      console.error('Error fetching purchases:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const navigateToOrders = () => {
-    navigate('/save');
+  useEffect(() => {
+    fetchPurchases();
+  }, []);
+
+  const handleSelectAll = (e: CheckboxChangeEvent) => {
+    const { checked } = e.target;
+    if (checked) {
+      setSelectedRowKeys(data.map(item => item._id));
+    } else {
+      setSelectedRowKeys([]);
+    }
+    setSelectAll(checked);
   };
+
+  const handleCheckboxChange = (e: CheckboxChangeEvent, id: React.Key) => {
+    const { checked } = e.target;
+    setSelectedRowKeys(prev => checked
+      ? [...prev, id]
+      : prev.filter(key => key !== id));
+  };
+
+  const refreshData = () => {
+    setFilterText('');
+    setFilterStatus('');
+    setFilterDate(null);
+    fetchPurchases();
+  };
+
+  const handleFilter = () => {
+    let filteredData = data;
+
+    if (filterStatus) {
+      filteredData = filteredData.filter((item) => item.status === filterStatus);
+    }
+
+    if (filterDate) {
+      filteredData = filteredData.filter((item) => {
+        const [startDate, endDate] = filterDate;
+        const itemDate = new Date(item.created_at);
+        return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
+      });
+    }
+
+    setData(filteredData);
+  };
+  
+  const getTotalListCourseStudent = (): number => {
+    return data.length;
+  };
+
+  // const onChangeStatus = (value: string) => {
+  //   const savedStatuses = JSON.parse(localStorage.getItem('listCourseStatuses') || '{}');
+  //   savedStatuses[value] = value;
+  //   localStorage.setItem('purchaseStatuses', JSON.stringify(savedStatuses));
+  //   setData(prevData => prevData.map(item =>
+  //     item._id === value ? { ...item, status: value } : item
+  //   ));
+  //   console.log(`Updated status to ${value}`);
+  // }
+
+  const columns = [
+    {
+      title: 'STT',
+      dataIndex: 'stt',
+      width: 50,
+      key: 'stt',
+      align: "center" as AlignType,
+      render: (_: any, __: any, index: number) => index + 1,
+    },
+    {
+      title: "Course Name",
+      dataIndex: "course_name",
+      key: "course_name",
+      width: 200,
+    },
+    {
+      title: "Instructor Name",
+      dataIndex: "instructor_name",
+      key: "instructor_name",
+      width: 150,
+    },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status_list",
+    //   key: "status_list",
+    //   width: 120,
+    //   align: 'center' as AlignType,
+    //   render: (status: string) => {
+    //     return (
+    //       <Select
+    //         value={status || "Process"}
+    //         onChange={(value) => onChangeStatus(value)}
+    //       >
+    //         <Option className="text-xs" value="Process">Process</Option>
+    //         <Option className="text-xs" value="Success">Success</Option>
+    //       </Select>
+    //     )
+    //   },
+    // },
+    {
+      title: "Action",
+      dataIndex: "course_id",
+      key: "course_id",
+      width: 100,
+      align: 'center' as AlignType,
+      render: (course_id: string) => (
+        <div className="text-xs">
+          <Button className="text-xs bg-slate-200"
+              onClick={() => navigate(`/student/student-learning/${course_id}`)}
+            >Learn Now<DoubleRightOutlined /></Button>
+        </div>
+      )
+    },
+  ];
 
   return (
-    <div className="flex flex-col h-screen bg-[#ffffff] p-4">
-      <div className="flex-1 overflow-y-auto">
-        {showMyCourses && (
-          <Card style={{ margin: 20 }}>
-            <Title level={4}>My Courses</Title>
-            <Table dataSource={coursesData} columns={columns} />
-          </Card>
-        )}
+    <Layout>
+      <div className="p-5">
+        <div className="py-5">
+          <h1 className="text-lg font-bold float-start sm:text-2xl">
+            <ReadOutlined className="mr-2" /> Wish List
+          </h1>
+        </div>
+        <div className="my-5">
+          <div className="flex flex-row items-center justify-between">
+            <Input
+              placeholder="Search"
+              prefix={<SearchOutlined />}
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-1/4 h-8 border-2 border-gray-300 border-solid rounded float-end sm:text-sm"
+            />
+            <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={12}>
+              <FilterOutlined /> Filter:
+              <RangePicker
+                size="small"
+                className="m-4"
+                onChange={(dates, dateStrings) => setFilterDate(dateStrings as [string, string])}
+              />
+              <div className="flex items-center justify-center gap-2">
+                <Select
+                  className="w-36"
+                  size="small"
+                  placeholder="Status"
+                  options={[
+                    { value: 'process', label: 'Process' },
+                    { value: 'success', label: 'Success' },
+                  ]}
+                  onChange={(value) => setFilterStatus(value)}
+                />
+                <Button className="text-xs text-white bg-blue-600" onClick={handleFilter}>Apply</Button>
+                <Button className="text-white bg-blue-600" onClick={refreshData}><RedoOutlined /></Button>
+              </div>
+            </Space>
+          </div>
+          <div>
+            <span className='px-3 text-xs font-semibold'>Total Courses: {getTotalListCourseStudent()}</span>
+          </div>
+          <div className="py-2 overflow-x-auto">
+            {loading ?
+              (<div className="flex items-center justify-center h-64">
+                <Spin size="large" />
+              </div>) :
+              (<Table
+                rowKey="_id"
+                columns={columns}
+                dataSource={data}
+                pagination={{ pageSize: 10 }}
+                // scroll={{x: 'max-content'}}
+              />)
+            }
+          </div>
+        </div>
       </div>
-    </div>
+    </Layout>
   );
-};
+}
 
-export default ProfileStudent;
+export default ListCoursesStudent;

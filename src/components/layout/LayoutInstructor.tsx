@@ -1,9 +1,7 @@
 import {
-  BellOutlined,
   BookOutlined,
-  MailOutlined,
   MenuOutlined,
-  ShoppingCartOutlined,
+  ShoppingCartOutlined
 } from '@ant-design/icons';
 import {
   Avatar,
@@ -19,7 +17,7 @@ import Footer from 'components/Footer';
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import 'tailwindcss/tailwind.css';
-import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
+import { getCurrentUser } from '../../services/AdminsApi/UserService';
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -32,13 +30,13 @@ interface MainLayoutProps {
 const LayoutInstructor: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null); // Define type based on your API response
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
       try {
-        const response = await getCurrentUser(); // Replace with your API call
+        const response = await getCurrentUser();
         if (response.success) {
           setCurrentUser(response.data);
         } else {
@@ -71,15 +69,6 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
   };
 
   const handleLogout = async () => {
-    // const result = await logoutApiService();
-    // if (result.success) {
-    //   navigate('/log-in');
-    // } else {
-    //   notification.error({
-    //     message: 'Error',
-    //     description: result.message,
-    //   });
-    // }
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("exp token");
@@ -106,7 +95,6 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
     </Menu>
   );
 
-  // Define notification counts or fetch them from API
   const notificationCountBell = 7;
   const notificationCountCart = 9;
 
@@ -125,19 +113,6 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-         {/*  <Badge count={notificationCountBell} offset={[3, 1]}>
-            <div className="flex items-center space-x-4 text-xl text-white">
-              <BellOutlined />
-            </div>
-          </Badge>
-
-          <Badge count={notificationCountCart} offset={[2, 5]}>
-            <div className="flex items-center space-x-4 text-xl text-white">
-              <Link to={`#`}>
-                <MailOutlined className="text-xl" />
-              </Link>
-            </div>
-          </Badge> */}
 
           <Badge count={notificationCountCart} offset={[5, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">
@@ -149,7 +124,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
           {currentUser && (
             <Dropdown overlay={profileMenu} trigger={['click']}>
               <Avatar
-                src={currentUser.avatar} // Assuming `avatar` is the correct field in your API response
+                src={currentUser.avatar}
                 className="text-4xl text-white"
                 style={{ width: 35, height: 35 }}
               />
@@ -176,9 +151,9 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             <Menu.Item key="3" className="mx-2">
               <Link to={`blog`}>Blog</Link>
             </Menu.Item>
-            <Menu.Item key="5" className="mx-2">
+            {/* <Menu.Item key="5" className="mx-2">
               <Link to={`top-instructor`}>Rankings</Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="6" className="mx-2">
               <Link to={`about`}>About</Link>
             </Menu.Item>

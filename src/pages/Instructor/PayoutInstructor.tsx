@@ -1,19 +1,17 @@
 import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, message } from "antd";
+import { Button, Checkbox, DatePicker, Input, Layout, Modal, Select, Space, Spin, Table, Typography, message } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
-import { Purchase } from "models/types";
+import { Payout } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
-import { getPurchasesAll } from "services/AdminsApi/getPurchasesApiService";
-import { createPayout } from "services/All/payoutApiService";
-import './stylesAdmin.css';
+import { getPayouts, updateStatusPayout } from "services/All/payoutApiService";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
-function PurchasesAdmin() {
-  const [data, setData] = useState<Purchase[]>([]);
+function PayoutsInstructor() {
+  const [data, setData] = useState<Payout[]>([]);
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
   const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
@@ -21,21 +19,24 @@ function PurchasesAdmin() {
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
+  const [comment, setComment] = useState('');
 
-  const fetchPurchases = async () => {
+  const fetchPayouts = async () => {
     setLoading(true);
     try {
-      const payouts = await getPurchasesAll(1, 10);
-      setData(payouts);
+      const response = await getPayouts(1, 10);
+      // setData(Array.isArray(response) ? response : []);
+      setData(response);
     } catch (error) {
-      console.error('Error fetching purchases:', error);
+      console.error('Error fetching payouts:', error);
+      setData([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchPurchases();
+    fetchPayouts();
   }, []);
 
   const handleSelectAll = (e: CheckboxChangeEvent) => {
@@ -55,20 +56,40 @@ function PurchasesAdmin() {
       : prev.filter(key => key !== id));
   };
 
+  const onUpdateStatusPayout = async (payoutId: string, newStatus: string, comment: string) => {
+    try {
+      console.log(`Changing status of payout with ID ${payoutId} to ${newStatus}`);
+      const response = await updateStatusPayout(payoutId, newStatus, '');
+      console.log("Response:", response);
+  
+      if (response) {
+        message.success('Changed Status Successfully!');
+        setData(prevData =>
+          prevData.map(payout =>
+            payout._id === payoutId ? { ...payout, status: newStatus } : payout
+          )
+        );
+      }
+    } catch (error) {
+      message.error('Failed to update payout status!');
+      console.error('Error:', error);
+    }
+  };
+
   const refreshData = () => {
     setFilterText('');
     setFilterStatus('');
     setFilterDate(null);
-    fetchPurchases();
+    fetchPayouts();
   };
 
   const handleFilter = () => {
     let filteredData = data;
-
+  
     if (filterStatus) {
       filteredData = filteredData.filter((item) => item.status === filterStatus);
     }
-
+  
     if (filterDate) {
       filteredData = filteredData.filter((item) => {
         const [startDate, endDate] = filterDate;
@@ -76,28 +97,8 @@ function PurchasesAdmin() {
         return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
       });
     }
-
+  
     setData(filteredData);
-  };
-
-  const handleCreatePayout = async () => {
-    if (selectedRowKeys.length === 0) {
-      message.warning("Please select at least one payout to create!");
-      return;
-    }
-    setLoading(true);
-    try {
-      const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
-      console.log("transactions", transactions)
-      const response = await createPayout('', transactions);
-      console.log('Payout response:', response);
-      setSelectedRowKeys([]);
-    } catch (error) {
-      message.error("Failed to create payout");
-      console.error('Failed to create payout:', error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   const columns = [
@@ -117,34 +118,9 @@ function PurchasesAdmin() {
       ),
     },
     {
-      title: "Purchase No",
-      dataIndex: "purchase_no",
-      key: "purchase_no",
-      width: 150,
-    },
-    {
-      title: "Cart No",
-      dataIndex: "cart_no",
-      key: "cart_no",
-      width: 150,
-    },
-    {
-      title: "Course Name",
-      dataIndex: "course_name",
-      key: "course_name",
-      width: 200,
-    },
-    {
-      title: "Price Paid",
-      dataIndex: "price_paid",
-      key: "price_paid",
-      align: 'end' as AlignType,
-      width: 120,
-    },
-    {
-      title: "Student Name",
-      dataIndex: "student_name",
-      key: "student_name",
+      title: "Payout No",
+      dataIndex: "payout_no",
+      key: "payout_no",
       width: 150,
     },
     {
@@ -154,11 +130,65 @@ function PurchasesAdmin() {
       width: 150,
     },
     {
+      title: "Balance Origin",
+      dataIndex: "balance_origin",
+      key: "balance_origin",
+      align: 'end' as AlignType,
+      width: 120,
+    },
+    {
+      title: "Balance Instructor Paid",
+      dataIndex: "balance_instructor_paid",
+      key: "balance_instructor_paid",
+      width: 200,
+      align: 'end' as AlignType,
+    },
+    {
+      title: "Balance Instructor Received",
+      dataIndex: "balance_instructor_received",
+      key: "balance_instructor_received",
+      width: 200,
+      align: 'end' as AlignType,
+    },
+    {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: 120,
-      align: 'center' as AlignType,
+      width: 200,
+      align: "center" as AlignType,
+      render: (status: string, record: Payout) => (
+        <div>
+          <Select
+            size="small"
+            className="items-start w-32 text-xs"
+            showSearch
+            optionFilterProp="label"
+            defaultValue={status}
+            value={status}
+            onChange={(newStatus) => {
+              Modal.confirm({
+                title: "Change Status Confirmation!",
+                content: (
+                  <>
+                    <p className="mb-3">Are you sure you want to change the status to "{newStatus}"?</p>
+                    <Input.TextArea
+                      rows={4}
+                      placeholder="Enter a comment (optional)"
+                      onChange={(e) => setComment(e.target.value)}
+                    />
+                  </>
+                ),
+                onOk: () => onUpdateStatusPayout(record._id, newStatus, comment),
+                onCancel: () => {},
+              });
+            }}
+            options={[
+              { value: 'new', label: 'New' },
+              { value: 'request_payout', label: 'Request Payout' },
+            ]}
+          />
+        </div>
+      ),
     },
     {
       title: "Created At",
@@ -183,7 +213,7 @@ function PurchasesAdmin() {
       <div className="p-5">
         <div className="py-5">
           <h1 className="text-lg font-bold float-start sm:text-2xl">
-            <HistoryOutlined className="mr-2" /> Purchases History
+            <HistoryOutlined className="mr-2" /> Payout History
           </h1>
         </div>
 
@@ -210,7 +240,7 @@ function PurchasesAdmin() {
                   placeholder="Status"
                   options={[
                     { value: 'new', label: 'New' },
-                    { value: 'request_paid', label: 'Request Paid' },
+                    { value: 'request_payout', label: 'Request Payout' },
                     { value: 'completed', label: 'Completed' },
                   ]}
                   onChange={(value) => setFilterStatus(value)}
@@ -222,17 +252,18 @@ function PurchasesAdmin() {
           </div>
           <div className="overflow-x-auto">
             {loading ?
-              (<div className="flex items-center justify-center h-64">
-                <Spin size="large" />
-              </div>) :
-              (<Table
-                rowKey="_id"
-                columns={columns}
-                dataSource={data}
-                pagination={{ pageSize: 10 }}
-                scroll={{ x: 'max-content' }}
-              />)
-            }
+            ( <div className="flex items-center justify-center h-64">
+              <Spin size="large"></Spin>
+              </div>) : (
+          <Table
+            columns={columns}
+            dataSource={Array.isArray(data) ? data : []}
+            rowKey="_id"
+            loading={loading}
+            pagination={{ pageSize: 10 }}
+            scroll={{x: 'max-content'}}
+          />
+        )}
           </div>
         </div>
       </div>
@@ -240,4 +271,4 @@ function PurchasesAdmin() {
   );
 }
 
-export default PurchasesAdmin;
+export default PayoutsInstructor;

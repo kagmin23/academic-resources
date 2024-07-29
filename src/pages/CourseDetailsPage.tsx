@@ -1,15 +1,18 @@
 
 import { BellOutlined, ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, Button, Modal, Tabs, message,notification } from 'antd';
+import { Avatar, Button, Card, Modal, Rate, Tabs, Typography, message, notification } from 'antd';
+import { Review } from 'models/types';
+import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { getReviews } from 'services/All/reviewApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
-import { createCart } from '../services/All/CartApiService';
+import { getCurrentUser } from '../services/AdminsApi/UserService';
+import { createCart } from '../services/All/cartApiService';
 import { createOrUpdate } from '../services/All/subcriptionApiService';
-import { useNavigate } from 'react-router-dom';
-import { getCurrentUser } from '../services/AdminsApi/UserService'
 
 const { TabPane } = Tabs;
+const { Title, Paragraph } = Typography;
 
 interface Lesson {
     _id: string;
@@ -23,7 +26,7 @@ interface Session {
     _id: string;
     name: string;
     position_order: number;
-    lession_list: Lesson[];
+    lesson_list: Lesson[];
 }
 
 interface CourseDetailType {
@@ -110,10 +113,10 @@ const CourseDetail: React.FC = () => {
         }
       };
     
-
-    const [loading, setLoading] = useState(false);
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
         const checkLoginStatus = async () => {
@@ -129,7 +132,6 @@ const CourseDetail: React.FC = () => {
         checkLoginStatus();
     }, []);
 
-
     useEffect(() => {
         if (!courseId) {
             console.error('Course ID is not available');
@@ -139,7 +141,9 @@ const CourseDetail: React.FC = () => {
             try {
                 const response = await getCourseDetail(courseId);
                 setCourseDetail(response.data);
+                // Nếu đã đăng nhập, kiểm tra xem người dùng đã đăng ký khóa học chưa
                 if (isLoggedIn) {
+                    // Tạm thời cho là `subscriptionInfo` sẽ chứa thông tin đăng ký từ API
                     const response = await fetch(`/api/subscription-status/${courseId}`);
                     const data = await response.json();
                     setIsSubscribed(data.is_subscribed);
@@ -151,6 +155,24 @@ const CourseDetail: React.FC = () => {
         fetchCourseDetail();
     }, [courseId, isLoggedIn]);
 
+    useEffect(() => {
+        if (courseId) {
+            const fetchReviews = async () => {
+                setLoading(true);
+                try {
+                    const response = await getReviews(courseId, 1, 10);
+                    console.log(response.data); // Check the structure here
+                    setReviews(Array.isArray(response.data) ? response.data : []);
+                } catch (error) {
+                    console.error('Failed to fetch reviews:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+            fetchReviews();
+        }
+    }, [courseId]);
+
     const handleSubscribe = async () => {
         if (!courseDetail) return;
 
@@ -158,20 +180,12 @@ const CourseDetail: React.FC = () => {
             message.warning('Please log in to subscribe.');
             return;
         }
-
         setLoading(true);
 
         try {
-            const response = await createOrUpdate(courseDetail.instructor_id);
-            setSubscriptionInfo(response.data);
-            const wasSubscribed = isSubscribed;
-            setIsSubscribed(response.data.is_subscribed);
-
-            if (wasSubscribed && !response.data.is_subscribed) {
-                message.success('Unsubscribed Successfully!');
-            } else if (!wasSubscribed && response.data.is_subscribed) {
-                message.success('Subscribed Successfully!');
-            }
+            await createOrUpdate(courseDetail.instructor_id);
+            // fetchSubscriptionStatus();
+            message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
         } catch (error) {
             console.error('Failed to subscribe:', error);
             message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
@@ -179,6 +193,14 @@ const CourseDetail: React.FC = () => {
             setLoading(false);
         }
     };
+    // const fetchSubscriptionStatus = async () => {
+    //     const response = await getItemBySubscriber("", 1, 10);
+    //     setIsSubscribed(response[0].is_subscribed);
+    // };
+    // useEffect(() => {
+    //     fetchSubscriptionStatus();
+    //     },
+    // []);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -289,9 +311,9 @@ const CourseDetail: React.FC = () => {
                         <div className="flex items-center">
                             <Avatar src={courseDetail.instructor_id} size="large" />
 
-                            <div className="ml-4 flex flex-col">
+                            <div className="flex flex-col ml-4">
                                 <div  onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
-                                <a href="#" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
+                                <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
 
                                 <Button
                                     onClick={handleSubscribe}
@@ -324,13 +346,13 @@ const CourseDetail: React.FC = () => {
                                         </h3>
                                         {expandedSessionId === session._id && (
                                             <ul>
-                                                {session.lession_list && session.lession_list.length > 0 ? (
-                                                    session.lession_list.map((lesson) => (
+                                                {session.lesson_list && session.lesson_list.length > 0 ? (
+                                                    session.lesson_list.map((lesson) => (
                                                         <li key={lesson._id} className="flex items-center py-2">
                                                             <div className="flex-shrink-0 w-8 h-8 bg-gray-200 rounded-full"></div>
                                                             <div className="ml-4">
                                                                 <div className="text-lg font-medium">{lesson.name}</div>
-                                                                <div className="text-gray-600">{lesson.lession_type} - {lesson.full_time} mins</div>
+                                                                <div className="text-gray-600">{lesson.lession_type} {lesson.full_time} mins</div>
                                                             </div>
                                                         </li>
                                                     ))
@@ -346,10 +368,32 @@ const CourseDetail: React.FC = () => {
                             )}
                         </TabPane>
                         <TabPane tab="Reviews" key="2">
-                            <div className="p-4">
-                                {/* Render reviews here */}
+    <div className="p-4">
+        {Array.isArray(reviews) && reviews.length > 0 ? (
+            reviews.map((review, index) => (
+                <Card
+                    key={index}
+                    className="mb-4"
+                    title={<Title level={4}>{review.course_name}</Title>}
+                    extra={
+                        <div>
+                            <Rate disabled value={review.rating} />
+                            <div className="text-sm text-gray-500">
+                                {moment(review.created_at).format('YYYY-MM-DD')} - {moment(review.updated_at).format('YYYY-MM-DD')}
                             </div>
-                        </TabPane>
+                        </div>
+                    }
+                >
+                    <Paragraph strong>{review.reviewer_name}</Paragraph>
+                    <Paragraph>{review.comment}</Paragraph>
+                </Card>
+            ))
+        ) : (
+            <p>No reviews available.</p>
+        )}
+    </div>
+</TabPane>
+
                     </Tabs>
                 </div>
             </div>

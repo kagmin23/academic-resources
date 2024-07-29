@@ -292,6 +292,20 @@ export class Course {
     is_deleted:	boolean,
   }
 
+  export interface Review {
+    _id:	string,
+    course_id:	string,
+    user_id:	string,
+    course_name:	string | null,
+    reviewer_id:	string,
+    reviewer_name:	string,
+    comment:	string,
+    rating:	number,
+    created_at:	Date,
+    updated_at:	Date,
+    is_deleted:	boolean,
+  }
+
   export interface Subcription {
     _id:	string,
     subscriber_id:	string,
@@ -304,27 +318,26 @@ export class Course {
     is_deleted:	boolean,
   }
 
-//   interface CoursesClient {
-//     _id: string;
-//     name: string;
-//     description: string;
-//     category_id: string;
-//     category_name: string;
-//     status: string;
-//     video_url: string;
-//     image_url: string;
-//     price_paid: number;
-//     price: number;
-//     discount: number;
-//     average_rating: number;
-//     review_count: number;
-//     instructor_id: string;
-//     instructor_name: string;
-//     full_time: number;
-//     session_list: Session[];
-//     is_in_cart: boolean;
-//     is_purchased: boolean;
-//     created_at: Date;
-//     updated_at: Date;
-//     is_deleted: boolean;
-// }
+export interface Transaction {
+  _id: string;
+  price_paid: number;
+  price: number;
+  discount: number;
+  purchase_id: string;
+  created_at: Date;
+}
+
+export interface Payout {
+  _id: string;
+  payout_no: string;
+  status: string;
+  instructor_id: string;
+  instructor_ratio: number;
+  balance_origin: number;
+  balance_instructor_paid: number;
+  balance_instructor_received: number;
+  transactions: Transaction[];
+  created_at: Date;
+  updated_at: Date;
+  is_deleted: boolean;
+}

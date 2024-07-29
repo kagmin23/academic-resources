@@ -2,7 +2,7 @@ import { message } from 'antd';
 import axios from 'axios';
 import { HOST_MAIN } from 'services/apiService';
 
-export const getItemsbyStudentPurchases = async (
+export const getPurchasesAll = async (
     pageNum: number,
     pageSize: number
   ) => {
@@ -10,7 +10,7 @@ export const getItemsbyStudentPurchases = async (
     const token = localStorage.getItem("token");
     
     const response = await axios.post(
-      `${HOST_MAIN}/api/purchase/search-for-student`,
+      `${HOST_MAIN}/api/purchase/search`,
       {
         searchCondition: {
           purchase_no: "",

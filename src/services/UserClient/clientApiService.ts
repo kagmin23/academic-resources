@@ -40,7 +40,6 @@ export const getCourseDetail = async (courseId: string) => {
   }
 };
 
-
 export const getCategories = async (keyword: string, pageNum: number, pageSize: number) => {
   const token = localStorage.getItem('');
 
@@ -64,7 +63,7 @@ export const getCategories = async (keyword: string, pageNum: number, pageSize: 
 };
 
 export const getUserDetail = async (userId: string) => {
-  const token = localStorage.getItem(''); 
+  const token = localStorage.getItem('');
 
   return apiRequest(`/api/users/${userId}`, {
     method: 'GET',

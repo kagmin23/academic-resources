@@ -3,9 +3,9 @@ import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { getCarts } from 'services/All/CartApiService';
+import { getCarts } from 'services/All/cartApiService';
 import 'tailwindcss/tailwind.css';
-import { getCurrentUser } from '../../services/AdminsApi/UserService'; // Adjust path as per your project structure
+import { getCurrentUser } from '../../services/AdminsApi/UserService';
 
 const { Header, Content } = Layout;
 const { Search } = Input;
@@ -14,7 +14,7 @@ const { SubMenu } = Menu;
 const LayoutStudent: React.FC = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
-  const [currentUser, setCurrentUser] = useState<any>(null); // Define type based on your API response
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [notificationCountCart, setNotificationCountCart] = useState<number>(0);
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ const LayoutStudent: React.FC = () => {
 
   const fetchCurrentUser = async () => {
     try {
-      const response = await getCurrentUser(); // Fetch current user data including avatar
+      const response = await getCurrentUser();
       if (response.success) {
         setCurrentUser(response.data);
       } else {
@@ -35,7 +35,7 @@ const LayoutStudent: React.FC = () => {
 
   const fetchCartData = async () => {
     try {
-      const response = await getCarts('', 1, 100); // Fetch cart data with a large page size to get all items
+      const response = await getCarts('', 1, 100);
       if (response.success) {
         setNotificationCountCart(response.data.length);
       } else {
@@ -69,15 +69,6 @@ const LayoutStudent: React.FC = () => {
   };
 
   const handleLogout = async () => {
-    // const result = await logoutApiService();
-    // if (result.success) {
-    //   navigate('/log-in');
-    // } else {
-    //   notification.error({
-    //     message: 'Error',
-    //     description: result.message,
-    //   });
-    // }
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("exp token");
@@ -118,22 +109,6 @@ const LayoutStudent: React.FC = () => {
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-          
-          {/* <Badge count={notificationCountBell} offset={[2, 5]}>
-            <div className="flex items-center space-x-4 text-xl text-white">
-              <Link to={'#'}>
-                <BellOutlined />
-              </Link>
-            </div>
-          </Badge>
-
-          <Badge count={notificationCountCart} offset={[5, 5]}>
-            <div className="flex items-center space-x-4 text-xl text-white">
-              <Link to={`#`}>
-                <MailOutlined className="text-xl" />
-              </Link>
-            </div>
-          </Badge> */}
 
           <Badge count={notificationCountCart} offset={[5, 5]}>
             <div className="flex items-center space-x-4 text-xl text-white">
@@ -145,7 +120,7 @@ const LayoutStudent: React.FC = () => {
           {currentUser && (
             <Dropdown overlay={profileMenu} trigger={['click']}>
               <Avatar
-                src={currentUser.avatar} // Assuming `avatar` is the correct field in your API response
+                src={currentUser.avatar}
                 className="text-4xl text-white"
                 style={{ width: 35, height: 35 }}
               />
@@ -172,9 +147,9 @@ const LayoutStudent: React.FC = () => {
             <Menu.Item key="3" className="mx-2">
               <Link to={`blog`}>Blog</Link>
             </Menu.Item>
-            <Menu.Item key="5" className="mx-2">
+            {/* <Menu.Item key="5" className="mx-2">
               <Link to={`top-instructor`}>Rankings</Link>
-            </Menu.Item>
+            </Menu.Item> */}
             <Menu.Item key="6" className="mx-2">
               <Link to={`about`}>About</Link>
             </Menu.Item>

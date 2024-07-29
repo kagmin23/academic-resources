@@ -2,7 +2,7 @@ import { BellOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input, Layout, Table, Tabs, message } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { createOrUpdate, getItemByInstructor, getItemBySubscriber } from 'services/All/subcriptionApiService';
+import { createOrUpdate, getItemByInstructorSubcription, getItemBySubscriber } from 'services/All/subcriptionApiService';
 
 const { Header, Content } = Layout;
 const { TabPane } = Tabs;
@@ -22,6 +22,7 @@ export interface Subcription {
 const SubcriptionStudent: React.FC = () => {
   const [subcriptionStudent, setSubcriptionStudent] = useState<Subcription[]>([]);
   const [subcriptionInstructor, setSubcriptionInstructor] = useState<Subcription[]>([]);
+  const [instructorSubcription, setInstructorSubcription] = useState<Subcription[]>([]);
   const [filteredData, setFilteredData] = useState<Subcription[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [isSubscribed, setIsSubscribed] = useState(true);
@@ -29,7 +30,7 @@ const SubcriptionStudent: React.FC = () => {
   const fetchSubscribers = async () => {
     setLoading(true);
     try {
-      const response = await getItemByInstructor("", 1, 10);
+      const response = await getItemByInstructorSubcription("", 1, 10);
       console.log('Fetched subscribers data:', response);
       setSubcriptionInstructor(response);
     } catch (error) {
@@ -48,6 +49,7 @@ const SubcriptionStudent: React.FC = () => {
     try {
       const response = await getItemBySubscriber("", 1, 10, 1, 1);
       console.log('Fetched instructor data:', response);
+      setInstructorSubcription(response);
     } catch (error) {
       message.error('Error fetching subscription data');
     } finally {
@@ -93,7 +95,7 @@ const SubcriptionStudent: React.FC = () => {
       render: (text: any, record: Subcription, index: number) => index + 1,
     },
     {
-      title: 'Subscribers Name',
+      title: 'Subscriber Name',
       dataIndex: 'subscriber_name',
       key: 'subscriber_name',
     },

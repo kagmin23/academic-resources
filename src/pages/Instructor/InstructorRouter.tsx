@@ -13,14 +13,14 @@ import {
   ShoppingCart,
   TopInstructorPage
 } from 'pages';
+import InstructorDetail from 'pages/InstructorDetail';
 import PaymentSuccess from 'pages/PaymentSuccess';
-import RouterLesson from 'pages/Student/RouterLesson';
+import MyCourseStudent from 'pages/Student/MyCourseStudent';
 import { Route, Routes } from 'react-router-dom';
 import LayoutInstructor from '../../components/layout/LayoutInstructor';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
 import Report from '../ReportPage';
 import InstructorPage from './InstructorPage';
-import InstructorDetail from 'pages/InstructorDetail';
 
 import ViewSession from './ViewSession';
 import InstructorSubscription from './SubcriptionInstructor';
@@ -68,7 +68,7 @@ export default function InstructorRouter() {
          <Route path={`add-blog`} element={<ProtectedRouter allowedRoles={["instructor"]}><AddBlog /></ProtectedRouter>} />
          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} />
          {/* <Route path={`lesson-student/:id`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} /> */}
-         <Route path={`router-lesson/*`} element={<ProtectedRouter allowedRoles={["instructor"]}><RouterLesson /></ProtectedRouter>} />
+         <Route path={`student-learning`} element={<ProtectedRouter allowedRoles={["student"]}><MyCourseStudent /></ProtectedRouter>} />
          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
          <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["instructor"]}><TopInstructorPage /></ProtectedRouter>} />
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}

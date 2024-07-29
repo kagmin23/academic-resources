@@ -15,16 +15,12 @@ export const loginUser = async (email: string, password: string) => {
       }
     );
 
-    console.log("Login response:", response);
-
     const token =
         response.data.token ||
         response.data.accessToken ||
         response.data.data?.token;
-    console.log(token);
 
     if (token) {
-      // console.log("Login Success. Token received:", token);
       localStorage.setItem("token", token);
       const userResponse = await axios.get(`${HOST_MAIN}/api/auth`, {
         headers: {

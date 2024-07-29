@@ -271,7 +271,7 @@ const UsersAdmin: React.FC = () => {
     <Layout>
       <Content className="p-4">
         <h2 className="mb-4 text-xl font-bold">Manage Accounts</h2>
-        <div className="flex flex-col md:flex-row md:items-center md:space-x-2 mb-4">
+        <div className="flex flex-col justify-between mb-4 md:flex-row md:items-center md:space-x-2">
           <Input.Search
             placeholder="Search"
             value={searchTerm}
@@ -283,7 +283,7 @@ const UsersAdmin: React.FC = () => {
             placeholder="Filter by Role"
             value={filteredRole}
             onChange={handleRoleFilterChange}
-            className="w-full md:w-1/6 mt-2 md:mt-0"
+            className="w-full mt-2 md:w-1/6 md:mt-0"
           >
             <Option value="all">All</Option>
             <Option value="admin">Admin</Option>

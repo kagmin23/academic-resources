@@ -19,7 +19,6 @@ export const createLesson = async (lessonData: {
     lessonData.full_time = parseFloat(lessonData.full_time);
   }
 
-
   return apiRequest('/api/lesson', {
     method: 'POST',
     headers: {

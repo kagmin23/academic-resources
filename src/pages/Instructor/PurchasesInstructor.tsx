@@ -1,18 +1,17 @@
-import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, message } from "antd";
+import { FilterOutlined, HistoryOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Tag, Typography, message } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Purchase } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
-import { getPurchasesAll } from "services/AdminsApi/getPurchasesApiService";
 import { createPayout } from "services/All/payoutApiService";
-import './stylesAdmin.css';
+import { getItemsbyInstructorPurchases } from "services/Instructor/getPurchasesApiService";
 
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
-function PurchasesAdmin() {
+function PurchasesInstructor() {
   const [data, setData] = useState<Purchase[]>([]);
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
@@ -25,7 +24,7 @@ function PurchasesAdmin() {
   const fetchPurchases = async () => {
     setLoading(true);
     try {
-      const payouts = await getPurchasesAll(1, 10);
+      const payouts = await getItemsbyInstructorPurchases(1, 10);
       setData(payouts);
     } catch (error) {
       console.error('Error fetching purchases:', error);
@@ -80,6 +79,14 @@ function PurchasesAdmin() {
     setData(filteredData);
   };
 
+  // useEffect(() => {
+  //   const filteredData = data.filter((item) =>
+  //     item.payout_no.toLowerCase().includes(searchTerm.toLowerCase())
+  //   );
+
+  //   setData(filteredData);
+  // }, [searchTerm]);
+
   const handleCreatePayout = async () => {
     if (selectedRowKeys.length === 0) {
       message.warning("Please select at least one payout to create!");
@@ -89,16 +96,17 @@ function PurchasesAdmin() {
     try {
       const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
       console.log("transactions", transactions)
-      const response = await createPayout('', transactions);
+      const response = await createPayout('',transactions);
       console.log('Payout response:', response);
       setSelectedRowKeys([]);
     } catch (error) {
       message.error("Failed to create payout");
       console.error('Failed to create payout:', error);
-    } finally {
+    }finally {
       setLoading(false);
     }
   };
+
 
   const columns = [
     {
@@ -116,6 +124,12 @@ function PurchasesAdmin() {
         />
       ),
     },
+    // {
+    //   title: "ID",
+    //   dataIndex: "_id",
+    //   key: "_id",
+    //   width: 100,
+    // },
     {
       title: "Purchase No",
       dataIndex: "purchase_no",
@@ -148,30 +162,33 @@ function PurchasesAdmin() {
       width: 150,
     },
     {
-      title: "Instructor Name",
-      dataIndex: "instructor_name",
-      key: "instructor_name",
-      width: 150,
-    },
-    {
       title: "Status",
       dataIndex: "status",
       key: "status",
       width: 120,
       align: 'center' as AlignType,
+      render: (status: string) => {
+        let color: string;
+        switch (status) {
+          case 'new':
+            color = '#999999';
+            break;
+          case 'request_paid':
+            color = 'blue';
+            break;
+          case 'completed':
+            color = 'green';
+            break;
+          default:
+            color = 'default';
+        }
+        return <Tag color={color}>{status}</Tag>;
+      },
     },
     {
       title: "Created At",
       dataIndex: "created_at",
       key: "created_at",
-      width: 200,
-      align: 'center' as AlignType,
-      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
-    },
-    {
-      title: "Updated At",
-      dataIndex: "updated_at",
-      key: "updated_at",
       width: 200,
       align: 'center' as AlignType,
       render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
@@ -220,6 +237,8 @@ function PurchasesAdmin() {
               </div>
             </Space>
           </div>
+          <Button className="my-2 text-white bg-blue-600" onClick={handleCreatePayout}><PlusCircleOutlined /> Create Payout</Button>
+
           <div className="overflow-x-auto">
             {loading ?
               (<div className="flex items-center justify-center h-64">
@@ -230,7 +249,6 @@ function PurchasesAdmin() {
                 columns={columns}
                 dataSource={data}
                 pagination={{ pageSize: 10 }}
-                scroll={{ x: 'max-content' }}
               />)
             }
           </div>
@@ -240,4 +258,4 @@ function PurchasesAdmin() {
   );
 }
 
-export default PurchasesAdmin;
+export default PurchasesInstructor;

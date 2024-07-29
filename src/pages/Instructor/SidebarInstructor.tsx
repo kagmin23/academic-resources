@@ -2,8 +2,10 @@ import {
   BellOutlined,
   ContainerOutlined,
   DeploymentUnitOutlined,
+  MoneyCollectOutlined,
   PieChartOutlined,
   ShoppingOutlined,
+  StarOutlined,
   UserSwitchOutlined
 } from "@ant-design/icons";
 import { Button, Menu } from "antd";
@@ -43,20 +45,25 @@ const SidebarAdmin: React.FC = () => {
       heading: "Manager Lesson",
       href: "/instructor/profile-instructor/manager-instructor-lesson",
     },
-    // {
-    //   icon: TrophyOutlined,
-    //   heading: "Manager Certificate",
-    //   href: "/instructor/profile-instructor/manager-instructor-certificate",
-    // },
     {
       icon: ShoppingOutlined,
       heading: "Manager Purchase",
       href: "/instructor/profile-instructor/manager-instructor-purchase",
     },
     {
+      icon: MoneyCollectOutlined,
+      heading: "Manager Payout",
+      href: "/instructor/profile-instructor/manager-instructor-payout",
+    },
+    {
       icon: BellOutlined,
       heading: "Manager Subcription",
-      href: "/instructor/profile-instructor/subcription-instructor",
+      href: "/instructor/profile-instructor/manager-subcription-instructor",
+    },
+    {
+      icon: StarOutlined,
+      heading: "Manager Review",
+      href: "/instructor/profile-instructor/manager-review-instructor",
     },
   ];
 
