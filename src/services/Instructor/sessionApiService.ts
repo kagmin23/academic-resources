@@ -1,38 +1,37 @@
-import { apiRequest } from 'services/apiService';
+import axios from 'axios';
+import { HOST_MAIN, apiRequest } from 'services/apiService';
 
-interface AddSession {
-_id:string,
-name:string,
-user_id:string,
-course_id:string,
-description:string,
-position_order:number,
-created_at:Date,
-updated_at:Date,
-is_deleted:boolean,
-}
 export const createSession = async (sessionData: {
-
-  name: string,
-  course_id: string,
-  description: string,
-  position_order: number,
+  name: string;
+  course_id: string;
+  description: string;
+  position_order: number;
 }) => {
   const token = localStorage.getItem('token');
-  console.log("sessionData", sessionData)
+  console.log("sessionData", sessionData);
+
   if (typeof sessionData.position_order === 'string') {
     sessionData.position_order = parseFloat(sessionData.position_order);
   }
 
-  return apiRequest('/api/session', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    data: sessionData,
-  });
+  try {
+    const response = await axios.post(`${HOST_MAIN}/api/session`,
+      sessionData,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    return response.data;
+  } catch (error) {
+    console.error('Error creating session:', error);
+    throw error;
+  }
 };
+
 
 
 export const getSessions = async (keyword: string, pageNum: number, pageSize: number,totalItems: number,totalPages: number, course_id: string) => {

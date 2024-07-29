@@ -9,7 +9,7 @@ import { getReviews } from 'services/All/reviewApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 import { createCart } from '../services/All/cartApiService';
-import { createOrUpdate } from '../services/All/subcriptionApiService';
+import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
@@ -161,8 +161,7 @@ const CourseDetail: React.FC = () => {
                 setLoading(true);
                 try {
                     const response = await getReviews(courseId, 1, 10);
-                    console.log(response.data);
-                    setReviews(Array.isArray(response.data) ? response.data : []);
+                    setReviews(response);
                 } catch (error) {
                     console.error('Failed to fetch reviews:', error);
                 } finally {
@@ -184,7 +183,7 @@ const CourseDetail: React.FC = () => {
 
         try {
             await createOrUpdate(courseDetail.instructor_id);
-            // fetchSubscriptionStatus();
+            fetchSubscriptionStatus();
             message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
         } catch (error) {
             console.error('Failed to subscribe:', error);
@@ -193,14 +192,14 @@ const CourseDetail: React.FC = () => {
             setLoading(false);
         }
     };
-    // const fetchSubscriptionStatus = async () => {
-    //     const response = await getItemBySubscriber("", 1, 10);
-    //     setIsSubscribed(response[0].is_subscribed);
-    // };
-    // useEffect(() => {
-    //     fetchSubscriptionStatus();
-    //     },
-    // []);
+    const fetchSubscriptionStatus = async () => {
+        const response = await getItemBySubscriber("", 1, 10);
+        setIsSubscribed(response[0].is_subscribed);
+    };
+    useEffect(() => {
+        fetchSubscriptionStatus();
+        },
+    []);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -367,32 +366,31 @@ const CourseDetail: React.FC = () => {
                             )}
                         </TabPane>
                         <TabPane tab="Reviews" key="2">
-    <div className="p-4">
-        {Array.isArray(reviews) && reviews.length > 0 ? (
-            reviews.map((review, index) => (
-                <Card
-                    key={index}
-                    className="mb-4"
-                    title={<Title level={4}>{review.course_name}</Title>}
-                    extra={
-                        <div>
-                            <Rate disabled value={review.rating} />
-                            <div className="text-sm text-gray-500">
-                                {moment(review.created_at).format('YYYY-MM-DD')} - {moment(review.updated_at).format('YYYY-MM-DD')}
+                            <div className="p-4">
+                                {Array.isArray(reviews) && reviews.length > 0 ? (
+                                    reviews.map((review, index) => (
+                                        <Card
+                                            key={index}
+                                            className="mb-4"
+                                            title={<Title level={4}>{review.course_name}</Title>}
+                                            extra={
+                                                <div>
+                                                    <Rate disabled value={review.rating} />
+                                                    <div className="text-sm text-gray-500">
+                                                        {moment(review.created_at).format('YYYY-MM-DD')} - {moment(review.updated_at).format('YYYY-MM-DD')}
+                                                    </div>
+                                                </div>
+                                            }
+                                        >
+                                            <Paragraph strong>{review.reviewer_name}</Paragraph>
+                                            <Paragraph>{review.comment}</Paragraph>
+                                        </Card>
+                                    ))
+                                ) : (
+                                    <p>No reviews available.</p>
+                                )}
                             </div>
-                        </div>
-                    }
-                >
-                    <Paragraph strong>{review.reviewer_name}</Paragraph>
-                    <Paragraph>{review.comment}</Paragraph>
-                </Card>
-            ))
-        ) : (
-            <p>No reviews available.</p>
-        )}
-    </div>
-</TabPane>
-
+                        </TabPane>
                     </Tabs>
                 </div>
             </div>

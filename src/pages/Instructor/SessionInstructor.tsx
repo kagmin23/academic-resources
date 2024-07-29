@@ -238,7 +238,7 @@ const ManagerCourseInstructor: React.FC = () => {
           >
             <Select placeholder="Select a course">
               {courses.map((course) => (
-                <Select.Option key={course._id} value={course._id}>
+                <Select.Option key={course._id} values={course._id}>
                   {course.name}
                 </Select.Option>
               ))}
