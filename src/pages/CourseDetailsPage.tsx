@@ -288,18 +288,6 @@ const CourseDetail: React.FC = () => {
         setExpandedSessionId(expandedSessionId === sessionId ? null : sessionId);
     };
 
-    const renderStars = (starCount: number) => {
-        const stars = [];
-        for (let i = 0; i < 5; i++) {
-            if (i < starCount) {
-                stars.push(<span key={i} role="img" aria-label="star" className="text-yellow-600">⭐️</span>);
-            } else {
-                stars.push(<span key={i} role="img" aria-label="star" className="text-gray-300">⭐️</span>);
-            }
-        }
-        return stars;
-    };
-
     if (!courseDetail) {
         return <div className="text-center text-white">Loading...</div>;
     }
@@ -343,9 +331,12 @@ const CourseDetail: React.FC = () => {
                             <h2 className="text-2xl font-bold">{courseDetail.name}</h2>
                             <p className="mt-3 text-lg">{courseDetail.description}</p>
                             <div className="flex items-center mt-4 text-lg">
-                                <div className="p-1 bg-yellow-500 rounded-lg">
+                                <div className="p-1">
                                     <StarOutlined className="font-semibold text-white" />
-                                    <span className="ml-2">{courseDetail.average_rating}</span>
+                                    <StarOutlined className="font-semibold text-white" />
+                                    <StarOutlined className="font-semibold text-white" />
+                                    <StarOutlined className="font-semibold text-white" />
+                                    <StarOutlined className="font-semibold text-white" />
                                 </div>
                                 <span className="ml-2">({courseDetail.review_count} Ratings)</span>
                             </div>

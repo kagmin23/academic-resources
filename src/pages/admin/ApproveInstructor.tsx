@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Table, message } from 'antd';
+import { Button, Input, Layout, Modal, Table, message, Select } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment, { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -8,6 +8,7 @@ import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorA
 
 const { Content } = Layout;
 const { TextArea } = Input;
+const { Option } = Select;
 
 interface ApproveIns {
   _id: string;
@@ -33,13 +34,14 @@ const ApproveInstructor: React.FC = () => {
   const [confirmItemId, setConfirmItemId] = useState<string | undefined>(undefined);
   const [confirmAction, setConfirmAction] = useState<string>("");
   const [rejectComment, setRejectComment] = useState<string>("");
+  const [filterStatus, setFilterStatus] = useState<string>("all");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await getUsers({
           searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false, is_verified: false },
-          pageInfo: { pageNum: 1, pageSize: 10,totalItems: 6, totalPages: 1 },
+          pageInfo: { pageNum: 1, pageSize: 10, totalItems: 6, totalPages: 1 },
         });
         if (response.success) {
           const storedRejected = JSON.parse(localStorage.getItem('rejectedInstructors') || '[]');
@@ -116,9 +118,17 @@ const ApproveInstructor: React.FC = () => {
     setConfirmVisible(true);
   };
 
-  const filteredData = data.filter((item) =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const handleFilterChange = (value: string) => {
+    setFilterStatus(value);
+  };
+
+  const filteredData = data.filter((item) => {
+    const matchesRole = filterStatus === "all" ||
+      (filterStatus === "approved" && item.isApproved) ||
+      (filterStatus === "rejected" && item.isRejected);
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase());
+    return matchesRole && matchesSearch;
+  });
 
   const columns: ColumnsType<ApproveIns> = [
     { title: 'ID', dataIndex: '_id', key: '_id' },
@@ -133,7 +143,6 @@ const ApproveInstructor: React.FC = () => {
     { title: 'Email', dataIndex: 'email', key: 'email' },
     { title: 'Video', dataIndex: 'video', key: 'video', width: 30 },
     { title: 'Description', dataIndex: 'description', key: 'description', width: 200 },
-
     {
       title: 'Action',
       key: 'action',
@@ -178,14 +187,22 @@ const ApproveInstructor: React.FC = () => {
             className="w-full sm:w-1/3"
             onSearch={(value) => setSearchTerm(value)}
           />
+          <Select
+            value={filterStatus}
+            onChange={handleFilterChange}
+            className="w-full sm:w-1/3"
+          >
+            <Option value="all">All</Option>
+            <Option value="approved">Approved</Option>
+            <Option value="rejected">Rejected</Option>
+          </Select>
         </div>
 
-        <Table
-          dataSource={filteredData}
+        <Table<ApproveIns>
           columns={columns}
-          rowKey="_id"
-          pagination={{ pageSize: 10 }}
-          scroll={{ x: 'max-content' }}
+          dataSource={filteredData}
+          rowKey={(record) => record._id}
+          pagination={false}
         />
 
         <Modal
