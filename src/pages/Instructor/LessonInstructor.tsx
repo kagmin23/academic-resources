@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Layout, Modal, Row, Select, Table, Typography, message } from 'antd';
+import { Button, Col, Form, Input, Layout, Modal, Row, Select, Spin, Table, Typography, message } from 'antd';
 import { Course, Lesson, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -27,6 +27,7 @@ const ManagerLessonInstructor: React.FC = () => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [filteredSessions, setFilteredSessions] = useState<Session[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   const handleAddNewLesson = () => {
     setIsEditMode(false);
@@ -49,6 +50,7 @@ const ManagerLessonInstructor: React.FC = () => {
   }, [sessionId, courseId]);
 
   const fetchLessons = async () => {
+    setLoading(true);
     try {
       if (courseId && sessionId) {
         const response = await getLessons(courseId, sessionId, 1, 10, 10, 1, "");
@@ -57,22 +59,28 @@ const ManagerLessonInstructor: React.FC = () => {
     } catch (error) {
       message.error("Failed to fetch lessons");
       console.error("Error fetching lessons:", error);
+    }finally{
+      setLoading(false);
     }
   };
 
   const fetchSessions = async () => {
+    setLoading(true);
     try {
-      const response = await getSessions("", 1, 10, 5, 1, "");
+      const response = await getSessions('','', 1, 10);
       console.log("response", response);
       setSessions(response.data.pageData);
       setDataSource(response.data.pageData);
     } catch (error) {
       message.error("Failed to fetch sessions");
       console.error("Error fetching sessions:", error);
+    }finally{
+      setLoading(false);
     }
   };
 
   const fetchCourses = async () => {
+    setLoading(true);
     try {
       const response = await getCourses("", 1, 10);
       console.log("courses", response);
@@ -83,6 +91,8 @@ const ManagerLessonInstructor: React.FC = () => {
       setCourses([]);
       setFilteredDataSource([]);
       message.error("Failed to fetch courses");
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -289,7 +299,12 @@ const ManagerLessonInstructor: React.FC = () => {
           </div>
         </div>
       </Header>
-      <Content>
+      <Content className="m-4 overflow-y-scroll">
+        {loading ? (
+          <div className="flex items-center justify-center h-full">
+            <Spin size="large" />
+          </div>
+        ) : (
         <Table
           columns={columns}
           dataSource={filteredDataSource}
@@ -320,6 +335,7 @@ const ManagerLessonInstructor: React.FC = () => {
             expandIcon: () => null,
           }}
         />
+        )}
       </Content>
       <Modal
           title={isEditMode ? "Edit Lesson" : "Add New Lesson"}

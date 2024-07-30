@@ -1,7 +1,7 @@
 
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
-import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Switch, Table, Typography, message } from "antd";
+import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Table, Typography, message } from "antd";
 import { Category, Course, LogStatus } from "models/types";
 import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
@@ -79,13 +79,6 @@ const ManagerCourseInstructor: React.FC = () => {
       setDataSource([]);
       setFilteredDataSource([]);
       message.error('Failed to fetch courses');
-    }
-  };
-
-  const onChangesell = (checked: boolean) => {
-    setIsSellChecked(checked);
-    if (!checked) {
-      form.setFieldsValue({ price: undefined });
     }
   };
 
@@ -416,9 +409,14 @@ const ManagerCourseInstructor: React.FC = () => {
           </div>
       </Header>
       <Content className="mx-4 my-16 overflow-y-auto xl:mx-6">
+      {loading ? (
+          <div className="flex items-center justify-center h-full">
+            <Spin size="large" />
+          </div>
+        ) : (
         <Table
           style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 180px)' }}
-          pagination={{ pageSize: 6 }}
+          pagination={{ pageSize: 10 }}
           dataSource={filteredDataSource}
           columns={columns}
           expandable={{
@@ -475,19 +473,11 @@ const ManagerCourseInstructor: React.FC = () => {
                     </div>
                   ) : (
                     <>
-                      <h1 className="mb-5">Log Status</h1>
+                      <h1 className="text-base font-bold">Log Status</h1>
+                      <p className="mb-5 text-xs italic">* Prioritize in order of newest</p>
                       <div className="flex mb-5 space-x-5">
                         <Button className="text-white bg-teal-600">All log</Button>
-                        <Select className="w-40">
-                          <Select.Option value="new">New</Select.Option>
-                          <Select.Option value="waiting_approve">Waiting approve</Select.Option>
-                          <Select.Option value="approve">Approve</Select.Option>
-                          <Select.Option value="reject">Reject</Select.Option>
-                          <Select.Option value="active">Active</Select.Option>
-                          <Select.Option value="inactive">Inactive</Select.Option>
-                        </Select>
-                        <Select className="w-40">
-                          <Select.Option value="all">All</Select.Option>
+                        <Select defaultValue="All" className="w-40">
                           <Select.Option value="new">New</Select.Option>
                           <Select.Option value="waiting_approve">Waiting approve</Select.Option>
                           <Select.Option value="approve">Approve</Select.Option>
@@ -503,8 +493,8 @@ const ManagerCourseInstructor: React.FC = () => {
                         logs.map((log, index) => (
                           <div key={index} className="mb-4">
                             <h1>Course Name: {log.course_name}</h1>
-                            <h1>Old status: {log.old_status}</h1>
-                            <h1>New status: {log.new_status}</h1>
+                            <h1 className="text-red-500">Old status: {log.old_status}</h1>
+                            <h1 className="text-blue-500">New status: {log.new_status}</h1>
                             <h1>Comment: {log.comment}</h1>
                           </div>
                         ))
@@ -530,6 +520,7 @@ const ManagerCourseInstructor: React.FC = () => {
           }}
           rowKey="_id"
         />
+        )}
       </Content>
 
 
@@ -610,15 +601,7 @@ const ManagerCourseInstructor: React.FC = () => {
               }}
               onEditorChange={handleEditorChange}
             />
-          </Form.Item>
-
-          <Form.Item label="How do you want to sell this course?">
-            <Switch checked={isSellChecked} onChange={onChangesell} />
-            <p className="mt-2 italic text-blue-500">(Otherwise, this course will be FREE)</p>
-          </Form.Item>
-
-          {isSellChecked && (
-            <div>
+            </Form.Item>
               <Form.Item
                 name="price"
                 label="Price"
@@ -633,8 +616,6 @@ const ManagerCourseInstructor: React.FC = () => {
               >
                 <Input type="number" />
               </Form.Item>
-            </div>
-          )}
         </Form>
       </Modal>
     </Layout>
