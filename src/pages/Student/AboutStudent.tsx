@@ -1,3 +1,4 @@
+
 import {
   CalendarOutlined,
   EditOutlined,
@@ -19,6 +20,7 @@ const AboutStudent: React.FC = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
+
   useEffect(() => {
       const fetchCurrentUser = async () => {
         try {
@@ -37,26 +39,24 @@ const AboutStudent: React.FC = () => {
             description: 'Failed to fetch current user information',
           });
         }
-      } catch (error) {
-        notification.error({
-          message: 'Error',
-          description: 'Failed to fetch current user information',
-        });
-      }
-    };
+      };
+  
+      fetchCurrentUser();
+    }, []);
+    
 
-    fetchCurrentUser();
-  }, []);
 
   if (!currentUser) {
-    return <div>Loading...</div>;
+      return <div>Loading...</div>;
   }
-  
   const formattedDob = new Date(currentUser.dob).toLocaleDateString('en-GB');
   const formattedCreatedAt = new Date(currentUser.created_at).toLocaleDateString('en-GB');
   const handleEdit = (userId: string) => {
+    
     navigate(`/student/profile-student/info-student/${userId}`);
+   
   };
+
 
   return (
       <div className="text-white wrappers ">
@@ -76,7 +76,6 @@ const AboutStudent: React.FC = () => {
                       />
                   </div>
               </div>
-            </div>
           </div>
           <div className='w-3/4 mx-auto font-medium mt-14'>
               
@@ -131,10 +130,15 @@ const AboutStudent: React.FC = () => {
           <EditOutlined />Edit Profile</Button>
           {/* </Link> */}
           </div>
-        </div>
+         
+     
+
+          
+         
       </div>
-    </div>
   );
 };
 
 export default AboutStudent;
+
+

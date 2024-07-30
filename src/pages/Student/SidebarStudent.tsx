@@ -5,7 +5,7 @@ import {
   PieChartOutlined,
   ShoppingCartOutlined
 } from "@ant-design/icons";
-import { Avatar, Menu, Typography, Button } from "antd";
+import { Avatar, Menu, Typography } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -45,6 +45,7 @@ const SidebarStudent: React.FC = () => {
       heading: 'My Course',
       href: "/student/profile-student/course-student",
     },
+
     {
       icon: ShoppingCartOutlined,
       heading: 'Orders',
@@ -54,13 +55,9 @@ const SidebarStudent: React.FC = () => {
     {
       icon: BellOutlined,
       heading: "Manager Subcription",
-      href: "/student/profile-student/student-subscription",
+      href: "/student/profile-student/subcription-student",
     },
   ];
-
-  const toggleDrawer = () => {
-    setExpanded(!expanded);
-  };
 
   return (
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-full min-h-screen bg-[#475a75] shadow-lg`}>
@@ -68,6 +65,54 @@ const SidebarStudent: React.FC = () => {
         <Avatar size={64} src={aboutData.avatarSrc} />
         {/* <Title level={4} style={{ marginLeft: 16, color: "white" }}>{aboutData.name}</Title> */}
       </div>
+      <Menu
+        mode="inline"
+        selectedKeys={[selected.toString()]}
+        style={{ backgroundColor: '#475a75', color: 'white' }}
+        className="h-full py-3"
+      >
+        {SidebarData.map((item, index) => (
+          item.children && item.children.length > 0 ? (
+            <Menu.SubMenu
+              key={index}
+              icon={<item.icon style={{ color: 'white' }} />}
+              title={<span style={{ color: 'white' }}>{item.heading}</span>}
+              style={{ color: 'white' }}
+            >
+              {item.children.map((child, childIndex) => (
+                <Menu.Item
+                  key={`${index}-${childIndex}`}
+                  icon={<child.icon style={{ color: 'white' }} />}
+                  style={{ color: 'white' }}
+                  className={selected === `${index}-${childIndex}` ? "bg-blue-900" : ""}
+                  onClick={() => {
+                    setSelected(`${index}-${childIndex}`);
+                    navigate(child.href);
+                  }}
+                >
+                  {expanded && child.heading}
+                </Menu.Item>
+              ))}
+            </Menu.SubMenu>
+          ) : (
+            <Menu.Item
+              key={index}
+              icon={<item.icon style={{ color: 'white' }} />}
+              style={{ color: 'white' }}
+              className={`${selected === index ? "bg-blue-900" : ""} ${item.heading === "Logout" ? "bg-red-600 mt-6" : "mt-0"}`}
+              onClick={() => {
+                setSelected(index);
+                navigate(item.href);
+              }}
+            >
+              {expanded && item.heading}
+            </Menu.Item>
+          )
+        ))}
+        <Menu.Item icon={<DeploymentUnitOutlined style={{ color: 'white' }} />} style={{ color: 'white' }}>
+          {expanded && 'By Academic'}
+        </Menu.Item>
+      </Menu>
     </div>
   );
 };
