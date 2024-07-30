@@ -269,7 +269,7 @@ const HomePage: React.FC = () => {
             ]}
           >
             {courses.map((course, index) => (
-              <div className="px-3 py-2 my-5 sm:my-10" key={index}>
+              <div className="px-3 py-2 my-5 transition-transform transform sm:my-10 hover:scale-105 hover:shadow-lg" key={index}>
                 <div onClick={() => handleNavigateToCourseDetails(course._id)}>
                   <img className="object-fill w-full h-40 rounded-xl lg:h-48" src={course.image_url} alt={course.name} />
                 </div>
