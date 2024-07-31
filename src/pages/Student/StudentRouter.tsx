@@ -9,6 +9,7 @@ import {
   CourseDetailsPage,
   CoursePage,
   HomePage,
+  SearchPage,
   Setting,
   ShoppingCart,
   TopInstructorPage
@@ -54,6 +55,7 @@ export default function StudentRouter() {
                     <Route path={`/`} element={<HomePage />} />
                     <Route path={`blog`} element={<BlogPage />} />
                     <Route path={`about`} element={<About />} />
+                    <Route path={`search`} element={<SearchPage />} />
                     <Route path={`course/`}element={<ProtectedRouter allowedRoles={["student"]}><CoursePage /></ProtectedRouter>} />
                     <Route path={`course/course-details`} element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`category`} element={<ProtectedRouter allowedRoles={["student"]}><CategoryPage /></ProtectedRouter>} />

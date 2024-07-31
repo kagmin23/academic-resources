@@ -4,6 +4,7 @@ import Footer from 'components/Footer';
 import React, { useEffect, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { getCarts } from 'services/All/cartApiService';
+import { getCourses } from 'services/UserClient/clientApiService';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService';
 
@@ -60,8 +61,14 @@ const LayoutStudent: React.FC = () => {
     setSelectedKeys([e.key]);
   };
 
-  const onSearch = (value: string) => {
-    navigate(`/search?query=${value}`);
+  const onSearch = async (value: string) => {
+    try {
+      const response = await getCourses(value, '', 1, 10);
+      console.log(response);
+      navigate(`/search?query=${value}`, { state: { courses: response } });
+    } catch (error) {
+      console.error('Error searching courses:', error);
+    }
   };
 
   const toggleDrawer = () => {

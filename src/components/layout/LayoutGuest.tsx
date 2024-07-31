@@ -3,13 +3,14 @@ import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { getCourses } from 'services/UserClient/clientApiService';
 import 'tailwindcss/tailwind.css';
 
 const { Header, Content } = Layout;
 const { Search } = Input;
 
 interface MainLayoutProps {
-  children?: React.ReactNode;  // Optional to match with default ReactNode
+  children?: React.ReactNode;
 }
 
 const LayoutGuest: React.FC<MainLayoutProps> = () => {
@@ -20,11 +21,17 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
   };
-
-  const onSearch = (value: string) => {
-    navigate(`/search?query=${value}`);
+  
+  const onSearch = async (value: string) => {
+    try {
+      const response = await getCourses(value, '', 1, 10);
+      console.log(response);
+      navigate(`/search?query=${value}`, { state: { courses: response } });
+    } catch (error) {
+      console.error('Error searching courses:', error);
+    }
   };
-
+  
   const toggleDrawer = () => {
     setDrawerVisible(!drawerVisible);
   };
@@ -38,24 +45,14 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             Academic - Resources
           </h1>
         </Link>
+
         <div className="flex items-center gap-12">
           <Search
-            placeholder="Search courses"
+            placeholder="Search courses..."
             onSearch={onSearch}
             className="hidden ml-4 w-72 md:block md:w-96"
           />
-         {/*  <div className="flex items-center space-x-4 text-xl text-white">
-            <Link to="/log-in">
-              <BellOutlined />
-            </Link>
-          </div>
-
-          <div className="flex items-center space-x-4 text-xl text-white">
-              <Link to="/log-in">
-                <MailOutlined className="text-xl" />
-              </Link>
-              </div> */}
-
+          
           <div className="flex items-center space-x-4 text-xl text-white">
             <Link to="/log-in">
               <ShoppingCartOutlined className="text-xl" />
@@ -73,9 +70,6 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
               </Button>
             </Link>
           </div>
-          {/* <Link to="/log-in">
-            <UserOutlined className="mt-5 mr-5 text-3xl text-white" />
-          </Link> */}
           <MenuOutlined className="ml-2 text-white md:hidden" onClick={toggleDrawer} />
         </div>
       </Header>
@@ -98,12 +92,6 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
             <Menu.Item key="3" className="mx-2">
               <Link to="/blog">Blog</Link>
             </Menu.Item>
-            {/* <Menu.Item key="4" className="mx-2">
-              <Link to="/log-in">Category</Link>
-            </Menu.Item> */}
-            {/* <Menu.Item key="5" className="mx-2">
-              <Link to="/top-instructor">Rakings</Link>
-            </Menu.Item> */}
             <Menu.Item key="6" className="mx-2">
               <Link to="/about">About</Link>
             </Menu.Item>

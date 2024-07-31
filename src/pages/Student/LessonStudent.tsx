@@ -89,7 +89,7 @@ const LearnCourseDetail: React.FC = () => {
     const handleLessonClick = (lesson: Lesson) => {
         console.log("lesson", lesson)
         fetchLessonDetail(lesson._id);
-        navigate(`/student-learning/${courseId}/lesson/${lesson._id}`);
+        navigate(`/student/student-learning/${courseId}/lesson/${lesson._id}`);
     };
 
     const getLessonIcon = (lessonType: string) => {
@@ -126,8 +126,8 @@ const LearnCourseDetail: React.FC = () => {
                     {selectedLesson && (
                         <Breadcrumb>
                             <Breadcrumb.Item>Home</Breadcrumb.Item>
-                            <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
-                            <Breadcrumb.Item>{selectedLesson.name}</Breadcrumb.Item>
+                            {/* <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
+                            <Breadcrumb.Item>{selectedLesson.name}</Breadcrumb.Item> */}
                         </Breadcrumb>
                     )}
                 </div>

@@ -126,8 +126,8 @@ const LearnCourseDetail: React.FC = () => {
                     {selectedLesson && (
                         <Breadcrumb>
                             <Breadcrumb.Item>Home</Breadcrumb.Item>
-                            <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
-                            <Breadcrumb.Item>{selectedLesson.name}</Breadcrumb.Item>
+                            {/* <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
+                            <Breadcrumb.Item>{selectedLesson.name}</Breadcrumb.Item> */}
                         </Breadcrumb>
                     )}
                 </div>

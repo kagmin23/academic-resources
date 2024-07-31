@@ -9,6 +9,7 @@ import {
   CoursePage,
   HomePage,
   LessonStudent,
+  SearchPage,
   Setting,
   ShoppingCart,
   TopInstructorPage
@@ -53,6 +54,7 @@ export default function InstructorRouter() {
          <Route path={`/`} element={<HomePage />} />
          <Route path={`blog`} element={<BlogPage />} />
          <Route path={`about`} element={<About />} />
+         <Route path={`search`} element={<SearchPage />} />
          <Route path={`course/*`}element={<ProtectedRouter allowedRoles={["instructor"]}><CoursePage /></ProtectedRouter>} />
          <Route path={`course/category`} element={<ProtectedRouter allowedRoles={["instructor"]}><CategoryPage /></ProtectedRouter>} />
          <Route path={`category`} element={<ProtectedRouter allowedRoles={["instructor"]}><CategoryPage /></ProtectedRouter>} />

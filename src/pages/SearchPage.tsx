@@ -20,18 +20,18 @@ const SearchPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState(query.get('query') || '');
   const [filters, setFilters] = useState<string[]>([]);
   const [filteredResults, setFilteredResults] = useState<ClientCourses[]>([]);
-  const [menuItems, setMenuItems] = useState<MenuItems>({}); // Initialize menuItems
+  const [menuItems, setMenuItems] = useState<MenuItems>({});
 
-  // Debounced search function
   const debouncedSearch = useCallback(
     debounce(async (value: string) => {
       try {
-        const data = await getCourses(value, '', 1, 10); // Adjust pageNum and pageSize as needed
-        setFilteredResults(data.courses || []); // Ensure data.courses is an array
+        const data = await getCourses(value, '', 1, 10);
+      console.log("data", data)
+        setFilteredResults(data.courses || []);
       } catch (error) {
         console.error('Error fetching courses:', error);
       }
-    }, 500), // Adjust debounce delay as needed
+    }, 500),
     []
   );
 
@@ -107,6 +107,7 @@ const SearchPage: React.FC = () => {
             <Card key={result._id} className="mb-4">
               <div className="flex">
                 <div className="flex-1">
+                  <img src="image_url" alt="" />
                   <h3 className="text-xl font-bold">{result.name}</h3>
                   <p className="text-gray-600">{result.category_name}</p>
                   <p className="text-gray-600">Instructor: {result.instructor_name}</p>

@@ -40,9 +40,6 @@ const CourseAdmin: React.FC = () => {
       console.error('Error fetching sessions:', error);
     }
   };
-  const handleSave = (record: Course) => {
-    console.log('Saved:', record);
-  };
 
   const showLogModal = () => {
     setLogModalVisible(true);

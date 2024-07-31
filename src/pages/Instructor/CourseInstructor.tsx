@@ -73,7 +73,6 @@ const ManagerCourseInstructor: React.FC = () => {
     try {
       const response = await getCourses('', 1, 10);
       console.log("courses", response);
-
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
