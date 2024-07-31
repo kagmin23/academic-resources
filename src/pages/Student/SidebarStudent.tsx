@@ -5,10 +5,11 @@ import {
   PieChartOutlined,
   ShoppingCartOutlined
 } from "@ant-design/icons";
-import { Avatar, Menu, Typography } from "antd";
+import { Avatar, Menu, notification, Typography } from "antd";
 import 'antd/dist/reset.css';
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { getCurrentUser } from '../../services/AdminsApi/UserService';
 
 const { Title } = Typography;
 
@@ -19,30 +20,22 @@ interface SidebarDataType {
   children?: SidebarDataType[];
 }
 
-const aboutData = {
-  avatarSrc: 'https://cdn3d.iconscout.com/3d/premium/thumb/student-male-7267574-5914564.png?f=webp',
-  email: 'davidd09@gmail.com',
-  dob: 'January 1, 2003',
-  gender: 'Female',
-  courseCreatedDate: 'January 15, 2023',
-  facebook: 'https://www.facebook.com/vu.hanthien.545',
-  linkedin: 'https://linkedin.com/in/david34',
-};
-
 const SidebarStudent: React.FC = () => {
   const [selected, setSelected] = useState<string | number>(0);
   const [expanded, setExpanded] = useState<boolean>(true);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+
   const navigate = useNavigate();
 
   const SidebarData: SidebarDataType[] = [
     {
       icon: PieChartOutlined,
-      heading: "About",
+      heading: "Profile student",
       href: '/student/profile-student'
     },
     {
       icon: ContainerOutlined,
-      heading: 'My Course',
+      heading: 'My Courses',
       href: "/student/profile-student/course-student",
     },
 
@@ -59,31 +52,60 @@ const SidebarStudent: React.FC = () => {
     },
   ];
 
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await getCurrentUser();
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          notification.error({
+            message: 'Error',
+            description: 'Failed to fetch current user information',
+          });
+        }
+      } catch (error) {
+        notification.error({
+          message: 'Error',
+          description: 'Failed to fetch current user information',
+        });
+      }
+    };
+
+    fetchCurrentUser();
+  }, []);
+  
+
+
+if (!currentUser) {
+    return <div>Loading...</div>;
+}
+
   return (
-    <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-full min-h-screen bg-[#475a75] shadow-lg`}>
+    <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-full min-h-screen bg-blue-200 shadow-lg`}>
       <div className="flex flex-col items-center justify-between p-4">
-        <Avatar size={64} src={aboutData.avatarSrc} />
-        {/* <Title level={4} style={{ marginLeft: 16, color: "white" }}>{aboutData.name}</Title> */}
+      <Avatar
+                          size={100}
+                          src={currentUser.avatar}
+                          className="border-4 border-white"
+                      />
       </div>
       <Menu
         mode="inline"
         selectedKeys={[selected.toString()]}
-        style={{ backgroundColor: '#475a75', color: 'white' }}
-        className="h-full py-3"
+        className="h-full py-3 bg-blue-200"
       >
         {SidebarData.map((item, index) => (
           item.children && item.children.length > 0 ? (
             <Menu.SubMenu
               key={index}
-              icon={<item.icon style={{ color: 'white' }} />}
-              title={<span style={{ color: 'white' }}>{item.heading}</span>}
-              style={{ color: 'white' }}
+              icon={<item.icon />}
+              title={<span >{item.heading}</span>}
             >
               {item.children.map((child, childIndex) => (
                 <Menu.Item
                   key={`${index}-${childIndex}`}
-                  icon={<child.icon style={{ color: 'white' }} />}
-                  style={{ color: 'white' }}
+                  icon={<child.icon  />}
                   className={selected === `${index}-${childIndex}` ? "bg-blue-900" : ""}
                   onClick={() => {
                     setSelected(`${index}-${childIndex}`);
@@ -97,8 +119,7 @@ const SidebarStudent: React.FC = () => {
           ) : (
             <Menu.Item
               key={index}
-              icon={<item.icon style={{ color: 'white' }} />}
-              style={{ color: 'white' }}
+              icon={<item.icon />}
               className={`${selected === index ? "bg-blue-900" : ""} ${item.heading === "Logout" ? "bg-red-600 mt-6" : "mt-0"}`}
               onClick={() => {
                 setSelected(index);
@@ -109,9 +130,6 @@ const SidebarStudent: React.FC = () => {
             </Menu.Item>
           )
         ))}
-        <Menu.Item icon={<DeploymentUnitOutlined style={{ color: 'white' }} />} style={{ color: 'white' }}>
-          {expanded && 'By Academic'}
-        </Menu.Item>
       </Menu>
     </div>
   );
