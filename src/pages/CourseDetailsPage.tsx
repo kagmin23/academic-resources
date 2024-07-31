@@ -4,7 +4,7 @@ import { Avatar, Button, Card, Form, Input, Modal, Rate, Spin, Tabs, Typography,
 import { Review } from 'models/types';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
@@ -342,9 +342,9 @@ const CourseDetail: React.FC = () => {
                             <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                             <div className="flex mt-4 space-x-4">
                                 <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
-                                <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
+                                {/* <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
                                     <Button type="default" className="p-5 text-lg font-semibold text-white bg-gray-800">Buy Now</Button>
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
                     </div>
