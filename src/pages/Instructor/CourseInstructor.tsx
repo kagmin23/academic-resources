@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
-import {Button,Col, Form,Image, Input, Layout, Modal, Row, Select, Spin,Switch,Table,Typography,message} from "antd";
+import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Switch, Table, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { Category, Course, LogStatus } from "models/types";
@@ -209,8 +209,6 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
     try {
-      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
-
       const course = courses.find(course => course._id === courseId);
 
       if (course?.status === 'reject' && (newStatus === 'active' || newStatus === 'inactive')) {
@@ -219,7 +217,6 @@ const ManagerCourseInstructor: React.FC = () => {
       }
 
       const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("response", response);
 
       if (response) {
         message.success('Changed Status Successfully!');
@@ -514,7 +511,6 @@ const ManagerCourseInstructor: React.FC = () => {
           rowKey="_id"
         />
       </Content>
-
 
       <Modal
         width={"50%"}

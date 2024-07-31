@@ -75,15 +75,15 @@ const SidebarStudent: React.FC = () => {
           item.children && item.children.length > 0 ? (
             <Menu.SubMenu
               key={index}
-              icon={<item.icon style={{ color: 'white' }} />}
+              icon={<item.icon style={{ color: selected === index ? 'black' : 'white' }} />}
               title={<span style={{ color: 'white' }}>{item.heading}</span>}
               style={{ color: 'white' }}
             >
               {item.children.map((child, childIndex) => (
                 <Menu.Item
                   key={`${index}-${childIndex}`}
-                  icon={<child.icon style={{ color: 'white' }} />}
-                  style={{ color: 'white' }}
+                  icon={<child.icon style={{ color: selected === index ? 'black' : 'white' }} />}
+                  style={{ color: selected === index ? 'black' : 'white' }}
                   className={selected === `${index}-${childIndex}` ? "bg-blue-900" : ""}
                   onClick={() => {
                     setSelected(`${index}-${childIndex}`);
@@ -97,9 +97,11 @@ const SidebarStudent: React.FC = () => {
           ) : (
             <Menu.Item
               key={index}
-              icon={<item.icon style={{ color: 'white' }} />}
-              style={{ color: 'white' }}
-              className={`${selected === index ? "bg-blue-900" : ""} ${item.heading === "Logout" ? "bg-red-600 mt-6" : "mt-0"}`}
+              icon={<item.icon style={{ color: selected === index ? 'black' : 'white' }} />}
+              style={{ color: selected === index ? 'black' : 'white' }}
+              className={`${
+                selected === index ? "bg-blue-900 text-black" : "text-white"
+              } ${item.heading === "Logout" ? "bg-red-600 mt-6" : "mt-0"}`}
               onClick={() => {
                 setSelected(index);
                 navigate(item.href);

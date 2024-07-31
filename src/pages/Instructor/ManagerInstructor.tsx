@@ -1,7 +1,7 @@
 
-import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, FilterOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
-import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Table, Typography, message } from "antd";
+import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Space, Spin, Table, Typography, message } from "antd";
 import { Category, Course, LogStatus } from "models/types";
 import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
@@ -26,10 +26,9 @@ const ManagerCourseInstructor: React.FC = () => {
   const [filteredDataSource, setFilteredDataSource] = useState<Course[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
-  const [currentRecord, setCurrentRecord] = useState<Course | null>(null);
+  const [currentRecord, setCurrentRecord] = useState<Course>();
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-  const [isSellChecked, setIsSellChecked] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [category, setCategory] = useState<Category | null>(null);
   const [comment, setComment] = useState('');
@@ -40,6 +39,9 @@ const ManagerCourseInstructor: React.FC = () => {
   const [logs, setLogs] = useState<LogStatus[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [course_id, setCourseId] = useState<string>("");
+  const [filterText, setFilterText] = useState<string>('');
+  const [filterStatus, setFilterStatus] = useState<string>('');
+  const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
   const [filteredStatus, setFilteredStatus] = useState<string>("all");
 
   const navigate = useNavigate();
@@ -97,6 +99,13 @@ const ManagerCourseInstructor: React.FC = () => {
     setCurrentRecord(record);
     setIsModalVisible(true);
     form.setFieldsValue(record);
+  };
+
+  const refreshData = () => {
+    setFilterText('');
+    setFilterStatus('');
+    setFilterDate(null);
+    fetchCourses();
   };
 
   const handleViewMore = (key: string) => {
@@ -199,8 +208,6 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
     try {
-      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
-
       const course = courses.find(course => course._id === courseId);
 
       if (course?.status === 'reject' && (newStatus === 'active' || newStatus === 'inactive')) {
@@ -209,7 +216,6 @@ const ManagerCourseInstructor: React.FC = () => {
       }
 
       const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("response", response);
 
       if (response) {
         message.success('Changed Status Successfully!');
@@ -224,7 +230,6 @@ const ManagerCourseInstructor: React.FC = () => {
       console.error('Error:', error);
     }
   };
-
 
   useEffect(() => {
     if (logModalVisible) {
@@ -244,7 +249,6 @@ const ManagerCourseInstructor: React.FC = () => {
       setLoading(false);
     }
   };
-
 
   const columns = [
     {
@@ -318,16 +322,10 @@ const ManagerCourseInstructor: React.FC = () => {
               });
             }}
             options={[
-              { value: 'new', label: 'New' },
               { value: 'waiting_approve', label: 'Waiting Approve' },
               { value: 'active', label: 'Active' },
               { value: 'inactive', label: 'Inactive' },
-            ].map(option => (
-              <Option key={option.value} value={option.value} className={`status-option ${option.value}`}>
-                {option.label}
-              </Option>
-            ))
-          }
+            ]}
           />
         </div>
       ),
@@ -375,7 +373,6 @@ const ManagerCourseInstructor: React.FC = () => {
             Manager Course
           </div>
           <div className="h-6 border-r lg:mx-4"></div>
-
           <Input
             placeholder="Search..."
             prefix={<SearchOutlined />}
@@ -391,29 +388,20 @@ const ManagerCourseInstructor: React.FC = () => {
             Add New Course
           </Button>
         </div>
-          <div className="">
-            <Select
-              placeholder="Filter by Status"
-              value={filteredStatus}
-              onChange={handleStatusFilterChange}
-              className="w-full mt-2 md:w-1/6 md:mt-0"
-            >
-              <Option value="all">All</Option>
-              <Option value="new">New</Option>
-              <Option value="waiting_approve">Waiting Approve</Option>
-              <Option value="approve">Approve</Option>
-              <Option value="reject">Reject</Option>
-              <Option value="active">Active</Option>
-              <Option value="inactive">Inactive</Option>
-            </Select>
-          </div>
+          <div className="flex flex-row items-center justify-end mx-10">
+            <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={1}>
+              <FilterOutlined /> Reload:
+                {/* <Button className="text-xs text-white bg-blue-600" onClick={handleFilter}>Apply</Button> */}
+                <Button className="text-white bg-blue-600" onClick={refreshData}><RedoOutlined /></Button>
+            </Space>
+            </div>
       </Header>
-      <Content className="mx-4 my-16 overflow-y-auto xl:mx-6">
       {loading ? (
           <div className="flex items-center justify-center h-full">
             <Spin size="large" />
           </div>
         ) : (
+      <Content className="mx-4 my-16 overflow-y-auto xl:mx-6">
         <Table
           style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 180px)' }}
           pagination={{ pageSize: 10 }}
@@ -520,9 +508,8 @@ const ManagerCourseInstructor: React.FC = () => {
           }}
           rowKey="_id"
         />
-        )}
       </Content>
-
+        )}
 
       <Modal
         width={"50%"}

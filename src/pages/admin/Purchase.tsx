@@ -76,7 +76,16 @@ function PurchasesAdmin() {
         return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
       });
     }
-
+    setData(filteredData);
+  };
+  
+  const handleSearch = (value: string) => {
+    const filteredData = data.filter((item) =>
+      item.course_name.toLowerCase().includes(value.toLowerCase()) ||
+      item.purchase_no.toLowerCase().includes(value.toLowerCase()) ||
+      item.cart_no.toLowerCase().includes(value.toLowerCase()) ||
+      item.instructor_name.toLowerCase().includes(value.toLowerCase())
+    );
     setData(filteredData);
   };
 
@@ -190,11 +199,10 @@ function PurchasesAdmin() {
         <div className="my-5">
           <div className="flex flex-row items-center justify-between">
             <Input
-              placeholder="Search"
+              placeholder="Search..."
               prefix={<SearchOutlined />}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-1/4 h-8 border-2 border-gray-300 border-solid rounded float-end sm:text-sm"
+              onChange={(e) => handleSearch(e.target.value)}
+              style={{ width: 300 }}
             />
             <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={12}>
               <FilterOutlined /> Filter:

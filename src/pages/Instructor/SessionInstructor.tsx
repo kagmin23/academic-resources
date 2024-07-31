@@ -5,7 +5,7 @@ import {
   PlusCircleOutlined,
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Form, Input, Layout, Modal, Select, Table, Tabs, message } from "antd";
+import { Button, Form, Input, Layout, Modal, Select, Spin, Table, Tabs, message } from "antd";
 import { Course, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -20,9 +20,7 @@ const { confirm } = Modal;
 
 const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Session[]>([]);
-  const [filteredDataSource, setFilteredDataSource] = useState<Session[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
-  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Session | null>(null);
   const [form] = Form.useForm();
@@ -32,6 +30,7 @@ const ManagerCourseInstructor: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   
   useEffect(() => {
     fetchSessions();
@@ -39,6 +38,7 @@ const ManagerCourseInstructor: React.FC = () => {
   }, []);
 
   const fetchSessions = async () => {
+    setLoading(true);
     try {
       const response = await getSessions('', '', 1, 10);
       console.log("reponse", response)
@@ -47,6 +47,8 @@ const ManagerCourseInstructor: React.FC = () => {
     } catch (error) {
       message.error('Failed to fetch sessions');
       console.error('Error fetching sessions:', error);
+    }finally{
+      setLoading(false);
     }
   };
 
@@ -56,11 +58,11 @@ const ManagerCourseInstructor: React.FC = () => {
       console.log("courses", response);
 
       setCourses(response.data.pageData);
-      setFilteredDataSource(response.data.pageData);
+      setDataSource(response.data.pageData);
     } catch (error) {
       console.error('Failed to fetch courses', error);
       setCourses([]);
-      setFilteredDataSource([]);
+      setDataSource([]);
       message.error('Failed to fetch courses');
     }
   };
@@ -83,7 +85,7 @@ const ManagerCourseInstructor: React.FC = () => {
                 item._id === updatedSession._id ? updatedSession : item
               );
               setDataSource(newDataSource);
-              setFilteredDataSource(newDataSource);
+              setDataSource(newDataSource);
               message.success('Session updated successfully');
             })
             .catch((error) => {
@@ -100,7 +102,7 @@ const ManagerCourseInstructor: React.FC = () => {
               console.log("value",values)
 
               setDataSource([...dataSource, newSession]);
-              setFilteredDataSource([...dataSource, newSession]);
+              setDataSource([...dataSource, newSession]);
               message.success('Session created successfully');
             })
             .catch((error) => {
@@ -126,7 +128,7 @@ const ManagerCourseInstructor: React.FC = () => {
           .then(() => {
             const newDataSource = dataSource.filter((item) => item._id !== sessionId);
             setDataSource(newDataSource);
-            setFilteredDataSource(newDataSource);
+            setDataSource(newDataSource);
             message.success('Session deleted successfully');
           })
           .catch((error) => {
@@ -141,10 +143,8 @@ const ManagerCourseInstructor: React.FC = () => {
     const filteredData = dataSource.filter(item =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredDataSource(filteredData);
+    setSessions(filteredData);
   };
-
-  const sortedSessions = [...sessions].sort((a, b) => a.position_order - b.position_order);
 
   const handleAddNewSession = () => {
     setIsEditing(false);
@@ -160,13 +160,12 @@ const ManagerCourseInstructor: React.FC = () => {
             Session Management
           </div>
           <div className="h-6 border-r lg:mx-4"></div>
-
-            <Input
-              placeholder="Search..."
-              prefix={<SearchOutlined />}
-              onChange={e => handleSearch(e.target.value)}
-              style={{ width: 300 }}
-            />
+          <Input
+            placeholder="Search..."
+            prefix={<SearchOutlined />}
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: 300 }}
+          />
           <div className="h-6 border-r lg:mx-4"></div>
 
           <Button
@@ -225,6 +224,11 @@ const ManagerCourseInstructor: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+      {loading ? (
+          <div className="flex items-center justify-center h-full">
+            <Spin size="large" />
+          </div>
+        ) : (
         <Content className="m-4 overflow-y-scroll">
           <Table
             pagination={{ pageSize: 10 }}
@@ -276,6 +280,7 @@ const ManagerCourseInstructor: React.FC = () => {
             ]}
           />
         </Content>
+        )}
         <Footer className="text-center bg-white">
           Academic_Resources ©2023 Created by My Team
         </Footer>

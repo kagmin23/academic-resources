@@ -130,12 +130,13 @@ const SubcriptionStudent: React.FC = () => {
           <div className='w-1/2'>
             <span className='text-lg font-semibold'>Total Subscribers: {getTotalSubcribers()}</span>
           </div>
-          <div className='w-1/4'>
+          <div className='w-1/4 mr-5'>
             <Input
+              className='mb-5'
               placeholder="Search..."
               prefix={<SearchOutlined />}
-              className='mb-5'
-              onChange={e => handleSearch(e.target.value)}
+              onChange={(e) => handleSearch(e.target.value)}
+              style={{ width: 300 }}
             />
           </div>
         </div>

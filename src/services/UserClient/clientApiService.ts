@@ -30,10 +30,20 @@ export const getCourses = async ( keyword: string, category_id: string, pageNum:
   }
 };
 
-export const getCourseDetail = async (courseId: string) => {
+export const getCourseDetail = async (courseId: string, role: string) => {
   try {
-    const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`);
-    console.log("getCourseDetail", response)
+    let headers = {};
+    if (role === 'student' || 'instructor') {
+      const token = localStorage.getItem('token');
+      if (token) {
+        headers = { Authorization: `Bearer ${token}` };
+      } else {
+        throw new Error('Unauthorized: Token not found');
+      }
+    }
+
+    const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`, { headers });
+    console.log("getCourseDetail", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching course detail:', error);

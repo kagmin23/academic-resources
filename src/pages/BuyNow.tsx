@@ -23,7 +23,7 @@ const BuyNow: React.FC = () => {
         const fetchCourseDetail = async () => {
             setLoading(true);
             try {
-                const response = await getCourseDetail(courseId);
+                const response = await getCourseDetail(courseId, '');
                 setCourseDetail(response.data);
             } catch (error) {
                 console.error('Failed to fetch course details:', error);

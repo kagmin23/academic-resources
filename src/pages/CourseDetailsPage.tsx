@@ -1,15 +1,15 @@
 
-import { BellOutlined, ExclamationCircleOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Form, Input, Modal, Rate, Tabs, Typography, message, notification } from 'antd';
+import { BellOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
+import { Avatar, Button, Card, Form, Input, Modal, Rate, Spin, Tabs, Typography, message, notification } from 'antd';
 import { Review } from 'models/types';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
+import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 import { createCart } from '../services/All/cartApiService';
 import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
-import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
@@ -82,11 +82,9 @@ const CourseDetail: React.FC = () => {
     const [updatedReviewRating, setUpdatedReviewRating] = useState<number>(0);
     const [updatedReviewComment, setUpdatedReviewComment] = useState<string>('');
     const [loadingUpdateReview, setLoadingUpdateReview] = useState<boolean>(false);
-
-
     const [form] = Form.useForm();
-
     const navigate = useNavigate();
+    
     const [currentUser, setCurrentUser] = useState<any>(null);
     useEffect(() => {
         const fetchCurrentUser = async () => {
@@ -110,7 +108,6 @@ const CourseDetail: React.FC = () => {
 
         fetchCurrentUser();
     }, []);
-
 
     const handleInstructorProfile = (userId: string) => {
         if (!currentUser) {
@@ -150,7 +147,7 @@ const CourseDetail: React.FC = () => {
         }
         const fetchCourseDetail = async () => {
             try {
-                const response = await getCourseDetail(courseId);
+                const response = await getCourseDetail(courseId, '');
                 setCourseDetail(response.data);
                 // Nếu đã đăng nhập, kiểm tra xem người dùng đã đăng ký khóa học chưa
                 if (isLoggedIn) {
@@ -293,14 +290,15 @@ const CourseDetail: React.FC = () => {
     }
 
     return (
+        <Spin spinning={loading} tip="Loading...">
         <div className="text-white bg-gray-900">
             <div className="py-8">
                 <div className="container px-4 mx-auto">
                     <div className="flex flex-col lg:flex-row lg:space-x-8">
                         <div className="w-full mb-4 lg:w-1/3 lg:mb-0">
                             <div className="relative">
-                                <a onClick={showModal} className="block cursor-pointer">
-                                    <img src={courseDetail.image_url} alt={courseDetail.name} className="w-full rounded-lg" />
+                                <a onClick={showModal} className="cursor-pointer">
+                                    <img src={courseDetail.image_url} alt={courseDetail.name} className="w-full rounded-lg h-80" />
                                     <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
                                         <PlayCircleOutlined className="text-4xl text-white" />
                                         <span className="absolute bottom-0 w-full py-2 text-xl font-semibold text-center text-white bg-black bg-opacity-75">Preview this course</span>
@@ -321,9 +319,6 @@ const CourseDetail: React.FC = () => {
                                         allowFullScreen
                                     ></iframe>
                                 </Modal>
-                            </div>
-                            <div className="mt-4">
-                                <Button type="link" className="text-lg text-white" icon={<ExclamationCircleOutlined />}>Report abuse</Button>
                             </div>
                         </div>
 
@@ -530,6 +525,7 @@ const CourseDetail: React.FC = () => {
                 </div>
             </div>
         </div>
+    </Spin>
     );
 };
 

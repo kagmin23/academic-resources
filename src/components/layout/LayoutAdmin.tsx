@@ -53,15 +53,6 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
   };
 
   const handleLogout = async () => {
-    // const result = await logoutApiService();
-    // if (result.success) {
-    //   navigate('/log-in');
-    // } else {
-    //   notification.error({
-    //     message: 'Error',
-    //     description: result.message,
-    //   });
-    // }
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("exp token");

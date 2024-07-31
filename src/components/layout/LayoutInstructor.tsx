@@ -1,7 +1,10 @@
 import {
   BookOutlined,
+  LogoutOutlined,
   MenuOutlined,
-  ShoppingCartOutlined
+  SettingOutlined,
+  ShoppingCartOutlined,
+  UserOutlined
 } from '@ant-design/icons';
 import {
   Avatar,
@@ -77,10 +80,10 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
 
   const profileMenu = (
     <Menu style={{ width: 200 }}>
-      <Menu.Item key="1">
+      <Menu.Item key="1" icon={<UserOutlined />}>
         <Link to="/instructor/profile-instructor">Profile</Link>
       </Menu.Item>
-      <SubMenu key="2" title="Settings">
+      <SubMenu key="2" title="Settings" icon={<SettingOutlined />}>
         <Menu.Item key="setting:1">
         <Link to={`/instructor/profile-instructor/instructor-setting/${currentUser ? currentUser._id : ''}`}>Personal Info</Link>
 
@@ -89,7 +92,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
           <Link to="/instructor/profile-instructor/instructor-changepassword">Change Password</Link>
         </Menu.Item>
       </SubMenu>
-      <Menu.Item key="3" onClick={handleLogout}>
+      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
         Logout
       </Menu.Item>
     </Menu>

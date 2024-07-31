@@ -1,11 +1,12 @@
 import { Button, Form, Input, message } from 'antd';
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { forgotPassword } from 'services/forgotPasswordApiService';
 import './stylesLogin.css';
 
 const ForgotPassword: React.FC = () => {
   const [form] = Form.useForm();
+  const navigate = useNavigate();
 
   const handleForgotPassword = async (values: any) => {
     try {
@@ -13,6 +14,7 @@ const ForgotPassword: React.FC = () => {
       await forgotPassword(values.email);
       message.success('Password reset instructions sent to your email. Please check your email!');
       form.resetFields();
+      navigate("/log-in");
     } catch (error) {
       console.error('Failed to reset password:', error);
       message.error('Failed to Reset Password! Please check your information.');

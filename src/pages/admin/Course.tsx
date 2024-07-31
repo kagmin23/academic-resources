@@ -22,7 +22,6 @@ const CourseAdmin: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [logModalVisible, setLogModalVisible] = useState(false);
   const [comment, setComment] = useState('');
-  const [editingItem, setEditingItem] = useState<Partial<Course>>({});
   const [courses, setCourses] = useState<Course[]>([]);
   const [filteredRole, setFilteredRole] = useState<string>("all");
 
@@ -59,15 +58,13 @@ const CourseAdmin: React.FC = () => {
     );
   };
 
-  const handleStatusChange = (checked: boolean, record: Course) => {
-    // const updatedDataSource = dataSource.map(item =>
-    //   item._id === record._id ? { ...item, status: checked } : item
-    // );
-    // setDataSource(updatedDataSource);
-  };
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
+  const handleSearch = (value: string) => {
+    const filteredData = dataSource.filter((item) =>
+      item.name.toLowerCase().includes(value.toLowerCase()) ||
+      item.user_name.toLowerCase().includes(value.toLowerCase()) ||
+      item.category_name.toLowerCase().includes(value.toLowerCase())
+    );
+    setDataSource(filteredData);
   };
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
@@ -85,7 +82,6 @@ const CourseAdmin: React.FC = () => {
           )
         );
       }
-
       
     } catch (error) {
       message.error('Please enter the reason of this course!');
@@ -174,7 +170,7 @@ const CourseAdmin: React.FC = () => {
         <div>
           <Select
             size="small"
-            className="text-xs"
+            className="w-24 text-xs"
             showSearch
             optionFilterProp="label"
             defaultValue={status}
@@ -197,8 +193,6 @@ const CourseAdmin: React.FC = () => {
               });
             }}
             options={[
-              { value: 'new', label: 'New' },
-              { value: 'waiting_approve', label: 'Waiting Approve' },
               { value: 'approve', label: 'Approve' },
               { value: 'reject', label: 'Reject' },
             ]}
@@ -214,14 +208,12 @@ const CourseAdmin: React.FC = () => {
         <Header className="p-0 bg-white">
           <div className="flex flex-col items-start justify-between mb-4 space-y-4 md:flex-row md:items-center md:space-y-0 bg-[#939fb1] pl-4 gap-5">
             <div className="w-full md:w-1/3">
-              <Input
-                placeholder="Search"
-                prefix={<SearchOutlined />}
-                onChange={handleSearchChange}
-                className="items-center w-full h-8 text-sm border-2 border-gray-300 border-solid rounded"
-                value={searchTerm}
-              />
-              
+            <Input
+              placeholder="Search..."
+              prefix={<SearchOutlined />}
+              onChange={(e) => handleSearch(e.target.value)}
+              style={{ width: 300 }}
+            />
             </div>
             <div className="flex flex-row w-full gap-5">
 
@@ -232,10 +224,7 @@ const CourseAdmin: React.FC = () => {
                 onChange={handleRoleFilterChange}
                 className="w-1/6"
               >
-                <Option value="new">All</Option>
-                {/* <Option value="waiting_approve">Waiting Approve</Option>
-                <Option value="approve">Approve</Option>
-                <Option value="reject">Reject</Option> */}
+                <Option value="">Category</Option>
               </Select>
 
             <Select

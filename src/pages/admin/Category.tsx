@@ -4,7 +4,7 @@ import { Category } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { createCategory, deleteCategory, getCategories, getCategoryDetail, updateCategory } from 'services/AdminsApi/categoryApiService';
+import { createCategory, deleteCategory, getCategories, updateCategory } from 'services/AdminsApi/categoryApiService';
 
 const { Header, Content, Footer } = Layout;
 const { Text } = Typography;
@@ -108,21 +108,6 @@ const CategoryAdmin: React.FC = () => {
     setFilteredDataSource(filtered);
   };
 
-  const handleViewDetails = async (id: string) => {
-    try {
-      const response = await getCategoryDetail(id);
-      const categoryDetail = response.data;
-      setModalData(categoryDetail);
-      setIsDetailModalVisible(true);
-    } catch (error) {
-      console.error('Error fetching category detail:', error);
-      notification.error({
-        message: 'Error',
-        description: 'Failed to fetch category detail.',
-      });
-    }
-  };
-
   const handleCloseAddEditModal = () => {
     setIsAddEditModalVisible(false);
     setModalData(null);
@@ -169,13 +154,12 @@ const CategoryAdmin: React.FC = () => {
       align: 'center' as AlignType,
       render: (updated_at: string) => moment(updated_at).format("YYYY-MM-DD"),
     },
-    {
-      title: 'Is deleted',
-      dataIndex: 'is_deleted',
-      key: 'is_deleted',
-      align: 'center' as AlignType,
-      render: (updated_at: string) => moment(updated_at).format("YYYY-MM-DD"),
-    },
+    // {
+    //   title: 'Is deleted',
+    //   dataIndex: 'is_deleted',
+    //   key: 'is_deleted',
+    //   align: 'center' as AlignType,
+    // },
     {
       title: 'Actions',
       key: 'actions',

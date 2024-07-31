@@ -1,4 +1,4 @@
-import { BookOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
+import { BookOutlined, LogoutOutlined, MenuOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useEffect, useState } from 'react';
@@ -77,10 +77,10 @@ const LayoutStudent: React.FC = () => {
 
   const profileMenu = (
     <Menu style={{ width: 200 }}>
-      <Menu.Item key="1">
+      <Menu.Item key="1" icon={<UserOutlined />}>
         <Link to="/student/profile-student">Profile</Link>
       </Menu.Item>
-      <SubMenu key="2" title="Settings">
+      <SubMenu key="2" icon={<SettingOutlined />} title="Settings">
         <Menu.Item key="setting:1">
           <Link to={`/student/profile-student/info-student/${currentUser ? currentUser._id : ''}`}>Personal Info</Link>
         </Menu.Item>
@@ -88,7 +88,7 @@ const LayoutStudent: React.FC = () => {
           <Link to="/student/profile-student/student-changepassword">Change Password</Link>
         </Menu.Item>
       </SubMenu>
-      <Menu.Item key="3" onClick={handleLogout}>
+      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
         Logout
       </Menu.Item>
     </Menu>
