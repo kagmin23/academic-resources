@@ -57,7 +57,7 @@ const LearnCourseDetail: React.FC = () => {
             }
 
             try {
-                const data = await getCourseDetail(courseId,'');
+                const data = await getCourseDetail(courseId);
                 setCourse(data.data);
                 if (lessonId) {
                     fetchLessonDetail(lessonId);

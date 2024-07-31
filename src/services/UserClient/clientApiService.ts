@@ -30,23 +30,29 @@ export const getCourses = async ( keyword: string, category_id: string, pageNum:
   }
 };
 
-export const getCourseDetail = async (courseId: string, role: string) => {
+export const getCourseDetail = async (courseId: string) => {
   try {
-    let headers = {};
-    if (role === 'student' || 'instructor') {
-      const token = localStorage.getItem('token');
-      if (token) {
-        headers = { Authorization: `Bearer ${token}` };
-      } else {
-        throw new Error('Unauthorized: Token not found');
-      }
-    }
-
-    const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`, { headers });
+    const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`);
     console.log("getCourseDetail", response);
     return response.data;
   } catch (error) {
-    console.error('Error fetching course detail:', error);
+    console.error('Error fetching getCourseDetail API!', error);
+    throw error;
+  }
+};
+
+export const getCourseDetailUser = async (courseId: string) => {
+  const token = localStorage.getItem("token");
+  try {
+    const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log("getCourseDetailUser", response);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching getCourseDetailUser API!', error);
     throw error;
   }
 };
@@ -73,7 +79,6 @@ export const getCategories = async (keyword: string, pageNum: number, pageSize: 
 };
 
 export const getUserDetail = async (userId: string) => {
-  const token = localStorage.getItem('');
 
   return apiRequest(`/api/users/${userId}`, {
     method: 'GET',

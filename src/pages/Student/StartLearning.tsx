@@ -42,7 +42,7 @@ interface Course {
 }
 
 const LearnCourseDetail: React.FC = () => {
-    const { id, lessonId } = useParams<{ id: string, lessonId?: string }>();
+    const { id, lessonId } = useParams<{ id: string, lessonId: string }>();
     const { courseId } = useParams<{ courseId?: string }>();
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
@@ -57,14 +57,14 @@ const LearnCourseDetail: React.FC = () => {
             }
 
             try {
-                const data = await getCourseDetail(courseId,'');
+                const data = await getCourseDetail(courseId);
                 setCourse(data.data);
                 if (lessonId) {
-                    fetchLessonDetail(lessonId);
+                    await fetchLessonDetail(lessonId);
                 } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
                     const firstLessonId = data.session_list[0].lesson_list[0]._id;
-                    fetchLessonDetail(firstLessonId);
-                    navigate(`/student-learning/${courseId}/lesson/${firstLessonId}`);
+                    await fetchLessonDetail(firstLessonId);
+                    // navigate(`/student-learning/${courseId}/lesson/${firstLessonId}`);
                 }
             } catch (error) {
                 message.error("Error fetching course details!");
@@ -80,6 +80,8 @@ const LearnCourseDetail: React.FC = () => {
             const lesson = await getLesson(lessonId);
             console.log("lesson", lesson)
             setSelectedLesson(lesson);
+            console.log("selectedLesson", selectedLesson)
+
         } catch (error) {
             message.error("Error fetching lesson details");
             console.error("Error fetching lesson details:", error);
@@ -89,7 +91,7 @@ const LearnCourseDetail: React.FC = () => {
     const handleLessonClick = (lesson: Lesson) => {
         console.log("lesson", lesson)
         fetchLessonDetail(lesson._id);
-        navigate(`/student-learning/${courseId}/lesson/${lesson._id}`);
+        navigate(`/student/student-learning/${courseId}/lesson/${lesson._id}`);
     };
 
     const getLessonIcon = (lessonType: string) => {

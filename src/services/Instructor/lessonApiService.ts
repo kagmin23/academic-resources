@@ -57,7 +57,6 @@ export const getLessons = async (course_id: string ,session_id: string, pageNum:
 
 export const getLesson = async (lessonId: string) => {
   const token = localStorage.getItem('token');
-
   return apiRequest(`/api/lesson/${lessonId}`, {
     method: 'GET',
     headers: {

@@ -37,11 +37,7 @@ const BlogPage: React.FC = () => {
                                 </Button>
                             </div>
                         </Link>
-
-
                     </div>
-
-                
                     <section className="flex flex-col p-4 bg-white rounded shadow md:flex-row">
                         <a href="/detail-blog" className="flex-shrink-0 block mb-4 md:mb-0">
                             <img src="https://accountlp.thimpress.com/wp-content/uploads/2022/11/course-8-400x300.jpg" className="object-cover w-full h-64 rounded md:w-64" alt="Blog 1" />

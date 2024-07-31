@@ -1,19 +1,16 @@
 import axios from 'axios';
 
 const api = axios.create({
-    // sever
-    //baseURL: 'https://bcsswp.azurewebsites.net',
-    // local
     baseURL: 'https://api-ojt-hcm24-react06-group04.vercel.app',
 });
 
-const authen = localStorage.getItem('Authen');
+const authen = localStorage.getItem('token');
 
 // Request interceptor
 if (authen != null) {
     api.interceptors.request.use(
         function (config) {
-            config.headers.Authorization = ` Bearer ${localStorage.getItem('Authen')}`;
+            config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
             return config;
         },
         function (error) {

@@ -147,7 +147,7 @@ const CourseDetail: React.FC = () => {
         }
         const fetchCourseDetail = async () => {
             try {
-                const response = await getCourseDetail(courseId, '');
+                const response = await getCourseDetail(courseId);
                 setCourseDetail(response.data);
                 // Nếu đã đăng nhập, kiểm tra xem người dùng đã đăng ký khóa học chưa
                 if (isLoggedIn) {
