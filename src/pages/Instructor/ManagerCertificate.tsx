@@ -116,7 +116,6 @@ const ManagerCertificate: React.FC = () => {
         setIsModalVisible(false);
       })
       .catch(info => {
-        console.log('Validate Failed:', info);
       });
   };
 

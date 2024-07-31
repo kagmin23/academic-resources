@@ -25,7 +25,6 @@ const LayoutGuest: React.FC<MainLayoutProps> = () => {
   const onSearch = async (value: string) => {
     try {
       const response = await getCourses(value, '', 1, 10);
-      console.log(response);
       navigate(`/search?query=${value}`, { state: { courses: response } });
     } catch (error) {
       console.error('Error searching courses:', error);

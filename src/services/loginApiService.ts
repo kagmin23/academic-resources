@@ -3,8 +3,6 @@ import { HOST_MAIN } from "services/apiService";
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    console.log("Attempting to log in with email:", email);
-
     const response = await axios.post(
       `${HOST_MAIN}/api/auth`,
       { email, password },

@@ -41,7 +41,6 @@ const ManagerCourseInstructor: React.FC = () => {
     setLoading(true);
     try {
       const response = await getSessions('', '', 1, 10);
-      console.log("reponse", response)
       setSessions(response.data.pageData);
       setDataSource(response.data.pageData);
     } catch (error) {
@@ -55,7 +54,6 @@ const ManagerCourseInstructor: React.FC = () => {
   const fetchCourses = async () => {
     try {
       const response = await getCourses('', 1, 10);
-      console.log("courses", response);
 
       setCourses(response.data.pageData);
       setDataSource(response.data.pageData);
@@ -68,7 +66,6 @@ const ManagerCourseInstructor: React.FC = () => {
   };
   
   const handleEdit = (record: Session) => {
-    console.log("Edit record:", record);
     setIsEditMode(true);
     setCurrentRecord(record);
     setIsModalVisible(true);
@@ -99,8 +96,6 @@ const ManagerCourseInstructor: React.FC = () => {
                 ...response.data,
                 key: response.data._id
               };
-              console.log("value",values)
-
               setDataSource([...dataSource, newSession]);
               setDataSource([...dataSource, newSession]);
               message.success('Session created successfully');
@@ -113,7 +108,6 @@ const ManagerCourseInstructor: React.FC = () => {
         setModalVisible(false);
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
         message.error('Validation failed');
       });
   };

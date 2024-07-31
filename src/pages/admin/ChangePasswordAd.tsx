@@ -39,7 +39,6 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
     if (!isDropdownVisible && !userId) {
       try {
         const response = await getCurrentUser();
-        console.log('Current user response:', response); // Debug log
         setUserId(response.data._id); // Correctly set userId from response
       } catch (error) {
         console.error('Failed to fetch current user:', error);
@@ -52,7 +51,6 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
   };
 
   const onFinish = async (values: any) => {
-    console.log('Form values:', values); // Debug log
     const { currentPassword, newPassword, confirmPassword } = values;
 
     if (newPassword !== confirmPassword) {
@@ -72,7 +70,6 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
     }
 
     try {
-      console.log('Changing password with:', { userId, currentPassword, newPassword }); // Debug log
       await changeUserPassword(userId, currentPassword, newPassword);
       notification.success({
         message: 'Success',

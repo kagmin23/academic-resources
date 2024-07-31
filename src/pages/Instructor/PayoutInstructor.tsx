@@ -37,10 +37,7 @@ function PayoutsInstructor() {
 
   const onUpdateStatusPayout = async (payoutId: string, newStatus: string, comment: string) => {
     try {
-      console.log(`Send request of payout with ID ${payoutId} to ${newStatus}`);
       const response = await updateStatusPayout(payoutId, newStatus, '');
-      console.log("Response:", response);
-  
       if (response) {
         message.success('Send Request Payout Successfully!');
         setData(prevData =>
@@ -147,6 +144,7 @@ function PayoutsInstructor() {
             color = 'default';
             showButton = false;
         }
+
         return (
           <div className="flex flex-row items-center justify-center">
             <Tag color={color}>{status}</Tag>

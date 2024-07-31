@@ -73,7 +73,7 @@ const LearnCourseDetail: React.FC = () => {
         };
 
         fetchCourseDetail();
-    }, [id, lessonId, navigate]);
+    }, [courseId, lessonId, navigate]);
 
     const fetchLessonDetail = async (lessonId: string) => {
         try {

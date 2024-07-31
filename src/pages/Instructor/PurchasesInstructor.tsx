@@ -96,9 +96,7 @@ function PurchasesInstructor() {
     setLoading(true);
     try {
       const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
-      console.log("transactions", transactions)
       const response = await createPayout('',transactions);
-      console.log('Payout response:', response);
       setSelectedRowKeys([]);
     } catch (error) {
       message.error("Failed to create payout");

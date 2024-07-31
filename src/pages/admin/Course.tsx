@@ -66,11 +66,7 @@ const CourseAdmin: React.FC = () => {
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
     try {
-      console.log("courseId", courseId);
-      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
       const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("response", response);
-  
       if (response) {
         message.success('Changed Status Successfully!');
         setCourses(prevCourses =>

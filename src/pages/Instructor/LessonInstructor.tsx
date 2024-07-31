@@ -68,7 +68,6 @@ const ManagerLessonInstructor: React.FC = () => {
     setLoading(true);
     try {
       const response = await getSessions('','', 1, 10);
-      console.log("response", response);
       setSessions(response.data.pageData);
       setDataSource(response.data.pageData);
     } catch (error) {
@@ -83,7 +82,6 @@ const ManagerLessonInstructor: React.FC = () => {
     setLoading(true);
     try {
       const response = await getCourses("", 1, 10);
-      console.log("courses", response);
       setCourses(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
@@ -107,12 +105,7 @@ const ManagerLessonInstructor: React.FC = () => {
     setExpandedKeys(prevKeys => prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]);
   };
 
-  const onChange = (value: string) => {
-    console.log(`selected ${value}`);
-  };
-
   const onSearch = (value: string) => {
-    console.log("search:", value);
   };
 
   const handleSaveLesson = () => {
@@ -156,7 +149,6 @@ const ManagerLessonInstructor: React.FC = () => {
         setModalVisible(false);
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
         message.error("Validation failed");
       });
   };
@@ -209,7 +201,6 @@ const ManagerLessonInstructor: React.FC = () => {
         setIsModalVisible(false);
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
         message.error("Validation failed");
       });
   };

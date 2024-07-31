@@ -52,7 +52,6 @@ export const getCourseDetail = async (courseId: string, role: string) => {
 };
 
 export const getCategories = async (keyword: string, pageNum: number, pageSize: number) => {
-  const token = localStorage.getItem('');
 
   return apiRequest('/api/client/category/search', {
     method: 'POST',
