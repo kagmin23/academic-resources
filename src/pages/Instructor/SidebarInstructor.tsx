@@ -32,17 +32,17 @@ const SidebarAdmin: React.FC = () => {
     },
     {
       icon: ContainerOutlined,
-      heading: "Manager Course",
+      heading: "Manager Courses",
       href: "/instructor/profile-instructor/manager-instructor-course",
     },
     {
       icon: ContainerOutlined,
-      heading: "Manager Session",
+      heading: "Manager Sessions",
       href: "/instructor/profile-instructor/manager-instructor-session",
     },
     {
       icon: ContainerOutlined,
-      heading: "Manager Lesson",
+      heading: "Manager Lessons",
       href: "/instructor/profile-instructor/manager-instructor-lesson",
     },
     {
