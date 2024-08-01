@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
-import { createCart } from '../services/All/cartApiService';
+import { createCart } from '../services/All/CartApiService';
 import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
 import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 
