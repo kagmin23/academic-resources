@@ -6,7 +6,6 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
-import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 import { createCart } from '../services/All/cartApiService';
 import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
@@ -82,6 +81,9 @@ const CourseDetail: React.FC = () => {
     const [updatedReviewRating, setUpdatedReviewRating] = useState<number>(0);
     const [updatedReviewComment, setUpdatedReviewComment] = useState<string>('');
     const [loadingUpdateReview, setLoadingUpdateReview] = useState<boolean>(false);
+    const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
+    const [reviews, setReviews] = useState<Review[]>([]);
+    const [loading, setLoading] = useState<boolean>(false);
     const [form] = Form.useForm();
     const navigate = useNavigate();
     
@@ -99,10 +101,7 @@ const CourseDetail: React.FC = () => {
                     });
                 }
             } catch (error) {
-                // notification.error({
-                //   message: 'Error',
-                //   description: 'Failed to fetch current user information',
-                // });
+                message.error("Failed to fetch current user!")
             }
         };
 
@@ -120,48 +119,6 @@ const CourseDetail: React.FC = () => {
             navigate(`/instructor-detail/${courseId}`);
         }
     };
-
-    const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
-    const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
-    const [reviews, setReviews] = useState<Review[]>([]);
-    const [loading, setLoading] = useState<boolean>(false);
-
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-            try {
-                const response = await fetch('/api/check-login-status');
-                const data = await response.json();
-                setIsLoggedIn(data.isLoggedIn);
-            } catch (error) {
-                console.error('Failed to check login status:', error);
-            }
-        };
-
-        checkLoginStatus();
-    }, []);
-
-    useEffect(() => {
-        if (!courseId) {
-            console.error('Course ID is not available');
-            return;
-        }
-        const fetchCourseDetail = async () => {
-            try {
-                const response = await getCourseDetail(courseId);
-                setCourseDetail(response.data);
-                // Nếu đã đăng nhập, kiểm tra xem người dùng đã đăng ký khóa học chưa
-                if (isLoggedIn) {
-                    // Tạm thời cho là `subscriptionInfo` sẽ chứa thông tin đăng ký từ API
-                    const response = await fetch(`/api/subscription-status/${courseId}`);
-                    const data = await response.json();
-                    setIsSubscribed(data.is_subscribed);
-                }
-            } catch (error) {
-                console.error('Failed to fetch course details:', error);
-            }
-        };
-        fetchCourseDetail();
-    }, [courseId, isLoggedIn]);
 
     useEffect(() => {
         if (courseId) {
@@ -205,13 +162,6 @@ const CourseDetail: React.FC = () => {
 
     const handleSubscribe = async () => {
         if (!courseDetail) return;
-
-        if (!isLoggedIn) {
-            message.warning('Please log in to subscribe.');
-            return;
-        }
-        setLoading(true);
-
         try {
             await createOrUpdate(courseDetail.instructor_id);
             fetchSubscriptionStatus();

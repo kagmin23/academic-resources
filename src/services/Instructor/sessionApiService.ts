@@ -8,11 +8,9 @@ export const createSession = async (sessionData: {
   position_order: number,
 }) => {
   const token = localStorage.getItem('token');
-
   if (typeof sessionData.position_order === 'string') {
     sessionData.position_order = parseFloat(sessionData.position_order);
   }
-
   try {
     const response = await axios.post(`${HOST_MAIN}/api/session`,
       sessionData,

@@ -10,7 +10,6 @@ import { Course, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { getCourses } from 'services/All/getCoursesApiService';
 import { createSession, deleteSession, getSessions, updateSession } from 'services/Instructor/sessionApiService';
 
@@ -26,7 +25,7 @@ const ManagerCourseInstructor: React.FC = () => {
   const [form] = Form.useForm();
   const [courses, setCourses] = useState<Course[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
-  const { sessionId, courseId } = useParams<{ sessionId: string, courseId: string }>();
+  const [courseId, setCourseId] = useState<Course>();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
@@ -90,13 +89,13 @@ const ManagerCourseInstructor: React.FC = () => {
               message.error('Failed to Update Session');
             });
         } else {
-          createSession({ ...values, course_id: courseId! })
+          createSession({ ...values, course_id: courseId })
             .then((response) => {
               const newSession = {
                 ...response.data,
                 key: response.data._id
               };
-              setDataSource([...dataSource, newSession]);
+              console.log("courseId", courseId)
               setDataSource([...dataSource, newSession]);
               message.success('Session created successfully');
             })

@@ -40,18 +40,6 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
     fetchCurrentUser();
   }, []);
 
-  const handleMenuClick = (e: { key: string }) => {
-    setSelectedKeys([e.key]); 
-  };
-
-  const onSearch = (value: string) => {
-    navigate(`/search?query=${value}`);
-  };
-
-  const toggleDrawer = () => {
-    setDrawerVisible(!drawerVisible);
-  };
-
   const handleLogout = async () => {
     localStorage.removeItem("user");
     localStorage.removeItem("token");

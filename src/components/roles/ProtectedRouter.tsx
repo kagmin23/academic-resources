@@ -17,7 +17,7 @@ const ProtectedRouter: React.FC<ProtectedRouteProps> = ({ allowedRoles, children
     return <Navigate to="/log-in" replace/>
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.data.role)) {
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace/>
   }
 

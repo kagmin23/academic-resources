@@ -1,16 +1,22 @@
 import axios from 'axios';
 
-const api = axios.create({
+const axiosInstance = axios.create({
     baseURL: 'https://api-ojt-hcm24-react06-group04.vercel.app',
+    headers: {
+        "content-type": "application/json; charset=UTF-8",
+    },
+    timeout: 300000,
+    timeoutErrorMessage: `Connection is timeout exceeded`,
 });
 
-const authen = localStorage.getItem('token');
+const token = localStorage.getItem('token');
 
 // Request interceptor
-if (authen != null) {
-    api.interceptors.request.use(
+if (token != null) {
+    axiosInstance.interceptors.request.use(
         function (config) {
             config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
+            console.log("config", config)
             return config;
         },
         function (error) {
@@ -20,8 +26,9 @@ if (authen != null) {
 }
 
 // Response interceptor
-api.interceptors.response.use(
+axiosInstance.interceptors.response.use(
     function (response) {
+        console.log("response inter", response)
         if (response.data && response.data.data) {
             response.data = response.data.data;
         }
@@ -32,4 +39,4 @@ api.interceptors.response.use(
     }
 );
 
-export default api;
+export default axiosInstance;

@@ -1,14 +1,20 @@
 import { SearchOutlined } from '@ant-design/icons';
-import { Button, Card, Checkbox, Dropdown, Input, Menu } from 'antd';
-import debounce from 'lodash/debounce';
-import { ClientCourses } from 'models/types';
-import React, { useCallback, useEffect, useState } from 'react';
+import { Button, Card, Checkbox, Dropdown, Input, Menu, message } from 'antd';
+import { Category, ClientCourses } from 'models/types';
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getCourses } from 'services/UserClient/clientApiService';
+import { getCategories, getCourses } from 'services/UserClient/clientApiService';
 
 const { Search } = Input;
+
 interface MenuItems {
   [key: string]: string[];
+}
+interface ApiResponse {
+  success: boolean;
+  data: {
+    pageData: any[];
+  };
 }
 
 const useQuery = () => {
@@ -19,25 +25,51 @@ const SearchPage: React.FC = () => {
   const query = useQuery();
   const [searchTerm, setSearchTerm] = useState(query.get('query') || '');
   const [filters, setFilters] = useState<string[]>([]);
-  const [filteredResults, setFilteredResults] = useState<ClientCourses[]>([]);
+  const [searchCourses, setSearchCourses] = useState<ClientCourses[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [menuItems, setMenuItems] = useState<MenuItems>({});
+  const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
+  const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
 
-  const debouncedSearch = useCallback(
-    debounce(async (value: string) => {
+  useEffect(() => {
+    const fetchCourses = async () => {
       try {
-        const data = await getCourses(value, '', 1, 10);
-      console.log("data", data)
-        setFilteredResults(data.courses || []);
+        const response: ApiResponse = await getCourses('', '', 1, 10);
+        if (response.success) {
+          setSearchCourses(response.data.pageData);
+        } else {
+          message.error('Failed to fetch courses');
+        }
       } catch (error) {
         console.error('Error fetching courses:', error);
+        message.error('An error occurred. Please try again later.');
+      } finally {
+        setLoadingCourses(false);
       }
-    }, 500),
-    []
-  );
+    };
+
+    const fetchCategories = async () => {
+      try {
+        const response: ApiResponse = await getCategories('', 1, 10);
+        if (response.success) {
+          setCategories(response.data.pageData);
+        } else {
+          message.error('Failed to fetch categories');
+        }
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+        message.error('An error occurred. Please try again later.');
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+    fetchCourses();
+    fetchCategories();
+  }, []);
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
-    debouncedSearch(value);
+    // debouncedSearch(value);
   };
 
   const handleFilterChange = (filter: string) => {
@@ -57,11 +89,17 @@ const SearchPage: React.FC = () => {
           course.instructor_name.includes(filter)
         )
       );
-      setFilteredResults(filtered);
+      setSearchCourses(filtered);
     } catch (error) {
       console.error('Error applying filters:', error);
     }
   };
+  
+  useEffect(() => {
+    if (filters.length > 0) {
+      applyFilters();
+    }
+  }, [filters]);
 
   const renderMenu = (options: string[]) => (
     <Menu>
@@ -78,18 +116,6 @@ const SearchPage: React.FC = () => {
     </Menu>
   );
 
-  useEffect(() => {
-    if (searchTerm) {
-      debouncedSearch(searchTerm);
-    }
-  }, [searchTerm, debouncedSearch]);
-
-  useEffect(() => {
-    if (filters.length > 0) {
-      applyFilters();
-    }
-  }, [filters]);
-
   return (
     <div className="flex flex-col p-4 md:flex-row">
       <div className="w-full md:w-3/4">
@@ -103,22 +129,18 @@ const SearchPage: React.FC = () => {
         />
         <h1 className="mt-4 text-2xl font-bold md:text-4xl lg:text-3xl md:mt-6 lg:mt-8">Search Results</h1>
         <div className="mt-4">
-          {filteredResults.map((result) => (
-            <Card key={result._id} className="mb-4">
-              <div className="flex">
-                <div className="flex-1">
-                  <img src="image_url" alt="" />
-                  <h3 className="text-xl font-bold">{result.name}</h3>
-                  <p className="text-gray-600">{result.category_name}</p>
-                  <p className="text-gray-600">Instructor: {result.instructor_name}</p>
-                  <p className="text-gray-600">Rating: {result.average_rating.toFixed(1)}</p>
-                  <p>{result.description}</p>
-                  <p className="font-semibold">${result.price.toFixed(2)}</p>
-                </div>
-                <div className="flex-shrink-0 ml-4">
-                  <img src={result.image_url} alt={result.name} className="object-cover w-32 h-32" />
-                </div>
-              </div>
+          {searchCourses.map((result) => (
+            <Card
+              key={result._id}
+              title={<h3 className="text-xl font-bold">{result.name}</h3>}
+              cover={<img className="w-full h-40" alt={result.name} src={result.image_url} />}
+              className="mb-4"
+            >
+              <p className="text-gray-600">{result.category_name}</p>
+              <p className="text-gray-600">Instructor: {result.instructor_name}</p>
+              <p className="text-gray-600">Rating: {result.average_rating.toFixed(1)}</p>
+              <p>{result.description}</p>
+              <p className="font-semibold">${result.price.toFixed(2)}</p>
             </Card>
           ))}
         </div>

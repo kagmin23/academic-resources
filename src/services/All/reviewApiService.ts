@@ -1,11 +1,8 @@
-import axios from "axios";
-import { HOST_MAIN } from "services/apiService";
+import axiosInstance from "hook/config";
 
 export const getReviews = async(course_id: string, pageNum: number, pageSize: number) => {
     try {
-        const token = localStorage.getItem('token');
-        
-        const response = await axios.post(`${HOST_MAIN}/api/review/search`, {
+        const response = await axiosInstance.post('/api/review/search', {
               "searchCondition": {
                   "course_id": course_id,
                   "rating": 0,
@@ -17,12 +14,8 @@ export const getReviews = async(course_id: string, pageNum: number, pageSize: nu
                   "pageNum": pageNum,
                   "pageSize": pageSize
                 }
-        }, {
-            headers: {
-            //   Authorization: `Bearer ${token}`,
-            'Content-Type': 'application/json',
-            }
-          });
+        },
+    );
           console.log("getReviews", response);
     return response.data.data.pageData;
 
@@ -34,22 +27,14 @@ export const getReviews = async(course_id: string, pageNum: number, pageSize: nu
 
 export const createReview = async (course_id: string, comment: string, rating: number) => {
     try {
-        const token = localStorage.getItem('token');
-        
-        const response = await axios.post(`${HOST_MAIN}/api/review`, {
+        const response = await axiosInstance.post('/api/review', {
             course_id,
             comment,
             rating
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            }
-        });
-        
+        },
+    );
         console.log("createReview: ", response);
         return response.data;
-
     } catch (error) {
         console.error("Error to Log Api createReview!", error);
         throw error;
@@ -58,21 +43,13 @@ export const createReview = async (course_id: string, comment: string, rating: n
 
 export const updateReview = async (reviewId: string, comment: string, rating: number) => {
     try {
-        const token = localStorage.getItem('token');
-        
-        const response = await axios.put(`${HOST_MAIN}/api/review/${reviewId}`, {
+        const response = await axiosInstance.put('/api/review/${reviewId}', {
             comment,
             rating
-        }, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            }
-        });
-
+        },
+    );
         console.log("updateReview: ", response);
-        return response.data; // Ensure this matches the output data structure
-
+        return response.data;
     } catch (error) {
         console.error("Error in updateReview API call!", error);
         throw error;

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosInstance from 'hook/config';
 import { HOST_MAIN, apiRequest } from 'services/apiService';
 
 export const getCourses = async ( keyword: string, category_id: string, pageNum: number, pageSize: number) => {
@@ -32,7 +33,7 @@ export const getCourses = async ( keyword: string, category_id: string, pageNum:
 
 export const getCourseDetail = async (courseId: string) => {
   try {
-    const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`);
+    const response = await axiosInstance.get(`/api/client/course/${courseId}`);
     console.log("getCourseDetail", response);
     return response.data;
   } catch (error) {
@@ -44,10 +45,7 @@ export const getCourseDetail = async (courseId: string) => {
 export const getCourseDetailUser = async (courseId: string) => {
   const token = localStorage.getItem("token");
   try {
-    const response = await axios.get(`${HOST_MAIN}/api/client/course/${courseId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+    const response = await axiosInstance.get(`/api/client/course/${courseId}`, {
     });
     console.log("getCourseDetailUser", response);
     return response.data;
@@ -79,11 +77,13 @@ export const getCategories = async (keyword: string, pageNum: number, pageSize: 
 };
 
 export const getUserDetail = async (userId: string) => {
-
-  return apiRequest(`/api/users/${userId}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
+  try {
+    const response = await axiosInstance.get(`/api/users/${userId}`, {
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user details:', error);
+    throw error;
+  }
 };
+

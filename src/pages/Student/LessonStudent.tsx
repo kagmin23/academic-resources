@@ -11,7 +11,7 @@ import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
-import { getCourseDetail } from "services/UserClient/clientApiService";
+import { getCourseDetailUser } from "services/UserClient/clientApiService";
 import "tailwindcss/tailwind.css";
 
 const { Sider, Content, Header } = Layout;
@@ -42,7 +42,7 @@ interface Course {
 }
 
 const LearnCourseDetail: React.FC = () => {
-    const { id, lessonId } = useParams<{ id: string, lessonId?: string }>();
+    const { lessonId } = useParams<{ id: string, lessonId?: string }>();
     const { courseId } = useParams<{ courseId?: string }>();
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
@@ -50,29 +50,29 @@ const LearnCourseDetail: React.FC = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const fetchCourseDetail = async () => {
+        const fetchCourseDetailUser = async () => {
             if (!courseId) {
                 message.error("Course ID is missing");
                 return;
             }
-
             try {
-                const data = await getCourseDetail(courseId);
-                setCourse(data.data);
-                if (lessonId) {
-                    fetchLessonDetail(lessonId);
-                } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
-                    const firstLessonId = data.session_list[0].lesson_list[0]._id;
-                    fetchLessonDetail(firstLessonId);
-                    navigate(`/student-learning/${courseId}/lesson/${firstLessonId}`);
-                }
+                const data = await getCourseDetailUser(courseId);
+                setCourse(data);
+                console.log("getCourseDetail", data)
+                // if (lessonId) {
+                //     fetchLessonDetail(lessonId);
+                // } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
+                //     const firstLessonId = data.session_list[0].lesson_list[0]._id;
+                //     fetchLessonDetail(firstLessonId);
+                //     navigate(`/student-learning/${courseId}/lesson/${firstLessonId}`);
+                // }
             } catch (error) {
                 message.error("Error fetching course details!");
                 console.error("Error fetching course details:", error);
             }
         };
 
-        fetchCourseDetail();
+        fetchCourseDetailUser();
     }, [courseId, lessonId, navigate]);
 
     const fetchLessonDetail = async (lessonId: string) => {
