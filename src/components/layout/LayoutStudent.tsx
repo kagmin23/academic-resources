@@ -1,9 +1,10 @@
 import { BookOutlined, LogoutOutlined, MenuOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { getCarts } from 'services/All/cartApiService';
+import { getCourses } from 'services/UserClient/clientApiService';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService';
 
@@ -16,9 +17,8 @@ const LayoutStudent: React.FC = () => {
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [notificationCountCart, setNotificationCountCart] = useState<number>(0);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-
-  const notificationCountBell = 5;
 
   const fetchCurrentUser = async () => {
     try {
@@ -60,17 +60,18 @@ const LayoutStudent: React.FC = () => {
     setSelectedKeys([e.key]);
   };
 
-  // const onSearch = async (value: string) => {
-  //   try {
-  //     const response = await getCourses(value, '', 1, 10);
-  //     console.log(response);
-  //     navigate(`/search?query=${value}`, { state: { courses: response } });
-  //   } catch (error) {
-  //     console.error('Error searching courses:', error);
-  //   }
-  // };
-
-  const onSearch = async (value: string) => {}
+  const onSearch = async (value: string) => {
+    try {
+      const response = await getCourses(value, '', 1, 10);
+      navigate(`search?query=${value}`, { state: { courses: response } });
+      if (searchInputRef.current) {
+        // Clear the search input
+        searchInputRef.current.value = ''; 
+      }
+    } catch (error) {
+      console.error('Error searching courses:', error);
+    }
+  };
 
   const toggleDrawer = () => {
     setDrawerVisible(!drawerVisible);

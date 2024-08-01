@@ -1,7 +1,7 @@
 import { BookOutlined, LoginOutlined, LogoutOutlined, MenuOutlined, ShoppingCartOutlined } from '@ant-design/icons';
 import { Button, Drawer, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { getCourses } from 'services/UserClient/clientApiService';
 import 'tailwindcss/tailwind.css';
@@ -16,16 +16,21 @@ interface MainLayoutProps {
 const LayoutGuest: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null); // Create a ref for the Input element
   const navigate = useNavigate();
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
   };
-  
+
   const onSearch = async (value: string) => {
     try {
       const response = await getCourses(value, '', 1, 10);
       navigate(`/search?query=${value}`, { state: { courses: response } });
+      if (searchInputRef.current) {
+        // Clear the search input
+        searchInputRef.current.value = ''; 
+      }
     } catch (error) {
       console.error('Error searching courses:', error);
     }
