@@ -181,8 +181,6 @@ const HomePage: React.FC = () => {
     }
   };
 
-
-
   return (
     <div className="bg-gray-100 homepage">
       <header className="hero-image">

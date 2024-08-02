@@ -246,6 +246,20 @@ const ManagerCourseInstructor: React.FC = () => {
     }
   };
 
+  const statusOptions = (status: string) => {
+    const allOptions = [
+      { value: 'waiting_approve', label: 'Waiting Approve' },
+      { value: 'active', label: 'Active' },
+      { value: 'inactive', label: 'Inactive' },
+    ];
+
+    if (['approve', 'active', 'inactive'].includes(status)) {
+      return allOptions.filter(option => option.value !== 'waiting_approve');
+    }
+
+    return allOptions;
+  };
+
   const columns = [
     {
       title: "Course Name",
@@ -317,11 +331,7 @@ const ManagerCourseInstructor: React.FC = () => {
                 onCancel: () => { },
               });
             }}
-            options={[
-              { value: 'waiting_approve', label: 'Waiting Approve' },
-              { value: 'active', label: 'Active' },
-              { value: 'inactive', label: 'Inactive' },
-            ]}
+            options={statusOptions(status)}
           />
         </div>
       ),
