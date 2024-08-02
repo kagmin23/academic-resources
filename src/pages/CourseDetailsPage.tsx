@@ -179,28 +179,28 @@ const CourseDetail: React.FC = () => {
         }
     };
 
-    const handleSubscribe = async () => {
-        if (!courseDetail) return;
-        try {
-            await createOrUpdate(courseDetail.instructor_id);
-            fetchSubscriptionStatus();
-            message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
-        } catch (error) {
-            console.error('Failed to subscribe:', error);
-            message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
-        } finally {
-            setLoading(false);
-        }
-    };
+    // const handleSubscribe = async () => {
+    //     if (!courseDetail) return;
+    //     try {
+    //         await createOrUpdate(courseDetail.instructor_id);
+    //         fetchSubscriptionStatus();
+    //         message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
+    //     } catch (error) {
+    //         console.error('Failed to subscribe:', error);
+    //         message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
     
-    const fetchSubscriptionStatus = async () => {
-        const response = await getItemBySubscriber("", 1, 10);
-        setIsSubscribed(response[0].is_subscribed);
-    };
-    useEffect(() => {
-        fetchSubscriptionStatus();
-    },
-        []);
+    // const fetchSubscriptionStatus = async () => {
+    //     const response = await getItemBySubscriber("", 1, 10);
+    //     setIsSubscribed(response[0].is_subscribed);
+    // };
+    // useEffect(() => {
+    //     fetchSubscriptionStatus();
+    // },
+    //     []);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -331,7 +331,7 @@ const CourseDetail: React.FC = () => {
                                     <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
 
                                 <Button
-                                    onClick={handleSubscribe}
+                                    // onClick={handleSubscribe}
                                     type="primary"
                                     loading={loading}
                                     className={`mr-2 mt-2 p-1 text-sm font-semibold w-full ${isSubscribed ? 'bg-gray-300 text-black' : 'bg-red-500 text-white'}`}

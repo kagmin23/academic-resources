@@ -10,12 +10,12 @@ import {
   RightOutlined,
   SketchOutlined
 } from '@ant-design/icons';
-import { Button, Card, Carousel, Col, Row, Spin, message } from 'antd';
+import { Button, Card, Carousel, Col, Row, Spin, message ,notification} from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCategories, getCourses } from 'services/UserClient/clientApiService';
 import './styles.css';
-
+import { getCurrentUser } from '../services/AdminsApi/UserService';
 interface Course {
   _id: string;
   name: string;
@@ -63,25 +63,22 @@ const HomePage: React.FC = () => {
   const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
   const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
 
-  // useEffect(() => {
-  //   const fetchCurrentUser = async () => {
-  //     try {
-  //       const response = await getCurrentUser();
-  //       if (response.success) {
-  //         setCurrentUser(response.data);
-  //       } else {
-  //         notification.error({
-  //           message: 'Error',
-  //           description: 'user dont login',
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error("Error to fetch Current User!")
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      try {
+        const response = await getCurrentUser();
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          // Handle no user logged in case
+        }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      }
+    };
 
-  //   fetchCurrentUser();
-  // }, []);
+    fetchCurrentUser();
+  }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
