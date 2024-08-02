@@ -3,7 +3,7 @@ import { Button, Card, ConfigProvider, Image, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-import { createCart } from 'services/All/cartApiService';
+import { createCart } from 'services/All/CartApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 
 
