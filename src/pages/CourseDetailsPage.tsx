@@ -123,25 +123,47 @@ const CourseDetail: React.FC = () => {
             navigate(`/instructor-detail/${courseId}`);
         }
     };
+    const handleSubscribe = async () => {
+        if (!courseDetail) return;
+    
+        if (!currentUser) {
+          navigate('/log-in');
+          return;
+        }
+    
+        setLoading(true); // Bắt đầu quá trình loading
+    
+        try {
+          const response = await createOrUpdate(courseDetail.instructor_id);
+          setIsSubscribed(response.data.is_subscribed);
+          message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
+        } catch (error) {
+          console.error('Failed to subscribe:', error);
+          message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+        } finally {
+          setLoading(false); // Kết thúc quá trình loading
+        }
+      };
+    
 
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
     const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
 
-    useEffect(() => {
-        const checkLoginStatus = async () => {
-            try {
-                const response = await fetch('/api/check-login-status');
-                const data = await response.json();
-                setIsLoggedIn(data.isLoggedIn);
-            } catch (error) {
-                console.error('Failed to check login status:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const checkLoginStatus = async () => {
+    //         try {
+    //             const response = await fetch('/api/check-login-status');
+    //             const data = await response.json();
+    //             setIsLoggedIn(data.isLoggedIn);
+    //         } catch (error) {
+    //             console.error('Failed to check login status:', error);
+    //         }
+    //     };
 
-        checkLoginStatus();
-    }, []);
+    //     checkLoginStatus();
+    // }, []);
 
     useEffect(() => {
         if (!courseId) {
@@ -153,18 +175,18 @@ const CourseDetail: React.FC = () => {
                 const response = await getCourseDetail(courseId);
                 setCourseDetail(response.data);
                 // Nếu đã đăng nhập, kiểm tra xem người dùng đã đăng ký khóa học chưa
-                if (isLoggedIn) {
-                    // Tạm thời cho là `subscriptionInfo` sẽ chứa thông tin đăng ký từ API
-                    const response = await fetch(`/api/subscription-status/${courseId}`);
-                    const data = await response.json();
-                    setIsSubscribed(data.is_subscribed);
-                }
+                // if (isLoggedIn) {
+                //     // Tạm thời cho là `subscriptionInfo` sẽ chứa thông tin đăng ký từ API
+                //     const response = await fetch(`/api/subscription-status/${courseId}`);
+                //     const data = await response.json();
+                //     setIsSubscribed(data.is_subscribed);
+                // }
             } catch (error) {
                 console.error('Failed to fetch course details:', error);
             }
         };
         fetchCourseDetail();
-    }, [courseId, isLoggedIn]);
+    }, [courseId]);
 
     useEffect(() => {
         if (courseId) {
@@ -206,34 +228,34 @@ const CourseDetail: React.FC = () => {
         }
     };
 
-    const handleSubscribe = async () => {
-        if (!courseDetail) return;
+    // const handleSubscribe = async () => {
+    //     if (!courseDetail) return;
 
-        if (!isLoggedIn) {
-            message.warning('Please log in to subscribe.');
-            return;
-        }
-        setLoading(true);
+    //     if (!isLoggedIn) {
+    //         message.warning('Please log in to subscribe.');
+    //         return;
+    //     }
+    //     setLoading(true);
 
-        try {
-            await createOrUpdate(courseDetail.instructor_id);
-            fetchSubscriptionStatus();
-            message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
-        } catch (error) {
-            console.error('Failed to subscribe:', error);
-            message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
-        } finally {
-            setLoading(false);
-        }
-    };
-    const fetchSubscriptionStatus = async () => {
-        const response = await getItemBySubscriber("", 1, 10);
-        setIsSubscribed(response[0].is_subscribed);
-    };
-    useEffect(() => {
-        fetchSubscriptionStatus();
-    },
-        []);
+    //     try {
+    //         await createOrUpdate(courseDetail.instructor_id);
+    //         fetchSubscriptionStatus();
+    //         message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
+    //     } catch (error) {
+    //         console.error('Failed to subscribe:', error);
+    //         message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+    //     } finally {
+    //         setLoading(false);
+    //     }
+    // };
+    // const fetchSubscriptionStatus = async () => {
+    //     const response = await getItemBySubscriber("", 1, 10);
+    //     setIsSubscribed(response[0].is_subscribed);
+    // };
+    // useEffect(() => {
+    //     fetchSubscriptionStatus();
+    // },
+    //     []);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -347,9 +369,9 @@ const CourseDetail: React.FC = () => {
                             <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                             <div className="flex mt-4 space-x-4">
                                 <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
-                                <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
+                                {/* <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
                                     <Button type="default" className="p-5 text-lg font-semibold text-white bg-gray-800">Buy Now</Button>
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
                     </div>
@@ -365,7 +387,8 @@ const CourseDetail: React.FC = () => {
                                 <div onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
                                     <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
 
-                                <Button
+                                {/* <Button
+                                    // onClick={handleSubscribe}
                                     onClick={handleSubscribe}
                                     type="primary"
                                     loading={loading}
@@ -378,7 +401,15 @@ const CourseDetail: React.FC = () => {
                                     ) : (
                                         'Subscribe'
                                     )}
-                                </Button>
+                                </Button> */}
+                                  <Button
+          type="primary"
+          icon={<BellOutlined />}
+          onClick={handleSubscribe}
+          loading={loading} // Hiển thị trạng thái loading
+        >
+          {isSubscribed ? 'Unsubscribe' : 'Subscribe'}
+        </Button>
                             </div>
                         </div>
                     </div>
