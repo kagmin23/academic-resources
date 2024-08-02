@@ -16,7 +16,6 @@ if (token != null) {
     axiosInstance.interceptors.request.use(
         function (config) {
             config.headers.Authorization = `Bearer ${localStorage.getItem('token')}`;
-            console.log("config", config)
             return config;
         },
         function (error) {
@@ -28,7 +27,6 @@ if (token != null) {
 // Response interceptor
 axiosInstance.interceptors.response.use(
     function (response) {
-        console.log("response inter", response)
         if (response.data && response.data.data) {
             response.data = response.data.data;
         }
