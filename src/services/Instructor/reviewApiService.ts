@@ -1,14 +1,8 @@
-import axios from "axios";
-import { HOST_MAIN } from "services/apiService";
+import axiosInstance from "hook/config";
 
 export const getReview = async (reviewId: string) => {
   try {
-    const token = localStorage.getItem('token');
-    
-    const response = await axios.get(`${HOST_MAIN}/api/review/${reviewId}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+    const response = await axiosInstance.get(`/api/review/${reviewId}`, {
     });
     
     console.log("getReview: ", response);

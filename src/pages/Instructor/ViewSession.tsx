@@ -54,7 +54,7 @@ const ViewSession: React.FC = () => {
     const fetchSessions = async () => {
       if (courseId) {
         try {
-          const response = await getSessions('', 1, 10,5, 1, courseId);
+          const response = await getSessions('',courseId, 1, 10);
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
         } catch (error) {
@@ -127,8 +127,6 @@ const ViewSession: React.FC = () => {
                 ...response.data,
                 key: response.data._id
               };
-              console.log("value",values)
-
               setDataSource([...dataSource, newSession]);
               setFilteredDataSource([...dataSource, newSession]);
               message.success('Session created successfully');

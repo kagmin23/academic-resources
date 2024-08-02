@@ -42,7 +42,6 @@ const Dashboard: React.FC = () => {
 
   const handleDateChange = (dates: any, dateStrings: [string, string]) => {
     setSelectedDates(dates);
-    console.log('Đang lọc dữ liệu từ ngày:', dateStrings[0], 'đến ngày:', dateStrings[1]);
     filterDataByRange(dates);
   };
 

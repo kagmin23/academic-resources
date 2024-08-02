@@ -1,5 +1,4 @@
-import axios from 'axios';
-import { HOST_MAIN } from './apiService';
+import axiosInstance from 'hook/config';
 
 interface User {
   _id:string;
@@ -23,14 +22,9 @@ export const loginViaGoogle = async (
   credential: string,
 ): Promise<string> => {
   try {
-    const res = await axios.post(
-      `${HOST_MAIN}/api/auth/google`,
+    const res = await axiosInstance.post(
+      '/api/auth/google',
       { google_id: credential },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      },
     );
 
     const token =
@@ -48,7 +42,7 @@ export const loginViaGoogle = async (
 
 export const getCurrentLogin = async (token: string): Promise<User> => {
   try {
-    const res = await axios.get(`${HOST_MAIN}/api/auth`, {
+    const res = await axiosInstance.get('/api/auth', {
       headers: {
         Authorization: `Bearer ${token}`,
       },

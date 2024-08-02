@@ -2,18 +2,15 @@ import axios from 'axios';
 import { HOST_MAIN, apiRequest } from 'services/apiService';
 
 export const createSession = async (sessionData: {
-  name: string;
-  course_id: string;
-  description: string;
-  position_order: number;
+  name: string,
+  course_id: string,
+  description: string,
+  position_order: number,
 }) => {
   const token = localStorage.getItem('token');
-  console.log("sessionData", sessionData);
-
   if (typeof sessionData.position_order === 'string') {
     sessionData.position_order = parseFloat(sessionData.position_order);
   }
-
   try {
     const response = await axios.post(`${HOST_MAIN}/api/session`,
       sessionData,
@@ -24,7 +21,6 @@ export const createSession = async (sessionData: {
         },
       }
     );
-
     return response.data;
   } catch (error) {
     console.error('Error creating session:', error);
@@ -32,9 +28,7 @@ export const createSession = async (sessionData: {
   }
 };
 
-
-
-export const getSessions = async (keyword: string, pageNum: number, pageSize: number,totalItems: number,totalPages: number, course_id: string) => {
+export const getSessions = async (keyword: string, course_id: string, pageNum: number, pageSize: number) => {
   const token = localStorage.getItem('token');
 
   return apiRequest('/api/session/search', {
@@ -47,12 +41,11 @@ export const getSessions = async (keyword: string, pageNum: number, pageSize: nu
       searchCondition: {
         keyword,
         course_id,
+        is_position_order: false,
         is_delete: false,
       },
       pageInfo: {
         pageNum,
-        totalItems,
-        totalPages,
         pageSize,
       },
     },

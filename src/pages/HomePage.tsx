@@ -10,11 +10,10 @@ import {
   RightOutlined,
   SketchOutlined
 } from '@ant-design/icons';
-import { Button, Card, Carousel, Col, Row, Spin, message, notification } from 'antd';
+import { Button, Card, Carousel, Col, Row, Spin, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCategories, getCourses } from 'services/UserClient/clientApiService';
-import { getCurrentUser } from '../services/AdminsApi/UserService';
 import './styles.css';
 
 interface Course {
@@ -64,25 +63,25 @@ const HomePage: React.FC = () => {
   const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
   const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await getCurrentUser();
-        if (response.success) {
-          setCurrentUser(response.data);
-        } else {
-          notification.error({
-            message: 'Error',
-            description: 'user dont login',
-          });
-        }
-      } catch (error) {
-        console.error("Error to fetch Current User!")
-      }
-    };
+  // useEffect(() => {
+  //   const fetchCurrentUser = async () => {
+  //     try {
+  //       const response = await getCurrentUser();
+  //       if (response.success) {
+  //         setCurrentUser(response.data);
+  //       } else {
+  //         notification.error({
+  //           message: 'Error',
+  //           description: 'user dont login',
+  //         });
+  //       }
+  //     } catch (error) {
+  //       console.error("Error to fetch Current User!")
+  //     }
+  //   };
 
-    fetchCurrentUser();
-  }, []);
+  //   fetchCurrentUser();
+  // }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -116,7 +115,6 @@ const HomePage: React.FC = () => {
         setLoadingCategories(false);
       }
     };
-
     fetchCourses();
     fetchCategories();
   }, []);
@@ -269,7 +267,7 @@ const HomePage: React.FC = () => {
             ]}
           >
             {courses.map((course, index) => (
-              <div className="px-3 py-2 my-5 sm:my-10" key={index}>
+              <div className="px-3 py-2 my-5 transition-transform transform sm:my-10 hover:scale-105 hover:shadow-lg" key={index}>
                 <div onClick={() => handleNavigateToCourseDetails(course._id)}>
                   <img className="object-fill w-full h-40 rounded-xl lg:h-48" src={course.image_url} alt={course.name} />
                 </div>

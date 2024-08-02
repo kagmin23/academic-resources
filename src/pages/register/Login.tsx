@@ -15,20 +15,10 @@ const Login: React.FC = () => {
   const handleLogin = async (values: { email: string, password: string }) => {
     setLoading(true);
     try {
-      await loginUser(values.email, values.password);
-      const storeUser: any = localStorage.getItem('user');
-
-      if (!storeUser) {
-        console.log('Failed to get data local');
-        setLoading(false);
-        return;
-      }
-
-      const user = JSON.parse(storeUser);
-      // console.log(user);
-      // console.log(user.data.role);
-      if (user && user.data) {
-        switch (user.data.role) {
+      const user = await loginUser(values.email, values.password);
+      console.log("user", user.role);
+      if (user) {
+        switch (user.role) {
           case 'admin':
             navigate('/admin');
             break;
@@ -42,6 +32,7 @@ const Login: React.FC = () => {
             navigate('/home');
         }
       }
+      console.log("user", user);
     } catch (error) {
       console.error('Login error:', error);
       message.error('Invalid email or password');
@@ -53,7 +44,6 @@ const Login: React.FC = () => {
   const handleGoogleLogin = async (credentialResponse: CredentialResponse) => {
     try {
       const { credential } = credentialResponse;
-      // console.log(credential);
       if (!credential) {
         throw new Error("Google credential is missing");
       }
@@ -62,9 +52,9 @@ const Login: React.FC = () => {
       if (token) {
         const user = await getCurrentLogin(token);
         if (user?.data) {
-          sessionStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("user", JSON.stringify(user));
           notification.success({
-            message: "Login Successful",
+            message: "Login Successfully!",
           });
           navigate("/student");
         }

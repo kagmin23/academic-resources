@@ -13,6 +13,7 @@ import { getUserDetail } from "services/All/getUserDetailApiService";
 import { updateUser } from "services/All/updateUserApiService";
 
 const { Option } = Select;
+const { confirm } = Modal;
 
 interface Item {
   _id: string;
@@ -36,8 +37,6 @@ const UsersAdmin: React.FC = () => {
   const [filteredRole, setFilteredRole] = useState<string>("all");
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState<boolean>(false);
   const [deleteItemId, setDeleteItemId] = useState<string | undefined>();
-  const [lockConfirmVisible, setLockConfirmVisible] = useState<boolean>(false);
-  const [lockItemId, setLockItemId] = useState<string | undefined>();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,7 +61,7 @@ const UsersAdmin: React.FC = () => {
   const handleAdd = async () => { 
     if (
       editingItem.name &&
-      editingItem.dob && 
+      editingItem.dob &&
       editingItem.email &&
       editingItem.phone_number &&
       editingItem.role
@@ -164,47 +163,48 @@ const UsersAdmin: React.FC = () => {
     setFilteredRole(value);
   };
 
-  const handleStatusChange = async (checked: boolean, item: Item) => {
-    try {
-      await changeStatus(item._id, checked);
-      const updatedData = data.map((dataItem) =>
-        dataItem._id === item._id ? { ...dataItem, status: checked } : dataItem
-      );
-      setData(updatedData);
-      message.success(`User status ${checked ? 'activated' : 'deactivated'} successfully`);
-    } catch (error) {
-      message.error('Error changing user status');
-    }
+  const handleStatusChange = (checked: boolean, item: Item) => {
+    Modal.confirm({
+      title: 'Confirm Status Change',
+      content: `Are you sure you want to ${checked ? 'activate' : 'deactivate'} this user status?`,
+      okText: 'Confirm',
+      cancelText: 'Cancel',
+      onOk: async () => {
+        try {
+          await changeStatus(item._id, checked);
+          const updatedData = data.map((dataItem) =>
+            dataItem._id === item._id ? { ...dataItem, status: checked } : dataItem
+          );
+          setData(updatedData);
+          message.success(`User status has been ${checked ? 'activated' : 'deactivated'} successfully`);
+        } catch (error) {
+          message.error('Error changing user status');
+        }
+      },
+      onCancel() {},
+    });
   };
 
-  const handleLockStatus = async () => {
-    if (lockItemId) {
-      try {
-        await changeStatus(lockItemId, false);
-        const updatedData = data.map((item) =>
-          item._id === lockItemId ? { ...item, status: false } : item
-        );
-        setData(updatedData);
-        setLockItemId(undefined);
-        setLockConfirmVisible(false);
-        message.success("User status locked successfully");
-      } catch (error) {
-        message.error('Error locking user status');
-      }
-    }
-  };
-
-  const handleRoleChange = async (userId: string, role: string) => {
-    try {
-      await changeUserRole(userId, role);
-      const updatedData = data.map((item) =>
-        item._id === userId ? { ...item, role } : item
-      );
-      setData(updatedData);
-      message.success("User role updated successfully");
-    } catch (error) {
-      message.error("Error updating user role");
-    }
+  const handleRoleChange = (userId: string, newRole: string) => {
+    confirm({
+      title: 'Bạn có chắc chắn muốn thay đổi vai trò của người dùng này?',
+      content: `Vai trò mới của người dùng sẽ là: ${newRole}`,
+      okText: 'Có',
+      cancelText: 'Không',
+      onOk: async () => {
+        try {
+          await changeUserRole(userId, newRole);
+          const updatedData = data.map((item) =>
+            item._id === userId ? { ...item, role: newRole } : item
+          );
+          setData(updatedData);
+          message.success('Vai trò người dùng đã được cập nhật thành công');
+        } catch (error) {
+          message.error('Lỗi khi cập nhật vai trò người dùng');
+        }
+      },
+      onCancel: () => {}
+    });
   };
 
   const filteredData = data.filter((item) => {
@@ -234,7 +234,7 @@ const UsersAdmin: React.FC = () => {
           size="small"
           value={role}
           onChange={(value) => handleRoleChange(item._id, value)}
-          style={{ width: 120 }}
+          style={{ width: 100 }}
         >
           <Option value="admin">Admin</Option>
           <Option value="student">Student</Option>
@@ -319,6 +319,7 @@ const UsersAdmin: React.FC = () => {
           <Form layout="vertical">
             <Form.Item label="Username">
               <Input
+                placeholder= "Please enter the name of user!"
                 value={editingItem.name}
                 onChange={(e) => setEditingItem({ ...editingItem, name: e.target.value })}
               />
@@ -331,18 +332,21 @@ const UsersAdmin: React.FC = () => {
             </Form.Item>
             <Form.Item label="Phone">
               <Input
+                placeholder= "Please enter the phone of user!"
                 value={editingItem.phone_number}
                 onChange={(e) => setEditingItem({ ...editingItem, phone_number: e.target.value })}
               />
             </Form.Item>
             <Form.Item label="Email">
               <Input
+                placeholder= "Please enter the email of user!"
                 value={editingItem.email}
                 onChange={(e) => setEditingItem({ ...editingItem, email: e.target.value })}
               />
             </Form.Item>
             <Form.Item label="Role">
               <Select
+                placeholder= "Please select the Role of user!"
                 value={editingItem.role}
                 onChange={(value) => setEditingItem({ ...editingItem, role: value })}
               >
@@ -354,6 +358,7 @@ const UsersAdmin: React.FC = () => {
             {!editingItem._id && (
               <Form.Item label="Password">
                 <Input.Password
+                  placeholder= "Please enter password of user!"
                   value={editingItem.password}
                   onChange={(e) => setEditingItem({ ...editingItem, password: e.target.value })}
                 />
@@ -373,19 +378,6 @@ const UsersAdmin: React.FC = () => {
           okButtonProps={{ danger: true }}
         >
           <p>Are you sure you want to delete this user?</p>
-        </Modal>
-
-        <Modal
-          title="Confirm Lock User"
-          visible={lockConfirmVisible}
-          onOk={handleLockStatus}
-          onCancel={() => {
-            setLockItemId(undefined);
-            setLockConfirmVisible(false);
-          }}
-          okButtonProps={{ danger: true }}
-        >
-          <p>Are you sure you want to lock this user?</p>
         </Modal>
       </Content>
     </Layout>

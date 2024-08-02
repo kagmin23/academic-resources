@@ -10,7 +10,6 @@ const ProtectedRouter: React.FC<ProtectedRouteProps> = ({ allowedRoles, children
   const userData: any = localStorage.getItem('user');
 
   if (!userData) {
-    console.log("Not found user in local");
   }
 
   const user = JSON.parse(userData);
@@ -18,7 +17,7 @@ const ProtectedRouter: React.FC<ProtectedRouteProps> = ({ allowedRoles, children
     return <Navigate to="/log-in" replace/>
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.data.role)) {
+  if (allowedRoles && !allowedRoles.includes(user.role)) {
     return <Navigate to="/" replace/>
   }
 

@@ -1,7 +1,10 @@
 import {
   BookOutlined,
+  LogoutOutlined,
   MenuOutlined,
-  ShoppingCartOutlined
+  SettingOutlined,
+  ShoppingCartOutlined,
+  UserOutlined
 } from '@ant-design/icons';
 import {
   Avatar,
@@ -14,8 +17,9 @@ import {
   notification,
 } from 'antd';
 import Footer from 'components/Footer';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { getCourses } from 'services/UserClient/clientApiService';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService';
 
@@ -31,6 +35,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
   const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
   const [drawerVisible, setDrawerVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -60,8 +65,17 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
     setSelectedKeys([e.key]);
   };
 
-  const onSearch = (value: string) => {
-    navigate(`/search?query=${value}`);
+  const onSearch = async (value: string) => {
+    try {
+      const response = await getCourses(value, '', 1, 10);
+      navigate(`search?query=${value}`, { state: { courses: response } });
+      if (searchInputRef.current) {
+        // Clear the search input
+        searchInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Error searching courses:', error);
+    }
   };
 
   const toggleDrawer = () => {
@@ -77,10 +91,10 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
 
   const profileMenu = (
     <Menu style={{ width: 200 }}>
-      <Menu.Item key="1">
+      <Menu.Item key="1" icon={<UserOutlined />}>
         <Link to="/instructor/profile-instructor">Profile</Link>
       </Menu.Item>
-      <SubMenu key="2" title="Settings">
+      <SubMenu key="2" title="Settings" icon={<SettingOutlined />}>
         <Menu.Item key="setting:1">
         <Link to={`/instructor/profile-instructor/instructor-setting/${currentUser ? currentUser._id : ''}`}>Personal Info</Link>
 
@@ -89,7 +103,7 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
           <Link to="/instructor/profile-instructor/instructor-changepassword">Change Password</Link>
         </Menu.Item>
       </SubMenu>
-      <Menu.Item key="3" onClick={handleLogout}>
+      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
         Logout
       </Menu.Item>
     </Menu>

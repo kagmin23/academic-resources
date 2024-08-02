@@ -155,7 +155,6 @@ const ReportAdmin: React.FC = () => {
 
       setData(updatedData);
       setUnapproveConfirmVisible(false);
-      console.log("Unapproving report with ID: ", unapproveItemId);
     }
   };
 

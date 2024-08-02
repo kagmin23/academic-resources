@@ -16,7 +16,6 @@ function PurchasesInstructor() {
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
   const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [selectAll, setSelectAll] = useState<boolean>(false);
@@ -79,13 +78,15 @@ function PurchasesInstructor() {
     setData(filteredData);
   };
 
-  // useEffect(() => {
-  //   const filteredData = data.filter((item) =>
-  //     item.payout_no.toLowerCase().includes(searchTerm.toLowerCase())
-  //   );
-
-  //   setData(filteredData);
-  // }, [searchTerm]);
+  const handleSearch = (value: string) => {
+    const filteredData = data.filter((item) =>
+      item.course_name.toLowerCase().includes(value.toLowerCase()) ||
+      item.purchase_no.toLowerCase().includes(value.toLowerCase()) ||
+      item.cart_no.toLowerCase().includes(value.toLowerCase()) ||
+      item.instructor_name.toLowerCase().includes(value.toLowerCase())
+    );
+    setData(filteredData);
+  };
 
   const handleCreatePayout = async () => {
     if (selectedRowKeys.length === 0) {
@@ -95,9 +96,7 @@ function PurchasesInstructor() {
     setLoading(true);
     try {
       const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
-      console.log("transactions", transactions)
       const response = await createPayout('',transactions);
-      console.log('Payout response:', response);
       setSelectedRowKeys([]);
     } catch (error) {
       message.error("Failed to create payout");
@@ -206,12 +205,11 @@ function PurchasesInstructor() {
 
         <div className="my-5">
           <div className="flex flex-row items-center justify-between">
-            <Input
-              placeholder="Search"
+          <Input
+              placeholder="Search..."
               prefix={<SearchOutlined />}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-1/4 h-8 border-2 border-gray-300 border-solid rounded float-end sm:text-sm"
+              onChange={(e) => handleSearch(e.target.value)}
+              style={{ width: 300 }}
             />
             <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={12}>
               <FilterOutlined /> Filter:

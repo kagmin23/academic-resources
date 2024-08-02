@@ -18,7 +18,7 @@ function PayoutsAdmin() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [comment, setComment] = useState('');
-  const [payout, setPayout] = useState<Payout[]>([]);
+  // const [payout, setPayout] = useState<Payout[]>([]);
 
   const fetchPayouts = async () => {
     setLoading(true);
@@ -40,10 +40,7 @@ function PayoutsAdmin() {
 
   const onUpdateStatusPayout = async (payoutId: string, newStatus: string, comment: string) => {
     try {
-      console.log(`Changing status of payout with ID ${payoutId} to ${newStatus}`);
       const response = await updateStatusPayout(payoutId, newStatus, '');
-      console.log("Response:", response);
-  
       if (response) {
         message.success('Changed Status Successfully!');
         setData(prevData =>
@@ -79,10 +76,16 @@ function PayoutsAdmin() {
         return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
       });
     }
-
     setData(filteredData);
   };
-
+  
+  const handleSearch = (value: string) => {
+    const filteredData = data.filter((item) =>
+      item.payout_no.toLowerCase().includes(value.toLowerCase())
+    );
+    setData(filteredData);
+  };
+  
   const columns = [
     {
       title: "Payout No",
@@ -152,7 +155,7 @@ function PayoutsAdmin() {
         return (
           <div className="flex flex-row items-center justify-center">
             <Tag color={color}>{statusText}</Tag>
-            {status === 'new' || status === 'request_payout' ? (
+            {status === 'request_payout' ? (
               <div className="flex flex-row gap-1">
                 <Button
                   type="primary"
@@ -166,6 +169,7 @@ function PayoutsAdmin() {
                         <>
                         <p className="mb-3">Are you sure you want to <strong>Complete Request Payout</strong>?</p>
                           <Input.TextArea
+                            name="comment"
                             rows={4}
                             placeholder="Enter a comment (optional)"
                             onChange={(e) => setComment(e.target.value)}
@@ -189,6 +193,7 @@ function PayoutsAdmin() {
                         <>
                         <p className="mb-3">Are you sure you want to <strong>Reject Request Payout</strong>?</p>
                           <Input.TextArea
+                            name="comment"
                             rows={4}
                             placeholder="Enter a comment (optional)"
                             onChange={(e) => setComment(e.target.value)}
@@ -236,11 +241,10 @@ function PayoutsAdmin() {
         <div className="my-5">
           <div className="flex flex-row items-center justify-between">
             <Input
-              placeholder="Search"
+              placeholder="Search..."
               prefix={<SearchOutlined />}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-1/4 h-8 border-2 border-gray-300 border-solid rounded float-end sm:text-sm"
+              onChange={(e) => handleSearch(e.target.value)}
+              style={{ width: 300 }}
             />
             <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={12}>
               <FilterOutlined /> Filter:

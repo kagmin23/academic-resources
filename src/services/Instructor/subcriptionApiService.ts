@@ -1,15 +1,12 @@
-import { apiRequest } from 'services/apiService';
+import axiosInstance from 'hook/config';
 
-export const getItemsByInstructor = async (pageNum: number, pageSize: number,keyword:string) => {
+export const getItemsByInstructor = async (pageNum: number, pageSize: number, keyword: string) => {
   const token = localStorage.getItem('token');
 
-  return apiRequest('/api/subscription/search-for-instructor', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-    data: {
+  try {
+    const response = await axiosInstance.post(
+      '/api/subscription/search-for-instructor',
+      {
         searchCondition: {
           keyword,
           is_delete: false,
@@ -19,5 +16,10 @@ export const getItemsByInstructor = async (pageNum: number, pageSize: number,key
           pageSize,
         },
       },
-  });
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching items by instructor:', error);
+    throw error;
+  }
 };

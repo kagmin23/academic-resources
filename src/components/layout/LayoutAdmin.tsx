@@ -40,28 +40,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
     fetchCurrentUser();
   }, []);
 
-  const handleMenuClick = (e: { key: string }) => {
-    setSelectedKeys([e.key]); 
-  };
-
-  const onSearch = (value: string) => {
-    navigate(`/search?query=${value}`);
-  };
-
-  const toggleDrawer = () => {
-    setDrawerVisible(!drawerVisible);
-  };
-
   const handleLogout = async () => {
-    // const result = await logoutApiService();
-    // if (result.success) {
-    //   navigate('/log-in');
-    // } else {
-    //   notification.error({
-    //     message: 'Error',
-    //     description: result.message,
-    //   });
-    // }
     localStorage.removeItem("user");
     localStorage.removeItem("token");
     localStorage.removeItem("exp token");

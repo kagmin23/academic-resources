@@ -41,7 +41,6 @@ const BuyNow: React.FC = () => {
         }
         try {
             const response = await createCart({ course_id: courseDetail._id });
-            console.log('Course added to cart successfully:', response.data);
             message.success('Course added to cart successfully!');
         } catch (error) {
             console.error('Failed to add course to cart:', error);

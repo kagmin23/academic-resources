@@ -1,6 +1,5 @@
 import { DoubleRightOutlined, FilterOutlined, ReadOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
-import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Purchase } from "models/types";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
@@ -28,11 +27,7 @@ function ListCoursesStudent() {
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
   const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
-  const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
-  const [selectAll, setSelectAll] = useState<boolean>(false);
-  const [statuses, setStatuses] = useState<{ [key: string]: string }>({});
   const navigate = useNavigate();
 
   const fetchPurchases = async () => {
@@ -50,23 +45,6 @@ function ListCoursesStudent() {
   useEffect(() => {
     fetchPurchases();
   }, []);
-
-  const handleSelectAll = (e: CheckboxChangeEvent) => {
-    const { checked } = e.target;
-    if (checked) {
-      setSelectedRowKeys(data.map(item => item._id));
-    } else {
-      setSelectedRowKeys([]);
-    }
-    setSelectAll(checked);
-  };
-
-  const handleCheckboxChange = (e: CheckboxChangeEvent, id: React.Key) => {
-    const { checked } = e.target;
-    setSelectedRowKeys(prev => checked
-      ? [...prev, id]
-      : prev.filter(key => key !== id));
-  };
 
   const refreshData = () => {
     setFilterText('');
@@ -89,7 +67,6 @@ function ListCoursesStudent() {
         return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
       });
     }
-
     setData(filteredData);
   };
   
@@ -97,15 +74,12 @@ function ListCoursesStudent() {
     return data.length;
   };
 
-  // const onChangeStatus = (value: string) => {
-  //   const savedStatuses = JSON.parse(localStorage.getItem('listCourseStatuses') || '{}');
-  //   savedStatuses[value] = value;
-  //   localStorage.setItem('purchaseStatuses', JSON.stringify(savedStatuses));
-  //   setData(prevData => prevData.map(item =>
-  //     item._id === value ? { ...item, status: value } : item
-  //   ));
-  //   console.log(`Updated status to ${value}`);
-  // }
+  const handleSearch = (value: string) => {
+    const filteredData = data.filter((item) =>
+      item.course_name.toLowerCase().includes(value.toLowerCase())
+    );
+    setData(filteredData);
+  };
 
   const columns = [
     {
@@ -128,24 +102,6 @@ function ListCoursesStudent() {
       key: "instructor_name",
       width: 150,
     },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status_list",
-    //   key: "status_list",
-    //   width: 120,
-    //   align: 'center' as AlignType,
-    //   render: (status: string) => {
-    //     return (
-    //       <Select
-    //         value={status || "Process"}
-    //         onChange={(value) => onChangeStatus(value)}
-    //       >
-    //         <Option className="text-xs" value="Process">Process</Option>
-    //         <Option className="text-xs" value="Success">Success</Option>
-    //       </Select>
-    //     )
-    //   },
-    // },
     {
       title: "Action",
       dataIndex: "course_id",
@@ -173,11 +129,10 @@ function ListCoursesStudent() {
         <div className="my-5">
           <div className="flex flex-row items-center justify-between">
             <Input
-              placeholder="Search"
+              placeholder="Search..."
               prefix={<SearchOutlined />}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-1/4 h-8 border-2 border-gray-300 border-solid rounded float-end sm:text-sm"
+              onChange={(e) => handleSearch(e.target.value)}
+              style={{ width: 300 }}
             />
             <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={12}>
               <FilterOutlined /> Filter:

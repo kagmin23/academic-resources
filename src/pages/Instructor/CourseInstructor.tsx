@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
-import {Button,Col, Form,Image, Input, Layout, Modal, Row, Select, Spin,Switch,Table,Typography,message} from "antd";
+import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Switch, Table, Typography, message } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { Category, Course, LogStatus } from "models/types";
@@ -72,8 +72,6 @@ const ManagerCourseInstructor: React.FC = () => {
   const fetchCourses = async () => {
     try {
       const response = await getCourses('', 1, 10);
-      console.log("courses", response);
-
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
     } catch (error) {
@@ -92,7 +90,6 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
   const handleEditorChange = (content: any, editor: any) => {
-    console.log("Content was updated:", content);
   };
 
   const handleAddNewCourse = () => {
@@ -144,7 +141,6 @@ const ManagerCourseInstructor: React.FC = () => {
         if (isEditMode && currentRecord) {
           updateCourse(currentRecord._id, values)
             .then(() => {
-              console.log("Values", values);
               const newDataSource = dataSource.map((item) =>
                 item._id === currentRecord._id ? { ...item, ...values } : item
               );
@@ -176,7 +172,6 @@ const ManagerCourseInstructor: React.FC = () => {
         setIsModalVisible(false);
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
         message.error('Validation failed');
       });
   };
@@ -198,7 +193,6 @@ const ManagerCourseInstructor: React.FC = () => {
         handleDelete(record);
       },
       onCancel() {
-        console.log("Cancel");
       },
     });
   };
@@ -209,8 +203,6 @@ const ManagerCourseInstructor: React.FC = () => {
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
     try {
-      console.log(`Changed Status of ${courseId} to Status ${newStatus}`);
-
       const course = courses.find(course => course._id === courseId);
 
       if (course?.status === 'reject' && (newStatus === 'active' || newStatus === 'inactive')) {
@@ -219,7 +211,6 @@ const ManagerCourseInstructor: React.FC = () => {
       }
 
       const response = await changeCourseStatus(courseId, newStatus, comment);
-      console.log("response", response);
 
       if (response) {
         message.success('Changed Status Successfully!');
@@ -514,7 +505,6 @@ const ManagerCourseInstructor: React.FC = () => {
           rowKey="_id"
         />
       </Content>
-
 
       <Modal
         width={"50%"}

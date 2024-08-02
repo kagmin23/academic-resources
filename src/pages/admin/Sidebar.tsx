@@ -74,19 +74,6 @@ const SidebarAdmin: React.FC = () => {
 
   ];
 
-  // const handleLogout = async () => {
-  //   try {
-  //     const resultLogout = await logoutApiService();
-  //     if (resultLogout.success) {
-  //       console.log("Logout Successfully");
-  //     } else {
-  //       console.error("Log-out failed", error);
-  //     }
-  //   } catch (error) {
-  //       console.error("Log-out failed", error);
-  //   }
-  // }
-
   return (
     <div className={`transition-all duration-300 ${expanded ? 'w-60' : 'w-20'} h-screen bg-[#1F2937] shadow-lg`}>
       <div className="flex items-center justify-between p-4">

@@ -1,18 +1,9 @@
-import axios from "axios";
-import { HOST_MAIN } from "services/apiService";
+import axiosInstance from "hook/config";
 
 export const loginUser = async (email: string, password: string) => {
   try {
-    console.log("Attempting to log in with email:", email);
-
-    const response = await axios.post(
-      `${HOST_MAIN}/api/auth`,
+    const response = await axiosInstance.post('/api/auth',
       { email, password },
-      {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
     );
 
     const token =
@@ -22,15 +13,12 @@ export const loginUser = async (email: string, password: string) => {
 
     if (token) {
       localStorage.setItem("token", token);
-      const userResponse = await axios.get(`${HOST_MAIN}/api/auth`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const userResponse = await axiosInstance.get('/api/auth', {
       });
 
       const userData = userResponse.data;
-
       if (userData) {
+        console.log("userData", userData)
         localStorage.setItem("user", JSON.stringify(userData));
         return userData;
       } else {

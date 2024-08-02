@@ -7,6 +7,7 @@ import sp from '../assets/sp.jpg';
 interface Cart {
   _id: string;
   course_name: string;
+  course_image: string;
   instructor_name: string;
   image_url?: string;
   price: number;
@@ -144,7 +145,7 @@ const ShoppingCart: React.FC = () => {
                     onChange={(e) => handleCheckboxChange(cart._id, e.target.checked, cart.cart_no)}
                   />
                   <img
-                    src={cart.image_url || sp}
+                    src={cart.course_image || sp}
                     alt="Product"
                     className="w-4/5 h-24 mx-auto md:w-1/3 md:h-36"
                   />

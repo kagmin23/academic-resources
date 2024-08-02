@@ -2,18 +2,14 @@ import {
   DeleteOutlined,
   EditOutlined,
   ExclamationCircleOutlined,
-  EyeOutlined,
   PlusCircleOutlined,
-  PlusOutlined,
-  ReadOutlined,
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Divider, Form, Input, Layout, List, Modal, Select, Table, Tabs, message } from "antd";
+import { Button, Form, Input, Layout, Modal, Select, Spin, Table, Tabs, message } from "antd";
 import { Course, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { getCourses } from 'services/All/getCoursesApiService';
 import { createSession, deleteSession, getSessions, updateSession } from 'services/Instructor/sessionApiService';
 
@@ -23,18 +19,17 @@ const { confirm } = Modal;
 
 const ManagerCourseInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Session[]>([]);
-  const [filteredDataSource, setFilteredDataSource] = useState<Session[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
-  const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Session | null>(null);
   const [form] = Form.useForm();
   const [courses, setCourses] = useState<Course[]>([]);
   const [isEditMode, setIsEditMode] = useState(false);
-  const { sessionId, courseId } = useParams<{ sessionId: string, courseId: string }>();
+  const [courseId, setCourseId] = useState<Course>();
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [currentSession, setCurrentSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   
   useEffect(() => {
     fetchSessions();
@@ -42,41 +37,34 @@ const ManagerCourseInstructor: React.FC = () => {
   }, []);
 
   const fetchSessions = async () => {
+    setLoading(true);
     try {
-      const response = await getSessions('', 1, 10, 5, 1, '');
-      console.log("reponse", response)
+      const response = await getSessions('', '', 1, 10);
       setSessions(response.data.pageData);
       setDataSource(response.data.pageData);
     } catch (error) {
       message.error('Failed to fetch sessions');
       console.error('Error fetching sessions:', error);
+    }finally{
+      setLoading(false);
     }
   };
 
   const fetchCourses = async () => {
     try {
       const response = await getCourses('', 1, 10);
-      console.log("courses", response);
 
       setCourses(response.data.pageData);
-      setFilteredDataSource(response.data.pageData);
+      setDataSource(response.data.pageData);
     } catch (error) {
       console.error('Failed to fetch courses', error);
       setCourses([]);
-      setFilteredDataSource([]);
+      setDataSource([]);
       message.error('Failed to fetch courses');
     }
   };
-
-  const handleViewMore = (key: string) => {
-    setExpandedKeys(prevKeys =>
-      prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]
-    );
-  };
   
-
   const handleEdit = (record: Session) => {
-    console.log("Edit record:", record);
     setIsEditMode(true);
     setCurrentRecord(record);
     setIsModalVisible(true);
@@ -93,7 +81,7 @@ const ManagerCourseInstructor: React.FC = () => {
                 item._id === updatedSession._id ? updatedSession : item
               );
               setDataSource(newDataSource);
-              setFilteredDataSource(newDataSource);
+              setDataSource(newDataSource);
               message.success('Session updated successfully');
             })
             .catch((error) => {
@@ -101,16 +89,14 @@ const ManagerCourseInstructor: React.FC = () => {
               message.error('Failed to Update Session');
             });
         } else {
-          createSession({ ...values, course_id: courseId! })
+          createSession({ ...values, course_id: courseId })
             .then((response) => {
               const newSession = {
                 ...response.data,
                 key: response.data._id
               };
-              console.log("value",values)
-
+              console.log("courseId", courseId)
               setDataSource([...dataSource, newSession]);
-              setFilteredDataSource([...dataSource, newSession]);
               message.success('Session created successfully');
             })
             .catch((error) => {
@@ -121,41 +107,6 @@ const ManagerCourseInstructor: React.FC = () => {
         setModalVisible(false);
       })
       .catch((info) => {
-        console.log("Validate Failed:", info);
-        message.error('Validation failed');
-      });
-  };
-  const handleOnEditLesson = () => {
-    form.validateFields()
-      .then(async (values) => {
-        form.resetFields();
-        const newValues = {
-          ...values,
-          course_id: courseId,
-          session_id: sessionId,
-        };
-        if (isEditMode && currentRecord) {
-          try {
-            const response = await updateSession(currentRecord._id, newValues);
-            const updatedLesson = response.data;
-
-            const newDataSource = dataSource.map((item) =>
-              item._id === updatedLesson._id ? updatedLesson : item
-            );
-            setDataSource(newDataSource);
-            setFilteredDataSource(newDataSource);
-            message.success('Lesson updated successfully');
-          } catch (error) {
-            console.error("Failed to Update Lesson", error);
-            message.error('Failed to Update Lesson');
-          }
-        } else {
-          message.error("Edit error");
-        }
-        setIsModalVisible(false);
-      })
-      .catch((info) => {
-        console.log("Validate Failed:", info);
         message.error('Validation failed');
       });
   };
@@ -170,7 +121,7 @@ const ManagerCourseInstructor: React.FC = () => {
           .then(() => {
             const newDataSource = dataSource.filter((item) => item._id !== sessionId);
             setDataSource(newDataSource);
-            setFilteredDataSource(newDataSource);
+            setDataSource(newDataSource);
             message.success('Session deleted successfully');
           })
           .catch((error) => {
@@ -185,10 +136,8 @@ const ManagerCourseInstructor: React.FC = () => {
     const filteredData = dataSource.filter(item =>
       item.name.toLowerCase().includes(value.toLowerCase())
     );
-    setFilteredDataSource(filteredData);
+    setSessions(filteredData);
   };
-
-  const sortedSessions = [...sessions].sort((a, b) => a.position_order - b.position_order);
 
   const handleAddNewSession = () => {
     setIsEditing(false);
@@ -204,13 +153,12 @@ const ManagerCourseInstructor: React.FC = () => {
             Session Management
           </div>
           <div className="h-6 border-r lg:mx-4"></div>
-
-            <Input
-              placeholder="Search..."
-              prefix={<SearchOutlined />}
-              onChange={e => handleSearch(e.target.value)}
-              style={{ width: 300 }}
-            />
+          <Input
+            placeholder="Search..."
+            prefix={<SearchOutlined />}
+            onChange={(e) => handleSearch(e.target.value)}
+            style={{ width: 300 }}
+          />
           <div className="h-6 border-r lg:mx-4"></div>
 
           <Button
@@ -269,9 +217,14 @@ const ManagerCourseInstructor: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+      {loading ? (
+          <div className="flex items-center justify-center h-full">
+            <Spin size="large" />
+          </div>
+        ) : (
         <Content className="m-4 overflow-y-scroll">
           <Table
-            pagination={{ pageSize: 5 }}
+            pagination={{ pageSize: 10 }}
             dataSource={sessions}
             columns={[
               {
@@ -313,71 +266,18 @@ const ManagerCourseInstructor: React.FC = () => {
                   <div className="flex flex-row justify-center gap-1">
                   <Button size="small" icon={<EditOutlined />} className="text-blue-500" onClick={() => handleEdit(session)}></Button>
                   <Button size="small" icon={<DeleteOutlined />} className="text-red-500" onClick={() => handleOnDeleteSession(session._id)}></Button>
-                  <Button size="small" icon={<EyeOutlined />} onClick={() => handleViewMore(session._id)}></Button>
+                  {/* <Button size="small" icon={<EyeOutlined />} onClick={() => handleViewMore(session._id)}></Button> */}
                 </div>
                 ),
               },
             ]}
-            expandable={{
-              expandedRowKeys: expandedKeys,
-              onExpand: (expanded, record) => handleViewMore(record._id),
-              expandedRowRender: (record: Session) => (
-                <div style={{ paddingBottom: "10px", backgroundColor: 'white', borderRadius: '4px' }}>
-                  <Tabs centered>
-                    <TabPane tab={<span style={{ fontSize: '16px' }}>List of course sessions:</span>} key="1" className='w-full'>
-                      <List
-                        className='px-2'
-                        size="small"
-                        dataSource={sortedSessions.filter(session => session.course_id === record._id)}
-                        renderItem={(session, index) => (
-                          <List.Item actions={[
-                            <Button icon={<PlusOutlined />} className="mr-2 text-white bg-green-600"></Button>,
-                            <Button icon={<DeleteOutlined />} className="mr-2 text-white bg-red-600"></Button>,
-                          ]}>
-                            <List.Item.Meta
-                              avatar={<ReadOutlined />}
-                              title={session.name}
-                              description={session.description}
-                            />
-                            <div>Position Order: {session.position_order}</div>
-                          </List.Item>
-                        )}
-                      />
-                      <Divider className='p-0 m-0' />
-                      <div className='flex justify-center w-full pr-5 my-5'>
-                        <Button type="dashed" className='text-base text-blue-700'> <PlusOutlined /> Add New Session</Button>
-                      </div>
-                    </TabPane>
-                  </Tabs>
-                </div>
-              ),
-              expandIcon: () => <></>,
-            }}
           />
         </Content>
+        )}
         <Footer className="text-center bg-white">
           Academic_Resources ©2023 Created by My Team
         </Footer>
       </Layout>
-
-      <Modal
-        visible={isModalVisible}
-        title={isEditMode ? "Edit Lesson" : "Add Lesson"}
-        onCancel={() => setIsModalVisible(false)}
-        onOk={handleOnEditLesson}
-      >
-        <Form form={form} layout="vertical">
-          <Form.Item name="name" label="Lesson Name" rules={[{ required: true, message: 'Please input the lesson name!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="description" label="Description" rules={[{ required: true, message: 'Please input the description!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="position_order" label="Position Order" rules={[{ required: true, message: 'Please input the position order!' }]}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </Modal>
     </Layout>
   );
 };

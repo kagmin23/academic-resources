@@ -50,6 +50,14 @@ const AdminReview: React.FC = () => {
     return filteredData.length;
   };
 
+  const handleSearch = (value: string) => {
+    const filteredSearchData = filteredData.filter((item) =>
+      item.reviewer_name.toLowerCase().includes(value.toLowerCase())
+      // item.course_name.toLowerCase().includes(value.toLowerCase())
+    );
+    setFilteredData(filteredSearchData);
+  };
+
   const columns1 = [
     {
       title: 'No.',
@@ -122,11 +130,13 @@ const AdminReview: React.FC = () => {
               <div className='w-1/2'>
                 <span className='text-lg font-semibold'>Total Reviews: {getTotalReview()}</span>
               </div>
-              <div className='w-1/4'>
+              <div className='w-1/4 mr-5'>
                 <Input
                   placeholder="Search..."
+                  className="mb-5"
                   prefix={<SearchOutlined />}
-                  className='mb-5'
+                  onChange={(e) => handleSearch(e.target.value)}
+                  style={{ width: 300 }}
                 />
               </div>
             </div>

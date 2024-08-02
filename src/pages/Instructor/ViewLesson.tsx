@@ -199,6 +199,8 @@ const ViewLesson: React.FC = () => {
       title: 'Name',
       dataIndex: 'name',
       key: 'name',
+      width: 150
+    
     },
     {
       title: 'Position Order',
@@ -210,12 +212,13 @@ const ViewLesson: React.FC = () => {
       title: 'Desciption',
       dataIndex: 'description',
       key: 'description',
+      width: 300
     },
-    // {
-    //   title: 'Lesson Type',
-    //   dataIndex: 'description',
-    //   key: 'description',
-    // },
+    {
+      title: 'Lesson Type',
+      dataIndex: 'lesson_type',
+      key: 'lesson_type',
+    },
     // {
     //   title: 'Video',
     //   dataIndex: 'video_url',
@@ -227,6 +230,9 @@ const ViewLesson: React.FC = () => {
     //   dataIndex: 'image_url',
     //   key: 'image_url',
     //   align: "center" as AlignType,
+    //   render: () => (
+    //     <iframe src="image_url"></iframe>
+    //   )
     // },
     {
       title: 'Full Time',
@@ -297,6 +303,7 @@ const ViewLesson: React.FC = () => {
           columns={columns}
           dataSource={filteredDataSource}
           loading={loading}
+          scroll={{x: "max-content"}}
           expandable={{
             expandedRowKeys: expandedKeys,
             onExpand: (expanded, lesson) => handleViewMore(lesson._id),

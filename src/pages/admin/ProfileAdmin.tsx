@@ -33,8 +33,6 @@ const ProfileAdmin: React.FC = () => {
   }, []);
 
   const handleSave = async (values: any) => {
-    // Handle saving changes to the backend, if needed
-    console.log('Saving changes:', values);
     notification.success({
       message: 'Success',
       description: 'Profile updated successfully',

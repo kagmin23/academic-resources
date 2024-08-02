@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Table, message, Select } from 'antd';
+import { Button, Input, Layout, Modal, Select, Table, message } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment, { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -200,6 +200,7 @@ const ApproveInstructor: React.FC = () => {
 
         <Table<ApproveIns>
           columns={columns}
+          scroll={{x: 'max-content'}}
           dataSource={filteredData}
           rowKey={(record) => record._id}
           pagination={false}

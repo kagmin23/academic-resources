@@ -140,7 +140,6 @@ export class Course {
     created_at: Date;
     updated_at: Date;
     is_deleted: boolean;
-  
     constructor(
       _id: string = "",
       name: string = "",
