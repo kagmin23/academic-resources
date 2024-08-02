@@ -1,13 +1,14 @@
 import {
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Col, Input, Layout, Modal, Row, Select, Table, Typography, message } from 'antd';
-import { Course } from 'models/types';
+import { Button, Input, Layout, Modal, Select, Spin, Table, Typography, message } from 'antd';
+import { Course, LogStatus } from 'models/types';
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { changeCourseStatus } from 'services/All/changerStatusApiService';
 import { getCourses } from 'services/All/getCoursesApiService';
+import { logStatus } from 'services/All/logStatusApiService';
 import './stylesAdmin.css';
 
 
@@ -22,26 +23,33 @@ const CourseAdmin: React.FC = () => {
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [logModalVisible, setLogModalVisible] = useState(false);
   const [comment, setComment] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [course_id, setCourseId] = useState<string>("");
+  const [logs, setLogs] = useState<LogStatus[]>([]);
+  const [error, setError] = useState<string | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [filteredRole, setFilteredRole] = useState<string>("all");
 
-
-
   useEffect(() => {
-    fetchSessions();
+    fetchCourses();
   }, []);
 
-  const fetchSessions = async () => {
+  const fetchCourses = async () => {
+    setLoading(true);
     try {
       const response = await getCourses('', 1, 10);
       setDataSource(response.data.pageData);
     } catch (error) {
-      message.error('Failed to fetch sessions');
-      console.error('Error fetching sessions:', error);
+      message.error('Failed to fetch Courses');
+      console.error('Error fetching Courses:', error);
+    }
+    finally {
+      setLoading(false);
     }
   };
 
-  const showLogModal = () => {
+  const showLogModal = (courseId: string) => {
+    setCourseId(courseId);
     setLogModalVisible(true);
   };
 
@@ -65,6 +73,7 @@ const CourseAdmin: React.FC = () => {
   };
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
+    setLoading(true);
     try {
       const response = await changeCourseStatus(courseId, newStatus, comment);
       if (response) {
@@ -79,6 +88,29 @@ const CourseAdmin: React.FC = () => {
     } catch (error) {
       message.error('Please enter the reason of this course!');
       console.error('Error:', error);
+    }
+    finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (logModalVisible) {
+      fetchLogStatus();
+    }
+  }, [logModalVisible]);
+
+  const fetchLogStatus = async () => {
+    if (!course_id) return;
+    setLoading(true);
+    try {
+      const response = await logStatus(course_id, "", 1, 100);
+      setLogs(response.data.pageData);
+      setError(null);
+    } catch (err) {
+      setError("Failed to fetch Logs Status");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -96,12 +128,15 @@ const CourseAdmin: React.FC = () => {
       title: 'Course',
       dataIndex: 'name',
       key: 'name',
+      render: (name: string, record: Course) => (
+        <a onClick={() => showLogModal(record._id)}>{name}</a>
+      ),
     },
     {
       title: 'User Name',
       dataIndex: 'user_name',
       key: 'user_id',
-      align: "center" as AlignType
+      align: "start" as AlignType
     },
     {
       title: 'Categrory',
@@ -113,7 +148,7 @@ const CourseAdmin: React.FC = () => {
       title: 'Price',
       dataIndex: 'price',
       key: 'price',
-      // align: "center" as AlignType
+      align: "end" as AlignType
     },
     {
       title: 'Discount (%)',
@@ -237,71 +272,84 @@ const CourseAdmin: React.FC = () => {
           </div>
         </Header>
         <Content className="m-4">
-          <div className="p-4 bg-white">
+          <div className="p-2 bg-white ">
+          {loading ?
+              (<div className="flex items-center justify-center h-64">
+                <Spin size="large" />
+              </div>) : (
             <Table
               dataSource={filteredDataSource}
               columns={columns}
-              expandable={{
-                expandedRowKeys: expandedKeys,
-                onExpand: (expanded, record) => handleViewMore(record._id),
-                expandedRowRender: (record: Course) => (
-                  <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
-                    <Row gutter={16}>
-                      <Col span={24}>
-                        <Title level={5} className='text-2xl'>Course Details</Title>
-                      </Col>
-                    </Row>
-                    <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Col span={8}>
-                        <Text strong>Description:</Text>
-                        <p>{record.description}</p>
-                      </Col>
-                      <Col span={7} style={{ textAlign: 'center' }}>
-                        <Text strong>Price:</Text>
-                        <p>${record.price}</p>
-                      </Col>
-                      <Button className='mt-5' onClick={showLogModal}>View Log</Button>
-                    </Row>
-                  </div>
-                ),
-                expandIcon: () => null,
-              }}
+              // expandable={{
+              //   expandedRowKeys: expandedKeys,
+              //   onExpand: (expanded, record) => handleViewMore(record._id),
+              //   expandedRowRender: (record: Course) => (
+              //     <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
+              //       <Row gutter={16}>
+              //         <Col span={24}>
+              //           <Title level={5} className='text-2xl'>Course Details</Title>
+              //         </Col>
+              //       </Row>
+              //       <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
+              //         <Col span={8}>
+              //           <Text strong>Description:</Text>
+              //           <p>{record.description}</p>
+              //         </Col>
+              //         <Col span={7} style={{ textAlign: 'center' }}>
+              //           <Text strong>Price:</Text>
+              //           <p>${record.price}</p>
+              //         </Col>
+              //         <Button className='mt-5' onClick={showLogModal}>View Log</Button>
+              //       </Row>
+              //     </div>
+              //   ),
+              //   expandIcon: () => null,
+              // }}
               rowKey="key"
-            />
+              />
+            )}
           </div>
           <Modal
-            visible={logModalVisible}
-            onCancel={hideLogModal}
-            footer={null}
-            width={800}
-          >
-            <h1 className="mb-5">Log Status</h1>
-            <div className="flex mb-5 space-x-5">
-              <Button className='bg-teal-600'>All log</Button>
-              <Select className="w-40">
-                <Select.Option value="New">New</Select.Option>
-                <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-                <Select.Option value="Approve">Approve</Select.Option>
-                <Select.Option value="Reject">Reject</Select.Option>
-                <Select.Option value="Active">Active</Select.Option>
-                <Select.Option value="Inactive">Inactive</Select.Option>
-              </Select>
-
-              <Select className="w-40">
-                <Select.Option value="New">New</Select.Option>
-                <Select.Option value="Waiting_approve">Waiting approve</Select.Option>
-                <Select.Option value="Approve">Approve</Select.Option>
-                <Select.Option value="Reject">Reject</Select.Option>
-                <Select.Option value="Active">Active</Select.Option>
-                <Select.Option value="Inactive">Inactive</Select.Option>
-              </Select>
-            </div>
-
-            <h1>Course Name: ...</h1>
-            <h1>Old status: ...</h1>
-            <h1>New status: ... </h1>
-            <h1>Comment: ...</h1>
-          </Modal>
+                  visible={logModalVisible}
+                  onCancel={hideLogModal}
+                  footer={null}
+                  width={800}
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center h-64">
+                      <Spin size="large" />
+                    </div>
+                  ) : (
+                    <>
+                      <h1 className="text-base font-bold">Log Status</h1>
+                      <p className="mb-5 text-xs italic">* Prioritize in order of newest</p>
+                      <div className="flex mb-5 space-x-5">
+                        <Button className="text-white bg-teal-600">All log</Button>
+                        <Select defaultValue="All" className="w-40">
+                          <Select.Option value="new">New</Select.Option>
+                          <Select.Option value="waiting_approve">Waiting approve</Select.Option>
+                          <Select.Option value="approve">Approve</Select.Option>
+                          <Select.Option value="reject">Reject</Select.Option>
+                          <Select.Option value="active">Active</Select.Option>
+                          <Select.Option value="inactive">Inactive</Select.Option>
+                        </Select>
+                      </div>
+                      {error && <p className="text-red-500">{error}</p>}
+                      {logs.length === 0 ? (
+                        <p>No logs available.</p>
+                      ) : (
+                        logs.map((log, index) => (
+                          <div key={index} className="mb-4">
+                            <h1>Course Name: {log.course_name}</h1>
+                            <h1 className="text-red-500">Old status: {log.old_status}</h1>
+                            <h1 className="text-blue-500">New status: {log.new_status}</h1>
+                            <h1>Comment: {log.comment}</h1>
+                          </div>
+                        ))
+                      )}
+                    </>
+                  )}
+                </Modal>
         </Content>
       </Layout>
     </Layout>

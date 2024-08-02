@@ -74,6 +74,8 @@ const ManagerCourseInstructor: React.FC = () => {
     form.validateFields()
       .then((values) => {
         if (isEditing && currentSession) {
+          console.log("values", values);
+
           updateSession(currentSession._id, { ...values, course_id: courseId })
             .then((response) => {
               const updatedSession = response.data;
@@ -89,13 +91,12 @@ const ManagerCourseInstructor: React.FC = () => {
               message.error('Failed to Update Session');
             });
         } else {
-          createSession({ ...values, course_id: courseId })
+          createSession({ ...values })
             .then((response) => {
               const newSession = {
                 ...response.data,
                 key: response.data._id
               };
-              console.log("courseId", courseId)
               setDataSource([...dataSource, newSession]);
               message.success('Session created successfully');
             })
@@ -177,6 +178,7 @@ const ManagerCourseInstructor: React.FC = () => {
         onCancel={() => setModalVisible(false)}
         onOk={handleSaveSession}
         okText="Save"
+        width={"50%"}
       >
         <Form form={form} layout="vertical">
         <Form.Item
@@ -186,7 +188,7 @@ const ManagerCourseInstructor: React.FC = () => {
           >
             <Select placeholder="Select a course">
               {courses.map((course) => (
-                <Select.Option key={course._id} values={course._id}>
+                <Select.Option key={course._id} value={course._id}>
                   {course.name}
                 </Select.Option>
               ))}

@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Layout, Modal, Table, Typography, notification } from 'antd';
+import { Button, Form, Input, Layout, Modal, Spin, Table, Typography, notification } from 'antd';
 import { Category } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -18,6 +18,7 @@ const CategoryAdmin: React.FC = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [modalData, setModalData] = useState<Category | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -25,6 +26,7 @@ const CategoryAdmin: React.FC = () => {
   }, []);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const response = await getCategories('', 1, 10);
       setDataSource(response.data.pageData);
@@ -35,6 +37,8 @@ const CategoryAdmin: React.FC = () => {
         message: 'Error',
         description: 'Failed to fetch categories.',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,12 +58,11 @@ const CategoryAdmin: React.FC = () => {
   };
 
   const handleCreateOrUpdateCategory = async (values: { name: string; description: string }) => {
+    setLoading(true);
     try {
       if (modalData) {
-        // Đây là logic cập nhật danh mục
         await updateCategory(modalData._id, values.name, values.description);
       } else {
-        // Đây là logic tạo mới danh mục
         await createCategory(values.name, values.description);
       }
       fetchData();
@@ -75,11 +78,13 @@ const CategoryAdmin: React.FC = () => {
         message: 'Error',
         description: `Failed to ${modalData ? 'update' : 'create'} category.`,
       });
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   const handleDeleteCategory = async () => {
+    setLoading(true);
     try {
       if (deleteId) {
         await deleteCategory(deleteId);
@@ -97,6 +102,8 @@ const CategoryAdmin: React.FC = () => {
         message: 'Error',
         description: 'Failed to delete category.',
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -131,7 +138,7 @@ const CategoryAdmin: React.FC = () => {
 
   const columns = [
     {
-      title: 'Name',
+      title: 'Categories',
       dataIndex: 'name',
       key: 'name',
     },
@@ -154,12 +161,6 @@ const CategoryAdmin: React.FC = () => {
       align: 'center' as AlignType,
       render: (updated_at: string) => moment(updated_at).format("YYYY-MM-DD"),
     },
-    // {
-    //   title: 'Is deleted',
-    //   dataIndex: 'is_deleted',
-    //   key: 'is_deleted',
-    //   align: 'center' as AlignType,
-    // },
     {
       title: 'Actions',
       key: 'actions',
@@ -206,75 +207,81 @@ const CategoryAdmin: React.FC = () => {
         </div>
       </Header>
       <Content className="m-4">
-        <div className="p-4 bg-white">
-          <Table
-            dataSource={filteredDataSource}
-            columns={columns}
-            rowKey="_id"
-          />
+        <div className="relative p-2 bg-white">
+          {loading ? (
+            <div className="flex items-center justify-center h-80">
+              <Spin size="large" tip="Loading..." />
+            </div>
+          ) : (
+            <Table
+              dataSource={filteredDataSource}
+              columns={columns}
+              rowKey="_id"
+            />
+          )}
         </div>
       </Content>
       <Modal
-          title={modalData ? "Edit Category" : "Add New Category"}
-          visible={isAddEditModalVisible}
-          onCancel={handleCloseAddEditModal}
-          footer={[
-            <Button key="close" onClick={handleCloseAddEditModal}>
-              Close
-            </Button>,
-            <Button key="save" type="primary" onClick={() => form.submit()}>
-              {modalData ? 'Save' : 'Add'}
-            </Button>,
-          ]}
-        >
-          <Form form={form} layout="vertical" onFinish={handleCreateOrUpdateCategory}>
-            <Form.Item
-              name="name"
-              label="Name"
-              rules={[{ required: true, message: 'Please input the category name!' }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item name="description" label="Description">
-              <Input.TextArea />
-            </Form.Item>
-          </Form>
-        </Modal>
+        title={modalData ? "Edit Category" : "Add New Category"}
+        visible={isAddEditModalVisible}
+        onCancel={handleCloseAddEditModal}
+        footer={[
+          <Button key="close" onClick={handleCloseAddEditModal}>
+            Close
+          </Button>,
+          <Button key="save" type="primary" onClick={() => form.submit()}>
+            {modalData ? 'Save' : 'Add'}
+          </Button>,
+        ]}
+      >
+        <Form form={form} layout="vertical" onFinish={handleCreateOrUpdateCategory}>
+          <Form.Item
+            name="name"
+            label="Name"
+            rules={[{ required: true, message: 'Please input the category name!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item name="description" label="Description">
+            <Input.TextArea />
+          </Form.Item>
+        </Form>
+      </Modal>
 
       <Modal
         title="Delete Confirmation"
         visible={isDeleteConfirmVisible}
         onOk={handleDeleteCategory}
         onCancel={handleCloseDeleteConfirm}
-        okText="Yes"
-        cancelText="No"
+        okText="Delete"
+        cancelText="Cancel"
       >
-        <Text>Are you sure you want to delete this category?</Text>
+        <p>Are you sure you want to delete this category?</p>
       </Modal>
-      {/* {modalData && (
-        <Modal
-          title="Category Detail"
-          visible={isDetailModalVisible}
-          onCancel={handleCloseDetailModal}
-          footer={[
-            <Button key="close" onClick={handleCloseDetailModal}>
-              Close
-            </Button>,
-          ]}
-        >
-          <Text strong>ID: </Text>
-          <Text>{modalData._id}</Text>
-          <br />
-          <Text strong>Name: </Text>
-          <Text>{modalData.name}</Text>
-          <br />
-          <Text strong>Description: </Text>
-          <Text>{modalData.description}</Text>
-          <br />
-          <Text strong>Created At: </Text>
-          <Text>{modalData.created_at}</Text>
-        </Modal>
-      )} */}
+
+      <Modal
+        title="Category Details"
+        visible={isDetailModalVisible}
+        onCancel={handleCloseDetailModal}
+        footer={[
+          <Button key="close" onClick={handleCloseDetailModal}>
+            Close
+          </Button>,
+        ]}
+      >
+        {modalData && (
+          <>
+            <p><strong>Name:</strong> {modalData.name}</p>
+            <p><strong>Description:</strong> {modalData.description}</p>
+            <p><strong>Created At:</strong> {moment(modalData.created_at).format("YYYY-MM-DD")}</p>
+            <p><strong>Updated At:</strong> {moment(modalData.updated_at).format("YYYY-MM-DD")}</p>
+          </>
+        )}
+      </Modal>
+
+      <Footer style={{ textAlign: 'center' }}>
+        Ant Design ©2024 Created by Ant UED
+      </Footer>
     </Layout>
   );
 };

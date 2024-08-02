@@ -4,7 +4,6 @@ import { Course, Lesson, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { getCourses } from 'services/All/getCoursesApiService';
 import { createLesson, deleteLesson, getLessons, updateLesson } from 'services/Instructor/lessonApiService';
 import { getSessions } from 'services/Instructor/sessionApiService';
@@ -20,14 +19,14 @@ const ManagerLessonInstructor: React.FC = () => {
   const [currentRecord, setCurrentRecord] = useState<Lesson | null>(null);
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-  const [lessons, setLessons] = useState<Lesson[]>([]);
-  const { sessionId, courseId } = useParams<{ sessionId: string; courseId: string }>();
   const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [filteredSessions, setFilteredSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [courseId, setCourseId] = useState<Course>();
+  const [sessionId, setSessionId] = useState<Session>();
 
   const handleAddNewLesson = () => {
     setIsEditMode(false);
@@ -40,7 +39,7 @@ const ManagerLessonInstructor: React.FC = () => {
     form.setFieldsValue({ course_id: courseId });
     const filteredSessions = sessions.filter(session => session.course_id === courseId);
     setFilteredSessions(filteredSessions);
-    form.setFieldsValue({ session_id: undefined }); // Reset session field
+    form.setFieldsValue({ session_id: undefined });
   };
 
   useEffect(() => {
@@ -52,13 +51,11 @@ const ManagerLessonInstructor: React.FC = () => {
   const fetchLessons = async () => {
     setLoading(true);
     try {
-      if (courseId && sessionId) {
-        const response = await getLessons(courseId, sessionId, 1, 10, 10, 1, "");
-        setLessons(response.data.pageData);
-      }
+      const response = await getLessons('', '', '', 1, 10);
+      setDataSource(response.data.pageData);
     } catch (error) {
-      message.error("Failed to fetch lessons");
-      console.error("Error fetching lessons:", error);
+      message.error('Failed to fetch lesson');
+      console.error('Error fetching lesson:', error);
     }finally{
       setLoading(false);
     }
@@ -105,7 +102,12 @@ const ManagerLessonInstructor: React.FC = () => {
     setExpandedKeys(prevKeys => prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]);
   };
 
+  const onChange = (value: string) => {
+    console.log(`selected ${value}`);
+  };
+
   const onSearch = (value: string) => {
+    console.log('search:', value);
   };
 
   const handleSaveLesson = () => {
@@ -114,8 +116,6 @@ const ManagerLessonInstructor: React.FC = () => {
         form.resetFields();
         const newValues = {
           ...values,
-          course_id: courseId,
-          session_id: sessionId,
         };
         if (isEditMode && currentLesson) {
           updateLesson(currentLesson._id, newValues)
@@ -130,6 +130,7 @@ const ManagerLessonInstructor: React.FC = () => {
               message.error("Failed to Update Lesson");
             });
         } else {
+          console.log("values", values)
           createLesson(newValues)
             .then((response) => {
               const newRecord = {
@@ -297,8 +298,9 @@ const ManagerLessonInstructor: React.FC = () => {
           </div>
         ) : (
         <Table
+          scroll={{x: 'max-content'}}
           columns={columns}
-          dataSource={filteredDataSource}
+          dataSource={dataSource}
           expandable={{
             expandedRowKeys: expandedKeys,
             onExpand: (expanded, record) => handleViewMore(record._id),
@@ -329,6 +331,7 @@ const ManagerLessonInstructor: React.FC = () => {
         )}
       </Content>
       <Modal
+          width={"50%"}
           title={isEditMode ? "Edit Lesson" : "Add New Lesson"}
           visible={modalVisible}
           onOk={isEditMode ? handleOnEditLesson : handleSaveLesson}
@@ -386,7 +389,6 @@ const ManagerLessonInstructor: React.FC = () => {
                 ))}
               </Select>
             </Form.Item>
-            
             <Form.Item
               label="Lesson Name"
               name="name"
@@ -394,7 +396,46 @@ const ManagerLessonInstructor: React.FC = () => {
             >
               <Input />
             </Form.Item>
-            
+            <Form.Item
+            name="lesson_type"
+            label="Lesson Type"
+            rules={[{ required: true, message: 'Please select the Lesson Type!' }]}
+          >
+            <Select
+              showSearch
+              placeholder="Select a lesson type"
+              optionFilterProp="label"
+              onChange={onChange}
+              onSearch={onSearch}
+              options={[
+                { value: 'text', label: 'text' },
+                { value: 'video', label: 'video' },
+                { value: 'image', label: 'image' },
+              ]}
+            />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Description"
+            rules={[{ required: false, message: 'Please enter the Lesson Description!' }]}
+          >
+            <Input.TextArea />
+          </Form.Item>
+          
+          <Form.Item
+            name="video_url"
+            label="Video URL"
+            rules={[{ required: false, message: 'Please enter the video URL!' }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="image_url"
+            label="Image URL"
+            rules={[{ required: false, message: 'Please enter the image URL!' }]}
+          >
+            <Input />
+          </Form.Item>
             <Form.Item
               label="Full Time"
               name="full_time"

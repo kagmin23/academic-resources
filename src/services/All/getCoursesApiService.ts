@@ -1,10 +1,15 @@
-import axiosInstance from 'hook/config';
+import { apiRequest } from 'services/apiService';
 
-export const getCourses = async (keyword: string, pageNum: number, pageSize: number) => {
-  try {
-    const response = await axiosInstance.post(
-      '/api/course/search',
-      {
+  export const getCourses = async (keyword: string, pageNum: number, pageSize: number) => {
+    const token = localStorage.getItem('token');
+  
+    return apiRequest('/api/course/search', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`,
+      },
+      data: {
         searchCondition: {
           keyword,
           is_delete: false,
@@ -14,10 +19,5 @@ export const getCourses = async (keyword: string, pageNum: number, pageSize: num
           pageSize,
         },
       },
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching courses:', error);
-    throw error;
-  }
-};
+    });
+  };
