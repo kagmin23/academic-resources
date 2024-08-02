@@ -73,7 +73,7 @@ const CourseDetail: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [isSubscribed, setIsSubscribed] = useState<boolean>();
     const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
     const [reviewRating, setReviewRating] = useState<number>(0);
     const [reviewComment, setReviewComment] = useState<string>('');
@@ -82,7 +82,7 @@ const CourseDetail: React.FC = () => {
     const [updatedReviewRating, setUpdatedReviewRating] = useState<number>(0);
     const [updatedReviewComment, setUpdatedReviewComment] = useState<string>('');
     const [loadingUpdateReview, setLoadingUpdateReview] = useState<boolean>(false);
-    const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
+    const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);   
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [form] = Form.useForm();
@@ -108,6 +108,54 @@ const CourseDetail: React.FC = () => {
 
         fetchCurrentUser();
     }, []);
+   
+      // Hàm kiểm tra trạng thái đăng ký
+    const checkSubscriptionStatus = async () => {
+        try {
+            const response = await getItemBySubscriber(currentUser._id, 1, 1);
+            if (response.length > 0) {
+                setIsSubscribed(response[0].is_subscribed);
+                setSubscriptionInfo(response[0]);
+            }
+        } catch (error) {
+            console.error('Failed to fetch subscription status:', error);
+        }
+    };
+
+    useEffect(() => {
+        if (currentUser) {
+            checkSubscriptionStatus();
+        }
+    }, [currentUser]);
+
+    // Hàm xử lý đăng ký/hủy đăng ký
+    const handleSubscribe = async () => {
+        if (!currentUser || !courseDetail) return;
+
+        try {
+            const response = await createOrUpdate(courseDetail.instructor_id);
+            if (response.data.is_subscribed) {
+                setIsSubscribed(true);
+                notification.success({
+                    message: 'Subscribed',
+                    description: 'You have successfully subscribed to the instructor.',
+                });
+            } else {
+                setIsSubscribed(false);
+                notification.success({
+                    message: 'Unsubscribed',
+                    description: 'You have successfully unsubscribed from the instructor.',
+                });
+            }
+            checkSubscriptionStatus();
+        } catch (error) {
+            notification.error({
+                message: 'Subscription Error',
+                description: 'There was an error while subscribing/unsubscribing. Please try again.',
+            });
+        }
+    };
+
 
     const handleInstructorProfile = (userId: string) => {
         if (!currentUser) {
@@ -179,28 +227,7 @@ const CourseDetail: React.FC = () => {
         }
     };
 
-    // const handleSubscribe = async () => {
-    //     if (!courseDetail) return;
-    //     try {
-    //         await createOrUpdate(courseDetail.instructor_id);
-    //         fetchSubscriptionStatus();
-    //         message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
-    //     } catch (error) {
-    //         console.error('Failed to subscribe:', error);
-    //         message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
-    //     } finally {
-    //         setLoading(false);
-    //     }
-    // };
-    
-    // const fetchSubscriptionStatus = async () => {
-    //     const response = await getItemBySubscriber("", 1, 10);
-    //     setIsSubscribed(response[0].is_subscribed);
-    // };
-    // useEffect(() => {
-    //     fetchSubscriptionStatus();
-    // },
-    //     []);
+   
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -275,6 +302,7 @@ const CourseDetail: React.FC = () => {
                                     </div>
                                 </a>
                                 <Modal
+                                   
                                     visible={isModalVisible}
                                     onCancel={handleCancel}
                                     footer={null}
@@ -282,7 +310,7 @@ const CourseDetail: React.FC = () => {
                                 >
                                     <iframe
                                         width="100%"
-                                        height="400px"
+                                        height="450px"
                                         src={courseDetail.video_url}
                                         frameBorder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -330,8 +358,8 @@ const CourseDetail: React.FC = () => {
                                 <div onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
                                     <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
 
-                                <Button
-                                    // onClick={handleSubscribe}
+                                {/* <Button
+                                    
                                     type="primary"
                                     loading={loading}
                                     className={`mr-2 mt-2 p-1 text-sm font-semibold w-full ${isSubscribed ? 'bg-gray-300 text-black' : 'bg-red-500 text-white'}`}
@@ -343,7 +371,13 @@ const CourseDetail: React.FC = () => {
                                     ) : (
                                         'Subscribe'
                                     )}
-                                </Button>
+                                </Button> */}
+                                  <Button
+                                type={isSubscribed ? 'default' : 'primary'}
+                                onClick={handleSubscribe}
+                            >
+                                {isSubscribed ? 'Subscribed' : 'Subscribe'}
+                            </Button>
                             </div>
                         </div>
                     </div>
