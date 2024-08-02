@@ -1,4 +1,6 @@
+import axios from 'axios';
 import axiosInstance from 'hook/config';
+import { HOST_MAIN } from 'services/apiService';
 
 export const createOrUpdate = async (instructor_id: string) => {
   try {
@@ -13,9 +15,11 @@ export const createOrUpdate = async (instructor_id: string) => {
 };
 
 export const getItemBySubscriber = async (keyword: string, pageNum: number, pageSize: number) => {
+  const token = localStorage.getItem('token');
+
   try {
-    const response = await axiosInstance.post(
-      '/api/subscription/search-for-subscriber',
+    const response = await axios.post(
+      `${HOST_MAIN}/api/subscription/search-for-subscriber`,
       {
         "searchCondition": {
             "keyword": keyword,
@@ -25,7 +29,13 @@ export const getItemBySubscriber = async (keyword: string, pageNum: number, page
             "pageNum": pageNum,
             "pageSize": pageSize,
         }
-      },
+    },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      }
     );
     if (response) {
       return response.data.data.pageData;

@@ -6,6 +6,7 @@ import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
+import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { getCurrentUser } from '../services/AdminsApi/UserService';
 import { createCart } from '../services/All/CartApiService';
 import { createOrUpdate, getItemBySubscriber } from '../services/All/subcriptionApiService';
@@ -122,6 +123,24 @@ const CourseDetail: React.FC = () => {
 
     useEffect(() => {
         if (courseId) {
+            setLoading(true);
+            const fetchCourseDetail = async () => {
+                try {
+                    const response = await getCourseDetail(courseId);
+                    setCourseDetail(response);
+                } catch (error) {
+                    console.error('Failed to fetch course detail:', error);
+                } finally {
+                    setLoading(false);
+                }
+            };
+
+            fetchCourseDetail();
+        }
+    }, [courseId]);
+
+    useEffect(() => {
+        if (courseId) {
             const fetchReviews = async () => {
                 setLoading(true);
                 try {
@@ -173,6 +192,7 @@ const CourseDetail: React.FC = () => {
             setLoading(false);
         }
     };
+    
     const fetchSubscriptionStatus = async () => {
         const response = await getItemBySubscriber("", 1, 10);
         setIsSubscribed(response[0].is_subscribed);
