@@ -1,22 +1,35 @@
+import axios from 'axios';
 import axiosInstance from 'hook/config';
+import { HOST_MAIN } from './apiService';
 
-interface User {
-  _id:string;
-  email: string;
-  password: string;
-  name: string;
-  role: string;
-  image: string;
-  status: boolean;
-  data: string;
-  description:string;
-  phone_number:string;
-  avatar:string;
-  dob:Date;
-  created_at:Date;
-  updated_at:Date;
-
-}
+export type User = {
+  data: {
+    _id: string;
+    email: string;
+    google_id: string;
+    password: string;
+    role: string;
+    name: string;
+    dob: string;
+    phone_number: string;
+    address: string;
+    avatar: string;
+    video: string;
+    status: boolean;
+    created_at: string;
+    updated_at: string;
+    balance_total: number;
+    balance_account: string;
+    balance_name: string;
+    transactions: {
+      _id: string;
+      payout_id: string;
+      payout_no: string;
+      payout_amount: string;
+      created_at: string;
+    };
+  };
+};
 
 export const loginViaGoogle = async (
   credential: string,
@@ -42,7 +55,7 @@ export const loginViaGoogle = async (
 
 export const getCurrentLogin = async (token: string): Promise<User> => {
   try {
-    const res = await axiosInstance.get('/api/auth', {
+    const res = await axios.get(`${HOST_MAIN}/api/auth`, {
       headers: {
         Authorization: `Bearer ${token}`,
       },

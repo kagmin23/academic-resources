@@ -130,7 +130,6 @@ const ManagerLessonInstructor: React.FC = () => {
               message.error("Failed to Update Lesson");
             });
         } else {
-          console.log("values", values)
           createLesson(newValues)
             .then((response) => {
               const newRecord = {

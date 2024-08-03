@@ -7,7 +7,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
-import { getCurrentUser } from '../services/AdminsApi/UserService';
 import { createCart } from '../services/All/cartApiService';
 
 const { TabPane } = Tabs;
@@ -84,40 +83,42 @@ const CourseDetail: React.FC = () => {
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<any>(null);
     const [form] = Form.useForm();
     const navigate = useNavigate();
     
-    const [currentUser, setCurrentUser] = useState<any>(null);
-    useEffect(() => {
-        const fetchCurrentUser = async () => {
-            try {
-                const response = await getCurrentUser();
-                if (response.success) {
-                    setCurrentUser(response.data);
-                } else {
-                    notification.error({
-                        message: 'Error',
-                        description: 'Failed to fetch current user information',
-                    });
-                }
-            } catch (error) {
-                message.error("Failed to fetch current user!")
-            }
-        };
+    // const [currentUser, setCurrentUser] = useState<any>(null);
+    // useEffect(() => {
+    //     const fetchCurrentUser = async () => {
+    //         try {
+    //             const response = await getCurrentUser();
+    //             if (response.success) {
+    //                 setCurrentUser(response.data);
+    //             } else {
+    //                 notification.error({
+    //                     message: 'Error',
+    //                     description: 'Failed to fetch current user information',
+    //                 });
+    //             }
+    //         } catch (error) {
+    //             message.error("Failed to fetch current user!")
+    //         }
+    //     };
 
-        fetchCurrentUser();
-    }, []);
+    //     fetchCurrentUser();
+    // }, []);
 
     const handleInstructorProfile = (userId: string) => {
-        if (!currentUser) {
-            navigate(`/instructor-detail/${userId}`);
-        } else if (currentUser.role === 'student') {
-            navigate(`/student/instructor-detail/${userId}`);
-        } else if (currentUser.role === 'instructor') {
-            navigate(`/instructor/instructor-detail/${userId}`);
-        } else {
-            navigate(`/instructor-detail/${courseId}`);
-        }
+        // if (!currentUser) {
+        //     navigate(`/instructor-detail/${userId}`);
+        // } else if (currentUser.role === 'student') {
+        //     navigate(`/student/instructor-detail/${userId}`);
+        // } else if (currentUser.role === 'instructor') {
+        //     navigate(`/instructor/instructor-detail/${userId}`);
+        // } else {
+        //     navigate(`/instructor-detail/${courseId}`);
+        // }
+        navigate(`instructor-detail/${userId}`)
     };
 
     useEffect(() => {
@@ -156,18 +157,18 @@ const CourseDetail: React.FC = () => {
     }, [courseId]);
 
     const handleSubmitReview = async () => {
+        debugger
         if (!courseId) return;
-
         setLoadingReview(true);
-
         try {
             const response = await createReview(courseId, reviewComment, reviewRating);
+            console.log("response",response)
             notification.success({
                 message: 'Review Submitted',
                 description: 'Your review has been successfully submitted.',
             });
-            setReviews([...reviews, response]); // Update the reviews list
-            form.resetFields(); // Reset the form fields
+            setReviews([...reviews, response]);
+            form.resetFields();
         } catch (error) {
             notification.error({
                 message: 'Error Submitting Review',
@@ -312,9 +313,6 @@ const CourseDetail: React.FC = () => {
                             <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                             <div className="flex mt-4 space-x-4">
                                 <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
-                                {/* <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
-                                    <Button type="default" className="p-5 text-lg font-semibold text-white bg-gray-800">Buy Now</Button>
-                                </Link> */}
                             </div>
                         </div>
                     </div>

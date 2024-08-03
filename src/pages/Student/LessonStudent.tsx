@@ -7,9 +7,8 @@ import {
     VideoCameraOutlined
 } from '@ant-design/icons';
 import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
-// import parse from 'html-react-parser';
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
 import { getCourseDetail } from "services/UserClient/clientApiService";
 import "tailwindcss/tailwind.css";
@@ -44,6 +43,7 @@ interface Course {
 const LearnCourseDetail: React.FC = () => {
     const { lessonId } = useParams<{ id: string, lessonId?: string }>();
     const { courseId } = useParams<{ courseId?: string }>();
+    const location = useLocation();
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
     const [collapsed, setCollapsed] = useState(false);
@@ -59,6 +59,7 @@ const LearnCourseDetail: React.FC = () => {
                 const data = await getCourseDetail(courseId);
                 setCourse(data);
                 if (lessonId) {
+                    console.log("lessonId", lessonId)
                     fetchLessonDetail(lessonId);
                 } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
                     const firstLessonId = data.session_list[0].lesson_list[0]._id;
@@ -77,7 +78,6 @@ const LearnCourseDetail: React.FC = () => {
         try {
             const lesson = await getLesson(lessonId);
             setSelectedLesson(lesson);
-            console.log("setSelectedLesson",selectedLesson)
         } catch (error) {
             message.error("Error fetching lesson details");
             console.error("Error fetching lesson details:", error);
@@ -86,12 +86,10 @@ const LearnCourseDetail: React.FC = () => {
 
     const handleLessonClick = async (lesson: Lesson) => {
         await fetchLessonDetail(lesson._id);
-        console.log('lesson', lesson)
-        navigate(`/student/student-learning/${courseId}/lesson/${lesson._id}`);
+        console.log('lesson', lesson);
+        setSelectedLesson(lesson);
+        window.history.replaceState(null, '', `/student/student-learning/${courseId}/lesson/${lesson._id}`);
     };
-    // const handleLessonClick = async(lessonItem: Lesson) => {
-    //     await fetchLessonDetail(lessonItem._id);
-    // };
 
     function getLessonIcon(lessonType: string) {
         switch (lessonType) {
@@ -188,7 +186,6 @@ const LearnCourseDetail: React.FC = () => {
                                 )}
                                 {selectedLesson.description && (
                                     <div className="mt-4 text-lg">
-                                        {/* {parse(selectedLesson.description)} */}
                                         {selectedLesson.description}
                                     </div>
                                 )}

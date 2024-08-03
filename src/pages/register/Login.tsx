@@ -1,8 +1,8 @@
 import { CredentialResponse, GoogleLogin } from "@react-oauth/google";
 import { Button, Form, Input, message, notification } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getCurrentLogin, loginViaGoogle } from 'services/googleApiLogin';
+import { User, getCurrentLogin, loginViaGoogle } from 'services/googleApiLogin';
 import { loginUser } from 'services/loginApiService';
 import './stylesLogin.css';
 
@@ -10,7 +10,26 @@ const Login: React.FC = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const formRef = useRef<any>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (user && user.data) {
+        switch (user.data.role) {
+          case 'student':
+            localStorage.setItem("user", JSON.stringify(user));
+            navigate('/student');
+            break;
+          case 'instructor':
+            localStorage.setItem("user", JSON.stringify(user));
+            navigate('/instructor');
+            break;
+          default:
+            throw new Error("Unknown role");
+        }
+      }
+    },
+  [user, navigate]);
 
   const handleLogin = async (values: { email: string, password: string }) => {
     setLoading(true);
@@ -49,13 +68,12 @@ const Login: React.FC = () => {
       const token = await loginViaGoogle(credential);
       if (token) {
         const user = await getCurrentLogin(token);
-        if (user?.data) {
-          localStorage.setItem("user", JSON.stringify(user));
-          notification.success({
-            message: "Login Successfully!",
-          });
-          navigate("/student");
+        if (user) {
+          setUser(user);
         }
+        notification.success({
+          message: "Login Successfully!",
+        });
       }
     } catch (error: any) {
       notification.error({
