@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Layout, Modal, Row, Select, Spin, Table, Typography, message } from 'antd';
+import { Button, Form, Input, Layout, Modal, Select, Spin, Table, message } from 'antd';
 import { Course, Lesson, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -14,12 +14,9 @@ const { Header, Content } = Layout;
 const ManagerLessonInstructor: React.FC = () => {
   const [dataSource, setDataSource] = useState<Lesson[]>([]);
   const [filteredDataSource, setFilteredDataSource] = useState<Lesson[]>([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isEditMode, setIsEditMode] = useState(false);
   const [currentRecord, setCurrentRecord] = useState<Lesson | null>(null);
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
-  const [currentLesson, setCurrentLesson] = useState<Lesson | null>(null);
   const [courses, setCourses] = useState<Course[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -27,19 +24,16 @@ const ManagerLessonInstructor: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [courseId, setCourseId] = useState<Course>();
   const [sessionId, setSessionId] = useState<Session>();
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  
 
   const handleAddNewLesson = () => {
-    setIsEditMode(false);
+    setIsEditing(false);
     setModalVisible(true);
+    setCurrentRecord(null);
     form.resetFields();
     setFilteredSessions([]);
-  };
-
-  const handleCourseChange = (courseId: string) => {
-    form.setFieldsValue({ course_id: courseId });
-    const filteredSessions = sessions.filter(session => session.course_id === courseId);
-    setFilteredSessions(filteredSessions);
-    form.setFieldsValue({ session_id: undefined });
   };
 
   useEffect(() => {
@@ -52,25 +46,30 @@ const ManagerLessonInstructor: React.FC = () => {
     setLoading(true);
     try {
       const response = await getLessons('', '', '', 1, 10);
-      setDataSource(response.data.pageData);
+      if (response.data && response.data.pageData) {
+        setDataSource(response.data.pageData);
+        setLessons(response.data.pageData);  // Cập nhật state lessons
+      } else {
+        message.error('No lessons found');
+      }
     } catch (error) {
-      message.error('Failed to fetch lesson');
-      console.error('Error fetching lesson:', error);
-    }finally{
+      message.error('Failed to fetch lessons');
+      console.error('Error fetching lessons:', error);
+    } finally {
       setLoading(false);
     }
   };
-
+  
   const fetchSessions = async () => {
     setLoading(true);
     try {
-      const response = await getSessions('','', 1, 10);
+      const response = await getSessions('', '', 1, 10);
       setSessions(response.data.pageData);
       setDataSource(response.data.pageData);
     } catch (error) {
       message.error("Failed to fetch sessions");
       console.error("Error fetching sessions:", error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -86,18 +85,11 @@ const ManagerLessonInstructor: React.FC = () => {
       setCourses([]);
       setFilteredDataSource([]);
       message.error("Failed to fetch courses");
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
-
-  const handleEdit = (record: Lesson) => {
-    setIsEditMode(true);
-    setCurrentRecord(record);
-    setIsModalVisible(true);
-    form.setFieldsValue(record);
-  };
-
+  
   const handleViewMore = (key: string) => {
     setExpandedKeys(prevKeys => prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]);
   };
@@ -110,46 +102,56 @@ const ManagerLessonInstructor: React.FC = () => {
     console.log('search:', value);
   };
 
+  const handleEdit = (record: Lesson) => {
+    setIsEditing(true);  // Đặt trạng thái chỉnh sửa thành true
+    setCurrentRecord(record);
+    setModalVisible(true);
+    form.setFieldsValue(record);  // Đặt giá trị của form dựa trên lesson hiện tại
+  };
+  
   const handleSaveLesson = () => {
     form.validateFields()
-      .then((values) => {
-        form.resetFields();
-        const newValues = {
-          ...values,
-        };
-        if (isEditMode && currentLesson) {
-          updateLesson(currentLesson._id, newValues)
-            .then(() => {
-              const newDataSource = dataSource.map(item => item._id === currentLesson._id ? { ...item, ...values } : item);
-              setDataSource(newDataSource);
-              setFilteredDataSource(newDataSource);
-              message.success("Lesson updated successfully");
-            })
-            .catch((error) => {
-              console.error("Failed to Update Lesson", error);
-              message.error("Failed to Update Lesson");
-            });
-        } else {
-          createLesson(newValues)
-            .then((response) => {
-              const newRecord = {
-                ...response.data,
-                key: (dataSource.length + 1).toString(),
-                created_at: new Date().toISOString().split("T")[0],
-              };
-              setDataSource([...dataSource, newRecord]);
-              setFilteredDataSource([...dataSource, newRecord]);
-              message.success("Lesson created successfully");
-            })
-            .catch((error) => {
-              console.error("Failed to Create lesson", error);
-              message.error("Failed to Create lesson");
-            });
+      .then(async (values) => {
+        setLoading(true);
+        try {
+          // Kiểm tra xem course_id có tồn tại không
+          const selectedCourse = courses.find(course => course._id === values.course_id);
+          if (!selectedCourse) {
+            message.error('Selected course is not valid!');
+            setLoading(false);
+            return;
+          }
+  
+          if (isEditing && currentRecord) {
+            // Nếu đang ở chế độ chỉnh sửa
+            const response = await updateLesson(currentRecord._id, values);
+            const updatedLesson = response.data;
+            setDataSource(dataSource.map(item =>
+              item._id === updatedLesson._id ? updatedLesson : item
+            ));
+            setLessons(lessons.map(item =>
+              item._id === updatedLesson._id ? updatedLesson : item
+            ));
+            message.success('Lesson updated successfully');
+          } else {
+            // Nếu không phải chế độ chỉnh sửa thì tạo mới
+            const response = await createLesson(values);
+            const newLesson = { ...response.data, key: response.data._id };
+            setDataSource([...dataSource, newLesson]);
+            setLessons([...lessons, newLesson]);
+            message.success('Lesson created successfully');
+          }
+          setModalVisible(false);
+        } catch (error) {
+          console.error("Error in saving lesson", error);
+          message.error(isEditing ? 'Failed to update lesson' : 'Failed to create lesson');
+        } finally {
+          setLoading(false);
         }
-        setModalVisible(false);
       })
       .catch((info) => {
-        message.error("Validation failed");
+        console.error('Validation failed:', info);
+        message.error('Please correct the errors in the form.');
       });
   };
 
@@ -174,97 +176,10 @@ const ManagerLessonInstructor: React.FC = () => {
     });
   };
 
-  const handleOnEditLesson = () => {
-    form.validateFields()
-      .then(async (values) => {
-        form.resetFields();
-        const newValues = {
-          ...values,
-          course_id: courseId,
-          session_id: sessionId,
-        };
-        if (isEditMode && currentRecord) {
-          try {
-            const response = await updateLesson(currentRecord._id, newValues);
-            const updatedLesson = response.data;
-            const newDataSource = dataSource.map(item => item._id === updatedLesson._id ? updatedLesson : item);
-            setDataSource(newDataSource);
-            setFilteredDataSource(newDataSource);
-            message.success("Lesson updated successfully");
-          } catch (error) {
-            console.error("Failed to Update Lesson", error);
-            message.error("Failed to Update Lesson");
-          }
-        } else {
-          message.error("Edit error");
-        }
-        setIsModalVisible(false);
-      })
-      .catch((info) => {
-        message.error("Validation failed");
-      });
-  };
-
   const handleSearch = (value: string) => {
     const filteredData = dataSource.filter(item => item.name.toLowerCase().includes(value.toLowerCase()));
     setFilteredDataSource(filteredData);
   };
-
-  const columns = [
-    {
-      title: "Lesson Name",
-      dataIndex: "name",
-      key: "name",
-    },
-    {
-      title: "Position Order",
-      dataIndex: "position_order",
-      key: "position_order",
-      align: "center" as AlignType,
-    },
-    {
-      title: "Session Name",
-      dataIndex: "session_name",
-      key: "session_name",
-    },
-    {
-      title: "Course Name",
-      dataIndex: "course_name",
-      key: "course_name",
-    },
-    {
-      title: "Full Time",
-      dataIndex: "full_time",
-      key: "full_time",
-      align: "center" as AlignType,
-    },
-    {
-      title: "Created At",
-      dataIndex: "created_at",
-      key: "created_at",
-      align: "center" as AlignType,
-      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
-    },
-    {
-      title: "Update At",
-      dataIndex: "updated_at",
-      key: "updated_at",
-      align: "center" as AlignType,
-      render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
-    },
-    {
-      title: "Action",
-      key: "actions",
-      align: "center" as AlignType,
-      render: (text: string, record: Lesson) => (
-        <span className="flex flex-row justify-center gap-1">
-          <Button size="small" className="text-blue-500" onClick={() => handleEdit(record)} icon={<EditOutlined />} />
-          <Button size="small" className="text-red-500" onClick={() => handleOnDeleteLesson(record._id)} icon={<DeleteOutlined />} />
-          <Button size="small" onClick={() => handleViewMore(record._id)} icon={<EyeOutlined />} />
-        </span>
-      ),
-    },
-  ];
 
   return (
     <Layout style={{ height: "100vh" }}>
@@ -290,112 +205,52 @@ const ManagerLessonInstructor: React.FC = () => {
           </div>
         </div>
       </Header>
-      <Content className="m-4 overflow-y-scroll">
-        {loading ? (
-          <div className="flex items-center justify-center h-full">
-            <Spin size="large" />
-          </div>
-        ) : (
-        <Table
-          scroll={{x: 'max-content'}}
-          columns={columns}
-          dataSource={dataSource}
-          expandable={{
-            expandedRowKeys: expandedKeys,
-            onExpand: (expanded, record) => handleViewMore(record._id),
-            expandedRowRender: (record) => (
-              <div
-                style={{
-                  padding: "10px 20px",
-                  backgroundColor: "#f9f9f9",
-                  borderRadius: "4px",
-                  marginLeft: "25px",
-                }}
-              >
-                <Row gutter={16} className="mb-5">
-                  <Col span={22} className="mb-5">
-                    <Typography.Title level={5}>Video:</Typography.Title>
-                    <p>{record.video_url || "-"}</p>
-                  </Col>
-                  <Col span={22}>
-                    <Typography.Title level={5}>Image:</Typography.Title>
-                    <p>{record.image_url || "-"}</p>
-                  </Col>
-                </Row>
-              </div>
-            ),
-            expandIcon: () => null,
-          }}
-        />
-        )}
-      </Content>
+
       <Modal
-          width={"50%"}
-          title={isEditMode ? "Edit Lesson" : "Add New Lesson"}
-          visible={modalVisible}
-          onOk={isEditMode ? handleOnEditLesson : handleSaveLesson}
-          onCancel={() => setModalVisible(false)}
-        >
-          <Form form={form} layout="vertical">
-            <Form.Item
-              label="Select Course"
-              name="course_id"
-              rules={[
-                { required: true, message: "Please select a course!" },
-              ]}
-            >
-              <Select
-                showSearch
-                placeholder="Select a course"
-                optionFilterProp="children"
-                onChange={handleCourseChange}
-                onSearch={onSearch}
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-              >
-                {courses.map((course) => (
-                  <Select.Option key={course._id} value={course._id}>
-                    {course.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Select Session"
-              name="session_id"
-              rules={[
-                { required: true, message: "Please select a session!" },
-              ]}
-            >
-              <Select
-                showSearch
-                placeholder="Select a session"
-                optionFilterProp="children"
-                onSearch={onSearch}
-                filterOption={(input, option) =>
-                  (option?.children as unknown as string)
-                    .toLowerCase()
-                    .includes(input.toLowerCase())
-                }
-              >
-                {filteredSessions.map((session) => (
-                  <Select.Option key={session._id} value={session._id}>
-                    {session.name}
-                  </Select.Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              label="Lesson Name"
-              name="name"
-              rules={[{ required: true, message: "Please input lesson name!" }]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
+        width={"50%"}
+        title={isEditing ? "Edit Lesson" : "Add New Lesson"}
+        visible={modalVisible}
+        onOk={handleSaveLesson}
+        okText="Save"
+        onCancel={() => setModalVisible(false)}
+      >
+        <Form form={form} layout="vertical">
+          <Form.Item
+            name="course_id"
+            label="Course"
+            rules={[{ required: true, message: "Please select a course!" }]}
+          >
+            <Select placeholder="Select a course">
+              {courses.map((course) => (
+                <Select.Option key={course._id} value={course._id}>
+                  {course.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            name="session_id"
+            label="Session"
+            rules={[{ required: true, message: "Please select a session!" }]}
+          >
+            <Select placeholder="Select a session">
+              {sessions.map((session) => (
+                <Select.Option key={session._id} value={session._id}>
+                  {session.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+
+          <Form.Item
+            label="Lesson Name"
+            name="name"
+            rules={[{ required: true, message: "Please input lesson name!" }]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
             name="lesson_type"
             label="Lesson Type"
             rules={[{ required: true, message: 'Please select the Lesson Type!' }]}
@@ -420,7 +275,7 @@ const ManagerLessonInstructor: React.FC = () => {
           >
             <Input.TextArea />
           </Form.Item>
-          
+
           <Form.Item
             name="video_url"
             label="Video URL"
@@ -435,26 +290,93 @@ const ManagerLessonInstructor: React.FC = () => {
           >
             <Input />
           </Form.Item>
-            <Form.Item
-              label="Full Time"
-              name="full_time"
-              rules={[
-                { required: true, message: "Please input full time!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-            <Form.Item
-              label="Position Order"
-              name="position_order"
-              rules={[
-                { required: true, message: "Please input position order!" },
-              ]}
-            >
-              <Input />
-            </Form.Item>
-          </Form>
-        </Modal>
+          <Form.Item
+            label="Full Time"
+            name="full_time"
+            rules={[
+              { required: true, message: "Please input full time!" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            label="Position Order"
+            name="position_order"
+            rules={[
+              { required: true, message: "Please input position order!" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
+
+      {loading ? (
+        <div className="flex items-center justify-center h-full">
+          <Spin size="large" />
+        </div>
+      ) : (
+        <Content className="m-4 overflow-y-scroll">
+          <Table
+            pagination={{ pageSize: 10 }}
+            dataSource={lessons}
+            columns={[
+              {
+                title: 'Lesson Name',
+                dataIndex: 'name',
+                key: 'name',
+              },
+              {
+                title: 'Session Name',
+                dataIndex: 'session_name',
+                key: 'session_name',
+              },
+              {
+                title: 'Course Name',
+                dataIndex: 'course_name',
+                key: 'course_name',
+              },
+              {
+                title: 'Position Order',
+                dataIndex: 'position_order',
+                key: 'position_order',
+                align: "center" as AlignType,
+              },
+              {
+                title: 'Description',
+                dataIndex: 'description',
+                key: 'description',
+              },
+              {
+                title: 'Created At',
+                dataIndex: 'created_at',
+                key: 'created_at',
+                align: 'center' as AlignType,
+                render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+              },
+              {
+                title: 'Update At',
+                dataIndex: 'updated_at',
+                key: 'updated_at',
+                align: 'center' as AlignType,
+                render: (created_at: string) => moment(created_at).format("YYYY-MM-DD"),
+              },
+              {
+                title: 'Actions',
+                key: 'actions',
+                align: 'center' as AlignType,
+                render: (text: string, lesson: Lesson) => (
+                  <div className="flex flex-row justify-center gap-1">
+                    <Button size="small" icon={<EditOutlined />} className="text-blue-500" onClick={() => handleEdit(lesson)}></Button>
+                    <Button size="small" icon={<DeleteOutlined />} className="text-red-500" onClick={() => handleOnDeleteLesson(lesson._id)}></Button>
+                    <Button size="small" icon={<EyeOutlined />} className="text-blue-900" onClick={() => handleViewMore(lesson._id)}></Button>
+                  </div>
+                ),
+              },
+            ]}
+          />
+        </Content>
+      )}
     </Layout>
   );
 };
