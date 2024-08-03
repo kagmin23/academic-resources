@@ -59,13 +59,13 @@ const LearnCourseDetail: React.FC = () => {
             try {
                 const data = await getCourseDetail(courseId);
                 setCourse(data.data);
-                if (lessonId) {
-                    await fetchLessonDetail(lessonId);
-                } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
-                    const firstLessonId = data.session_list[0].lesson_list[0]._id;
-                    await fetchLessonDetail(firstLessonId);
-                    // navigate(`/student-learning/${courseId}/lesson/${firstLessonId}`);
-                }
+                // if (lessonId) {
+                //     await fetchLessonDetail(lessonId);
+                // } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
+                //     const firstLessonId = data.session_list[0].lesson_list[0]._id;
+                //     await fetchLessonDetail(firstLessonId);
+                //     // navigate(`/student-learning/${courseId}/lesson/${firstLessonId}`);
+                // }
             } catch (error) {
                 message.error("Error fetching course details!");
                 console.error("Error fetching course details:", error);

@@ -10,12 +10,12 @@ import {
   RightOutlined,
   SketchOutlined
 } from '@ant-design/icons';
-import { Button, Card, Carousel, Col, Row, Spin, message ,notification} from 'antd';
+import { Button, Card, Carousel, Col, Row, Spin, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCategories, getCourses } from 'services/UserClient/clientApiService';
 import './styles.css';
-import { getCurrentUser } from '../services/AdminsApi/UserService';
+
 interface Course {
   _id: string;
   name: string;
@@ -62,23 +62,6 @@ const HomePage: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
   const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await getCurrentUser();
-        if (response.success) {
-          setCurrentUser(response.data);
-        } else {
-          // Handle no user logged in case
-        }
-      } catch (error) {
-        console.error("Error fetching current user:", error);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -167,15 +150,7 @@ const HomePage: React.FC = () => {
   );
 
   const handleNavigateToCourseDetails = (courseId: string) => {
-    if (!currentUser) {
-      navigate(`/course-details/${courseId}`);
-    } else if (currentUser.role === 'student') {
-      navigate(`/student/course-details/${courseId}`);
-    } else if (currentUser.role === 'instructor') {
-      navigate(`/instructor/course-details/${courseId}`);
-    } else {
-      navigate(`/course-details/${courseId}`);
-    }
+    navigate(`course-details/${courseId}`);
   };
 
   return (
