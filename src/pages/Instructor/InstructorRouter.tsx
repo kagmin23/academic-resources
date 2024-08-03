@@ -59,6 +59,7 @@ export default function InstructorRouter() {
          <Route path={`course/category`} element={<ProtectedRouter allowedRoles={["instructor"]}><CategoryPage /></ProtectedRouter>} />
          <Route path={`category`} element={<ProtectedRouter allowedRoles={["instructor"]}><CategoryPage /></ProtectedRouter>} />
          <Route path={`course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["instructor"]}><CourseDetailsPage /></ProtectedRouter>} />
+         <Route path={`course/course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["instructor"]}><CourseDetailsPage /></ProtectedRouter>} />
          <Route path={`shopping-cart`} element={<ProtectedRouter allowedRoles={["instructor"]}><ShoppingCart /></ProtectedRouter>} />
          <Route path={`profile-instructor/*`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorPage /></ProtectedRouter>} />
          <Route path={`buy-now`} element={<ProtectedRouter allowedRoles={["instructor"]}><BuyNow /></ProtectedRouter>} />
@@ -68,7 +69,7 @@ export default function InstructorRouter() {
          <Route path={`add-blog`} element={<ProtectedRouter allowedRoles={["instructor"]}><AddBlog /></ProtectedRouter>} />
          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} />
          {/* <Route path={`lesson-student/:id`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} /> */}
-         <Route path={`student-learning`} element={<ProtectedRouter allowedRoles={["student"]}><MyCourseStudent /></ProtectedRouter>} />
+         <Route path={`student-learning`} element={<ProtectedRouter allowedRoles={["instructor"]}><MyCourseStudent /></ProtectedRouter>} />
          <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
          <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["instructor"]}><TopInstructorPage /></ProtectedRouter>} />
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}

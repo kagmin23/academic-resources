@@ -63,26 +63,6 @@ const HomePage: React.FC = () => {
   const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
   const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
 
-  // useEffect(() => {
-  //   const fetchCurrentUser = async () => {
-  //     try {
-  //       const response = await getCurrentUser();
-  //       if (response.success) {
-  //         setCurrentUser(response.data);
-  //       } else {
-  //         notification.error({
-  //           message: 'Error',
-  //           description: 'user dont login',
-  //         });
-  //       }
-  //     } catch (error) {
-  //       console.error("Error to fetch Current User!")
-  //     }
-  //   };
-
-  //   fetchCurrentUser();
-  // }, []);
-
   useEffect(() => {
     const fetchCourses = async () => {
       try {
@@ -170,15 +150,7 @@ const HomePage: React.FC = () => {
   );
 
   const handleNavigateToCourseDetails = (courseId: string) => {
-    if (!currentUser) {
-      navigate(`/course-details/${courseId}`);
-    } else if (currentUser.role === 'student') {
-      navigate(`/student/course-details/${courseId}`);
-    } else if (currentUser.role === 'instructor') {
-      navigate(`/instructor/course-details/${courseId}`);
-    } else {
-      navigate(`/course-details/${courseId}`);
-    }
+    navigate(`course-details/${courseId}`);
   };
 
   return (

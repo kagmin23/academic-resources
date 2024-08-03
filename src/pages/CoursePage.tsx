@@ -3,7 +3,6 @@ import { ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCourses } from 'services/UserClient/clientApiService';
-import { getCurrentUser } from '../services/AdminsApi/UserService';
 
 interface ApiResponse {
   success: boolean;
@@ -20,24 +19,6 @@ const CoursePage: React.FC = () => {
   const [keyword, setKeyword] = useState('');
   const [pageSize] = useState(15); // Number of courses per page
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState<any>(null);
-
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await getCurrentUser();
-        if (response.success) {
-          setCurrentUser(response.data);
-        } else {
-          // Handle no user logged in case
-        }
-      } catch (error) {
-        console.error("Error fetching current user:", error);
-      }
-    };
-
-    fetchCurrentUser();
-  }, []);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -73,15 +54,7 @@ const CoursePage: React.FC = () => {
   };
 
   const handleNavigateToCourseDetails = (courseId: string) => {
-    if (!currentUser) {
-      navigate(`/course-details/${courseId}`);
-    } else if (currentUser.role === 'student') {
-      navigate(`/student/course-details/${courseId}`);
-    } else if (currentUser.role === 'instructor') {
-      navigate(`/instructor/course-details/${courseId}`);
-    } else {
-      navigate(`/course-details/${courseId}`);
-    }
+    navigate(`course-details/${courseId}`);
   };
 
   return (

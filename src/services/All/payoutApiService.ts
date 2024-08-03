@@ -64,7 +64,6 @@ export const updateStatusPayout = async (payoutId: string, status: string, comme
                 Authorization: `Bearer ${token}`
             }
         });
-        console.log("updateStatusPayout", response)
         return response.data;
 
     } catch (error) {

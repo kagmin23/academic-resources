@@ -44,8 +44,6 @@ const AboutStudent: React.FC = () => {
       fetchCurrentUser();
     }, []);
     
-
-
   if (!currentUser) {
       return <div>Loading...</div>;
   }

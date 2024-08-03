@@ -11,7 +11,7 @@ import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
-import { getCourseDetailUser } from "services/UserClient/clientApiService";
+import { getCourseDetail } from "services/UserClient/clientApiService";
 import "tailwindcss/tailwind.css";
 
 const { Sider, Content, Header } = Layout;
@@ -56,16 +56,14 @@ const LearnCourseDetail: React.FC = () => {
                 return;
             }
             try {
-                const data = await getCourseDetailUser(courseId);
+                const data = await getCourseDetail(courseId);
                 setCourse(data);
-                console.log("getCourseDetail", data)
-                // if (lessonId) {
-                //     fetchLessonDetail(lessonId);
-                // } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
-                //     const firstLessonId = data.session_list[0].lesson_list[0]._id;
-                //     fetchLessonDetail(firstLessonId);
-                //     navigate(`/student-learning/${courseId}/lesson/${firstLessonId}`);
-                // }
+                if (lessonId) {
+                    fetchLessonDetail(lessonId);
+                } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
+                    const firstLessonId = data.session_list[0].lesson_list[0]._id;
+                    fetchLessonDetail(firstLessonId);
+                }
             } catch (error) {
                 message.error("Error fetching course details!");
                 console.error("Error fetching course details:", error);
@@ -78,21 +76,24 @@ const LearnCourseDetail: React.FC = () => {
     const fetchLessonDetail = async (lessonId: string) => {
         try {
             const lesson = await getLesson(lessonId);
-            console.log("lesson", lesson)
             setSelectedLesson(lesson);
+            console.log("setSelectedLesson",selectedLesson)
         } catch (error) {
             message.error("Error fetching lesson details");
             console.error("Error fetching lesson details:", error);
         }
     };
 
-    const handleLessonClick = (lesson: Lesson) => {
-        console.log("lesson", lesson)
-        fetchLessonDetail(lesson._id);
+    const handleLessonClick = async (lesson: Lesson) => {
+        await fetchLessonDetail(lesson._id);
+        console.log('lesson', lesson)
         navigate(`/student/student-learning/${courseId}/lesson/${lesson._id}`);
     };
+    // const handleLessonClick = async(lessonItem: Lesson) => {
+    //     await fetchLessonDetail(lessonItem._id);
+    // };
 
-    const getLessonIcon = (lessonType: string) => {
+    function getLessonIcon(lessonType: string) {
         switch (lessonType) {
             case "video":
                 return <VideoCameraOutlined />;
@@ -103,7 +104,7 @@ const LearnCourseDetail: React.FC = () => {
             default:
                 return <EyeOutlined />;
         }
-    };
+    }
 
     if (!course) {
         return (
@@ -125,9 +126,7 @@ const LearnCourseDetail: React.FC = () => {
                 <div className="flex-1">
                     {selectedLesson && (
                         <Breadcrumb>
-                            <Breadcrumb.Item>Home</Breadcrumb.Item>
-                            {/* <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
-                            <Breadcrumb.Item>{selectedLesson.name}</Breadcrumb.Item> */}
+                            <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
                         </Breadcrumb>
                     )}
                 </div>
