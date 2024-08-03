@@ -108,13 +108,16 @@ function ListCoursesStudent() {
       key: "course_id",
       width: 100,
       align: 'center' as AlignType,
-      render: (course_id: string) => (
+      render: (course_id: string, lesson_id: Purchase) => (
         <div className="text-xs">
-          <Button className="text-xs bg-slate-200"
-              onClick={() => navigate(`/student/student-learning/${course_id}`)}
-            >Learn Now<DoubleRightOutlined /></Button>
+          <Button
+            className="text-xs bg-slate-200"
+            onClick={() => navigate(`/student/student-learning/${course_id}/lesson`)}
+          >
+            Learn Now<DoubleRightOutlined />
+          </Button>
         </div>
-      )
+      ),
     },
   ];
 

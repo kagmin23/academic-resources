@@ -1,7 +1,7 @@
 import Login from 'pages/register/Login';
 import SignUp from 'pages/register/SignUp';
 import React from 'react';
-import { Navigate, Route, BrowserRouter as Router, Routes } from 'react-router-dom';
+import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 import {
   About,
@@ -38,9 +38,10 @@ const AppRouter: React.FC = () => (
       <Routes>
         {/* Layout for Guest */}
         <Route path={`/`} element={<LayoutGuest />}>
-          <Route index element={<Navigate to={`/home`} />} />
-          <Route path={`/home`} element={<HomePage />} />
-          <Route path={`/home/course-details`} element={<CourseDetailsPage/>} />
+          {/* <Route index element={<Navigate to="/" />} /> */}
+          <Route path={`/`} element={<HomePage />} />
+          {/* <Route path={`/home/course-details/:courseId`} element={<CourseDetailsPage/>} /> */}
+          {/* <Route path={`/course/course-details/:courseId`} element={<CourseDetailsPage/>} /> */}
           <Route path="/log-in" element={<Login />} />
           <Route path="instructor-detail/:userId/" element={<InstructorDetail />} />
           <Route path="/sign-up" element={<SignUp />} />
@@ -48,8 +49,9 @@ const AppRouter: React.FC = () => (
           <Route path={`search`} element={<SearchPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/add-blog/*" element={<AddBlog />} />
-          <Route path={`course-details`} element={<CourseDetailsPage />} />
-          <Route path="course-details/:courseId/"element={<CourseDetailsPage />} />
+          {/* <Route path={`home/course-details/:courseId/`} element={<CourseDetailsPage />} /> */}
+          <Route path="/course-details/:courseId/" element={<CourseDetailsPage />} />
+          <Route path="/course/course-details/:courseId/" element={<CourseDetailsPage />} />
           <Route path="/detail-blog" element={<DetailBlogPage />} />
           <Route path="/course" element={<CoursePage />} />
           <Route path="/about" element={<About />} />

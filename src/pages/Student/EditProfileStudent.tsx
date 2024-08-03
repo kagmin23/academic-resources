@@ -61,8 +61,8 @@ const SettingStudent: React.FC = () => {
   const prepareUserData = (values: FormValues) => {
     return {
       ...values,
-      role: '', 
-      status: false, 
+      role: '',
+      status: false,
     };
   };
 

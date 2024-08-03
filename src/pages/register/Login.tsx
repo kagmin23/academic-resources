@@ -16,7 +16,6 @@ const Login: React.FC = () => {
     setLoading(true);
     try {
       const user = await loginUser(values.email, values.password);
-      console.log("user", user.role);
       if (user) {
         switch (user.role) {
           case 'admin':
@@ -29,10 +28,9 @@ const Login: React.FC = () => {
             navigate('/instructor');
             break;
           default:
-            navigate('/home');
+            navigate('/');
         }
       }
-      console.log("user", user);
     } catch (error) {
       console.error('Login error:', error);
       message.error('Invalid email or password');
@@ -68,7 +66,6 @@ const Login: React.FC = () => {
   };
 
   const onFinishFailed = (errorInfo: any) => {
-    console.log('Validation failed:', errorInfo);
     message.error('Failed to Login! Please check your information.');
   };
 

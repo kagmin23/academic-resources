@@ -34,23 +34,9 @@ export const getCourses = async ( keyword: string, category_id: string, pageNum:
 export const getCourseDetail = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(`/api/client/course/${courseId}`);
-    console.log("getCourseDetail", response);
     return response.data;
   } catch (error) {
     console.error('Error fetching getCourseDetail API!', error);
-    throw error;
-  }
-};
-
-export const getCourseDetailUser = async (courseId: string) => {
-  const token = localStorage.getItem("token");
-  try {
-    const response = await axiosInstance.get(`/api/client/course/${courseId}`, {
-    });
-    console.log("getCourseDetailUser", response);
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching getCourseDetailUser API!', error);
     throw error;
   }
 };
@@ -86,4 +72,3 @@ export const getUserDetail = async (userId: string) => {
     throw error;
   }
 };
-

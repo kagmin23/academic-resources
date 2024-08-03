@@ -1,8 +1,8 @@
 import AboutStudent from 'pages/Student/AboutStudent';
 import Certificate from 'pages/Student/Certificate';
 import ChangepasswordStu from 'pages/Student/ChangePasswordStu';
+import ProfileStudent from 'pages/Student/EditProfileStudent';
 import MyCourseStudent from 'pages/Student/MyCourseStudent';
-import ProfileStudent from 'pages/Student/ProfileStudent';
 import SidebarStudent from 'pages/Student/SidebarStudent';
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';

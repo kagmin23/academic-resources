@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Card, Col, Image, Layout, Menu, Row, Typography } from 'antd';
-import React, { useState } from 'react';
+import { Card, Col, Image, Layout, Menu, Row, Typography } from 'antd';
+import { useState } from 'react';
 
 const { Content, Sider } = Layout;
 const { Text } = Typography;

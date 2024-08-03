@@ -56,10 +56,10 @@ export default function StudentRouter() {
                     <Route path={`blog`} element={<BlogPage />} />
                     <Route path={`about`} element={<About />} />
                     <Route path={`search`} element={<SearchPage />} />
-                    <Route path={`course/`}element={<ProtectedRouter allowedRoles={["student"]}><CoursePage /></ProtectedRouter>} />
-                    <Route path={`course/course-details`} element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />
+                    <Route path={`course`}element={<ProtectedRouter allowedRoles={["student"]}><CoursePage /></ProtectedRouter>} />
                     <Route path={`category`} element={<ProtectedRouter allowedRoles={["student"]}><CategoryPage /></ProtectedRouter>} />
                     <Route path={`course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />
+                    <Route path={`course/course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`shopping-cart/*`} element={<ProtectedRouter allowedRoles={["student"]}><ShoppingCart /></ProtectedRouter>} />
                     <Route path={`profile-student/*`} element={<ProtectedRouter allowedRoles={["student"]}><StudentPage /></ProtectedRouter>} />
                     <Route path={`buy-now`} element={<ProtectedRouter allowedRoles={["student"]}><BuyNow /></ProtectedRouter>} />
@@ -67,7 +67,7 @@ export default function StudentRouter() {
                     <Route path={`report`} element={<ProtectedRouter allowedRoles={["student"]}><Report /></ProtectedRouter>} />
                     <Route path={`setting`} element={<ProtectedRouter allowedRoles={["student"]}><Setting /></ProtectedRouter>} />
                     <Route path={`add-blog`} element={<ProtectedRouter allowedRoles={["student"]}><AddBlog /></ProtectedRouter>} />
-                    <Route path={`student-learning/:courseId/`} element={<ProtectedRouter allowedRoles={["student"]}><LessonStudent /></ProtectedRouter>} />
+                    <Route path={`student-learning/:courseId/lesson`} element={<ProtectedRouter allowedRoles={["student"]}><LessonStudent /></ProtectedRouter>} />
                     <Route path={`student-learning/:courseId/lesson/:lessonId/`} element={<ProtectedRouter allowedRoles={["student"]}><StartLearning /></ProtectedRouter>} />
                     <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`top-instructor`} element={<ProtectedRouter allowedRoles={["student"]}><TopInstructorPage /></ProtectedRouter>} />

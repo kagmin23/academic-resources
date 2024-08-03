@@ -23,7 +23,6 @@ export const logStatus = async(course_id: string, keyword: string, pageNum: numb
               Authorization: `Bearer ${token}`
             }
           });
-          console.log("Response", response)
     return response.data;
 
     } catch (error){

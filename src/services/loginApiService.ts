@@ -18,7 +18,6 @@ export const loginUser = async (email: string, password: string) => {
 
       const userData = userResponse.data;
       if (userData) {
-        console.log("userData", userData)
         localStorage.setItem("user", JSON.stringify(userData));
         return userData;
       } else {
