@@ -112,7 +112,7 @@ function ListCoursesStudent() {
         <div className="text-xs">
           <Button
             className="text-xs bg-slate-200"
-            onClick={() => navigate(`/student/student-learning/${course_id}/lesson`)}
+            onClick={() => navigate(`/student/student-learning/${course_id}/lesson/`)}
           >
             Learn Now<DoubleRightOutlined />
           </Button>
