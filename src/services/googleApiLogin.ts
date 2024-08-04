@@ -1,5 +1,4 @@
 import axios from 'axios';
-import axiosInstance from 'hook/config';
 import { HOST_MAIN } from './apiService';
 
 export type User = {
@@ -35,9 +34,14 @@ export const loginViaGoogle = async (
   credential: string,
 ): Promise<string> => {
   try {
-    const res = await axiosInstance.post(
-      '/api/auth/google',
+    const res = await axios.post(
+      `${HOST_MAIN}/api/auth/google`,
       { google_id: credential },
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      },
     );
 
     const token =

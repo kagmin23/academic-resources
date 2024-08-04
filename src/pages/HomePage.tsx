@@ -10,7 +10,7 @@ import {
   RightOutlined,
   SketchOutlined
 } from '@ant-design/icons';
-import { Button, Card, Carousel, Col, Row, Spin, message } from 'antd';
+import { Button, Card, Carousel, Col, Image, Row, Spin, message } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getCategories, getCourses } from 'services/UserClient/clientApiService';
@@ -55,11 +55,9 @@ interface ApiResponse {
 }
 
 const HomePage: React.FC = () => {
-  const [email, setEmail] = useState('');
   const [courses, setCourses] = useState<Course[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
-  const [currentUser, setCurrentUser] = useState<any>(null);
   const [loadingCourses, setLoadingCourses] = useState<boolean>(true);
   const [loadingCategories, setLoadingCategories] = useState<boolean>(true);
 
@@ -110,33 +108,6 @@ const HomePage: React.FC = () => {
     }
   };
 
-  const handleSubscribe = async () => {
-    if (!email) {
-      message.error('Please enter your email address');
-      return;
-    }
-
-    try {
-      const response = await fetch('/api/subscribe', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
-
-      if (response.ok) {
-        message.success('Subscription successful');
-        setEmail('');
-      } else {
-        message.error('Subscription failed');
-      }
-    } catch (error) {
-      console.error('Subscription error:', error);
-      message.error('An error occurred. Please try again later.');
-    }
-  };
-
   const CustomPrevArrow = (props: any) => (
     <button {...props} className="absolute left-0 z-10 border-2 rounded-md -inset-1 bg-slate-600">
       <LeftOutlined className="text-lg text-white" />
@@ -182,18 +153,18 @@ const HomePage: React.FC = () => {
               color: 'black',
             }}
           >
-            <ol className="text-black">
+            <p className="text-2xl text-black">
               100,000 Online Courses
               <li>Explore a variety of fresh topics</li>
-            </ol>
-            <ol className="text-black">
+            </p>
+            <p className="text-2xl text-black">
               Expert Instruction
               <li>Find the right instructor for you</li>
-            </ol>
-            <ol className="text-black">
+            </p>
+            <p className="text-2xl text-black">
               Unlimited Lifetime Access
               <li>Learn on your schedule</li>
-            </ol>
+            </p>
           </div>
         </div>
       </header>
@@ -237,42 +208,42 @@ const HomePage: React.FC = () => {
             ]}
           >
             {courses.map((course, index) => (
-              <div className="px-3 py-2 my-5 transition-transform transform sm:my-10 hover:scale-105 hover:shadow-lg" key={index}>
-                <div onClick={() => handleNavigateToCourseDetails(course._id)}>
+              <div className="px-3 py-2 my-5 transition-transform transform sm:my-10 hover:scale-105 hover:shadow-lg" key={course._id}>
+                <button
+                  type="button"
+                  onClick={() => handleNavigateToCourseDetails(course._id)}
+                  className="w-full p-0 bg-transparent border-none"
+                >
                   <img className="object-fill w-full h-40 rounded-xl lg:h-48" src={course.image_url} alt={course.name} />
-                </div>
-                <div className="">
+                </button>
+                <div>
                   <h1 className="flex justify-start p-3 text-lg font-bold truncate lg:text-xl">{course.name}</h1>
-
                 </div>
                 <div className='flex justify-between ml-3'>
-                  <div className="flex flex-row md:text-lg sm:text-sm ">
-                    <span className="mr-1 text-sm" style={{ textDecoration: 'line-through' }}>{course.price.toLocaleString('vi-VN')} đ</span>
+                  <div className="flex flex-row md:text-lg sm:text-sm">
+                    <span className="mr-1 text-sm line-through">{course.price.toLocaleString('vi-VN')} đ</span>
                     <span>({course.discount * 100}%)</span>
                     <div className='ml-3 text-orange-600'>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} đ</div>
                   </div>
                 </div>
               </div>
             ))}
+
           </Carousel>
           )}
         </div>
-
-        <Link to="/course">
-          <p className="text-center pt-2.5 sm:text-sm">View More <ArrowRightOutlined /></p>
-        </Link>
-
+          <p className="text-center pt-2.5 sm:text-sm">Let's Start <ArrowRightOutlined /></p>
         <div className="body-homebox">
           <div className="box image-box">
-            <img className="sm:-ml-7" src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" />
+            <Image src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" />
           </div>
           <div className="sm:pt-10 sm:mr-20">
             <div className="flex flex-col items-center pt-20 sm:pt-10">
               <p className="text-xl font-bold text-center sm:text-3xl">Limitless Learning, More</p>
               <p className="text-xl font-bold text-center sm:text-3xl">Possibilities</p>
-              <ul className="mt-5 mb-10 text-xl italic text-center text-blue-900 underline sm:text-2xl">
+              <p className="mt-5 mb-10 text-xl italic text-center text-blue-900 underline sm:text-2xl">
                 Answer A Few Questions For Your Top Picks
-              </ul>
+              </p>
               <div className="flex flex-wrap justify-center gap-10 pb-5 text-2xl text-blue-900">
                 <SketchOutlined />
                 <OpenAIOutlined />
@@ -302,7 +273,7 @@ const HomePage: React.FC = () => {
         <Row gutter={[20, 20]} className="justify-center px-8">
           {categories.length > 0 ? (
             categories.map((category, index) => (
-              <Col key={index} xs={12} sm={8} md={6} lg={6}>
+              <Col key={category._id} xs={12} sm={8} md={6} lg={6}>
                 <Card
                   bordered={true}
                   className="w-full h-16 transition duration-300 ease-in-out bg-blue-200 shadow-lg hover:shadow-md"

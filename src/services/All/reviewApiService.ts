@@ -5,17 +5,17 @@ import { HOST_MAIN } from "services/apiService";
 export const getReviews = async(course_id: string, pageNum: number, pageSize: number) => {
     try {
         const response = await axiosInstance.post('/api/review/search', {
-              "searchCondition": {
-                  "course_id": course_id,
-                  "rating": 0,
-                  "is_instructor": false,
-                  "is_rating_order": false,
-                  "is_deleted": false
-              },
-              "pageInfo": {
-                  "pageNum": pageNum,
-                  "pageSize": pageSize
-                }
+            "searchCondition": {
+            "course_id": course_id,
+            "rating": 0,
+            "is_instructor": false,
+            "is_rating_order": false,
+            "is_deleted": false
+            },
+            "pageInfo": {
+            "pageNum": pageNum,
+            "pageSize": pageSize
+            }
         },
     );
         console.log("getReviews", response);

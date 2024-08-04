@@ -1,4 +1,4 @@
-import { DeploymentUnitOutlined, FlagOutlined, LineChartOutlined, MenuUnfoldOutlined, MoneyCollectOutlined, PieChartOutlined, ReadOutlined, StarOutlined, SwapOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { FlagOutlined, LineChartOutlined, MenuUnfoldOutlined, MoneyCollectOutlined, PieChartOutlined, ReadOutlined, StarOutlined, SwapOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -119,10 +119,6 @@ const SidebarAdmin: React.FC = () => {
             );
           }
         })}
-
-        <Menu.Item icon={<DeploymentUnitOutlined />}>
-          {expanded && 'By Academic'}
-        </Menu.Item>
       </Menu>
     </div>
   );

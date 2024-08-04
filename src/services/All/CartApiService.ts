@@ -1,66 +1,76 @@
-import axiosInstance from 'hook/config';
-import { HOST_MAIN } from 'services/apiService';
+import axios from 'axios';
+import { HOST_MAIN, apiRequest } from 'services/apiService';
 
-export const createCart = async (courseData: { course_id: string }) => {
-  try {
-    const response = await axiosInstance.post(
-      '/api/cart', {
-      courseData,
-      },
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error creating cart:', error);
-    throw error;
-  }
+export const createCart = async (courseData: {
+  course_id: string,
+}) => {
+  const token = localStorage.getItem('token');
+
+  return apiRequest('/api/cart', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    data: courseData,
+  });
 };
 
 export const getCarts = async (status: string, pageNum: number, pageSize: number) => {
+  const token = localStorage.getItem('token');
+  
   try {
-    const response = await axiosInstance.post(
-      '/api/cart/search',
-      {
-        searchCondition: {
-          status,
-          is_delete: false,
-        },
-        pageInfo: {
-          pageNum,
-          pageSize,
-        },
+  return apiRequest('/api/cart/search', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+    data: {
+      searchCondition: {
+        status,
+        is_delete: false,
       },
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error fetching carts:', error);
-    throw error;
+      pageInfo: {
+        pageNum,
+        pageSize,
+      },
+    },
+  })} catch (error){
+    console.error("Error!")
   }
 };
 
 export const deleteCart = async (courseId: string) => {
+  const token = localStorage.getItem('token');
 
-  try {
-    const response = await axiosInstance.delete(
-      `/api/cart/${courseId}`,
-    );
-    return response.data;
-  } catch (error) {
-    console.error('Error deleting cart:', error);
-    throw error;
-  }
+  return apiRequest(`/api/cart/${courseId}`, {
+    method: 'DELETE',
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 };
 
 export const updateCartStatus = async (status: string, items: { _id: string, cart_no: string }[]) => {
-    try {
-    const response = await axiosInstance.put(
-      `${HOST_MAIN}/api/cart/update-status`,
+  const token = localStorage.getItem('token');
+
+  try {
+    const response = await axios.put(`${HOST_MAIN}/api/cart/update-status`,
       {
         status,
         items,
       },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+      }
     );
     return response.data;
   } catch (error) {
-    console.error('Error update cart:', error);
+    console.error("ERROR: ", error);
+    throw error;
   }
 };
