@@ -7,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
 import { getCourseDetail } from "services/UserClient/clientApiService";
 import "tailwindcss/tailwind.css";
@@ -46,7 +46,6 @@ const LearnCourseDetail: React.FC = () => {
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
     const [collapsed, setCollapsed] = useState(false);
     const [firstLessonLoaded, setFirstLessonLoaded] = useState(false);
-    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCourseDetailUser = async () => {
@@ -185,7 +184,6 @@ const LearnCourseDetail: React.FC = () => {
                                             height="400px"
                                             src={convertToEmbedUrl(selectedLesson.video_url)}
                                             title={selectedLesson.name}
-                                            frameBorder="0"
                                             allowFullScreen
                                             className="rounded-lg shadow-md"
                                         ></iframe>
