@@ -86,7 +86,7 @@ const LearnCourseDetail: React.FC = () => {
         if (selectedLesson?._id !== lesson._id) {
             await fetchLessonDetail(lesson._id);
         }
-        navigate(`/student/student-learning/${courseId}/lesson/${lesson._id}`);
+        window.history.replaceState(null, '', `/student/student-learning/${courseId}/lesson/${lesson._id}`);
     };
 
     function getLessonIcon(lessonType: string) {
