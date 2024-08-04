@@ -504,6 +504,14 @@ const ManagerLessonInstructor: React.FC = () => {
             return;
           }
   
+          // Kiểm tra xem session_id có tồn tại không
+          const selectedSession = sessions.find(session => session._id === values.session_id);
+          if (!selectedSession) {
+            message.error('Selected session is not valid!');
+            setLoading(false);
+            return;
+          }
+  
           if (isEditing && currentRecord) {
             // Nếu đang ở chế độ chỉnh sửa
             const response = await updateLesson(currentRecord._id, values);
@@ -519,8 +527,8 @@ const ManagerLessonInstructor: React.FC = () => {
             // Nếu không phải chế độ chỉnh sửa thì tạo mới
             const response = await createLesson(values);
             const newLesson = { ...response.data, key: response.data._id };
-            setDataSource([...dataSource, newLesson]);
-            setLessons([...lessons, newLesson]);
+            setDataSource([newLesson, ...dataSource]); // Thêm bài học mới vào đầu danh sách
+            setLessons([newLesson, ...lessons]); // Thêm bài học mới vào đầu danh sách
             message.success('Lesson created successfully');
           }
           setModalVisible(false);
@@ -535,7 +543,7 @@ const ManagerLessonInstructor: React.FC = () => {
         console.error('Validation failed:', info);
         message.error('Please correct the errors in the form.');
       });
-  };
+  };  
 
   const handleOnDeleteLesson = (lessonId: string) => {
     confirm({
@@ -613,18 +621,18 @@ const ManagerLessonInstructor: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            name="session_name"
-            label="Session"
-            rules={[{ required: true, message: "Please select a session!" }]}
-          >
-            <Select placeholder="Select a session">
-              {sessions.map((session) => (
-                <Select.Option key={session._id} value={session._id}>
-                  {session.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
+  name="session_id"
+  label="Session"
+  rules={[{ required: true, message: "Please select a session!" }]}
+>
+  <Select placeholder="Select a session">
+    {sessions.map((session) => (
+      <Select.Option key={session._id} value={session._id}>
+        {session.name}
+      </Select.Option>
+    ))}
+  </Select>
+</Form.Item>
 
           <Form.Item
             label="Lesson Name"
