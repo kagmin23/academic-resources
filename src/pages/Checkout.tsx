@@ -1,7 +1,7 @@
 import { Button, Card, Col, Divider, Modal, Radio, Row, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { getCarts, updateCartStatus } from 'services/All/CartApiService';
+import { getCarts, updateCartStatus } from '../services/All/CartApiService';
 import Paypal from '../assets/Paypal2.png';
 import VNPay from '../assets/VNPay2.jpg';
 

@@ -10,10 +10,12 @@ import ManagerStudentPurchase from './PurchasesStudent';
 import SubcriptionStudent from './SubcriptionStudent';
 const StudentPage: React.FC = () => {
   return (
-    <div className="flex min-h-screen">
-    <SidebarStudent />
+    <div className="flex ">
+      <div  className='h-[91vh] pb-3'>
+
+    <SidebarStudent /></div>
       {/* <div className="flex-grow p-4 bg-white rounded shadow-md"> */}
-      <div className="flex-grow pl-4 ">
+      <div className="flex-grow h-screen ml-4 overflow-auto hide-scrollbar ">
         <Routes>
           <Route path={`/`} element={<AboutStudent />} />
           <Route path={`course-student`} element={<MyCourseStudent />} />

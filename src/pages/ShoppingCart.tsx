@@ -1,7 +1,7 @@
 import { Button, Card, Checkbox, Modal, Tag } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteCart, getCarts, updateCartStatus } from 'services/All/CartApiService';
+import { deleteCart, getCarts, updateCartStatus } from '../services/All/CartApiService'
 import sp from '../assets/sp.jpg';
 
 interface Cart {

@@ -32,7 +32,7 @@ export default function PaymentSuccess() {
                      <span>15:03:10 10/6/2024</span>
                 </div>
                 <div>
-                <Link to="/"> <Button type="primary" className='w-full mt-8 text-base font-bold bg-green-700 md:p-5 md:text-lg'>Back to Home</Button></Link>
+                <Link to={`/student`}> <Button type="primary" className='w-full mt-8 text-base font-bold bg-green-700 md:p-5 md:text-lg'>Back to Home</Button></Link>
                 </div>
 
         
