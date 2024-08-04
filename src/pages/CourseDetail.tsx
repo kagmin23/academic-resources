@@ -194,7 +194,7 @@ const CourseDetail: React.FC = () => {
     };
     
     const fetchSubscriptionStatus = async () => {
-        const response = await getItemBySubscriber("", 1, 10);
+        const response = await getItemBySubscriber(1, 10);
         setIsSubscribed(response[0].is_subscribed);
     };
     useEffect(() => {

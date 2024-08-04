@@ -22,7 +22,7 @@ const ManagerLessonInstructor: React.FC = () => {
   const [modalVisible, setModalVisible] = useState<boolean>(false);
   const [filteredSessions, setFilteredSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [courseId, setCourseId] = useState<Course>();
+  const [courseId, setCourseId] = useState<string | undefined>(undefined);
   const [sessionId, setSessionId] = useState<Session>();
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [lessons, setLessons] = useState<Lesson[]>([]);
@@ -38,7 +38,6 @@ const ManagerLessonInstructor: React.FC = () => {
 
   useEffect(() => {
     fetchLessons();
-    fetchSessions();
     fetchCourses();
   }, [sessionId, courseId]);
 
@@ -60,19 +59,17 @@ const ManagerLessonInstructor: React.FC = () => {
     }
   };
   
-  const fetchSessions = async () => {
-    setLoading(true);
+  const handleChangeCourse = async (value: string) => {
+    setCourseId(value);
     try {
-      const response = await getSessions('', '', 1, 10);
+      const response = await getSessions('', value, 1, 10);
       setSessions(response.data.pageData);
-      setDataSource(response.data.pageData);
     } catch (error) {
-      message.error("Failed to fetch sessions");
-      console.error("Error fetching sessions:", error);
-    } finally {
-      setLoading(false);
+      message.error('Failed to fetch sessions for the selected course');
+      console.error('Error fetching sessions:', error);
     }
   };
+  
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -103,10 +100,10 @@ const ManagerLessonInstructor: React.FC = () => {
   };
 
   const handleEdit = (record: Lesson) => {
-    setIsEditing(true);  // Đặt trạng thái chỉnh sửa thành true
+    setIsEditing(true);
     setCurrentRecord(record);
     setModalVisible(true);
-    form.setFieldsValue(record);  // Đặt giá trị của form dựa trên lesson hiện tại
+    form.setFieldsValue(record);
   };
   
   const handleSaveLesson = () => {
@@ -123,9 +120,13 @@ const ManagerLessonInstructor: React.FC = () => {
           }
   
           if (isEditing && currentRecord) {
+            debugger
             // Nếu đang ở chế độ chỉnh sửa
             const response = await updateLesson(currentRecord._id, values);
+            console.log("currentRecord", response)
+          
             const updatedLesson = response.data;
+            console.log("updatedLesson", updateLesson)
             setDataSource(dataSource.map(item =>
               item._id === updatedLesson._id ? updatedLesson : item
             ));
@@ -220,7 +221,8 @@ const ManagerLessonInstructor: React.FC = () => {
             label="Course"
             rules={[{ required: true, message: "Please select a course!" }]}
           >
-            <Select placeholder="Select a course">
+            <Select placeholder="Select a course"
+              onChange={handleChangeCourse}>
               {courses.map((course) => (
                 <Select.Option key={course._id} value={course._id}>
                   {course.name}
@@ -230,7 +232,7 @@ const ManagerLessonInstructor: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-            name="session_id"
+            name="session_name"
             label="Session"
             rules={[{ required: true, message: "Please select a session!" }]}
           >

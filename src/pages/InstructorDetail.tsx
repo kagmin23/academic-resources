@@ -1,4 +1,3 @@
-
 import {
   BellOutlined,
   CalendarOutlined,
@@ -10,22 +9,51 @@ import {
   VideoCameraOutlined
 } from '@ant-design/icons';
 import { Avatar, Button, Card, Divider, Typography, message, notification } from 'antd';
+import { Subcription } from 'models/types';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getUserDetail } from 'services/All/getUserDetailApiService';
+import { createOrUpdate, getItemBySubscriber } from 'services/All/subcriptionApiService';
 
+export interface InstructorDetail {
+  _id:		string,
+  name:		string,
+  email:		string,
+  google_id:		string,
+  role:		string,
+  status:		boolean,
+  description:		string,
+  phone_number:		string,
+  avatar:		string,
+  video:		string,
+  dob:		Date,
+  is_verified:		boolean,
+  balance_total:		number,
+  balance_account:		string,
+  balance_name:		string,
+  transactions:		TransactionInstructorDetail[]
+  created_at:		Date,
+  updated_at:		Date,
+  is_deleted:		boolean,
+}
+
+export interface TransactionInstructorDetail {
+  _id:	string,
+  payout_id:	string,
+  payout_no:	string,
+  payout_amount:	number,
+  created_at:	Date,
+}
 
 const { Title, Text } = Typography;
 
 export default function InstructorDetail() {
   const { userId } = useParams<{ userId: string }>();
-  const [isSubscribed, setIsSubscribed] = useState(true);
-  const [currentInstructor, setCurrentInstructor] = useState<any>(null);
- 
-
-  const handleSubscribe = () => {
-    setIsSubscribed(!isSubscribed);
-  };
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+  const [currentInstructor, setCurrentInstructor] = useState<InstructorDetail | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [subcriptionStudent, setSubcriptionStudent] = useState<Subcription[]>([]);
+  const [filteredData, setFilteredData] = useState<Subcription[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -37,6 +65,7 @@ export default function InstructorDetail() {
         const response = await getUserDetail(userId);
         if (response.success) {
           setCurrentInstructor(response.data);
+          await fetchSubscriptionStatus(); // Fetch subscription status after getting instructor data
         } else {
           notification.error({
             message: 'Error',
@@ -51,6 +80,32 @@ export default function InstructorDetail() {
 
     fetchUserData();
   }, [userId]);
+
+  const handleSubscribe = async () => {
+    if (!currentInstructor) return;
+    setLoading(true);
+
+    try {
+        await createOrUpdate(currentInstructor._id);
+        fetchSubscriptionStatus();
+        message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
+    } catch (error) {
+        console.error('Failed to subscribe:', error);
+        message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+    } finally {
+        setLoading(false);
+    }
+  };
+  const fetchSubscriptionStatus = async () => {
+      const response = await getItemBySubscriber(1, 10);
+      console.log("response", response)
+      setIsSubscribed(response);
+  };
+  useEffect(() => {
+      fetchSubscriptionStatus();
+      },
+  []);
+
   if (!currentInstructor) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -107,14 +162,20 @@ export default function InstructorDetail() {
           
         </div>
         <div className="flex justify-center w-1/6 my-auto">
-          <Button
-            onClick={handleSubscribe}
-            type="primary"
-            className={`bg-red-500 py-2 px-4 text-lg font-semibold`}
-            style={{ fontSize: '16px', height: 'auto' }}
-          >
-            <BellOutlined />{isSubscribed ? 'Subscribed' : 'Subscribe'}
-          </Button>
+        <Button
+                                    onClick={handleSubscribe}
+                                    type="primary"
+                                    loading={loading}
+                                    className={`mr-2 mt-2 p-1 text-sm font-semibold w-full bg-red-500`}
+                                >
+                                    {isSubscribed ? (
+                                        <>
+                                            <BellOutlined /> Subscribed
+                                        </>
+                                    ) : (
+                                        'Subscribe'
+                                    )}
+                                </Button>
         </div>
       </div>
       <Card className='py-2 my-4'style={{ boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)' }}>

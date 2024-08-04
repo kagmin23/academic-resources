@@ -340,3 +340,33 @@ export interface Payout {
   updated_at: Date;
   is_deleted: boolean;
 }
+
+export interface InstructorDetail {
+  _id:		string,
+  name:		string,
+  email:		string,
+  google_id:		string,
+  role:		string,
+  status:		boolean,
+  description:		string,
+  phone_number:		string,
+  avatar:		string,
+  video:		string,
+  dob:		Date,
+  is_verified:		boolean,
+  balance_total:		number,
+  balance_account:		string,
+  balance_name:		string,
+  transactions:		TransactionInstructorDetail[]
+  created_at:		Date,
+  updated_at:		Date,
+  is_deleted:		boolean,
+}
+
+export interface TransactionInstructorDetail {
+  _id:	string,
+  payout_id:	string,
+  payout_no:	string,
+  payout_amount:	number,
+  created_at:	Date,
+}

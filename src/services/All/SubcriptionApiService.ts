@@ -1,11 +1,18 @@
 import axios from 'axios';
-import axiosInstance from 'hook/config';
 import { HOST_MAIN } from 'services/apiService';
 
 export const createOrUpdate = async (instructor_id: string) => {
+  const token = localStorage.getItem('token');
+
   try {
-    const response = await axiosInstance.post('/api/subscription',
+    const response = await axios.post(`${HOST_MAIN}/api/subscription`,
       { instructor_id },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+      }
     );
     return response;
   } catch (error) {
@@ -14,7 +21,7 @@ export const createOrUpdate = async (instructor_id: string) => {
   }
 };
 
-export const getItemBySubscriber = async (keyword: string, pageNum: number, pageSize: number) => {
+export const getItemBySubscriber = async (pageNum: number, pageSize: number) => {
   const token = localStorage.getItem('token');
 
   try {
@@ -22,7 +29,7 @@ export const getItemBySubscriber = async (keyword: string, pageNum: number, page
       `${HOST_MAIN}/api/subscription/search-for-subscriber`,
       {
         "searchCondition": {
-            "keyword": keyword,
+            "keyword": "",
             "is_delete": false,
         },
         "pageInfo": {
@@ -47,9 +54,11 @@ export const getItemBySubscriber = async (keyword: string, pageNum: number, page
 };
 
 export const getItemByInstructorSubcription = async (keyword: string, pageNum: number, pageSize: number) => {
+  const token = localStorage.getItem('token');
+  
   try {
-    const response = await axiosInstance.post(
-      '/api/subscription/search-for-instructor',
+    const response = await axios.post(
+      `${HOST_MAIN}/api/subscription/search-for-instructor`,
       {
         "searchCondition": {
             "keyword": keyword,
@@ -59,7 +68,12 @@ export const getItemByInstructorSubcription = async (keyword: string, pageNum: n
             "pageNum": pageNum,
             "pageSize": pageSize,
         }
-      },
+    },
+      {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      }
     );
     
     return response.data;
