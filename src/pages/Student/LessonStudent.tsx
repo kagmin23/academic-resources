@@ -7,7 +7,6 @@ import {
     VideoCameraOutlined
 } from '@ant-design/icons';
 import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
-// import parse from 'html-react-parser';
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
@@ -47,37 +46,40 @@ const LearnCourseDetail: React.FC = () => {
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
     const [collapsed, setCollapsed] = useState(false);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCourseDetailUser = async () => {
             if (!courseId) {
                 message.error("Course ID is missing");
+                setLoading(false);
                 return;
             }
             try {
                 const data = await getCourseDetail(courseId);
                 setCourse(data);
                 if (lessonId) {
-                    fetchLessonDetail(lessonId);
+                    await fetchLessonDetail(lessonId);
                 } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
                     const firstLessonId = data.session_list[0].lesson_list[0]._id;
-                    fetchLessonDetail(firstLessonId);
+                    await fetchLessonDetail(firstLessonId);
                 }
+                setLoading(false);
             } catch (error) {
                 message.error("Error fetching course details!");
                 console.error("Error fetching course details:", error);
+                setLoading(false);
             }
         };
 
         fetchCourseDetailUser();
-    }, [courseId, lessonId, navigate]);
+    }, [courseId, lessonId]);
 
     const fetchLessonDetail = async (lessonId: string) => {
         try {
             const lesson = await getLesson(lessonId);
-            setSelectedLesson(lesson);
-            console.log("setSelectedLesson",selectedLesson)
+            setSelectedLesson(lesson.data);
         } catch (error) {
             message.error("Error fetching lesson details");
             console.error("Error fetching lesson details:", error);
@@ -86,12 +88,8 @@ const LearnCourseDetail: React.FC = () => {
 
     const handleLessonClick = async (lesson: Lesson) => {
         await fetchLessonDetail(lesson._id);
-        console.log('lesson', lesson)
         navigate(`/student/student-learning/${courseId}/lesson/${lesson._id}`);
     };
-    // const handleLessonClick = async(lessonItem: Lesson) => {
-    //     await fetchLessonDetail(lessonItem._id);
-    // };
 
     function getLessonIcon(lessonType: string) {
         switch (lessonType) {
@@ -106,7 +104,12 @@ const LearnCourseDetail: React.FC = () => {
         }
     }
 
-    if (!course) {
+    const convertToEmbedUrl = (url: string) => {
+        const videoId = url.split("v=")[1];
+        return `https://www.youtube.com/embed/${videoId}`;
+    };
+
+    if (loading) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <Spin size="large" />
@@ -126,7 +129,7 @@ const LearnCourseDetail: React.FC = () => {
                 <div className="flex-1">
                     {selectedLesson && (
                         <Breadcrumb>
-                            <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
+                            <Breadcrumb.Item>{course?.name}</Breadcrumb.Item>
                         </Breadcrumb>
                     )}
                 </div>
@@ -141,10 +144,10 @@ const LearnCourseDetail: React.FC = () => {
                 >
                     <Menu
                         mode="inline"
-                        defaultOpenKeys={[course.session_list[0]?._id]}
+                        defaultOpenKeys={course?.session_list[0]?._id ? [course.session_list[0]._id] : []}
                         style={{ height: "100%" }}
                     >
-                        {course.session_list.map((session) => (
+                        {course?.session_list.map((session) => (
                             <Menu.SubMenu key={session._id} title={session.name}>
                                 {session.lesson_list.map((lesson) => (
                                     <Menu.Item
@@ -169,7 +172,7 @@ const LearnCourseDetail: React.FC = () => {
                                         <iframe
                                             width="100%"
                                             height="400px"
-                                            src={selectedLesson.video_url}
+                                            src={convertToEmbedUrl(selectedLesson.video_url)}
                                             title={selectedLesson.name}
                                             frameBorder="0"
                                             allowFullScreen
@@ -188,7 +191,6 @@ const LearnCourseDetail: React.FC = () => {
                                 )}
                                 {selectedLesson.description && (
                                     <div className="mt-4 text-lg">
-                                        {/* {parse(selectedLesson.description)} */}
                                         {selectedLesson.description}
                                     </div>
                                 )}

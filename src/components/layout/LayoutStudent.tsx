@@ -19,6 +19,7 @@ const LayoutStudent: React.FC = () => {
   const [notificationCountCart, setNotificationCountCart] = useState<number>(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+  const [lastFetched, setLastFetched] = useState<Date | null>(null);
 
   const fetchCurrentUser = async () => {
     try {
@@ -38,6 +39,7 @@ const LayoutStudent: React.FC = () => {
       const response = await getCarts('', 1, 100);
       if (response.success) {
         setNotificationCountCart(response.data.length);
+        setLastFetched(new Date());
       } else {
         console.error('Failed to fetch cart data:', response.error);
       }
@@ -52,9 +54,13 @@ const LayoutStudent: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    const interval = setInterval(fetchCartData, 5000);
+    const interval = setInterval(() => {
+      if (lastFetched && (new Date().getTime() - lastFetched.getTime() > 300000)) { // 5 minutes
+        fetchCartData();
+      }
+    }, 60000); // 1 minute
     return () => clearInterval(interval);
-  }, []);
+  }, [lastFetched]);
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
@@ -65,8 +71,7 @@ const LayoutStudent: React.FC = () => {
       const response = await getCourses(value, '', 1, 10);
       navigate(`search?query=${value}`, { state: { courses: response } });
       if (searchInputRef.current) {
-        // Clear the search input
-        searchInputRef.current.value = ''; 
+        searchInputRef.current.value = '';
       }
     } catch (error) {
       console.error('Error searching courses:', error);
@@ -156,9 +161,6 @@ const LayoutStudent: React.FC = () => {
             <Menu.Item key="3" className="mx-2">
               <Link to={`blog`}>Blog</Link>
             </Menu.Item>
-            {/* <Menu.Item key="5" className="mx-2">
-              <Link to={`top-instructor`}>Rankings</Link>
-            </Menu.Item> */}
             <Menu.Item key="6" className="mx-2">
               <Link to={`about`}>About</Link>
             </Menu.Item>
