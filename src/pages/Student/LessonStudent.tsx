@@ -243,17 +243,19 @@ interface Session {
 interface Course {
     _id: string;
     name: string;
+    description:string;
+    video_url:string;
     session_list: Session[];
 }
 
 const LearnCourseDetail: React.FC = () => {
     const { lessonId } = useParams<{ id: string, lessonId?: string }>();
     const { courseId } = useParams<{ courseId?: string }>();
-    const location = useLocation();
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
     const [collapsed, setCollapsed] = useState(false);
     const navigate = useNavigate();
+    
 
     useEffect(() => {
         const fetchCourseDetailUser = async () => {
@@ -271,6 +273,7 @@ const LearnCourseDetail: React.FC = () => {
                     const firstLessonId = data.session_list[0].lesson_list[0]._id;
                     fetchLessonDetail(firstLessonId);
                 }
+                
             } catch (error) {
                 message.error("Error fetching course details!");
                 console.error("Error fetching course details:", error);
@@ -278,13 +281,15 @@ const LearnCourseDetail: React.FC = () => {
         };
 
         fetchCourseDetailUser();
-    }, [courseId, lessonId, navigate]);
+    }, [courseId, lessonId]);
+
+ 
 
     const fetchLessonDetail = async (lessonId: string) => {
         try {
             const lesson = await getLesson(lessonId);
             setSelectedLesson(lesson);
-            console.log("setSelectedLesson", selectedLesson);
+            // console.log("setSelectedLesson", selectedLesson);
         } catch (error) {
             message.error("Error fetching lesson details");
             console.error("Error fetching lesson details:", error);
@@ -303,7 +308,7 @@ const LearnCourseDetail: React.FC = () => {
         switch (lessonType) {
             case "video":
                 return <VideoCameraOutlined />;
-            case "reading":
+            case "text":
                 return <ReadOutlined />;
             case "image":
                 return <FileOutlined />;
@@ -311,6 +316,7 @@ const LearnCourseDetail: React.FC = () => {
                 return <EyeOutlined />;
         }
     }
+    console.log("Lesson data:", selectedLesson)
 
     if (!course) {
         return (
@@ -351,6 +357,7 @@ const LearnCourseDetail: React.FC = () => {
                         style={{ height: "100%" }}
                     >
                         {course.session_list.map((session) => (
+                            
                             <Menu.SubMenu key={session._id} title={session.name}>
                                 {session.lesson_list.map((lesson) => (
                                     <Menu.Item
@@ -366,10 +373,12 @@ const LearnCourseDetail: React.FC = () => {
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Content className="p-6 bg-gray-100">
+                    <Content className="p-4 bg-gray-100">
                         {selectedLesson ? (
                             <div className="p-6 bg-white rounded-lg shadow-lg">
                                 <h2 className="mb-4 text-3xl font-bold">{selectedLesson.name}</h2>
+                                <p><strong>Lesson Type:</strong> {selectedLesson.lesson_type}</p>
+                                <p><strong>Lesson Type:</strong> {selectedLesson.image_url}</p>
                                 {selectedLesson.lesson_type === "video" && selectedLesson.video_url && (
                                     <div className="mb-4">
                                         <iframe
@@ -392,14 +401,40 @@ const LearnCourseDetail: React.FC = () => {
                                         />
                                     </div>
                                 )}
-                                {selectedLesson.description && (
-                                    <div className="mt-4 text-lg">
+                                {selectedLesson.lesson_type === "text" && selectedLesson.description && (
+                                    <div className="mt-4 text-lg text-black">
+                                        
                                         {selectedLesson.description}
                                     </div>
                                 )}
+                                
                             </div>
                         ) : (
-                            <div>No lesson selected</div>
+                            <div>
+                                 <div className="mb-6 p-8 bg-white rounded-lg shadow-md">
+                             <h1 className="text-2xl font-bold mb-2">Name Course: {course.name}</h1>
+                              
+                                {course.video_url && (
+                                <div className="mb-4 ">
+                                
+                                    <iframe
+                                        width="100%"
+                                        height="400px"
+                                        src={course.video_url}
+                                        title={course.name}
+                                        frameBorder="0"
+                                        allowFullScreen
+                                        className="rounded-lg"
+                                    ></iframe>
+                                </div>
+                                
+                            )}
+                            <p className="text-lg mb-2"><strong>Description:</strong> {course.description}</p>
+                        </div>
+
+
+                                
+                            </div>
                         )}
                     </Content>
                 </Layout>
