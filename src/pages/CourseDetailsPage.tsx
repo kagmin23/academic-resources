@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 import { createOrUpdate, getItemBySubscriber } from 'services/All/subcriptionApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
-import { createCart } from '../services/All/cartApiService';
+import { createCart } from '../services/All/CartApiService';
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;

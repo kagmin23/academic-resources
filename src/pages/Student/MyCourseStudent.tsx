@@ -60,7 +60,7 @@ const LearnCourseDetail: React.FC = () => {
             } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
                 const firstLessonId = data.session_list[0].lesson_list[0]._id;
                 fetchLessonDetail(firstLessonId);
-                navigate(`/learn-course-detail/${courseId}/lesson/${firstLessonId}`);
+                navigate(`/learn-course-detail/${courseId}/lesson/`);
             }
         };
 
