@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
 import { getCourseDetail } from "services/UserClient/clientApiService";
 import "tailwindcss/tailwind.css";
@@ -43,7 +43,6 @@ interface Course {
 const LearnCourseDetail: React.FC = () => {
     const { lessonId } = useParams<{ id: string, lessonId?: string }>();
     const { courseId } = useParams<{ courseId?: string }>();
-    const location = useLocation();
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
     const [collapsed, setCollapsed] = useState(false);
@@ -59,7 +58,6 @@ const LearnCourseDetail: React.FC = () => {
                 const data = await getCourseDetail(courseId);
                 setCourse(data);
                 if (lessonId) {
-                    console.log("first", lessonId)
                     fetchLessonDetail(lessonId);
                 } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
                     const firstLessonId = data.session_list[0].lesson_list[0]._id;
@@ -72,13 +70,12 @@ const LearnCourseDetail: React.FC = () => {
         };
 
         fetchCourseDetailUser();
-    }, [courseId, lessonId, navigate]);
+    }, [courseId, lessonId]);
 
     const fetchLessonDetail = async (lessonId: string) => {
         try {
             const lesson = await getLesson(lessonId);
-            setSelectedLesson(lesson);
-            console.log("setSelectedLesson", selectedLesson);
+            setSelectedLesson(lesson.data);
         } catch (error) {
             message.error("Error fetching lesson details");
             console.error("Error fetching lesson details:", error);
@@ -86,10 +83,10 @@ const LearnCourseDetail: React.FC = () => {
     };
 
     const handleLessonClick = async (lesson: Lesson) => {
-        await fetchLessonDetail(lesson._id);
-        console.log('lesson', lesson);
-        setSelectedLesson(lesson);
-        window.history.replaceState(null, '', `/student/student-learning/${courseId}/lesson/${lesson._id}`);
+        if (selectedLesson?._id !== lesson._id) {
+            await fetchLessonDetail(lesson._id);
+        }
+        navigate(`/student/student-learning/${courseId}/lesson/${lesson._id}`);
     };
 
     function getLessonIcon(lessonType: string) {
@@ -104,6 +101,11 @@ const LearnCourseDetail: React.FC = () => {
                 return <EyeOutlined />;
         }
     }
+
+    const convertToEmbedUrl = (url: string) => {
+        const videoId = url.split("v=")[1];
+        return `https://www.youtube.com/embed/${videoId}`;
+    };
 
     if (!course) {
         return (
@@ -168,7 +170,7 @@ const LearnCourseDetail: React.FC = () => {
                                         <iframe
                                             width="100%"
                                             height="400px"
-                                            src={selectedLesson.video_url}
+                                            src={convertToEmbedUrl(selectedLesson.video_url)}
                                             title={selectedLesson.name}
                                             frameBorder="0"
                                             allowFullScreen
