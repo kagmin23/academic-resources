@@ -5,22 +5,17 @@ import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 
 import {
   About,
-  AddBlog,
-  BlogPage,
   Contact,
   CourseDetailsPage,
   CoursePage,
-  DetailBlogPage,
   HomePage,
   ResendVerifyToken,
-  TopInstructorPage,
   VerityToken
 } from 'pages';
 
 import { SearchPage } from 'pages';
 
 import { AuthProvider } from 'context/AuthContext';
-import AllInstructor from 'pages/AllInstructor';
 import InstructorRouter from 'pages/Instructor/InstructorRouter';
 import InstructorDetail from 'pages/InstructorDetail';
 import AdminPage from 'pages/admin/AdminPage';
@@ -47,17 +42,12 @@ const AppRouter: React.FC = () => (
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path={`search`} element={<SearchPage />} />
-          <Route path="/blog" element={<BlogPage />} />
-          <Route path="/add-blog/*" element={<AddBlog />} />
           {/* <Route path={`home/course-details/:courseId/`} element={<CourseDetailsPage />} /> */}
           <Route path="/course-details/:courseId/" element={<CourseDetailsPage />} />
           <Route path="/course/course-details/:courseId/" element={<CourseDetailsPage />} />
-          <Route path="/detail-blog" element={<DetailBlogPage />} />
           <Route path="/course" element={<CoursePage />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
-          <Route path="/top-instructor" element={<TopInstructorPage />} />
-          <Route path="/all-instructor" element={<AllInstructor />} />
           <Route path="/verify-email" element={<VerityToken />} />
           <Route path="/resend-email" element={<ResendVerifyToken />} />
           <Route path="/sign-up-google" element={<SignUpGoogleInstructor />} />

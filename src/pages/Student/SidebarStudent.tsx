@@ -1,7 +1,6 @@
 import {
   BellOutlined,
   ContainerOutlined,
-  DeploymentUnitOutlined,
   PieChartOutlined,
   ShoppingCartOutlined
 } from "@ant-design/icons";
@@ -111,9 +110,6 @@ const SidebarStudent: React.FC = () => {
             </Menu.Item>
           )
         ))}
-        <Menu.Item icon={<DeploymentUnitOutlined style={{ color: 'white' }} />} style={{ color: 'white' }}>
-          {expanded && 'By Academic'}
-        </Menu.Item>
       </Menu>
     </div>
   );

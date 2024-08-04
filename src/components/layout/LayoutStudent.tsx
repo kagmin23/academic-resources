@@ -3,7 +3,6 @@ import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { getCarts } from 'services/All/CartApiService';
 import { getCourses } from 'services/UserClient/clientApiService';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService';
@@ -19,7 +18,6 @@ const LayoutStudent: React.FC = () => {
   const [notificationCountCart, setNotificationCountCart] = useState<number>(0);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const [lastFetched, setLastFetched] = useState<Date | null>(null);
 
   const fetchCurrentUser = async () => {
     try {
@@ -34,33 +32,28 @@ const LayoutStudent: React.FC = () => {
     }
   };
 
-  const fetchCartData = async () => {
-    try {
-      const response = await getCarts('', 1, 100);
-      if (response.success) {
-        setNotificationCountCart(response.data.length);
-        setLastFetched(new Date());
-      } else {
-        console.error('Failed to fetch cart data:', response.error);
-      }
-    } catch (error) {
-      console.error('Error fetching cart data:', error);
-    }
-  };
+  // const fetchCartData = async () => {
+  //   try {
+  //     const response = await getCarts('', 1, 100);
+  //     if (response.success) {
+  //       setNotificationCountCart(response.data.length);
+  //     } else {
+  //       console.error('Failed to fetch cart data:', response.error);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching cart data:', error);
+  //   }
+  // };
 
   useEffect(() => {
     fetchCurrentUser();
-    fetchCartData();
+    // fetchCartData();
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (lastFetched && (new Date().getTime() - lastFetched.getTime() > 300000)) { // 5 minutes
-        fetchCartData();
-      }
-    }, 60000); // 1 minute
-    return () => clearInterval(interval);
-  }, [lastFetched]);
+  // useEffect(() => {
+  //   // const interval = setInterval(fetchCartData, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
@@ -71,7 +64,8 @@ const LayoutStudent: React.FC = () => {
       const response = await getCourses(value, '', 1, 10);
       navigate(`search?query=${value}`, { state: { courses: response } });
       if (searchInputRef.current) {
-        searchInputRef.current.value = '';
+        // Clear the search input
+        searchInputRef.current.value = ''; 
       }
     } catch (error) {
       console.error('Error searching courses:', error);
@@ -158,9 +152,12 @@ const LayoutStudent: React.FC = () => {
             <Menu.Item key="2" className="mx-2">
               <Link to={`course`}>Courses</Link>
             </Menu.Item>
-            <Menu.Item key="3" className="mx-2">
+            {/* <Menu.Item key="3" className="mx-2">
               <Link to={`blog`}>Blog</Link>
-            </Menu.Item>
+            </Menu.Item> */}
+            {/* <Menu.Item key="5" className="mx-2">
+              <Link to={`top-instructor`}>Rankings</Link>
+            </Menu.Item> */}
             <Menu.Item key="6" className="mx-2">
               <Link to={`about`}>About</Link>
             </Menu.Item>
@@ -192,9 +189,9 @@ const LayoutStudent: React.FC = () => {
           <Menu.Item key="2" className="my-2">
             <Link to={`course`}>Courses</Link>
           </Menu.Item>
-          <Menu.Item key="3" className="my-2">
+          {/* <Menu.Item key="3" className="my-2">
             <Link to={`blog`}>Blog</Link>
-          </Menu.Item>
+          </Menu.Item> */}
           <Menu.Item key="4" className="my-2">
             <Link to={`category`}>Category</Link>
           </Menu.Item>

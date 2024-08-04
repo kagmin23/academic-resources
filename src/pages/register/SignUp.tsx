@@ -1,4 +1,4 @@
-import { CheckCircleOutlined, GoogleOutlined } from '@ant-design/icons';
+import { GoogleOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Radio, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import { User } from 'models/types';
