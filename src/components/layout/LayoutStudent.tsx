@@ -3,7 +3,6 @@ import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
 import Footer from 'components/Footer';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
-import { getCarts } from 'services/All/cartApiService';
 import { getCourses } from 'services/UserClient/clientApiService';
 import 'tailwindcss/tailwind.css';
 import { getCurrentUser } from '../../services/AdminsApi/UserService';
@@ -33,28 +32,28 @@ const LayoutStudent: React.FC = () => {
     }
   };
 
-  const fetchCartData = async () => {
-    try {
-      const response = await getCarts('', 1, 100);
-      if (response.success) {
-        setNotificationCountCart(response.data.length);
-      } else {
-        console.error('Failed to fetch cart data:', response.error);
-      }
-    } catch (error) {
-      console.error('Error fetching cart data:', error);
-    }
-  };
+  // const fetchCartData = async () => {
+  //   try {
+  //     const response = await getCarts('', 1, 100);
+  //     if (response.success) {
+  //       setNotificationCountCart(response.data.length);
+  //     } else {
+  //       console.error('Failed to fetch cart data:', response.error);
+  //     }
+  //   } catch (error) {
+  //     console.error('Error fetching cart data:', error);
+  //   }
+  // };
 
   useEffect(() => {
     fetchCurrentUser();
-    fetchCartData();
+    // fetchCartData();
   }, []);
 
-  useEffect(() => {
-    const interval = setInterval(fetchCartData, 5000);
-    return () => clearInterval(interval);
-  }, []);
+  // useEffect(() => {
+  //   // const interval = setInterval(fetchCartData, 5000);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);

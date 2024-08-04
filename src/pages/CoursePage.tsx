@@ -86,18 +86,6 @@ const CoursePage: React.FC = () => {
     <div className="col-span-12 text-center text-red-500">{error}</div>
   );
 
-  const renderNoResults = () => (
-    <div className="flex flex-col items-center justify-center h-full p-4 pb-44">
-      <img
-        src="https://static.vecteezy.com/system/resources/previews/010/856/652/non_2x/no-result-data-document-or-file-not-found-concept-illustration-flat-design-eps10-modern-graphic-element-for-landing-page-empty-state-ui-infographic-icon-etc-vector.jpg"
-        alt="No data illustration"
-        className="w-52 h-52"
-      />
-      <Text className="text-xl font-semibold">No Results Found</Text>
-      <Text className="mt-2 text-gray-600">Try adjusting your search criteria or filters.</Text>
-    </div>
-  );
-
   const renderCourses = () => (
     courses.slice((currentPage - 1) * pageSize, currentPage * pageSize).map((course) => (
       <Col
@@ -141,9 +129,21 @@ const CoursePage: React.FC = () => {
     ))
   );
 
+  const renderNoResults = () => (
+    <div className="flex flex-col items-center justify-center h-full p-4 pb-44">
+      <img
+        src="https://static.vecteezy.com/system/resources/previews/010/856/652/non_2x/no-result-data-document-or-file-not-found-concept-illustration-flat-design-eps10-modern-graphic-element-for-landing-page-empty-state-ui-infographic-icon-etc-vector.jpg"
+        alt="No data illustration"
+        className="w-52 h-52"
+      />
+      <Text className="text-xl font-semibold">No Results Found</Text>
+      <Text className="mt-2 text-gray-600">Try adjusting your search criteria or filters.</Text>
+    </div>
+  );
+
   const renderContent = () => {
     if (error) return renderError();
-    if (courses.length === 0) return renderNoResults();
+    if (keyword.trim() !== '') return renderNoResults();
     return renderCourses();
   };
 
