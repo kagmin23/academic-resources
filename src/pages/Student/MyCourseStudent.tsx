@@ -6,14 +6,6 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getItemsbyStudentPurchases } from "services/Student/getpurchaseApiService";
 
-
-
-
-
-
-
-
-
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 const { Option } = Select;
@@ -54,9 +46,6 @@ function ListCoursesStudent() {
     fetchPurchases();
   }, []);
 
-
-
-
   const refreshData = () => {
     setFilterText('');
     setFilterStatus('');
@@ -64,22 +53,12 @@ function ListCoursesStudent() {
     fetchPurchases();
   };
 
-
-
-
-
-
-
-
-
-
   const handleFilter = () => {
     let filteredData = data;
 
     if (filterStatus) {
       filteredData = filteredData.filter((item) => item.status === filterStatus);
     }
-
 
     if (filterDate) {
       filteredData = filteredData.filter((item) => {
@@ -101,12 +80,6 @@ function ListCoursesStudent() {
     );
     setData(filteredData);
   };
-
-
-
-
-
-
 
   const columns = [
     {
