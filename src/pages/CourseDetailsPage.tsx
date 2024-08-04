@@ -86,13 +86,10 @@ const CourseDetail: React.FC = () => {
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [button, setButton] = useState<string>('Add to card');
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [form] = Form.useForm();
     const navigate = useNavigate();
-
-    const handleInstructorProfile = (userId: string) => {
-        navigate(`instructor-detail/${userId}`)
-    };
 
     useEffect(() => {
         if (courseId) {
@@ -107,6 +104,21 @@ const CourseDetail: React.FC = () => {
         fetchSubscriberStatus();
         },
     []);
+
+    useEffect(() => {
+        if(courseDetail) {
+            if(courseDetail.is_in_cart) {
+                if(courseDetail.is_purchased) {
+                    setButton("Learn Now")
+                } else {
+                    setButton("Go to card")
+                }
+            }else {
+                setButton("Add to card")
+            }
+        }
+    },
+    [courseDetail])
 
     const fetchCourseDetail = async () => {
         if (courseId) {
@@ -193,6 +205,16 @@ const CourseDetail: React.FC = () => {
         }
     };
 
+    const handleSetButton = () => {
+        if(button === "Learn Now") {
+            navigate(`student/student-learning/${courseId}/lesson`);
+        } else if(button === "Go to card") {
+            navigate(`shopping-cart`);
+        } else if(button === "Add to card") {
+            handleAddToCart();
+        }
+    }
+
     // const newLocal = async () => {
     //     if (!courseDetail) return;
     //     try {
@@ -266,6 +288,10 @@ const CourseDetail: React.FC = () => {
         }
     };
 
+    const handleInstructorProfile = (userId: string) => {
+        navigate(`instructor-detail/${userId}`)
+    };
+
     const toggleSession = (sessionId: string) => {
         setExpandedSessionId(expandedSessionId === sessionId ? null : sessionId);
     };
@@ -275,7 +301,7 @@ const CourseDetail: React.FC = () => {
     }
 
     return (
-        <Spin spinning={loading} tip="Loading...">
+        <Spin spinning={loading} className="text-black" tip="Loading...">
         <div className="text-white bg-gray-900">
             <div className="py-8">
                 <div className="container px-4 mx-auto">
@@ -326,7 +352,7 @@ const CourseDetail: React.FC = () => {
                             </div>
                             <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                             <div className="flex mt-4 space-x-4">
-                                <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
+                                <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleSetButton}>{button}</Button>
                             </div>
                         </div>
                     </div>
