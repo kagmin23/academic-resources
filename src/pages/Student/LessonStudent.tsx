@@ -210,7 +210,8 @@ import {
     MenuFoldOutlined,
     MenuUnfoldOutlined,
     ReadOutlined,
-    VideoCameraOutlined
+    VideoCameraOutlined,
+    ReconciliationOutlined 
 } from '@ant-design/icons';
 import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
 import React, { useEffect, useState } from "react";
@@ -266,13 +267,13 @@ const LearnCourseDetail: React.FC = () => {
             try {
                 const data = await getCourseDetail(courseId);
                 setCourse(data);
-                if (lessonId) {
-                    console.log("first", lessonId)
-                    fetchLessonDetail(lessonId);
-                } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
-                    const firstLessonId = data.session_list[0].lesson_list[0]._id;
-                    fetchLessonDetail(firstLessonId);
-                }
+                // if (lessonId) {
+                //     console.log("first", lessonId)
+                //     fetchLessonDetail(lessonId);
+                // } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
+                //     const firstLessonId = data.session_list[0].lesson_list[0]._id;
+                //     fetchLessonDetail(firstLessonId);
+                // }
                 
             } catch (error) {
                 message.error("Error fetching course details!");
@@ -316,7 +317,11 @@ const LearnCourseDetail: React.FC = () => {
                 return <EyeOutlined />;
         }
     }
-    console.log("Lesson data:", selectedLesson)
+    
+    const handleIntroduceClick = () => {
+        setSelectedLesson(null); 
+        navigate(`/student/student-learning/${courseId}/lesson/`);
+    };
 
     if (!course) {
         return (
@@ -352,25 +357,32 @@ const LearnCourseDetail: React.FC = () => {
                     trigger={null}
                 >
                     <Menu
-                        mode="inline"
-                        defaultOpenKeys={[course.session_list[0]?._id]}
-                        style={{ height: "100%" }}
-                    >
-                        {course.session_list.map((session) => (
-                            
-                            <Menu.SubMenu key={session._id} title={session.name}>
-                                {session.lesson_list.map((lesson) => (
-                                    <Menu.Item
-                                        key={lesson._id}
-                                        icon={getLessonIcon(lesson.lesson_type)}
-                                        onClick={() => handleLessonClick(lesson)}
-                                    >
-                                        {lesson.name}
-                                    </Menu.Item>
-                                ))}
-                            </Menu.SubMenu>
-                        ))}
-                    </Menu>
+    mode="inline"
+    defaultOpenKeys={[course.session_list[0]?._id]}
+    style={{ height: "100%" }}
+>
+    <Menu.Item
+        key="introduce"
+        icon={<ReconciliationOutlined />}
+        onClick={handleIntroduceClick}
+    >
+        Introduce
+    </Menu.Item>
+    {course.session_list.map((session) => (
+        <Menu.SubMenu key={session._id} title={session.name}>
+            {session.lesson_list.map((lesson) => (
+                <Menu.Item
+                    key={lesson._id}
+                    icon={getLessonIcon(lesson.lesson_type)}
+                    onClick={() => handleLessonClick(lesson)}
+                >
+                    {lesson.name}
+                </Menu.Item>
+            ))}
+        </Menu.SubMenu>
+    ))}
+</Menu>
+
                 </Sider>
                 <Layout>
                     <Content className="p-4 bg-gray-100">
