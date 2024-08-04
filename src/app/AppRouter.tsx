@@ -43,7 +43,7 @@ const AppRouter: React.FC = () => (
           {/* <Route path={`/home/course-details/:courseId`} element={<CourseDetailsPage/>} /> */}
           {/* <Route path={`/course/course-details/:courseId`} element={<CourseDetailsPage/>} /> */}
           <Route path="/log-in" element={<Login />} />
-          <Route path="instructor-detail/:userId/" element={<InstructorDetail />} />
+          <Route path="/course-details/:courseId/instructor-detail/:userId/" element={<InstructorDetail />} />
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path={`search`} element={<SearchPage />} />
@@ -62,7 +62,7 @@ const AppRouter: React.FC = () => (
           <Route path="/resend-email" element={<ResendVerifyToken />} />
           <Route path="/sign-up-google" element={<SignUpGoogleInstructor />} />
         </Route>
-
+        
         {/* Layout for Students */}
        
         <Route path="/student/*"  element={<ProtectedRouter allowedRoles={["student"]}><StudentRouter /></ProtectedRouter>}/>

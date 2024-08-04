@@ -30,10 +30,7 @@ const ManagerCourseInstructor: React.FC = () => {
   const [form] = Form.useForm();
   const [expandedKeys, setExpandedKeys] = useState<string[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [category, setCategory] = useState<Category | null>(null);
   const [comment, setComment] = useState('');
-  const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
-  const [commentForm] = Form.useForm();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
   const [logs, setLogs] = useState<LogStatus[]>([]);

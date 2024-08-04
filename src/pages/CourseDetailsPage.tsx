@@ -1,14 +1,14 @@
 
 import { BellOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Form, Input, Modal, Rate, Spin, Tabs, Typography, message, notification } from 'antd';
-import { Review } from 'models/types';
+import { Review, Subcription } from 'models/types';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
+import { createOrUpdate, getItemBySubscriber } from 'services/All/subcriptionApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
-import { getCurrentUser } from '../services/AdminsApi/UserService';
-import { createCart } from '../services/All/CartApiService';
+import { createCart } from '../services/All/cartApiService';
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
@@ -71,8 +71,10 @@ interface SubscriptionResponse {
 const CourseDetail: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
+    const [instructor_id, setInstructor_id] = useState<string>("");
     const [isModalVisible, setIsModalVisible] = useState(false);
-    const [isSubscribed, setIsSubscribed] = useState(false);
+    const [subscriber, setSubscriber] = useState<Subcription[]>([]);
+    const [isSubscribed, setIsSubscribed] = useState(true);
     const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
     const [reviewRating, setReviewRating] = useState<number>(0);
     const [reviewComment, setReviewComment] = useState<string>('');
@@ -84,59 +86,72 @@ const CourseDetail: React.FC = () => {
     const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<any>(null);
     const [form] = Form.useForm();
     const navigate = useNavigate();
-    
-    const [currentUser, setCurrentUser] = useState<any>(null);
-    useEffect(() => {
-        const fetchCurrentUser = async () => {
-            try {
-                const response = await getCurrentUser();
-                if (response.success) {
-                    setCurrentUser(response.data);
-                } else {
-                    notification.error({
-                        message: 'Error',
-                        description: 'Failed to fetch current user information',
-                    });
-                }
-            } catch (error) {
-                message.error("Failed to fetch current user!")
-            }
-        };
-
-        fetchCurrentUser();
-    }, []);
 
     const handleInstructorProfile = (userId: string) => {
-        if (!currentUser) {
-            navigate(`/instructor-detail/${userId}`);
-        } else if (currentUser.role === 'student') {
-            navigate(`/student/instructor-detail/${userId}`);
-        } else if (currentUser.role === 'instructor') {
-            navigate(`/instructor/instructor-detail/${userId}`);
-        } else {
-            navigate(`/instructor-detail/${courseId}`);
-        }
+        navigate(`instructor-detail/${userId}`)
     };
 
     useEffect(() => {
         if (courseId) {
             setLoading(true);
-            const fetchCourseDetail = async () => {
-                try {
-                    const response = await getCourseDetail(courseId);
-                    setCourseDetail(response);
-                } catch (error) {
-                    console.error('Failed to fetch course detail:', error);
-                } finally {
-                    setLoading(false);
-                }
-            };
-
+            
             fetchCourseDetail();
         }
     }, [courseId]);
+
+    useEffect(() => {
+        fetchCourseDetail();
+        fetchSubscriberStatus();
+        },
+    []);
+
+    const fetchCourseDetail = async () => {
+        if (courseId) {
+            setLoading(true);
+            try {
+                const response = await getCourseDetail(courseId);
+                    console.log("fetchCourseDetail", response)
+                    setCourseDetail(response);
+                    setInstructor_id(response.instructor_id)
+                    console.log("response.instructor_id", response.instructor_id)
+                    fetchSubscriberStatus()
+                const instructor = response.filter((a:any) => a.instructor_id === response.instructor_id)
+                    console.log("instructor", instructor)
+                    setSubscriber(instructor.is_subscribed);
+            } catch (error) {
+                console.error('Failed to fetch course detail:', error);
+            } finally {
+                setLoading(false);
+            }
+            
+        }
+    };
+
+    const handleSubscribe = async () => {
+        setLoading(true);
+
+        try {
+            await createOrUpdate(instructor_id);
+            fetchSubscriberStatus();
+            message.success(isSubscribed ? 'Subscribed Successfully!' : 'Unsubscribed Successfully!');
+        } catch (error) {
+            console.error('Failed to subscribe:', error);
+            message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+        } finally {
+            setLoading(false);
+        }
+    };
+    
+    const fetchSubscriberStatus = async () => {
+        const response = await getItemBySubscriber(1, 10);
+        console.log("getItemBySubscriber", response)
+        if (response)  {
+            setSubscriber(response);
+        }
+    };
 
     useEffect(() => {
         if (courseId) {
@@ -156,18 +171,18 @@ const CourseDetail: React.FC = () => {
     }, [courseId]);
 
     const handleSubmitReview = async () => {
+        debugger
         if (!courseId) return;
-
         setLoadingReview(true);
-
         try {
             const response = await createReview(courseId, reviewComment, reviewRating);
+            console.log("response",response)
             notification.success({
                 message: 'Review Submitted',
                 description: 'Your review has been successfully submitted.',
             });
-            setReviews([...reviews, response]); // Update the reviews list
-            form.resetFields(); // Reset the form fields
+            setReviews([...reviews, response]);
+            form.resetFields();
         } catch (error) {
             notification.error({
                 message: 'Error Submitting Review',
@@ -312,9 +327,6 @@ const CourseDetail: React.FC = () => {
                             <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                             <div className="flex mt-4 space-x-4">
                                 <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleAddToCart}>Add to Cart</Button>
-                                {/* <Link to={`/student/buy-now?courseId=${courseDetail._id}`}>
-                                    <Button type="default" className="p-5 text-lg font-semibold text-white bg-gray-800">Buy Now</Button>
-                                </Link> */}
                             </div>
                         </div>
                     </div>
@@ -331,12 +343,12 @@ const CourseDetail: React.FC = () => {
                                     <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
 
                                 <Button
-                                    // onClick={handleSubscribe}
+                                    onClick={handleSubscribe}
                                     type="primary"
                                     loading={loading}
                                     className={`mr-2 mt-2 p-1 text-sm font-semibold w-full ${isSubscribed ? 'bg-gray-300 text-black' : 'bg-red-500 text-white'}`}
                                 >
-                                    {isSubscribed ? (
+                                    {isSubscribed === true ? (
                                         <>
                                             <BellOutlined /> Subscribed
                                         </>

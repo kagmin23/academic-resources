@@ -68,7 +68,6 @@ export const updateLesson = async (lessonId: string, lessonData: {
     name: string,
     course_id: string,
     session_id: string,
-    lesson_type: string,
     video_url: string,
     image_url: string,
     description: string,

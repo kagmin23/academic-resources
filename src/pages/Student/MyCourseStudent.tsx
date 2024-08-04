@@ -1,186 +1,207 @@
-import { DoubleRightOutlined, FilterOutlined, ReadOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
-import { Purchase } from "models/types";
-import { AlignType } from 'rc-table/lib/interface';
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { getItemsbyStudentPurchases } from "services/Student/getpurchaseApiService";
+import {
+  EyeOutlined,
+  FileOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  ReadOutlined,
+  VideoCameraOutlined
+} from '@ant-design/icons';
+import { Breadcrumb, Button, Layout, Menu, Spin } from "antd";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+// import parse from 'html-react-parser';
+import { getLesson } from "services/Instructor/lessonApiService";
+import { getCourseDetail } from "services/UserClient/clientApiService";
+import "tailwindcss/tailwind.css";
 
-const { Title, Text } = Typography;
-const { RangePicker } = DatePicker;
-const { Option } = Select;
+const { Sider, Content, Header } = Layout;
 
-export interface Subcription {
-  _id:	string,
-  subscriber_id:	string,
-  subscriber_name:	string,
-  instructor_id:	string,
-  instructor_name:	string,
-  is_subscribed:	boolean,
-  created_at:	Date,
-  updated_at:	Date,
-  is_deleted:	boolean,
+interface Lesson {
+    _id: string;
+    name: string;
+    lesson_type: string;
+    full_time: number;
+    position_order: number;
+    video_url?: string;
+    image_url?: string;
+    description?: string;
 }
 
-function ListCoursesStudent() {
-  const [data, setData] = useState<Purchase[]>([]);
-  const [filterText, setFilterText] = useState<string>('');
-  const [filterStatus, setFilterStatus] = useState<string>('');
-  const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
-  const navigate = useNavigate();
+interface Session {
+    _id: string;
+    name: string;
+    position_order: number;
+    full_time: number;
+    lesson_list: Lesson[];
+}
 
-  const fetchPurchases = async () => {
-    setLoading(true);
-    try {
-      const payouts = await getItemsbyStudentPurchases(1, 10);
-      setData(payouts);
-    } catch (error) {
-      console.error('Error fetching purchases:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+interface Course {
+    _id: string;
+    name: string;
+    session_list: Session[];
+}
 
-  useEffect(() => {
-    fetchPurchases();
-  }, []);
+const LearnCourseDetail: React.FC = () => {
+    const { courseId, lessonId } = useParams<{ courseId: string, lessonId?: string }>();
+    const [course, setCourse] = useState<Course | null>(null);
+    const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
+    const [collapsed, setCollapsed] = useState(false);
+    const navigate = useNavigate();
 
-  const refreshData = () => {
-    setFilterText('');
-    setFilterStatus('');
-    setFilterDate(null);
-    fetchPurchases();
-  };
-
-  const handleFilter = () => {
-    let filteredData = data;
-
-    if (filterStatus) {
-      filteredData = filteredData.filter((item) => item.status === filterStatus);
-    }
-
-    if (filterDate) {
-      filteredData = filteredData.filter((item) => {
-        const [startDate, endDate] = filterDate;
-        const itemDate = new Date(item.created_at);
-        return itemDate >= new Date(startDate) && itemDate <= new Date(endDate);
-      });
-    }
-    setData(filteredData);
-  };
-  
-  const getTotalListCourseStudent = (): number => {
-    return data.length;
-  };
-
-  const handleSearch = (value: string) => {
-    const filteredData = data.filter((item) =>
-      item.course_name.toLowerCase().includes(value.toLowerCase())
-    );
-    setData(filteredData);
-  };
-
-  const columns = [
-    {
-      title: 'STT',
-      dataIndex: 'stt',
-      width: 50,
-      key: 'stt',
-      align: "center" as AlignType,
-      render: (_: any, __: any, index: number) => index + 1,
-    },
-    {
-      title: "Course Name",
-      dataIndex: "course_name",
-      key: "course_name",
-      width: 200,
-    },
-    {
-      title: "Instructor Name",
-      dataIndex: "instructor_name",
-      key: "instructor_name",
-      width: 150,
-    },
-    {
-      title: "Action",
-      dataIndex: "course_id",
-      key: "course_id",
-      width: 100,
-      align: 'center' as AlignType,
-      render: (course_id: string, lesson_id: Purchase) => (
-        <div className="text-xs">
-          <Button
-            className="text-xs bg-slate-200"
-            onClick={() => navigate(`/student/student-learning/${course_id}/lesson/`)}
-          >
-            Learn Now<DoubleRightOutlined />
-          </Button>
-        </div>
-      ),
-    },
-  ];
-
-  return (
-    <Layout>
-      <div className="p-5">
-        <div className="py-5">
-          <h1 className="text-lg font-bold float-start sm:text-2xl">
-            <ReadOutlined className="mr-2" /> Wish List
-          </h1>
-        </div>
-        <div className="my-5">
-          <div className="flex flex-row items-center justify-between">
-            <Input
-              placeholder="Search..."
-              prefix={<SearchOutlined />}
-              onChange={(e) => handleSearch(e.target.value)}
-              style={{ width: 300 }}
-            />
-            <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={12}>
-              <FilterOutlined /> Filter:
-              <RangePicker
-                size="small"
-                className="m-4"
-                onChange={(dates, dateStrings) => setFilterDate(dateStrings as [string, string])}
-              />
-              <div className="flex items-center justify-center gap-2">
-                <Select
-                  className="w-36"
-                  size="small"
-                  placeholder="Status"
-                  options={[
-                    { value: 'process', label: 'Process' },
-                    { value: 'success', label: 'Success' },
-                  ]}
-                  onChange={(value) => setFilterStatus(value)}
-                />
-                <Button className="text-xs text-white bg-blue-600" onClick={handleFilter}>Apply</Button>
-                <Button className="text-white bg-blue-600" onClick={refreshData}><RedoOutlined /></Button>
-              </div>
-            </Space>
-          </div>
-          <div>
-            <span className='px-3 text-xs font-semibold'>Total Courses: {getTotalListCourseStudent()}</span>
-          </div>
-          <div className="py-2 overflow-x-auto">
-            {loading ?
-              (<div className="flex items-center justify-center h-64">
-                <Spin size="large" />
-              </div>) :
-              (<Table
-                rowKey="_id"
-                columns={columns}
-                dataSource={data}
-                pagination={{ pageSize: 10 }}
-                // scroll={{x: 'max-content'}}
-              />)
+    useEffect(() => {
+        const fetchCourseDetail = async () => {
+            if (!courseId) {
+                return;
             }
-          </div>
-        </div>
-      </div>
-    </Layout>
-  );
-}
+            const data = await getCourseDetail(courseId);
+            setCourse(data);
+            if (lessonId) {
+                fetchLessonDetail(lessonId);
+            } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
+                const firstLessonId = data.session_list[0].lesson_list[0]._id;
+                fetchLessonDetail(firstLessonId);
+                navigate(`/learn-course-detail/${courseId}/lesson/${firstLessonId}`);
+            }
+        };
 
-export default ListCoursesStudent;
+        fetchCourseDetail();
+    }, [courseId, lessonId, navigate]);
+
+    const fetchLessonDetail = async (lessonId: string) => {
+        const lesson = await getLesson(lessonId);
+        setSelectedLesson(lesson);
+    };
+
+    const handleLessonClick = (lesson: Lesson) => {
+        fetchLessonDetail(lesson._id);
+        navigate(`/studen-learning/${courseId}/lesson/${lesson._id}`);
+    };
+
+    const getLessonIcon = (lessonType: string) => {
+        switch (lessonType) {
+            case "video":
+                return <VideoCameraOutlined />;
+            case "reading":
+                return <ReadOutlined />;
+            case "image":
+                return <FileOutlined />;
+            default:
+                return <EyeOutlined />;
+        }
+    };
+
+    if (!course) {
+        return (
+            <div className="flex items-center justify-center min-h-screen">
+                <Spin size="large" />
+            </div>
+        );
+    }
+
+    return (
+        <Layout className="min-h-screen">
+            <Header className="bg-white shadow-md flex items-center px-4 md:px-6 lg:px-8">
+                <Button
+                    type="text"
+                    icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                    onClick={() => setCollapsed(!collapsed)}
+                    className="mr-4"
+                />
+                <div className="flex-1">
+                    {selectedLesson && (
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <span 
+                                    className="cursor-pointer hover:text-blue-500 transition-colors duration-300 font-semibold" 
+                                    onClick={() => navigate('/homepage')}
+                                >
+                                    Home
+                                </span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span 
+                                    className="cursor-pointer hover:text-blue-500 transition-colors duration-300 font-semibold" 
+                                    onClick={() => navigate(`/course-detail/${courseId}`)}
+                                >
+                                    {course.name}
+                                </span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>{selectedLesson.name}</Breadcrumb.Item>
+                        </Breadcrumb>
+                    )}
+                </div>
+            </Header>
+            <Layout>
+                <Sider
+                    collapsible
+                    collapsed={collapsed}
+                    width={300}
+                    className="bg-white shadow-md overflow-auto"
+                    trigger={null}
+                    breakpoint="lg"
+                    collapsedWidth="0"
+                >
+                    <Menu
+                        mode="inline"
+                        defaultOpenKeys={[course.session_list[0]?._id]}
+                        style={{ height: "100%" }}
+                    >
+                        {course.session_list.map((session) => (
+                            <Menu.SubMenu key={session._id} title={session.name}>
+                                {session.lesson_list.map((lesson) => (
+                                    <Menu.Item
+                                        key={lesson._id}
+                                        icon={getLessonIcon(lesson.lesson_type)}
+                                        onClick={() => handleLessonClick(lesson)}
+                                    >
+                                        {lesson.name}
+                                    </Menu.Item>
+                                ))}
+                            </Menu.SubMenu>
+                        ))}
+                    </Menu>
+                </Sider>
+                <Layout>
+                    <Content className="p-4 md:p-6 lg:p-8 bg-gray-100">
+                        {selectedLesson ? (
+                            <div className="bg-white p-4 md:p-6 lg:p-8 rounded-lg shadow-lg">
+                                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-4">{selectedLesson.name}</h2>
+                                {selectedLesson.lesson_type === "video" && selectedLesson.video_url && (
+                                    <div className="mb-4">
+                                        <iframe
+                                            width="100%"
+                                            height="250px"
+                                            src={selectedLesson.video_url}
+                                            title={selectedLesson.name}
+                                            frameBorder="0"
+                                            allowFullScreen
+                                            className="rounded-lg"
+                                        ></iframe>
+                                    </div>
+                                )}
+                                {selectedLesson.lesson_type === "image" && selectedLesson.image_url && (
+                                    <div className="mb-4">
+                                        <img
+                                            src={selectedLesson.image_url}
+                                            alt={selectedLesson.name}
+                                            className="max-w-full h-auto rounded-lg"
+                                        />
+                                    </div>
+                                )}
+                                {selectedLesson.description && (
+                                    <div className="mt-4 text-sm md:text-base lg:text-lg">
+                                        {selectedLesson.description}
+                                    </div>
+                                )}
+                            </div>
+                        ) : (
+                            <div>No lesson selected</div>
+                        )}
+                    </Content>
+                </Layout>
+            </Layout>
+        </Layout>
+    );
+};
+
+export default LearnCourseDetail;
