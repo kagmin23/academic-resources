@@ -1,8 +1,7 @@
 import { GoogleOutlined } from '@ant-design/icons';
 import { Button, Checkbox, Form, Input, Radio, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
-import { User } from 'models/types';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
 import { registerUser } from '../../services/registerApiService';
@@ -11,10 +10,16 @@ const SignUp: React.FC = () => {
   const [form] = Form.useForm();
   const [value, setValue] = useState<string>('student');
   const [current, setCurrent] = useState<number>(0);
-  const [formData, setFormData] = useState<User>();
+  const [formData, setFormData] = useState<any>();
   const [completedSteps, setCompletedSteps] = useState<boolean[]>([false, false, false, false, false]);
-  const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Reset fields when role changes
+    if (value === 'student') {
+      form.resetFields(['video', 'description', 'phone_number']);
+    }
+  }, [value]);
 
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
@@ -31,15 +36,11 @@ const SignUp: React.FC = () => {
       updatedCompletedSteps[current] = true;
       setFormData({ ...formData, ...values });
       setCurrent(current + 1);
-
-      if (current === 0) {
-        setShowRadioGroup(false);
-      }
     } catch (error) {
       console.log('Validation Failed:', error);
     }
   };
-  
+
   const onFinish = async () => {
     try {
       const values = await form.validateFields();
@@ -48,11 +49,11 @@ const SignUp: React.FC = () => {
       setCompletedSteps(updatedCompletedSteps);
       const finalFormData = { ...formData, ...values, role: value };
       setFormData(finalFormData);
-  
+
       // Save user data to localStorage
       localStorage.setItem("user", JSON.stringify(finalFormData));
       console.log('Final Form Data:', finalFormData);
-  
+
       // Register the user
       const response = await registerUser(finalFormData);
       console.log('Registration successful:', response);
@@ -61,14 +62,13 @@ const SignUp: React.FC = () => {
         description: 'You have signed up successfully!',
       });
       navigate('/verify-email');
-  
+
       // Handle instructor profile review if applicable
       if (value === 'instructor') {
-        const userId = finalFormData._id; 
+        const userId = finalFormData._id;
         const status: "approve" | "reject" = "approve";
-  
+
         await reviewProfileInstructor(userId, status, "Profile review submitted for instructor.");
-        console.log('Instructor profile review submitted');
       }
     } catch (error) {
       console.error('Registration error:', error);
@@ -77,8 +77,8 @@ const SignUp: React.FC = () => {
         description: 'There was an error during the registration process. Please try again.',
       });
     }
-  };  
-  
+  };
+
   const steps = [
     {
       title: 'Sign Up',
@@ -107,7 +107,6 @@ const SignUp: React.FC = () => {
             rules={[
               { required: true, message: 'Please input your password!' },
               {
-                // pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/,
                 message: 'Your password must be from 8 to 16 characters long, must contain at least 1 uppercase character, lowercase character and numeric character',
               },
             ]}
@@ -145,33 +144,43 @@ const SignUp: React.FC = () => {
       title: 'Update',
       content: (
         <Form form={form} className="space-y-4">
-          <Form.Item
-            name="video"
-            rules={[{ required: false, message: 'Please enter the video URL' }]}
-          >
-            <Input placeholder="Video URL" size="middle" />
-          </Form.Item>
-          <Form.Item
-            name="description"
-            rules={[{ required: false, message: 'Please enter the description' }]}
-          >
-            <Input.TextArea placeholder="Update description" size="large" rows={4} />
-          </Form.Item>
-          <Form.Item
-            name="phone_number"
-            label="Phone Number"
-            rules={[{ required: false, message: 'Please enter the phone number' }]}
-          >
-            <Input placeholder="Update Phone Number" size="small" />
+          {value === 'instructor' && (
+            <>
+              <Form.Item
+                name="video"
+                rules={[{ required: value === 'instructor', message: 'Please enter the video URL' }]}
+              >
+                <Input placeholder="Video URL" size="middle" />
+              </Form.Item>
+              <Form.Item
+                name="description"
+                rules={[{ required: value === 'instructor', message: 'Please enter the description' }]}
+              >
+                <Input.TextArea placeholder="Update description" size="large" rows={4} />
+              </Form.Item>
+              <Form.Item
+                name="phone_number"
+                label="Phone Number"
+                rules={[{ required: value === 'instructor', message: 'Please enter the phone number' }]}
+              >
+                <Input placeholder="Update Phone Number" size="small" />
+              </Form.Item>
+            </>
+          )}
+          <Form.Item>
+            <Radio.Group onChange={onChangeRole} value={value}>
+              <Radio value="student">Student</Radio>
+              <Radio value="instructor">Instructor</Radio>
+            </Radio.Group>
           </Form.Item>
           <div className="flex justify-between">
             <Button onClick={onPrev} className="text-blue-400">
               Previous
             </Button>
 
-              <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
-                Finish
-              </Button>
+            <Button type="primary" onClick={onFinish} className="text-white bg-green-600 hover:bg-green-700">
+              Finish
+            </Button>
 
           </div>
         </Form>
@@ -179,7 +188,6 @@ const SignUp: React.FC = () => {
     },
   ];
   
-
   return (
     <div className="relative flex items-center justify-center min-h-screen bg-gray-100">
       <div className="absolute top-0 left-0 w-full h-full bg-black bg-opacity-50 background-transition"></div>
@@ -191,13 +199,6 @@ const SignUp: React.FC = () => {
 
         <h2 className="text-3xl font-bold text-center">Welcome to Academic</h2>
         <p className="italic text-center text-gray-600">Sign Up and Start Learning!</p>
-
-        {showRadioGroup && (
-          <Radio.Group onChange={onChangeRole} value={value}>
-            <Radio value="student">Student</Radio>
-            <Radio value="instructor">Instructor</Radio>
-          </Radio.Group>
-        )}
 
         <div className="steps-content">{steps[current].content}</div>
 
@@ -221,12 +222,11 @@ const SignUp: React.FC = () => {
         </div>
 
         <div className="text-center text-gray-600">
-          <p>Already have an account? <Link to="/log-in" className="text-blue-600">Login</Link></p>
+          <p>Already have an account? <Link to="/log-in" className="text-blue-600">Log In</Link></p>
         </div>
-
-        <footer className="mt-4 text-center text-gray-600">
-          <p>© 2024 Academic. All Rights Reserved.</p>
-        </footer>
+          <footer className="bottom-0 left-0 w-full text-center text-gray-600 ">
+            <p>&copy; 2024 Academic. All Rights Reserved.</p>
+          </footer>
       </div>
     </div>
   );
