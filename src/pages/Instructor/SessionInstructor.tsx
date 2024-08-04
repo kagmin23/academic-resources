@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
-import { Button, Form, Input, Layout, Modal, Select, Spin, Table, message } from "antd";
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { Button, Form, Input, Layout, Modal, Select, Spin, Table, message } from "antd";
 import { Course, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
+import React, { useEffect, useState } from 'react';
 import { getCourses } from 'services/All/getCoursesApiService';
 import { createSession, deleteSession, getSessions, updateSession } from 'services/Instructor/sessionApiService';
 
@@ -223,9 +223,15 @@ const ManagerCourseInstructor: React.FC = () => {
                   key: 'name',
                 },
                 {
+                  title: 'Course Name',
+                  dataIndex: 'course_name',
+                  key: 'course_name',
+                },
+                {
                   title: 'Position Order',
                   dataIndex: 'position_order',
                   key: 'position_order',
+                  width: 120,
                   align: "center" as AlignType,
                 },
                 {

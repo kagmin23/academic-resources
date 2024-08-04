@@ -1,4 +1,6 @@
+import axios from "axios";
 import axiosInstance from "hook/config";
+import { HOST_MAIN } from "services/apiService";
 
 export const getReviews = async(course_id: string, pageNum: number, pageSize: number) => {
     try {
@@ -16,7 +18,7 @@ export const getReviews = async(course_id: string, pageNum: number, pageSize: nu
                 }
         },
     );
-          console.log("getReviews", response);
+        console.log("getReviews", response);
     return response.data.data.pageData;
 
     } catch (error){
@@ -27,14 +29,22 @@ export const getReviews = async(course_id: string, pageNum: number, pageSize: nu
 
 export const createReview = async (course_id: string, comment: string, rating: number) => {
     try {
-        const response = await axiosInstance.post('/api/review', {
+        const token = localStorage.getItem('token');
+        
+        const response = await axios.post(`${HOST_MAIN}/api/review`, {
             course_id,
             comment,
-            rating
-        },
-    );
+            rating,
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+        
         console.log("createReview: ", response);
         return response.data;
+
     } catch (error) {
         console.error("Error to Log Api createReview!", error);
         throw error;
@@ -43,13 +53,21 @@ export const createReview = async (course_id: string, comment: string, rating: n
 
 export const updateReview = async (reviewId: string, comment: string, rating: number) => {
     try {
-        const response = await axiosInstance.put('/api/review/${reviewId}', {
+        const token = localStorage.getItem('token');
+        
+        const response = await axios.put(`${HOST_MAIN}/api/review/${reviewId}`, {
             comment,
             rating
-        },
-    );
+        }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            }
+        });
+
         console.log("updateReview: ", response);
         return response.data;
+
     } catch (error) {
         console.error("Error in updateReview API call!", error);
         throw error;

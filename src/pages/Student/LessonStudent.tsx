@@ -8,7 +8,7 @@ import {
 } from '@ant-design/icons';
 import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
 import { getCourseDetail } from "services/UserClient/clientApiService";
 import "tailwindcss/tailwind.css";
@@ -43,43 +43,42 @@ interface Course {
 const LearnCourseDetail: React.FC = () => {
     const { lessonId } = useParams<{ id: string, lessonId?: string }>();
     const { courseId } = useParams<{ courseId?: string }>();
+    const location = useLocation();
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
     const [collapsed, setCollapsed] = useState(false);
-    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         const fetchCourseDetailUser = async () => {
             if (!courseId) {
                 message.error("Course ID is missing");
-                setLoading(false);
                 return;
             }
             try {
                 const data = await getCourseDetail(courseId);
                 setCourse(data);
                 if (lessonId) {
-                    await fetchLessonDetail(lessonId);
+                    console.log("first", lessonId)
+                    fetchLessonDetail(lessonId);
                 } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
                     const firstLessonId = data.session_list[0].lesson_list[0]._id;
-                    await fetchLessonDetail(firstLessonId);
+                    fetchLessonDetail(firstLessonId);
                 }
-                setLoading(false);
             } catch (error) {
                 message.error("Error fetching course details!");
                 console.error("Error fetching course details:", error);
-                setLoading(false);
             }
         };
 
         fetchCourseDetailUser();
-    }, [courseId, lessonId]);
+    }, [courseId, lessonId, navigate]);
 
     const fetchLessonDetail = async (lessonId: string) => {
         try {
             const lesson = await getLesson(lessonId);
-            setSelectedLesson(lesson.data);
+            setSelectedLesson(lesson);
+            console.log("setSelectedLesson", selectedLesson);
         } catch (error) {
             message.error("Error fetching lesson details");
             console.error("Error fetching lesson details:", error);
@@ -88,7 +87,9 @@ const LearnCourseDetail: React.FC = () => {
 
     const handleLessonClick = async (lesson: Lesson) => {
         await fetchLessonDetail(lesson._id);
-        navigate(`/student/student-learning/${courseId}/lesson/${lesson._id}`);
+        console.log('lesson', lesson);
+        setSelectedLesson(lesson);
+        window.history.replaceState(null, '', `/student/student-learning/${courseId}/lesson/${lesson._id}`);
     };
 
     function getLessonIcon(lessonType: string) {
@@ -104,12 +105,7 @@ const LearnCourseDetail: React.FC = () => {
         }
     }
 
-    const convertToEmbedUrl = (url: string) => {
-        const videoId = url.split("v=")[1];
-        return `https://www.youtube.com/embed/${videoId}`;
-    };
-
-    if (loading) {
+    if (!course) {
         return (
             <div className="flex items-center justify-center min-h-screen">
                 <Spin size="large" />
@@ -129,7 +125,7 @@ const LearnCourseDetail: React.FC = () => {
                 <div className="flex-1">
                     {selectedLesson && (
                         <Breadcrumb>
-                            <Breadcrumb.Item>{course?.name}</Breadcrumb.Item>
+                            <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
                         </Breadcrumb>
                     )}
                 </div>
@@ -144,10 +140,10 @@ const LearnCourseDetail: React.FC = () => {
                 >
                     <Menu
                         mode="inline"
-                        defaultOpenKeys={course?.session_list[0]?._id ? [course.session_list[0]._id] : []}
+                        defaultOpenKeys={[course.session_list[0]?._id]}
                         style={{ height: "100%" }}
                     >
-                        {course?.session_list.map((session) => (
+                        {course.session_list.map((session) => (
                             <Menu.SubMenu key={session._id} title={session.name}>
                                 {session.lesson_list.map((lesson) => (
                                     <Menu.Item
@@ -172,7 +168,7 @@ const LearnCourseDetail: React.FC = () => {
                                         <iframe
                                             width="100%"
                                             height="400px"
-                                            src={convertToEmbedUrl(selectedLesson.video_url)}
+                                            src={selectedLesson.video_url}
                                             title={selectedLesson.name}
                                             frameBorder="0"
                                             allowFullScreen

@@ -47,7 +47,7 @@ const SubcriptionStudent: React.FC = () => {
   const fetchSubscribers = async () => {
     setLoading(true);
     try {
-      const response = await getItemBySubscriber('', 1, 10);
+      const response = await getItemBySubscriber(1, 10);
       if (Array.isArray(response)) {
         const subscribedStudents = response.filter(sub => sub.is_subscribed);
         setSubcriptionStudents(subscribedStudents);
@@ -65,7 +65,7 @@ const SubcriptionStudent: React.FC = () => {
   const fetchSubscriptionStatus = async () => {
     setLoading(true);
     try {
-      const response = await getItemBySubscriber('', 1, 10);
+      const response = await getItemBySubscriber(1, 10);
       if (Array.isArray(response)) {
         setSubcriptionInstructors(response);
         setFilteredInstructors(response);
