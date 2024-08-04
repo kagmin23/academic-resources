@@ -132,7 +132,7 @@ function ListCoursesStudent() {
     {
       title: "Action",
       dataIndex: "course_id",
-      key: "course_id",
+      key: "course_id", 
       width: 100,
       align: 'center' as AlignType,
       render: (course_id: string, lesson_id: Purchase) => (
