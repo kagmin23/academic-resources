@@ -1,7 +1,6 @@
 import {
   BellOutlined,
   ContainerOutlined,
-  DeploymentUnitOutlined,
   MoneyCollectOutlined,
   PieChartOutlined,
   ShoppingOutlined,
@@ -114,9 +113,6 @@ const SidebarAdmin: React.FC = () => {
             </Menu.Item>
           )
         ))}
-        <Menu.Item icon={<DeploymentUnitOutlined />}>
-          {expanded && 'By Academic'}
-        </Menu.Item>
       </Menu>
     </div>
   );

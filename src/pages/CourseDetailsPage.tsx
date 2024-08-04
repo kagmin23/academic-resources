@@ -207,9 +207,9 @@ const CourseDetail: React.FC = () => {
 
     const handleSetButton = () => {
         if(button === "Learn Now") {
-            navigate(`student/student-learning/${courseId}/lesson`);
+            navigate(`/student/student-learning/${courseId}/lesson`);
         } else if(button === "Go to card") {
-            navigate(`shopping-cart`);
+            navigate(`/student/shopping-cart`);
         } else if(button === "Add to card") {
             handleAddToCart();
         }
@@ -272,7 +272,6 @@ const CourseDetail: React.FC = () => {
             setLoadingUpdateReview(false);
         }
     };
-
 
     const handleAddToCart = async () => {
         if (!courseId) {

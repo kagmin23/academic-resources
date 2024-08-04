@@ -1,5 +1,5 @@
 import { TinyColor } from '@ctrl/tinycolor';
-import { Button, Card, Col, ConfigProvider, Row } from 'antd';
+import { Card, Col, ConfigProvider, Row } from 'antd';
 import independent from '../assets/independent.jpg';
 import present from '../assets/present.jpg';
 import savetimeImage from '../assets/savetime.jpg';
@@ -139,9 +139,9 @@ export default function About() {
                         },
                     }}
                 >
-                    <Button type="primary" size="large" className='p-5 text-lg font-bold'>
-                        Join Our Team
-                    </Button>
+                    <span className='p-5 text-lg font-bold'>
+                        Join Our Team!
+                    </span>
                 </ConfigProvider>
             </div>
                 </div>

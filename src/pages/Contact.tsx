@@ -62,13 +62,13 @@ export default function Contact() {
                         <div className='flex w-40 text-sm font-semibold '>
                          <MailOutlineIcon className='mr-2' /> Email Address:
                         </div>
-                        <div className='flex-1 text-sm text-gray-600'>nhom4@gmail.com</div>
+                        <div className='flex-1 text-sm text-gray-600'>phankangmin.dev@gmail.com</div>
                     </div>
                     <div className='flex mb-4'>
                         <div className='flex w-40 text-sm font-semibold'>
                         <PhoneIcon className='mr-2' /> Phone Number:
                         </div>
-                        <div className='flex-1 text-sm text-gray-600'>0123456789</div>
+                        <div className='flex-1 text-sm text-gray-600'>+84 342 555 702</div>
                      </div>
                      <div className='mt-10 '>
                         <InstagramIcon className='mr-4 cursor-pointer' fontSize="large" sx={{ color: red[300] }}/>
