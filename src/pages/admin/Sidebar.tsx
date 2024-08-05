@@ -1,4 +1,4 @@
-import { FlagOutlined, LineChartOutlined, MenuUnfoldOutlined, MoneyCollectOutlined, PieChartOutlined, ReadOutlined, StarOutlined, SwapOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
+import { LineChartOutlined, MenuUnfoldOutlined, MoneyCollectOutlined, PieChartOutlined, ReadOutlined, StarOutlined, SwapOutlined, UserSwitchOutlined, UsergroupAddOutlined } from "@ant-design/icons";
 import { Button, Menu } from "antd";
 import 'antd/dist/reset.css';
 import React, { useState } from "react";
@@ -66,12 +66,6 @@ const SidebarAdmin: React.FC = () => {
       heading: "Review",
       href: "/admin/review",
     },
-    {
-      icon: FlagOutlined,
-      heading: 'Report',
-      href: "/admin/report"
-    },
-
   ];
 
   return (

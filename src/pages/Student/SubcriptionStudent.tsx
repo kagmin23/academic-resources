@@ -124,10 +124,11 @@ const SubcriptionStudent: React.FC = () => {
 
   return (
     <Layout style={{ height: 'fit-content', minHeight: '100vh' }}>
-      <div className='px-5'>
+      <div className='p-5 px-5'>
+            <p className='text-lg font-bold sm:text-2xl'><BellOutlined />  Subcription</p>
         <div className='flex justify-between'>
-          <div className='w-1/2'>
-            <span className='text-lg font-semibold'>Total Subscribers: {getTotalSubcribers()}</span>
+          <div className='w-1/2 mt-5'>
+            <span className='ml-2 text-sm font-semibold text-gray-600'>Total Subscribers: {getTotalSubcribers()}</span>
           </div>
           <div className='w-1/4 mr-5'>
             <Input

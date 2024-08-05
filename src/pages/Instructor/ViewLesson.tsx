@@ -153,6 +153,7 @@ const ViewLesson: React.FC = () => {
           ...values,
           course_id: courseId,
           session_id: sessionId,
+          full_time: Number(values.full_time)
         };
         
         if (isEditMode && currentLesson) {
@@ -405,7 +406,9 @@ const ViewLesson: React.FC = () => {
           <Form.Item
             name="position_order"
             label="Position Order"
-            rules={[{ required: true, message: 'Please enter the position order!' }]}
+            rules={[{ required: true, message: 'Please enter the position order!' },
+                    { type: 'number', message: 'Please enter a valid number!' }
+            ]}
           >
             <Input />
           </Form.Item>

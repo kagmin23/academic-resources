@@ -1,6 +1,7 @@
-import { DeleteOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, SearchOutlined, StarOutlined } from '@ant-design/icons';
 import { Button, Input, Layout, Modal, Spin, Table, Tabs } from 'antd';
 import { Review } from 'models/types';
+import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { deleteReview } from 'services/AdminsApi/reviewApiService';
@@ -9,18 +10,22 @@ import { getReviews } from 'services/All/reviewApiService';
 const { TabPane } = Tabs;
 
 const AdminReview: React.FC = () => {
+  const [originalData, setOriginalData] = useState<Review[]>([]);
   const [filteredData, setFilteredData] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState<boolean>(false);
+  const [search, setSearch] = useState<string>('');
   const [deleteItemId, setDeleteItemId] = useState<string | undefined>();
 
   const fetchReviews = async () => {
     setLoading(true);
     try {
       const response = await getReviews('', 1, 10);
+      setOriginalData(response);
       setFilteredData(response);
     } catch (error) {
       console.error('Error fetching reviews:', error);
+      setOriginalData([]);
       setFilteredData([]);
     } finally {
       setLoading(false);
@@ -36,7 +41,9 @@ const AdminReview: React.FC = () => {
     setLoading(true);
     try {
       await deleteReview(deleteItemId);
-      setFilteredData(filteredData.filter(review => review._id !== deleteItemId));
+      const updatedData = originalData.filter(review => review._id !== deleteItemId);
+      setOriginalData(updatedData);
+      setFilteredData(updatedData);
       setDeleteItemId(undefined);
       setDeleteConfirmVisible(false);
     } catch (error) {
@@ -51,19 +58,25 @@ const AdminReview: React.FC = () => {
   };
 
   const handleSearch = (value: string) => {
-    const filteredSearchData = filteredData.filter((item) =>
-      item.reviewer_name.toLowerCase().includes(value.toLowerCase())
-      // item.course_name.toLowerCase().includes(value.toLowerCase())
-    );
-    setFilteredData(filteredSearchData);
-  };
+    setSearch(value);
+    if (value) {
+      const filtered = originalData.filter(review =>
+        review.course_name?.toLowerCase().includes(value.toLowerCase()) ||
+        review.reviewer_name?.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredData(filtered);
+    } else {
+      setFilteredData(originalData);
+    }
+  }
 
   const columns1 = [
     {
       title: 'No.',
-      dataIndex: '_id',
-      key: '_id',
+      dataIndex: 'no',
+      key: 'no',
       width: 50,
+      align: 'center' as AlignType,
       render: (text: any, record: Review, index: number) => index + 1,
     },
     {
@@ -81,11 +94,27 @@ const AdminReview: React.FC = () => {
     {
       title: 'Comment',
       dataIndex: 'comment',
-      width: 300,
+      width: 180,
       key: 'comment',
     },
     {
-      title: 'Rating',
+      title: 'Created At',
+      dataIndex: 'created_at',
+      width: 100,
+      key: 'created_at',
+      align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format('YYYY-MM-DD')
+    },
+    {
+      title: 'Updated At',
+      dataIndex: 'updated_at',
+      width: 100,
+      key: 'updated_at',
+      align: 'center' as AlignType,
+      render: (updated_at: string) => moment(updated_at).format('YYYY-MM-DD')
+    },
+    {
+      title: <StarOutlined />,
       dataIndex: 'rating',
       key: 'rating',
       width: 50,
@@ -130,13 +159,13 @@ const AdminReview: React.FC = () => {
               <div className='w-1/2'>
                 <span className='text-lg font-semibold'>Total Reviews: {getTotalReview()}</span>
               </div>
-              <div className='w-1/4 mr-5'>
+              <div className='w-1/4'>
                 <Input
                   placeholder="Search..."
-                  className="mb-5"
                   prefix={<SearchOutlined />}
-                  onChange={(e) => handleSearch(e.target.value)}
-                  style={{ width: 300 }}
+                  className='mb-5'
+                  onChange={e => handleSearch(e.target.value)}
+                  value={search}
                 />
               </div>
             </div>

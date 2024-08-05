@@ -18,8 +18,7 @@ export const getReviews = async(course_id: string, pageNum: number, pageSize: nu
             }
         },
     );
-        console.log("getReviews", response);
-    return response.data.data.pageData;
+    return response.data.pageData;
 
     } catch (error){
         console.error("Error to Log Api getReviews!",error);

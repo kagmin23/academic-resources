@@ -151,13 +151,13 @@ const ApproveInstructor: React.FC = () => {
           {!item.isRejected && !item.isApproved && (
             <>
               <Button
-                className="text-white bg-blue-500"
+                className="text-white bg-blue-600"
                 size="small"
                 icon={<CheckOutlined />}
                 onClick={() => handleConfirm("approve", item._id)}
               />
               <Button
-                className="text-white bg-red-500"
+                className="text-white bg-red-600"
                 size="small"
                 icon={<CloseOutlined />}
                 onClick={() => handleConfirm("reject", item._id)}

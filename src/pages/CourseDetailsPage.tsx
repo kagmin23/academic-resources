@@ -1,5 +1,5 @@
 
-import { BellOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
+import { BellOutlined, EditOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Form, Input, Modal, Rate, Spin, Tabs, Typography, message, notification } from 'antd';
 import { Review } from 'models/types';
 import moment from 'moment';
@@ -67,8 +67,6 @@ const CourseDetail: React.FC = () => {
     const [updatedReviewRating, setUpdatedReviewRating] = useState<number>(0);
     const [updatedReviewComment, setUpdatedReviewComment] = useState<string>('');
     const [loadingUpdateReview, setLoadingUpdateReview] = useState<boolean>(false);
-    // const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionResponse | null>(null);
-    const [currentUser, setCurrentUser] = useState<any>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [button, setButton] = useState<string>('Add to cart');
@@ -98,7 +96,7 @@ const CourseDetail: React.FC = () => {
                 try {
                     const response = await getCourseDetail(courseId);
                     setCourseDetail(response);
-                    setIsPurchased(response.is_purchased);  // Cập nhật trạng thái isPurchased
+                    setIsPurchased(response.is_purchased);
                 } catch (error) {
                     console.error('Failed to fetch course detail:', error);
                 } finally {
@@ -169,7 +167,6 @@ const CourseDetail: React.FC = () => {
         }
     };
 
-
     useEffect(() => {
         fetchSubscriptionStatus();
     }, []);
@@ -202,9 +199,7 @@ const CourseDetail: React.FC = () => {
 
     const handleUpdateReview = async () => {
         if (!editingReviewId) return;
-
         setLoadingUpdateReview(true);
-
         try {
             const response = await updateReview(editingReviewId, updatedReviewComment, updatedReviewRating);
             notification.success({
@@ -225,7 +220,6 @@ const CourseDetail: React.FC = () => {
             setLoadingUpdateReview(false);
         }
     };
-
 
     const handleAddToCart = async () => {
         if (!courseId) {
@@ -260,7 +254,12 @@ const CourseDetail: React.FC = () => {
     }
 
     return (
-        <Spin spinning={loading} tip="Loading...">
+        <div className="relative min-h-screen">
+            {loading ? (
+            <div className="flex items-center justify-center h-64">
+                <Spin size="large" />
+            </div>
+            ) : (
             <div className="text-white bg-gray-900">
                 <div className="py-8">
                     <div className="container px-4 mx-auto">
@@ -321,11 +320,9 @@ const CourseDetail: React.FC = () => {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <Avatar src={courseDetail.instructor_id} size="large" />
-
                                 <div className="flex flex-col ml-4">
                                     <div onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
                                         <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
-
                                     <Button
                                         onClick={handleSubscribe}
                                         type="primary"
@@ -340,7 +337,6 @@ const CourseDetail: React.FC = () => {
                                             'Subscribe'
                                         )}
                                     </Button>
-
                                 </div>
                             </div>
                         </div>
@@ -380,27 +376,29 @@ const CourseDetail: React.FC = () => {
                                 )}
                             </TabPane>
                             <TabPane tab="Reviews" key="2">
-                                <div className="p-4">
+                                <div>
                                     {reviews.length > 0 ? (
                                         reviews.map((review) => (
-                                            <Card key={review._id} className="mb-4">
-                                                <Card.Meta
-                                                    avatar={<Avatar>{review.reviewer_name.charAt(0)}</Avatar>}
-                                                    title={
-                                                        <div className="d-flex justify-content-between align-items-center">
-                                                            <span>{review.reviewer_name}</span>
-                                                            <Rate value={review.rating} disabled />
+                                        <Card key={review._id} className="mb-3">
+                                            <Card.Meta
+                                                avatar={<Avatar>{review.reviewer_name.charAt(0)}</Avatar>}
+                                                title={
+                                                    <div className="flex items-center justify-between">
+                                                        <div className="flex flex-col">
+                                                            <div className="flex items-center gap-4">
+                                                                <span>{review.reviewer_name}</span>
+                                                                <span className="text-xs text-gray-400">{moment(review.created_at).format('LL')}</span>
+                                                            </div>
+                                                            <Rate className="text-sm" value={review.rating} disabled />
                                                         </div>
-                                                    }
-                                                    description={review.comment}
-                                                />
-                                                <div className="mt-2 d-flex justify-content-between align-items-center">
-                                                    <span className="text-muted">{moment(review.created_at).format('LL')}</span>
-                                                    {currentUser && review._id === currentUser._id && (
-                                                        <Button type="link" onClick={() => showModal()}>Edit</Button>
-                                                    )}
-                                                </div>
-                                            </Card>
+                                                        <div className="mt-5">
+                                                            <Button size="small" type="text" icon={<EditOutlined />} onClick={handleUpdateReview} />
+                                                        </div>
+                                                    </div>
+                                                }
+                                                description={<p className="text-sm text-black">{review.comment}</p>}
+                                            />
+                                        </Card>
                                         ))
                                     ) : (
                                         <div>No reviews available</div>
@@ -422,14 +420,12 @@ const CourseDetail: React.FC = () => {
                                     )}
                                 </div>
                             </TabPane>
-
-
-
                         </Tabs>
                     </div>
                 </div>
             </div>
-        </Spin>
+            )}
+        </div>
     );
 };
 

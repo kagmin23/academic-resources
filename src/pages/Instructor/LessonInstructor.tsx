@@ -23,7 +23,7 @@ const ManagerLessonInstructor: React.FC = () => {
   const [filteredSessions, setFilteredSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [courseId, setCourseId] = useState<string | undefined>(undefined);
-  const [sessionId, setSessionId] = useState<Session>();
+  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [lessons, setLessons] = useState<Lesson[]>([]);
   
@@ -47,7 +47,7 @@ const ManagerLessonInstructor: React.FC = () => {
       const response = await getLessons('', '', '', 1, 10);
       if (response.data && response.data.pageData) {
         setDataSource(response.data.pageData);
-        setLessons(response.data.pageData);  // Cập nhật state lessons
+        setLessons(response.data.pageData);
       } else {
         message.error('No lessons found');
       }
@@ -68,8 +68,7 @@ const ManagerLessonInstructor: React.FC = () => {
       message.error('Failed to fetch sessions for the selected course');
       console.error('Error fetching sessions:', error);
     }
-  };
-  
+  }
 
   const fetchCourses = async () => {
     setLoading(true);
@@ -99,11 +98,25 @@ const ManagerLessonInstructor: React.FC = () => {
     console.log('search:', value);
   };
 
-  const handleEdit = (record: Lesson) => {
+  const handleEdit = async (record: Lesson) => {
     setIsEditing(true);
     setCurrentRecord(record);
     setModalVisible(true);
-    form.setFieldsValue(record);
+    
+    if (courses.length === 0) {
+      await fetchCourses();
+    }
+    
+    setCourseId(record.course_id);
+    await handleChangeCourse(record.course_id);
+    
+    setSessionId(record.session_id);
+    
+    form.setFieldsValue({
+      ...record,
+      course_id: record.course_id,
+      session_id: record.session_id
+    });
   };
   
   const handleSaveLesson = () => {
@@ -111,25 +124,22 @@ const ManagerLessonInstructor: React.FC = () => {
       .then(async (values) => {
         setLoading(true);
         try {
-          // Kiểm tra xem course_id có tồn tại không
-          const selectedCourse = courses.find(course => course._id === values.course_id);
-          if (!selectedCourse) {
-            message.error('Selected course is not valid!');
-            setLoading(false);
-            return;
+          const selectedCourse = courses.find(course => course._id === courseId);
+          const selectedSession = sessions.find(session => session._id === sessionId);
+          
+          if (!selectedCourse || !selectedSession) {
+            throw new Error('Invalid course or session');
           }
-  
-          // Kiểm tra xem session_id có tồn tại không
-          const selectedSession = sessions.find(session => session._id === values.session_id);
-          if (!selectedSession) {
-            message.error('Selected session is not valid!');
-            setLoading(false);
-            return;
-          }
-  
+
+          const lessonData = {
+            ...values,
+            course_id: courseId,
+            session_id: sessionId,
+          };
+          console.log("lessonData", lessonData)
+
           if (isEditing && currentRecord) {
-            // Nếu đang ở chế độ chỉnh sửa
-            const response = await updateLesson(currentRecord._id, values);
+            const response = await updateLesson(currentRecord._id, lessonData);
             const updatedLesson = response.data;
             setDataSource(dataSource.map(item =>
               item._id === updatedLesson._id ? updatedLesson : item
@@ -139,11 +149,10 @@ const ManagerLessonInstructor: React.FC = () => {
             ));
             message.success('Lesson updated successfully');
           } else {
-            // Nếu không phải chế độ chỉnh sửa thì tạo mới
-            const response = await createLesson(values);
+            const response = await createLesson(lessonData);
             const newLesson = { ...response.data, key: response.data._id };
-            setDataSource([newLesson, ...dataSource]); // Thêm bài học mới vào đầu danh sách
-            setLessons([newLesson, ...lessons]); // Thêm bài học mới vào đầu danh sách
+            setDataSource([newLesson, ...dataSource]);
+            setLessons([newLesson, ...lessons]);
             message.success('Lesson created successfully');
           }
           setModalVisible(false);
@@ -236,18 +245,20 @@ const ManagerLessonInstructor: React.FC = () => {
           </Form.Item>
 
           <Form.Item
-  name="session_id"
-  label="Session"
-  rules={[{ required: true, message: "Please select a session!" }]}
->
-  <Select placeholder="Select a session">
-    {sessions.map((session) => (
-      <Select.Option key={session._id} value={session._id}>
-        {session.name}
-      </Select.Option>
-    ))}
-  </Select>
-</Form.Item>
+              name="session_name"
+              label="Session"
+              rules={[{ required: true, message: "Please select a session!" }]}
+            >
+              <Select placeholder="Select a session"
+                onChange={(value) => setSessionId(value)}
+                value={sessionId}>
+                {sessions.map((session) => (
+                  <Select.Option key={session._id} value={session._id}>
+                    {session.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
 
           <Form.Item
             label="Lesson Name"
@@ -336,6 +347,7 @@ const ManagerLessonInstructor: React.FC = () => {
                 title: 'Session Name',
                 dataIndex: 'session_name',
                 key: 'session_name',
+                width: 200
               },
               {
                 title: 'Course Name',
@@ -352,6 +364,7 @@ const ManagerLessonInstructor: React.FC = () => {
                 title: 'Description',
                 dataIndex: 'description',
                 key: 'description',
+                width: 100
               },
               {
                 title: 'Created At',

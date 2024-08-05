@@ -1,76 +1,94 @@
-import { SearchOutlined } from '@ant-design/icons';
+import { SearchOutlined, StarOutlined } from '@ant-design/icons';
 import { Input, Layout, Spin, Table, Tabs } from 'antd';
 import { Review } from 'models/types';
+import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { getReview } from 'services/Instructor/reviewApiService';
+import { getReviews } from 'services/All/reviewApiService';
 
 const { Header, Content } = Layout;
 const { TabPane } = Tabs;
 
 const ReviewManager: React.FC = () => {
-  const [filteredData, setFilteredData] = useState<Review[]>([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const { reviewId } = useParams<{ reviewId: string }>();
+  const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
     const fetchReviews = async () => {
-      if (!reviewId) {
-        console.error('No reviewId provided!');
-        return;
-      }
-      
       setLoading(true);
       try {
-        const data = await getReview(reviewId);
-        setFilteredData(data);
+        const response = await getReviews('', 1, 10);
+        setReviews(response);
+        setFilteredReviews(response);
       } catch (error) {
-        console.error('Error fetching reviews:', error);
+        console.error('Failed to fetch reviews:', error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchReviews();
-  }, [reviewId]);
+  }, []);
 
-  const getTotalSubscribers = (): number => {
-    return filteredData.length;
-  };
+  const handleSearch = (value: string) => {
+    setSearch(value);
+    if (value) {
+      const filtered = reviews.filter(review =>
+        review.course_name?.toLowerCase().includes(value.toLowerCase()) ||
+        review.reviewer_name?.toLowerCase().includes(value.toLowerCase())
+      );
+      setFilteredReviews(filtered);
+    } else {
+      setFilteredReviews(reviews);
+    }
+  }
 
-  const getTotalReview = (): number => {
-    return filteredData.length;
+  const getTotalReviews = (): number => {
+    return filteredReviews.length;
   };
 
   const columns1 = [
     {
-        title: 'User',
-        dataIndex: 'user_id',
-        width: 100,
-        key: 'user_id',
-        render: (text: any, record: Review, index: number) => index + 1,
+      title: 'Reviewer Name',
+      dataIndex: 'reviewer_name',
+      width: 100,
+      key: 'reviewer_name',
     },
     {
-        title: 'Course',
-        dataIndex: 'course_id',
-        width: 100,
-        key: 'course_id',
-        render: (text: any, record: Review, index: number) => index + 1,
-      },
+      title: 'Course Name',
+      dataIndex: 'course_name',
+      width: 100,
+      key: 'course_name',
+    },
     {
       title: 'Comment',
       dataIndex: 'comment',
-      width: 200,
+      width: 150,
       key: 'comment',
-      render: (text: any, record: Review, index: number) => index + 1,
     },
     {
-      title: 'Rating',
+      title: 'Created At',
+      dataIndex: 'created_at',
+      width: 90,
+      key: 'created_at',
+      align: 'center' as AlignType,
+      render: (created_at: string) => moment(created_at).format('YYYY-MM-DD')
+    },
+    {
+      title: 'Updated At',
+      dataIndex: 'updated_at',
+      width: 90,
+      key: 'updated_at',
+      align: 'center' as AlignType,
+      render: (updated_at: string) => moment(updated_at).format('YYYY-MM-DD')
+    },
+    {
+      title: <StarOutlined />,
       dataIndex: 'rating',
       key: 'rating',
       width: 50,
-      align: 'center' as AlignType
+      align: 'center' as AlignType,
     },
   ];
 
@@ -81,31 +99,33 @@ const ReviewManager: React.FC = () => {
           <TabPane tab="Reviews" key="1">
             <div className='flex justify-between'>
               <div className='w-1/2'>
-                <span className='text-lg font-semibold'>Total Review: {getTotalSubscribers()}</span>
+                <span className='text-lg font-semibold'>Total Review: {getTotalReviews()}</span>
               </div>
               <div className='w-1/4'>
                 <Input
                   placeholder="Search..."
                   prefix={<SearchOutlined />}
                   className='mb-5'
-                //   onChange={e => handleSearch(e.target.value)}
+                  onChange={e => handleSearch(e.target.value)}
+                  value={search}
                 />
               </div>
             </div>
             <div className="overflow-x-auto">
-            {loading ?
-                ( <div className="flex items-center justify-center h-64">
-                <Spin size="large"></Spin>
-                </div>) : (
-                        <Table
-                        className='custom-table'
-                        columns={columns1}
-                        dataSource={filteredData}
-                        rowKey="_id"
-                        loading={loading}
-                        />
-                    )}
+              {loading ? (
+                <div className="flex items-center justify-center h-64">
+                  <Spin size="large" />
                 </div>
+              ) : (
+                <Table
+                  className='custom-table'
+                  columns={columns1}
+                  dataSource={filteredReviews}
+                  rowKey="_id"
+                  loading={loading}
+                />
+              )}
+            </div>
           </TabPane>
         </Tabs>
       </div>
