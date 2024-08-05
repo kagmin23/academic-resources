@@ -5,10 +5,10 @@ import { Review } from 'models/types';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
-import { getCourseDetail } from 'services/UserClient/clientApiService';
 import { createCart } from 'services/All/cartApiService';
+import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 import { createOrUpdate, getItemBySubscriber } from 'services/All/subcriptionApiService';
+import { getCourseDetail } from 'services/UserClient/clientApiService';
 
 const { TabPane } = Tabs;
 const { Title, Paragraph } = Typography;
