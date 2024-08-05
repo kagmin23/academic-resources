@@ -54,20 +54,6 @@ interface CourseDetailType {
     is_deleted: boolean;
 }
 
-interface SubscriptionResponse {
-    success: boolean;
-    data: {
-        subscriber_id: string;
-        instructor_id: string;
-        is_subscribed: boolean;
-        is_deleted: boolean;
-        _id: string;
-        created_at: Date;
-        updated_at: Date;
-        __v: number;
-    }
-}
-
 const CourseDetail: React.FC = () => {
     const { courseId } = useParams<{ courseId: string }>();
     const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
@@ -85,24 +71,25 @@ const CourseDetail: React.FC = () => {
     const [currentUser, setCurrentUser] = useState<any>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
-    const [button, setButton] = useState<string>('Add to card');
+    const [button, setButton] = useState<string>('Add to cart');
     const [form] = Form.useForm();
     const navigate = useNavigate();
+    const [isPurchased, setIsPurchased] = useState<boolean>(false);
 
     useEffect(() => {
-        if(courseDetail) {
-            if(courseDetail.is_in_cart) {
-                if(courseDetail.is_purchased) {
+        if (courseDetail) {
+            if (courseDetail.is_in_cart) {
+                if (courseDetail.is_purchased) {
                     setButton("Learn Now")
                 } else {
-                    setButton("Go to card")
+                    setButton("Go to cart")
                 }
-            }else {
-                setButton("Add to card")
+            } else {
+                setButton("Add to cart")
             }
         }
     },
-    [courseDetail])
+        [courseDetail])
 
     useEffect(() => {
         if (courseId) {
@@ -111,6 +98,7 @@ const CourseDetail: React.FC = () => {
                 try {
                     const response = await getCourseDetail(courseId);
                     setCourseDetail(response);
+                    setIsPurchased(response.is_purchased);  // Cập nhật trạng thái isPurchased
                 } catch (error) {
                     console.error('Failed to fetch course detail:', error);
                 } finally {
@@ -153,8 +141,8 @@ const CourseDetail: React.FC = () => {
                 message: 'Review Submitted',
                 description: 'Your review has been successfully submitted.',
             });
-            setReviews([...reviews, response]); // Update the reviews list
-            form.resetFields(); // Reset the form fields
+            setReviews([...reviews, response]);
+            form.resetFields();
         } catch (error) {
             notification.error({
                 message: 'Error Submitting Review',
@@ -170,7 +158,8 @@ const CourseDetail: React.FC = () => {
         setLoading(true);
         try {
             await createOrUpdate(courseDetail.instructor_id);
-            fetchSubscriptionStatus();
+            // Update the isSubscribed state immediately
+            setIsSubscribed(!isSubscribed);
             message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
         } catch (error) {
             console.error('Failed to subscribe:', error);
@@ -179,15 +168,29 @@ const CourseDetail: React.FC = () => {
             setLoading(false);
         }
     };
-    
-    const fetchSubscriptionStatus = async () => {
-        const response = await getItemBySubscriber(1, 10);
-        setIsSubscribed(response[0].is_subscribed);
-    };
+
+
     useEffect(() => {
         fetchSubscriptionStatus();
-    },
-        []);
+    }, []);
+
+    const fetchSubscriptionStatus = async () => {
+        try {
+            const response = await getItemBySubscriber(1, 10);
+            console.log('Subscription Response:', response);
+
+            if (response && response.length > 0 && response[0] && 'is_subscribed' in response[0]) {
+                setIsSubscribed(response[0].is_subscribed);
+            } else {
+                console.error('Subscription status not found in response');
+                setIsSubscribed(false);
+            }
+        } catch (error) {
+            console.error('Failed to fetch subscription status:', error);
+            setIsSubscribed(false);
+        }
+    };
+
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -239,11 +242,11 @@ const CourseDetail: React.FC = () => {
     };
 
     const handleSetButton = () => {
-        if(button === "Learn Now") {
+        if (button === "Learn Now") {
             navigate(`/student/student-learning/${courseId}/lesson`);
-        } else if(button === "Go to card") {
+        } else if (button === "Go to cart") {
             navigate(`/student/shopping-cart`);
-        } else if(button === "Add to card") {
+        } else if (button === "Add to cart") {
             handleAddToCart();
         }
     }
@@ -258,237 +261,175 @@ const CourseDetail: React.FC = () => {
 
     return (
         <Spin spinning={loading} tip="Loading...">
-        <div className="text-white bg-gray-900">
-            <div className="py-8">
-                <div className="container px-4 mx-auto">
-                    <div className="flex flex-col lg:flex-row lg:space-x-8">
-                        <div className="w-full mb-4 lg:w-1/3 lg:mb-0">
-                            <div className="relative">
-                                <a onClick={showModal} className="cursor-pointer">
-                                    <img src={courseDetail.image_url} alt={courseDetail.name} className="w-full rounded-lg h-80" />
-                                    <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                                        <PlayCircleOutlined className="text-4xl text-white" />
-                                        <span className="absolute bottom-0 w-full py-2 text-xl font-semibold text-center text-white bg-black bg-opacity-75">Preview this course</span>
-                                    </div>
-                                </a>
-                                <Modal
-                                    visible={isModalVisible}
-                                    onCancel={handleCancel}
-                                    footer={null}
-                                    centered
-                                >
-                                    <iframe
-                                        width="100%"
-                                        height="400px"
-                                        src={courseDetail.video_url}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                    ></iframe>
-                                </Modal>
-                            </div>
-                        </div>
-
-                        <div className="w-full lg:w-2/3">
-                            <h2 className="text-2xl font-bold">{courseDetail.name}</h2>
-                            <p className="mt-3 text-lg">{courseDetail.description}</p>
-                            <div className="flex items-center mt-4 text-lg">
-                                <div className="p-1">
-                                    <StarOutlined className="font-semibold text-white" />
-                                    <StarOutlined className="font-semibold text-white" />
-                                    <StarOutlined className="font-semibold text-white" />
-                                    <StarOutlined className="font-semibold text-white" />
-                                    <StarOutlined className="font-semibold text-white" />
+            <div className="text-white bg-gray-900">
+                <div className="py-8">
+                    <div className="container px-4 mx-auto">
+                        <div className="flex flex-col lg:flex-row lg:space-x-8">
+                            <div className="w-full mb-4 lg:w-1/3 lg:mb-0">
+                                <div className="relative">
+                                    <a onClick={showModal} className="cursor-pointer">
+                                        <img src={courseDetail.image_url} alt={courseDetail.name} className="w-full rounded-lg h-80" />
+                                        <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                                            <PlayCircleOutlined className="text-4xl text-white" />
+                                            <span className="absolute bottom-0 w-full py-2 text-xl font-semibold text-center text-white bg-black bg-opacity-75">Preview this course</span>
+                                        </div>
+                                    </a>
+                                    <Modal
+                                        visible={isModalVisible}
+                                        onCancel={handleCancel}
+                                        footer={null}
+                                        centered
+                                    >
+                                        <iframe
+                                            width="100%"
+                                            height="400px"
+                                            src={courseDetail.video_url}
+                                            frameBorder="0"
+                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                            allowFullScreen
+                                        ></iframe>
+                                    </Modal>
                                 </div>
-                                <span className="ml-2">({courseDetail.review_count} Ratings)</span>
                             </div>
-                            <p className="mt-3 text-lg">{courseDetail.review_count} students enrolled</p>
-                            <div className="flex items-center mt-4 mb-3 text-lg">
-                                {courseDetail.category_name}
-                            </div>
-                            <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
-                            <div className="flex mt-4 space-x-4">
-                                <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleSetButton}>{button}</Button>                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="py-4 bg-white shadow-md">
-                <div className="container px-4 mx-auto">
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <Avatar src={courseDetail.instructor_id} size="large" />
 
-                            <div className="flex flex-col ml-4">
-                                <div onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
-                                    <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
-
-                                <Button
-                                    onClick={handleSubscribe}
-                                    type="primary"
-                                    loading={loading}
-                                    className={`mr-2 mt-2 p-1 text-sm font-semibold w-full ${isSubscribed ? 'bg-gray-300 text-black' : 'bg-red-500 text-white'}`}
-                                >
-                                    {isSubscribed ? (
-                                        <>
-                                            <BellOutlined /> Subscribed
-                                        </>
-                                    ) : (
-                                        'Subscribe'
-                                    )}
-                                </Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div className="py-4 bg-gray-100">
-                <div className="container px-4 mx-auto">
-                    <Tabs defaultActiveKey="1">
-                        <TabPane tab="Curriculum" key="1">
-                            {courseDetail.session_list && courseDetail.session_list.length > 0 ? (
-                                courseDetail.session_list.map((session) => (
-                                    <div key={session._id} className="p-4 mb-4 bg-white rounded shadow-md">
-                                        <h3 className="text-xl font-semibold cursor-pointer" onClick={() => toggleSession(session._id)}>
-                                            {session.name}
-                                        </h3>
-                                        {expandedSessionId === session._id && (
-                                            <ul>
-                                                {session.lesson_list && session.lesson_list.length > 0 ? (
-                                                    session.lesson_list.map((lesson) => (
-                                                        <li key={lesson._id} className="flex items-center py-2">
-                                                            <div className="flex-shrink-0 w-8 h-8 bg-gray-200 rounded-full"></div>
-                                                            <div className="ml-4">
-                                                                <div className="text-lg font-medium">{lesson.name}</div>
-                                                                <div className="text-gray-600">{lesson.lession_type} {lesson.full_time} mins</div>
-                                                            </div>
-                                                        </li>
-                                                    ))
-                                                ) : (
-                                                    <li>No lessons available</li>
-                                                )}
-                                            </ul>
-                                        )}
+                            <div className="w-full lg:w-2/3">
+                                <h2 className="text-2xl font-bold">{courseDetail.name}</h2>
+                                <p className="mt-3 text-lg">{courseDetail.description}</p>
+                                <div className="flex items-center mt-4 text-lg">
+                                    <div className="p-1">
+                                        <StarOutlined className="font-semibold text-white" />
+                                        <StarOutlined className="font-semibold text-white" />
+                                        <StarOutlined className="font-semibold text-white" />
+                                        <StarOutlined className="font-semibold text-white" />
+                                        <StarOutlined className="font-semibold text-white" />
                                     </div>
-                                ))
-                            ) : (
-                                <div>No sessions available</div>
-                            )}
-                        </TabPane>
-                        <TabPane tab="Reviews" key="2">
-                            <div className="p-4">
-                                <Form form={form} layout="vertical" onFinish={handleSubmitReview}>
-                                    <Form.Item
-                                        name="rating"
-                                        label="Rating"
-                                        rules={[{ required: true, message: 'Please select a rating!' }]}
-                                    >
-                                        <Rate
-                                            allowHalf
-                                            onChange={(value) => setReviewRating(value)}
-                                            value={reviewRating}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item
-                                        name="comment"
-                                        label="Comment"
-                                        rules={[{ required: true, message: 'Please enter your comment!' }]}
-                                    >
-                                        <TextArea
-                                            rows={4}
-                                            onChange={(e) => setReviewComment(e.target.value)}
-                                            value={reviewComment}
-                                        />
-                                    </Form.Item>
-                                    <Form.Item>
-                                        <Button
-                                            type="primary"
-                                            htmlType="submit"
-                                            loading={loadingReview}
-                                        >
-                                            Submit Review
-                                        </Button>
-                                    </Form.Item>
-                                </Form>
+                                    <span className="ml-2">({courseDetail.review_count} Ratings)</span>
+                                </div>
+                                <p className="mt-3 text-lg">{courseDetail.review_count} students enrolled</p>
+                                <div className="flex items-center mt-4 mb-3 text-lg">
+                                    {courseDetail.category_name}
+                                </div>
+                                <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
+                                <div className="flex mt-4 space-x-4">
+                                    <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleSetButton}>{button}</Button>                            </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="py-4 bg-white shadow-md">
+                    <div className="container px-4 mx-auto">
+                        <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                                <Avatar src={courseDetail.instructor_id} size="large" />
 
-                                {Array.isArray(reviews) && reviews.length > 0 ? (
-                                    reviews.map((review) => (
-                                        <Card
-                                            key={review._id}
-                                            className="mb-4"
-                                            title={<Title level={4}>{courseDetail?.name}</Title>}
-                                            extra={
-                                                <div>
-                                                    <Rate disabled value={review.rating} />
-                                                    <div className="text-sm text-gray-500">
-                                                        {moment(review.created_at).format('YYYY-MM-DD')} - {moment(review.updated_at).format('YYYY-MM-DD')}
-                                                    </div>
-                                                </div>
-                                            }
-                                        >
-                                            <Paragraph strong>{review.reviewer_name}</Paragraph>
-                                            <Paragraph>{review.comment}</Paragraph>
-                                            {currentUser?._id === review.user_id && (
-                                                <Button
-                                                    type="link"
-                                                    onClick={() => {
-                                                        setEditingReviewId(review._id);
-                                                        setUpdatedReviewRating(review.rating);
-                                                        setUpdatedReviewComment(review.comment);
-                                                    }}
-                                                >
-                                                    Edit
-                                                </Button>
+                                <div className="flex flex-col ml-4">
+                                    <div onClick={() => handleInstructorProfile(courseDetail.instructor_id)}>
+                                        <a href="" className="text-lg font-semibold text-black" >{courseDetail.instructor_name}</a></div>
+
+                                    <Button
+                                        onClick={handleSubscribe}
+                                        type="primary"
+                                        loading={loading}
+                                        className={`mr-2 mt-2 p-1 text-sm font-semibold w-full ${isSubscribed ? 'bg-gray-300 text-black' : 'bg-red-500 text-white'}`}
+                                    >
+                                        {isSubscribed ? (
+                                            <>
+                                                <BellOutlined /> Subscribed
+                                            </>
+                                        ) : (
+                                            'Subscribe'
+                                        )}
+                                    </Button>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div className="py-4 bg-gray-100">
+                    <div className="container px-4 mx-auto">
+                        <Tabs defaultActiveKey="1">
+                            <TabPane tab="Curriculum" key="1">
+                                {courseDetail.session_list && courseDetail.session_list.length > 0 ? (
+                                    courseDetail.session_list.map((session) => (
+                                        <div key={session._id} className="p-4 mb-4 bg-white rounded shadow-md">
+                                            <h3 className="text-xl font-semibold cursor-pointer" onClick={() => toggleSession(session._id)}>
+                                                {session.name}
+                                            </h3>
+                                            {expandedSessionId === session._id && (
+                                                <ul>
+                                                    {session.lesson_list && session.lesson_list.length > 0 ? (
+                                                        session.lesson_list.map((lesson) => (
+                                                            <li key={lesson._id} className="flex items-center py-2">
+                                                                <div className="flex-shrink-0 w-8 h-8 bg-gray-200 rounded-full"></div>
+                                                                <div className="ml-4">
+                                                                    <div className="text-lg font-medium">{lesson.name}</div>
+                                                                    <div className="text-gray-600">{lesson.lession_type} {lesson.full_time} mins</div>
+                                                                </div>
+                                                            </li>
+                                                        ))
+                                                    ) : (
+                                                        <li>No lessons available</li>
+                                                    )}
+                                                </ul>
                                             )}
-                                        </Card>
+                                        </div>
                                     ))
                                 ) : (
-                                    <p>No reviews available.</p>
+                                    <div>No sessions available</div>
                                 )}
+                            </TabPane>
+                            <TabPane tab="Reviews" key="2">
+                                <div className="p-4">
+                                    {reviews.length > 0 ? (
+                                        reviews.map((review) => (
+                                            <Card key={review._id} className="mb-4">
+                                                <Card.Meta
+                                                    avatar={<Avatar>{review.reviewer_name.charAt(0)}</Avatar>}
+                                                    title={
+                                                        <div className="d-flex justify-content-between align-items-center">
+                                                            <span>{review.reviewer_name}</span>
+                                                            <Rate value={review.rating} disabled />
+                                                        </div>
+                                                    }
+                                                    description={review.comment}
+                                                />
+                                                <div className="mt-2 d-flex justify-content-between align-items-center">
+                                                    <span className="text-muted">{moment(review.created_at).format('LL')}</span>
+                                                    {currentUser && review._id === currentUser._id && (
+                                                        <Button type="link" onClick={() => showModal()}>Edit</Button>
+                                                    )}
+                                                </div>
+                                            </Card>
+                                        ))
+                                    ) : (
+                                        <div>No reviews available</div>
+                                    )}
+                                    {isPurchased && (
+                                        <Form form={form} onFinish={handleSubmitReview} className="mt-4">
+                                            <Form.Item name="rating" rules={[{ required: true, message: 'Please provide a rating' }]}>
+                                                <Rate onChange={(value) => setReviewRating(value)} value={reviewRating} />
+                                            </Form.Item>
+                                            <Form.Item name="comment" rules={[{ required: true, message: 'Please provide a comment' }]}>
+                                                <TextArea rows={4} onChange={(e) => setReviewComment(e.target.value)} value={reviewComment} />
+                                            </Form.Item>
+                                            <Form.Item>
+                                                <Button type="primary" htmlType="submit" loading={loadingReview}>
+                                                    Submit Review
+                                                </Button>
+                                            </Form.Item>
+                                        </Form>
+                                    )}
+                                </div>
+                            </TabPane>
 
-                                {editingReviewId && (
-                                    <Form layout="vertical" onFinish={handleUpdateReview}>
-                                        <Form.Item
-                                            name="rating"
-                                            label="Rating"
-                                            rules={[{ required: true, message: 'Please select a rating!' }]}
-                                        >
-                                            <Rate
-                                                allowHalf
-                                                onChange={(value) => setUpdatedReviewRating(value)}
-                                                value={updatedReviewRating}
-                                            />
-                                        </Form.Item>
-                                        <Form.Item
-                                            name="comment"
-                                            label="Comment"
-                                            rules={[{ required: true, message: 'Please enter your comment!' }]}
-                                        >
-                                            <TextArea
-                                                rows={4}
-                                                onChange={(e) => setUpdatedReviewComment(e.target.value)}
-                                                value={updatedReviewComment}
-                                            />
-                                        </Form.Item>
-                                        <Form.Item>
-                                            <Button
-                                                type="primary"
-                                                htmlType="submit"
-                                                loading={loadingUpdateReview}
-                                            >
-                                                Update Review
-                                            </Button>
-                                        </Form.Item>
-                                    </Form>
-                                )}
-                            </div>
-                        </TabPane>
 
-                    </Tabs>
+
+                        </Tabs>
+                    </div>
                 </div>
             </div>
-        </div>
-    </Spin>
+        </Spin>
     );
 };
 

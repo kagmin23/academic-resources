@@ -1,4 +1,5 @@
 import axios from 'axios';
+import axiosInstance from 'hook/config';
 import { HOST_MAIN } from 'services/apiService';
 
 export const createOrUpdate = async (instructor_id: string) => {
@@ -21,7 +22,7 @@ export const createOrUpdate = async (instructor_id: string) => {
   }
 };
 
-export const getItemBySubscriber = async (pageNum: number, pageSize: number) => {
+export const getItemBySubscriberStudent = async (pageNum: number, pageSize: number) => {
   const token = localStorage.getItem('token');
 
   try {
@@ -46,6 +47,56 @@ export const getItemBySubscriber = async (pageNum: number, pageSize: number) => 
     );
     if (response) {
       return response.data.data.pageData;
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
+
+export const getItemBySubscriber = async (pageNum: number, pageSize: number) => {
+
+  try {
+    const response = await axiosInstance.post(
+      '/api/subscription/search-for-subscriber',
+      {
+        "searchCondition": {
+            "keyword": "",
+            "is_delete": false,
+        },
+        "pageInfo": {
+            "pageNum": pageNum,
+            "pageSize": pageSize,
+        }
+      },
+    );
+    if (response) {
+      return response.data.data.pageData;
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
+
+export const getItemBySubscriberInstructor = async (pageNum: number, pageSize: number) => {
+
+  try {
+    const response = await axiosInstance.post(
+      '/api/subscription/search-for-subscriber',
+      {
+        "searchCondition": {
+            "keyword": "",
+            "is_delete": false,
+        },
+        "pageInfo": {
+            "pageNum": pageNum,
+            "pageSize": pageSize,
+        }
+      },
+    );
+    if (response) {
+      return response.data;
     }
   } catch (error) {
     console.error('Error fetching data:', error);

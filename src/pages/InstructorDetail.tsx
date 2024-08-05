@@ -1,7 +1,6 @@
 import {
   BellOutlined,
   CalendarOutlined,
-  DoubleLeftOutlined,
   GiftOutlined,
   MailOutlined,
   PhoneOutlined,
@@ -12,8 +11,8 @@ import { Avatar, Button, Card, Divider, Typography, message, notification } from
 import { Subcription } from 'models/types';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getUserDetail } from 'services/All/getUserDetailApiService';
-import { createOrUpdate, getItemBySubscriber } from 'services/All/subcriptionApiService';
+import { getInstructorDetail } from 'services/All/getUserDetailApiService';
+import { createOrUpdate, getItemBySubscriberInstructor } from 'services/All/subcriptionApiService';
 
 export interface InstructorDetail {
   _id:		string,
@@ -49,23 +48,23 @@ const { Title, Text } = Typography;
 
 export default function InstructorDetail() {
   const { userId } = useParams<{ userId: string }>();
-  const [isSubscribed, setIsSubscribed] = useState<boolean>(true);
+  const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [currentInstructor, setCurrentInstructor] = useState<InstructorDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [subcriptionStudent, setSubcriptionStudent] = useState<Subcription[]>([]);
+  const [subcriptionInstructor, setSubcriptionInstructor] = useState<Subcription[]>([]);
   const [filteredData, setFilteredData] = useState<Subcription[]>([]);
 
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchInstructorData = async () => {
       if (!userId) {
         return;
       }
 
       try {
-        const response = await getUserDetail(userId);
-        if (response.success) {
-          setCurrentInstructor(response.data);
-          await fetchSubscriptionStatus(); // Fetch subscription status after getting instructor data
+        const response = await getInstructorDetail(userId);
+        if (response) {
+          setSubcriptionInstructor(response);
+          // await fetchSubscriptionStatus();
         } else {
           notification.error({
             message: 'Error',
@@ -78,7 +77,7 @@ export default function InstructorDetail() {
       }
     };
 
-    fetchUserData();
+    fetchInstructorData();
   }, [userId]);
 
   const handleSubscribe = async () => {
@@ -87,6 +86,7 @@ export default function InstructorDetail() {
 
     try {
         await createOrUpdate(currentInstructor._id);
+        setIsSubscribed(isSubscribed);
         fetchSubscriptionStatus();
         message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
     } catch (error) {
@@ -96,15 +96,27 @@ export default function InstructorDetail() {
         setLoading(false);
     }
   };
-  const fetchSubscriptionStatus = async () => {
-      const response = await getItemBySubscriber(1, 10);
-      console.log("response", response)
-      setIsSubscribed(response);
-  };
+  
   useEffect(() => {
-      fetchSubscriptionStatus();
-      },
-  []);
+    fetchSubscriptionStatus();
+}, []);
+
+const fetchSubscriptionStatus = async () => {
+    try {
+        const response = await getItemBySubscriberInstructor(1, 10);
+        console.log('Subscription Response:', response);
+
+        if (response && response.length > 0 && response[0] && 'is_subscribed' in response[0]) {
+            setIsSubscribed(response[0].is_subscribed);
+        } else {
+            console.error('Subscription status not found in response');
+            setIsSubscribed(false);
+        }
+    } catch (error) {
+        console.error('Failed to fetch subscription status:', error);
+        setIsSubscribed(false);
+    }
+};
 
   if (!currentInstructor) {
     return (
@@ -119,9 +131,6 @@ export default function InstructorDetail() {
 
   return (
     <div className='min-h-screen'>
-        <div className="pb-2">
-          <Button className="bg-slate-100"><DoubleLeftOutlined />Back</Button>
-        </div>
       <div className='flex w-full px-5 pt-6 pb-4 min-h-56 bg-gradient-to-br from-gray-800 to-blue-900 h-fit'>
         <div className="flex justify-center w-1/5 ">
           <Avatar

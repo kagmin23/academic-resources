@@ -2,7 +2,7 @@ import { BellOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
 import { Button, Input, Layout, Table, message } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { createOrUpdate, getItemBySubscriber } from 'services/All/subcriptionApiService';
+import { createOrUpdate, getItemBySubscriberStudent } from 'services/All/subcriptionApiService';
 
 const { Header, Content } = Layout;
 
@@ -24,11 +24,10 @@ const SubcriptionStudent: React.FC = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [isSubscribed, setIsSubscribed] = useState(true);
 
-
   const fetchSubscriptionStatus = async () => {
     setLoading(true);
     try {
-      const response = await getItemBySubscriber(1, 10);
+      const response = await getItemBySubscriberStudent(1, 10);
       setSubcriptionStudent(response);
       setFilteredData(response);
     } catch (error) {
