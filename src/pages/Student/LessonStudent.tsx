@@ -1,5 +1,4 @@
 import {
-    EyeOutlined,
     FileOutlined,
     MenuFoldOutlined,
     MenuUnfoldOutlined,
@@ -8,7 +7,7 @@ import {
 } from '@ant-design/icons';
 import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
 import { getCourseDetail } from "services/UserClient/clientApiService";
 import "tailwindcss/tailwind.css";
@@ -46,7 +45,7 @@ const LearnCourseDetail: React.FC = () => {
     const [course, setCourse] = useState<Course | null>(null);
     const [selectedLesson, setSelectedLesson] = useState<Lesson | null>(null);
     const [collapsed, setCollapsed] = useState(false);
-    const navigate = useNavigate();
+    const [firstLessonLoaded, setFirstLessonLoaded] = useState(false);
 
     useEffect(() => {
         const fetchCourseDetailUser = async () => {
@@ -62,6 +61,7 @@ const LearnCourseDetail: React.FC = () => {
                 } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
                     const firstLessonId = data.session_list[0].lesson_list[0]._id;
                     fetchLessonDetail(firstLessonId);
+                    setFirstLessonLoaded(true); // Mark first lesson as loaded
                 }
             } catch (error) {
                 message.error("Error fetching course details!");
@@ -92,13 +92,13 @@ const LearnCourseDetail: React.FC = () => {
     function getLessonIcon(lessonType: string) {
         switch (lessonType) {
             case "video":
-                return <VideoCameraOutlined />;
+                return <VideoCameraOutlined style={{ fontSize: '13px', color: '#1890ff' }} />;
             case "reading":
-                return <ReadOutlined />;
+                return <ReadOutlined style={{ fontSize: '13px', color: '#52c41a' }} />;
             case "image":
-                return <FileOutlined />;
+                return <FileOutlined style={{ fontSize: '13px', color: '#faad14' }} />;
             default:
-                return <EyeOutlined />;
+                return <FileOutlined style={{ fontSize: '13px', color: '#faad14' }} />;
         }
     }
 
@@ -107,27 +107,34 @@ const LearnCourseDetail: React.FC = () => {
         return `https://www.youtube.com/embed/${videoId}`;
     };
 
+    useEffect(() => {
+        if (course && firstLessonLoaded) {
+            const firstLesson = course.session_list[0].lesson_list[0];
+            handleLessonClick(firstLesson);
+        }
+    }, [course, firstLessonLoaded]);
+
     if (!course) {
         return (
-            <div className="flex items-center justify-center min-h-screen">
+            <div className="flex items-center justify-center min-h-screen bg-gray-50">
                 <Spin size="large" />
             </div>
         );
     }
 
     return (
-        <Layout className="min-h-screen overflow-auto">
-            <Header className="flex items-center px-4 bg-white shadow-md">
+        <Layout className="min-h-screen overflow-hidden bg-gray-100">
+            <Header className="flex items-center px-4 bg-white border-b border-gray-200 shadow-md">
                 <Button
                     type="text"
                     icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
                     onClick={() => setCollapsed(!collapsed)}
-                    className="mr-4"
+                    className="mr-4 text-blue-500 hover:text-blue-700"
                 />
                 <div className="flex-1">
                     {selectedLesson && (
                         <Breadcrumb>
-                            <Breadcrumb.Item>{course.name}</Breadcrumb.Item>
+                            <Breadcrumb.Item className="text-lg text-blue-950">{course.name}</Breadcrumb.Item>
                         </Breadcrumb>
                     )}
                 </div>
@@ -137,23 +144,28 @@ const LearnCourseDetail: React.FC = () => {
                     collapsible
                     collapsed={collapsed}
                     width={300}
-                    className="overflow-auto bg-white shadow-md"
+                    className="bg-white border-r border-gray-200 shadow-md"
                     trigger={null}
+                    style={{ overflowY: 'auto' }}
                 >
                     <Menu
                         mode="inline"
                         defaultOpenKeys={[course.session_list[0]?._id]}
-                        style={{ height: "100%" }}
+                        style={{ height: "100%", overflowY: 'auto' }}
                     >
                         {course.session_list.map((session) => (
-                            <Menu.SubMenu key={session._id} title={session.name}>
+                            <Menu.SubMenu key={session._id} title={session.name} icon={<ReadOutlined />}>
                                 {session.lesson_list.map((lesson) => (
                                     <Menu.Item
                                         key={lesson._id}
                                         icon={getLessonIcon(lesson.lesson_type)}
                                         onClick={() => handleLessonClick(lesson)}
+                                        className="hover:bg-blue-100"
                                     >
-                                        {lesson.name}
+                                        <div className="flex items-center justify-between">
+                                            <span>{lesson.name}</span>
+                                            <span className="text-xs text-gray-500">{lesson.full_time}mins</span>
+                                        </div>
                                     </Menu.Item>
                                 ))}
                             </Menu.SubMenu>
@@ -161,10 +173,10 @@ const LearnCourseDetail: React.FC = () => {
                     </Menu>
                 </Sider>
                 <Layout>
-                    <Content className="p-6 bg-gray-100">
+                    <Content className="p-6 bg-white rounded-lg shadow-lg" style={{ overflowY: 'auto' }}>
                         {selectedLesson ? (
-                            <div className="p-6 bg-white rounded-lg shadow-lg">
-                                <h2 className="mb-4 text-3xl font-bold">{selectedLesson.name}</h2>
+                            <div className="p-6">
+                                <h2 className="mb-4 text-3xl font-bold text-gray-900">{selectedLesson.name}</h2>
                                 {selectedLesson.lesson_type === "video" && selectedLesson.video_url && (
                                     <div className="mb-4">
                                         <iframe
@@ -172,9 +184,8 @@ const LearnCourseDetail: React.FC = () => {
                                             height="400px"
                                             src={convertToEmbedUrl(selectedLesson.video_url)}
                                             title={selectedLesson.name}
-                                            frameBorder="0"
                                             allowFullScreen
-                                            className="rounded-lg"
+                                            className="rounded-lg shadow-md"
                                         ></iframe>
                                     </div>
                                 )}
@@ -183,18 +194,20 @@ const LearnCourseDetail: React.FC = () => {
                                         <img
                                             src={selectedLesson.image_url}
                                             alt={selectedLesson.name}
-                                            className="h-auto max-w-full rounded-lg"
+                                            className="h-auto max-w-full rounded-lg shadow-md"
                                         />
                                     </div>
                                 )}
                                 {selectedLesson.description && (
-                                    <div className="mt-4 text-lg">
+                                    <div className="mt-4 text-lg text-gray-700">
                                         {selectedLesson.description}
                                     </div>
                                 )}
                             </div>
                         ) : (
-                            <div>No lesson selected</div>
+                            <div className="text-center text-gray-600">
+                                No lesson selected
+                            </div>
                         )}
                     </Content>
                 </Layout>

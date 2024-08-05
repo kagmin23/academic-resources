@@ -1,8 +1,7 @@
 import { Button } from "antd";
-import  {CheckCircleFilled } from '@ant-design/icons' ;
 import Lottie from "lottie-react";
-import image from '../assets/payment2.json'
 import { Link } from 'react-router-dom';
+import image from '../assets/payment2.json';
 export default function PaymentSuccess() {
   return (
     <div className='w-full my-8' >
@@ -12,37 +11,11 @@ export default function PaymentSuccess() {
         </div>
         
         <div className='mt-4 text-xl italic font-bold text-center md:text-3xl'>Payment Successfull!</div>
-        <div className='mt-8 text-lg font-bold text-center md:text-2xl'>1.250.000VNĐ</div>
-        <div className='mt-4 text-lg italic font-bold text-center md:text-2xl'> 
-           <div> The payment has been done successfully.</div>
-           <div>Thank you for purchasing our courses.</div>
+                <div className="flex flex-col items-center justify-center text-center">
+                <img className="mt-5 w-96 h-w-96" src="https://static.vecteezy.com/system/resources/previews/021/730/260/non_2x/thank-you-for-your-purchase-printable-illustration-business-thank-you-customer-card-creative-graphic-design-template-soft-watercolor-background-calligraphy-script-text-business-card-free-vector.jpg" alt="image success payment" />
+                <Link to={`/student/manager-student-purchase`}><Button type="primary" className='w-auto mt-8 text-base font-bold bg-green-700 md:p-5 md:text-lg'>Come to your Orders</Button></Link>
+                </div>
         </div>
-        <div className='w-32 h-0.5 bg-black mx-auto mt-5'></div>
-        <div className='w-full mx-auto mt-8 xl:w-2/6 lg:w-1/2'>
-                <div className='flex justify-between mb-2 text-base text-gray-600 md:text-lg'>
-                    <span>Customer Name:</span>
-                    <span>TAT_610</span>
-                </div>
-                <div className='flex justify-between mb-2 text-base text-gray-600 md:text-lg'>
-                     <span>Payment ID:</span>
-                     <span>123456</span>
-                </div>
-                <div className='flex justify-between mb-2 text-base text-gray-600 md:text-lg'>
-                     <span>Time:</span>
-                     <span>15:03:10 10/6/2024</span>
-                </div>
-                <div>
-                <Link to={`/student`}> <Button type="primary" className='w-full mt-8 text-base font-bold bg-green-700 md:p-5 md:text-lg'>Back to Home</Button></Link>
-                </div>
-
-        
-
-            
-        </div>
-    
-
-        
-    </div>
   );
 }
 

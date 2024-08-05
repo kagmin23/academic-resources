@@ -58,15 +58,15 @@ const AboutStudent: React.FC = () => {
 
   return (
       <div className="text-white wrappers ">
-          <div className='relative w-full h-56 bg-gradient-to-br from-blue-300 to-purple-200'>
+          <div className='relative w-full h-48 bg-gradient-to-br from-blue-300 to-purple-200'>
               <div className='absolute left-0 w-full h-full -top-6'>
                   <Lottie animationData={animation} className='w-[400px] h-[400px] m-auto' loop={true} />
               </div>
               <div className='absolute inset-0 flex flex-col items-center justify-center'>
-                  <div className='text-3xl font-bold text-center text-white pt-14'>
+                  <div className='text-3xl font-bold text-center text-white pt-11'>
                       Welcome to Academic Resource, {currentUser.name}
                   </div>
-                  <div className="flex justify-center mt-3 transform translate-y-1/4">
+                  <div className="flex justify-center transform translate-y-1/4">
                       <Avatar
                           size={160}
                           src={currentUser.avatar}
@@ -110,17 +110,17 @@ const AboutStudent: React.FC = () => {
           <Divider orientation="left"></Divider>
           <div className='w-3/4 mx-auto '>
               <Text className='text-xl font-bold'><VideoCameraOutlined className="text-blue-500 " style={{ marginRight: 8,fontSize: '25px'}}/>Introductory Video:</Text>
-              <div className='p-2 mt-4'>
+              <div className='p-2'>
               <iframe 
                   width="100%" 
-                  height="400" 
+                  height="300" 
                   src={currentUser.video.replace('watch?v=', 'embed/')} 
                   title="Introductory Video" 
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                   allowFullScreen>
               </iframe></div>
           </div>
-          <div className='flex justify-center w-full my-7'>
+          <div className='flex justify-center w-full'>
           {/* <Link to="/instructor/profile-instructor/instructor-setting"> */}
           <Button className='w-1/4 p-5 text-lg text-white rounded-full bg-gradient-to-br from-blue-400 to-purple-300'
            onClick={() => handleEdit(currentUser._id)}>

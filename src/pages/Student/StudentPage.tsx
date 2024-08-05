@@ -1,5 +1,4 @@
 import AboutStudent from 'pages/Student/AboutStudent';
-import Certificate from 'pages/Student/Certificate';
 import ChangepasswordStu from 'pages/Student/ChangePasswordStu';
 import ProfileStudent from 'pages/Student/EditProfileStudent';
 import MyCourseStudent from 'pages/Student/MyCourseStudent';
@@ -22,7 +21,6 @@ const StudentPage: React.FC = () => {
           <Route path={`info-student`} element={<ProfileStudent />} />
           <Route path={`info-student/:userId/`} element={<ProfileStudent />} />
           <Route path={`student-changepassword`} element={<ChangepasswordStu />} />
-          <Route path={`certificate-student`} element={<Certificate />} />
           <Route path={`manager-student-purchase`} element={<ManagerStudentPurchase />} />
           <Route path={`subcription-student`} element={<SubcriptionStudent />} />
         </Routes>

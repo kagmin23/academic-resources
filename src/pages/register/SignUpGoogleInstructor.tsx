@@ -1,7 +1,6 @@
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
 import { Form, Input, Radio, message } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
-import { User } from 'models/types';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerViaGoogle } from 'services/registerGoogleApiService';
@@ -9,19 +8,27 @@ import { registerViaGoogle } from 'services/registerGoogleApiService';
 const SignUp: React.FC = () => {
   const [form] = Form.useForm();
   const [value, setValue] = useState<string>("");
-  const [formData, setFormData] = useState<User>();
+  const [isFormComplete, setIsFormComplete] = useState<boolean>(false);
   const [showRadioGroup, setShowRadioGroup] = useState<boolean>(true);
   const navigate = useNavigate();
 
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     form.resetFields();
+    setIsFormComplete(false); // Reset form completion status when role changes
+  };
+
+  const handleFormChange = () => {
+    if (value === 'instructor') {
+      const fieldsValue = form.getFieldsValue();
+      const { description, phone_number, video } = fieldsValue;
+      setIsFormComplete(description && phone_number && video ? true : false);
+    }
   };
 
   const handleRegisterGoogle = async (credentialResponse: CredentialResponse) => {
     try {
       if (value === 'instructor') {
-        console.log("value", value)
         const fieldsValue = form.getFieldsValue();
         const { description, phone_number, video } = fieldsValue;
 
@@ -31,17 +38,12 @@ const SignUp: React.FC = () => {
         }
       }
       const { credential } = credentialResponse;
-      console.log("credential", credential)
       if (!credential) throw new Error("Google credential is missing");
 
-
-
       const dataUser = await registerViaGoogle(credential, value);
-      console.log("dataUser", dataUser)
       message.success("Register Successfully!");
       navigate("/verify-email");
     } catch (error) {
-      console.log("Error Occurred: ", error);
       message.error("Registration failed.");
     }
   };
@@ -63,7 +65,7 @@ const SignUp: React.FC = () => {
         <p className="italic text-center text-gray-600">Sign Up and Start Learning!</p>
 
         {showRadioGroup && (
-          <Form form={form} layout="vertical">
+          <Form form={form} layout="vertical" onValuesChange={handleFormChange}>
             <Form.Item>
               <Radio.Group onChange={onChangeRole} value={value}>
                 <Radio value="student">Student</Radio>
@@ -90,7 +92,9 @@ const SignUp: React.FC = () => {
             )}
 
             <Form.Item>
-              <GoogleLogin onSuccess={handleRegisterGoogle} onError={onError} />
+              {(value === 'student' || isFormComplete) && (
+                <GoogleLogin onSuccess={handleRegisterGoogle} onError={onError} />
+              )}
             </Form.Item>
           </Form>
         )}

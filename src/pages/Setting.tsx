@@ -1,11 +1,11 @@
 
-import { Button, Form, Input, Typography, notification, message, Modal } from 'antd';
-import React, { useState, useEffect } from 'react';
-import 'tailwindcss/tailwind.css';
+import { Button, Form, Input, Modal, Typography, message, notification } from 'antd';
+import { User } from 'models/types';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { getUserDetail } from 'services/All/getUserDetailApiService';
 import { updateUser } from 'services/All/updateUserApiService';
-import { User } from 'models/types';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import 'tailwindcss/tailwind.css';
 
 const { Text } = Typography;
 
