@@ -240,7 +240,7 @@ const HomePage: React.FC = () => {
         </div>
           <p className="text-center pt-2.5 sm:text-sm">Let's Start <ArrowRightOutlined /></p>
         <div className="body-homebox">
-          <div className="box image-box">
+          <div className="mr-8 box image-box">
             <Image src="https://students.ubc.ca/sites/students.ubc.ca/files/styles/large_image_mobile_1_5x/public/17_07_14_StudyTips_1.jpg?itok=RdmR9DZr&timestamp=1505404484" alt="Image" />
           </div>
           <div className="sm:pt-10 sm:mr-20">
