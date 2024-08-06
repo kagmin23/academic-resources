@@ -12,8 +12,6 @@ interface MainLayoutProps {
 }
 
 const LayoutStudent: React.FC<MainLayoutProps> = () => {
-  const [selectedKeys, setSelectedKeys] = useState<string[]>(['1']);
-  const [drawerVisible, setDrawerVisible] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const navigate = useNavigate();
 
@@ -29,11 +27,12 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
             description: 'Failed to fetch current user information',
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         notification.error({
-          message: 'Error',
-          description: 'Failed to fetch current user information',
-        });
+          message: "Failed to fetch User information!",
+          description:
+            error.message || "Failed to fetch User information. Please try again.",
+        })
       }
     };
 

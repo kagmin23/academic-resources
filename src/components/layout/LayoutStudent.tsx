@@ -1,5 +1,5 @@
 import { BookOutlined, LogoutOutlined, MenuOutlined, SettingOutlined, ShoppingCartOutlined, UserOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu } from 'antd';
+import { Avatar, Badge, Drawer, Dropdown, Input, Layout, Menu, notification } from 'antd';
 import Footer from 'components/Footer';
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, Outlet, useNavigate } from 'react-router-dom';
@@ -27,33 +27,17 @@ const LayoutStudent: React.FC = () => {
       } else {
         console.error('Failed to fetch current user:', response.error);
       }
-    } catch (error) {
-      console.error('Error fetching current user:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to fetch User information!",
+        description:
+          error.message || "Failed to fetch User information. Please try again.",
+      })
     }
   };
-
-  // const fetchCartData = async () => {
-  //   try {
-  //     const response = await getCarts('', 1, 100);
-  //     if (response.success) {
-  //       setNotificationCountCart(response.data.length);
-  //     } else {
-  //       console.error('Failed to fetch cart data:', response.error);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching cart data:', error);
-  //   }
-  // };
-
   useEffect(() => {
     fetchCurrentUser();
-    // fetchCartData();
   }, []);
-
-  // useEffect(() => {
-  //   // const interval = setInterval(fetchCartData, 5000);
-  //   return () => clearInterval(interval);
-  // }, []);
 
   const handleMenuClick = (e: { key: string }) => {
     setSelectedKeys([e.key]);
@@ -65,10 +49,14 @@ const LayoutStudent: React.FC = () => {
       navigate(`search?query=${value}`, { state: { courses: response } });
       if (searchInputRef.current) {
         // Clear the search input
-        searchInputRef.current.value = ''; 
+        searchInputRef.current.value = '';
       }
-    } catch (error) {
-      console.error('Error searching courses:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Courses!",
+        description:
+          error.message || "Failed to get Courses. Please try again.",
+      });
     }
   };
 

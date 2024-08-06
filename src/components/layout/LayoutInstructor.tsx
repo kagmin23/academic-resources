@@ -50,10 +50,11 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             description: 'Failed to fetch current user information',
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         notification.error({
-          message: 'Error',
-          description: 'Failed to fetch current user information',
+          message: "Failed to User information!",
+          description:
+            error.message || "Failed to User information. Please try again.",
         });
       }
     };
@@ -73,8 +74,12 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
         // Clear the search input
         searchInputRef.current.value = '';
       }
-    } catch (error) {
-      console.error('Error searching courses:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Courses!",
+        description:
+          error.message || "Failed to get Courses. Please try again.",
+      });
     }
   };
 
