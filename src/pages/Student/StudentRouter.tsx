@@ -35,7 +35,7 @@ export default function StudentRouter() {
                     <Route path={`contact`} element={<ProtectedRouter allowedRoles={["student"]}><Contact /></ProtectedRouter>} />
                     <Route path={`setting`} element={<ProtectedRouter allowedRoles={["student"]}><Setting /></ProtectedRouter>} />
                     <Route path={`student-learning/:courseId/lesson/`} element={<ProtectedRouter allowedRoles={["student"]}><LessonStudent /></ProtectedRouter>} />
-                    <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
+                    <Route path={`shopping-cart/check-out/payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`check-out`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
                     <Route path={`manager-your-purchases`} element={<ProtectedRouter allowedRoles={["student"]}><ManagerStudentPurchase /></ProtectedRouter>} />
                     <Route path={`shopping-cart/check-out`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
