@@ -1,17 +1,18 @@
 
 import { BellOutlined, EditOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
-import { Avatar, Button, Card, Form, Input, Modal, Rate, Spin, Tabs, Typography, message, notification } from 'antd';
-import { Review } from 'models/types';
+import { Avatar, Button, Card, Form, Input, Modal, Rate, Spin, Tabs, message, notification } from 'antd';
+import { Review, User } from 'models/types';
 import moment from 'moment';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { createCart } from 'services/All/cartApiService';
+import { getUserDetail } from 'services/All/getUserDetailApiService';
 import { createReview, getReviews, updateReview } from 'services/All/reviewApiService';
 import { createOrUpdate, getItemBySubscriber } from 'services/All/subcriptionApiService';
 import { getCourseDetail } from 'services/UserClient/clientApiService';
 
+
 const { TabPane } = Tabs;
-const { Title, Paragraph } = Typography;
 const { TextArea } = Input;
 
 interface Lesson {
@@ -55,7 +56,7 @@ interface CourseDetailType {
 }
 
 const CourseDetail: React.FC = () => {
-    const { courseId } = useParams<{ courseId: string }>();
+    const { courseId, userId } = useParams<{ courseId: string, userId: string }>();
     const [courseDetail, setCourseDetail] = useState<CourseDetailType | null>(null);
     const [isModalVisible, setIsModalVisible] = useState(false);
     const [isSubscribed, setIsSubscribed] = useState(false);
@@ -64,9 +65,7 @@ const CourseDetail: React.FC = () => {
     const [reviewComment, setReviewComment] = useState<string>('');
     const [loadingReview, setLoadingReview] = useState<boolean>(false);
     const [editingReviewId, setEditingReviewId] = useState<string | null>(null);
-    const [updatedReviewRating, setUpdatedReviewRating] = useState<number>(0);
-    const [updatedReviewComment, setUpdatedReviewComment] = useState<string>('');
-    const [loadingUpdateReview, setLoadingUpdateReview] = useState<boolean>(false);
+    const [currentUser, setCurrentUser] = useState<User | null>(null);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loading, setLoading] = useState<boolean>(false);
     const [button, setButton] = useState<string>('Add to cart');
@@ -87,7 +86,7 @@ const CourseDetail: React.FC = () => {
             }
         }
     },
-        [courseDetail])
+        [courseDetail]);
 
     useEffect(() => {
         if (courseId) {
@@ -135,30 +134,59 @@ const CourseDetail: React.FC = () => {
     const handleInstructorProfile = (userId: string) => {
         navigate(`instructor-detail/${userId}`)
     };
+
+    useEffect(() => {
+        if (userId) {
+            const fetchCurrentUser = async () => {
+                try {
+                    const user = await getUserDetail(userId);
+                    setCurrentUser(user);
+                } catch (error: any) {
+                    notification.error({
+                        message: 'Failed to fetch user information!',
+                        description: error.message || 'Failed to fetch user information. Please try again.',
+                    });
+                }
+            };
+
+            fetchCurrentUser();
+        }
+    }, [userId]);
+
+
     const handleEditReview = (review: Review) => {
         setEditingReviewId(review._id);
-        setUpdatedReviewRating(review.rating);
-        setUpdatedReviewComment(review.comment);
+        setReviewRating(review.rating);
+        setReviewComment(review.comment);
         form.setFieldsValue({
             rating: review.rating,
             comment: review.comment,
         });
     };
 
-    const handleSubmitReview = async () => {
-        if (!courseId) return;
-        setLoadingReview(true);
+    const handleCancelEditReview = () => {
+        setEditingReviewId(null);
+        setReviewRating(0);
+        setReviewComment('');
+        form.resetFields();
+    };
 
+    const handleSubmitReview = async () => {
+        if (!courseId || !isPurchased) {
+            message.error('You must purchase the course to leave a review.');
+            return;
+        }
+        setLoadingReview(true);
         try {
             if (editingReviewId) {
-                // If editingReviewId is set, update the review
+                // Cập nhật review nếu đang ở chế độ chỉnh sửa
                 await updateReview(editingReviewId, reviewComment, reviewRating);
                 notification.success({
                     message: 'Review Updated',
                     description: 'Your review has been successfully updated.',
                 });
 
-                // Update the reviews array with the updated review
+                // Cập nhật mảng review với review đã được cập nhật
                 setReviews(reviews.map(review =>
                     review._id === editingReviewId
                         ? { ...review, comment: reviewComment, rating: reviewRating }
@@ -191,7 +219,6 @@ const CourseDetail: React.FC = () => {
         setLoading(true);
         try {
             await createOrUpdate(courseDetail.instructor_id);
-            // Update the isSubscribed state immediately
             setIsSubscribed(!isSubscribed);
             message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
         } catch (error: any) {
@@ -211,16 +238,24 @@ const CourseDetail: React.FC = () => {
     }, []);
 
     const fetchSubscriptionStatus = async () => {
-        try {
-            const response = await getItemBySubscriber(1, 10);
-            console.log('Subscription Response:', response);
+        if (!courseId || !userId) return;
 
-            if (response && response.length > 0 && response[0] && 'is_subscribed' in response[0]) {
-                setIsSubscribed(response[0].is_subscribed);
-            } else {
-                console.error('Subscription status not found in response');
+        try {
+            const response = await getItemBySubscriber(1, 10); // Giả định: response là danh sách các đối tượng đăng ký
+            // Kiểm tra nếu phản hồi không phải là mảng hoặc không có dữ liệu
+            if (!Array.isArray(response) || response.length === 0) {
+                console.error('Subscription response is not an array or empty');
                 setIsSubscribed(false);
+                setIsPurchased(false);
+                return;
             }
+            // Kiểm tra điều kiện đăng ký
+            const userSubscription = response.find(item => item.user_id === userId);
+            setIsSubscribed(!!userSubscription?.is_subscribed);
+
+            // Kiểm tra điều kiện mua khóa học
+            const hasPurchased = response.some(item => item.user_id === userId && item.course_id === courseId && item.status === 'completed');
+            setIsPurchased(hasPurchased);
         } catch (error: any) {
             notification.error({
                 message: "Failed to fetch Subscription Status!",
@@ -228,6 +263,7 @@ const CourseDetail: React.FC = () => {
                     error.message || "Failed to fetch Subscription Status. Please try again.",
             });
             setIsSubscribed(false);
+            setIsPurchased(false);
         }
     };
 
@@ -259,7 +295,7 @@ const CourseDetail: React.FC = () => {
 
     const handleSetButton = () => {
         if (button === "Learn Now") {
-            navigate(`/student/student-learning/${courseId}/lesson`);
+            navigate(`/student/student-learning/${courseId}/lesson`)
         } else if (button === "Go to cart") {
             navigate(`/student/shopping-cart`);
         } else if (button === "Add to cart") {
@@ -272,7 +308,7 @@ const CourseDetail: React.FC = () => {
     };
 
     if (!courseDetail) {
-        return <div className="text-center text-white">Loading...</div>;
+        return <div className="text-center text-black">Loading...</div>;
     }
 
     return (
@@ -332,7 +368,8 @@ const CourseDetail: React.FC = () => {
                                     </div>
                                     <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
                                     <div className="flex mt-4 space-x-4">
-                                        <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleSetButton}>{button}</Button>                            </div>
+                                        <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleSetButton}>{button}</Button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -403,21 +440,27 @@ const CourseDetail: React.FC = () => {
                                             reviews.map((review) => (
                                                 <Card key={review._id} className="mb-3">
                                                     <Card.Meta
-                                                        avatar={<Avatar>{review.reviewer_name.charAt(0)}</Avatar>}
+                                                        avatar={<Avatar>{review.reviewer_name ? review.reviewer_name.charAt(0) : '?'}</Avatar>}
                                                         title={
                                                             <div className="flex items-center justify-between">
                                                                 <div className="flex flex-col">
                                                                     <div className="flex items-center gap-4">
-                                                                        <span>{review.reviewer_name}</span>
+                                                                        <span>{review.reviewer_name || 'Unknown'}</span>
                                                                         <span className="text-xs text-gray-400">{moment(review.created_at).format('LL')}</span>
                                                                     </div>
                                                                     <Rate className="text-sm" value={review.rating} disabled />
                                                                 </div>
-                                                                <div className="mt-5">
-                                                                    <Button size="small" type="text" icon={<EditOutlined />} onClick={() => handleEditReview(review)} />
-                                                                </div>
+                                                                {currentUser && review.reviewer_id === currentUser._id && (
+                                                                    <div className="text-right">
+                                                                        <Button
+                                                                            icon={<EditOutlined />}
+                                                                            onClick={() => handleEditReview(review)}
+                                                                        />
+                                                                    </div>
+                                                                )}
                                                             </div>
                                                         }
+                                                        
                                                         description={<p className="text-sm text-black">{review.comment}</p>}
                                                     />
                                                 </Card>
@@ -434,14 +477,22 @@ const CourseDetail: React.FC = () => {
                                                     <TextArea rows={4} onChange={(e) => setReviewComment(e.target.value)} value={reviewComment} />
                                                 </Form.Item>
                                                 <Form.Item>
-                                                    <Button type="primary" htmlType="submit" loading={loadingReview}>
-                                                        {editingReviewId ? 'Update Review' : 'Submit Review'}
-                                                    </Button>
+                                                    <div className="flex space-x-2">
+                                                        <Button type="primary" htmlType="submit" loading={loadingReview}>
+                                                            {editingReviewId ? 'Update Review' : 'Submit Review'}
+                                                        </Button>
+                                                        {editingReviewId && (
+                                                            <Button type="default" onClick={handleCancelEditReview}>
+                                                                Cancel
+                                                            </Button>
+                                                        )}
+                                                    </div>
                                                 </Form.Item>
                                             </Form>
                                         )}
                                     </div>
                                 </TabPane>
+
                             </Tabs>
                         </div>
                     </div>
