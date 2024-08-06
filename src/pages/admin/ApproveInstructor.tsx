@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Table, message } from 'antd';
+import { Button, Input, Layout, Modal, Select, Table, message, notification } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment, { Moment } from 'moment';
 import React, { useEffect, useState } from 'react';
@@ -53,13 +53,16 @@ const ApproveInstructor: React.FC = () => {
           });
           setData(updatedData);
         } else {
-          message.error("Failed to fetch users");
+          message.error("Failed to fetch Users");
         }
-      } catch (error) {
-        message.error("Error fetching users");
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to fetch Users!",
+          description:
+            error.message || "Failed to fetch Users. Please try again.",
+        })
       }
     };
-
     fetchData();
   }, []);
 
@@ -76,8 +79,12 @@ const ApproveInstructor: React.FC = () => {
       );
       setData(updatedData);
       localStorage.setItem('approvedInstructors', JSON.stringify(updatedData.filter(instructor => instructor.isApproved)));
-    } catch (error) {
-      message.error('Error approving instructor profile');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to Approve Instructor!",
+        description:
+          error.message || "Failed to Approve Instructor. Please try again.",
+      })
     }
   };
 
@@ -90,8 +97,12 @@ const ApproveInstructor: React.FC = () => {
       );
       setData(updatedData);
       localStorage.setItem('rejectedInstructors', JSON.stringify(updatedData.filter(instructor => instructor.isRejected)));
-    } catch (error) {
-      message.error('Error rejecting instructor profile');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to Reject Instructor!",
+        description:
+          error.message || "Failed to Reject Instructor. Please try again.",
+      })
     }
   };
 

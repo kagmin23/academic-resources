@@ -45,14 +45,13 @@ const SettingStudent: React.FC = () => {
           dob: userData.dob ? new Date(userData.dob).toISOString().split('T')[0] : '',
         });
         setLoading(false);
-      } catch (error) {
-        console.error("Failed to Fetch User", error);
+      } catch (error: any) {
         notification.error({
-          message: 'Error',
-          description: 'Failed to fetch user data',
-        });
-        setLoading(false);
-      }
+          message: "Failed to fetch User information details!",
+          description:
+            error.message || "Failed to fetch User information details. Please try again.",
+        })
+      };
     };
 
     fetchUserData();

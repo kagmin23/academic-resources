@@ -40,11 +40,11 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
       try {
         const response = await getCurrentUser();
         setUserId(response.data._id);
-      } catch (error) {
-        console.error('Failed to fetch current user:', error);
+      } catch (error: any) {
         notification.error({
-          message: 'Error',
-          description: 'Failed to fetch current user details.',
+          message: "Change Password Failed!",
+          description:
+            error.message || "Failed to fetch current user. Please try again.",
         });
       }
     }
@@ -76,11 +76,11 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
         description: 'Password has been updated successfully!',
       });
       form.resetFields();
-    } catch (error) {
-      console.error('Failed to change password:', error);
+    } catch (error: any) {
       notification.error({
-        message: 'Error',
-        description: 'Failed to change password. Please try again later.',
+        message: "Change Password Failed!",
+        description:
+          error.message || "Failed to change password. Please try again.",
       });
     }
   };

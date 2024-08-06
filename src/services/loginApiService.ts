@@ -28,8 +28,9 @@ export const loginUser = async (email: string, password: string) => {
       console.error("Error: Token not received");
       throw new Error("Error: Token not received");
     }
-  } catch (error) {
-    console.error('Failed to login:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };

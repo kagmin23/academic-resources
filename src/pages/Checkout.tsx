@@ -1,4 +1,4 @@
-import { Button, Card, Col, Divider, Modal, Radio, Row, Tag } from 'antd';
+import { Button, Card, Col, Divider, Modal, Radio, Row, Tag, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { getCarts, updateCartStatus } from 'services/All/cartApiService';
@@ -60,8 +60,12 @@ const Checkout: React.FC = () => {
         } else {
           console.error('Response data is not an array:', response.data);
         }
-      } catch (err) {
-        setError(err as Error);
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to fetch Carts!",
+          description:
+            error.message || "Failed to fetch Carts. Please try again.",
+        });
       } finally {
         setLoading(false);
       }
@@ -90,8 +94,12 @@ const Checkout: React.FC = () => {
         } else {
           navigate('/student/payment-successfully');
         }
-      } catch (error) {
-        console.error('Failed to update cart status:', error);
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to this Action!",
+          description:
+            error.message || "Failed to this Action. Please try again.",
+        });
       } finally {
         setIsModalVisible(false);
         setActionType(null);

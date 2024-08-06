@@ -1,6 +1,6 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
-import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Switch, Table, Typography, message } from "antd";
+import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Switch, Table, Typography, message, notification } from "antd";
 import React, { useEffect, useState } from "react";
 
 import { Category, Course, LogStatus } from "models/types";
@@ -33,7 +33,6 @@ const ManagerCourseInstructor: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [category, setCategory] = useState<Category | null>(null);
   const [comment, setComment] = useState('');
-  // const [isStatusChangeModalVisible, setIsStatusChangeModalVisible] = useState(false);
   const [commentForm] = Form.useForm();
   const [courses, setCourses] = useState<Course[]>([]);
   const [loading, setLoading] = useState(false);
@@ -63,9 +62,12 @@ const ManagerCourseInstructor: React.FC = () => {
     try {
       const response = await getCategories("", 1, 10);
       setCategories(response.data.pageData);
-    } catch (error) {
-      console.error("Failed to fetch categories", error);
-      setCategories([]);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Categories!",
+        description:
+          error.message || "Failed to get Categories. Please try again.",
+      });
     }
   };
 
@@ -74,12 +76,15 @@ const ManagerCourseInstructor: React.FC = () => {
       const response = await getCourses('', 1, 10);
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
-    } catch (error) {
-      console.error('Failed to fetch courses', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Courses!",
+        description:
+          error.message || "Failed to get Courses. Please try again.",
+        });
       setDataSource([]);
       setFilteredDataSource([]);
-      message.error('Failed to fetch courses');
-    }
+      }
   };
 
   const onChangesell = (checked: boolean) => {
@@ -122,10 +127,13 @@ const ManagerCourseInstructor: React.FC = () => {
       .then(() => {
         message.success('Course deleted successfully');
       })
-      .catch((error) => {
-        console.error("Failed to delete course", error);
-        message.error('Failed to delete course');
-      });
+      .catch((error: any) => {
+        notification.error({
+          message: "Failed to deleted Course!",
+          description:
+            error.message || "Failed to deleted Course. Please try again.",
+          })
+        })
   };
 
   const handleSave = () => {
@@ -148,10 +156,13 @@ const ManagerCourseInstructor: React.FC = () => {
               setFilteredDataSource(newDataSource);
               message.success('Course updated successfully');
             })
-            .catch((error) => {
-              console.error("Failed to update course", error);
-              message.error('Failed to update course');
-            });
+            .catch((error: any) => {
+                notification.error({
+                  message: "Failed to update Course!",
+                  description:
+                    error.message || "Failed to update Course. Please try again.",
+                  });
+                })
         } else {
           createCourse(values)
             .then((response) => {
@@ -164,10 +175,13 @@ const ManagerCourseInstructor: React.FC = () => {
               setFilteredDataSource([newRecord, ...dataSource]);
               message.success('Course created successfully');
             })
-            .catch((error) => {
-              console.error("Failed to create course", error);
-              message.error('Failed to create course');
-            });
+            .catch((error: any) => {
+              notification.error({
+                message: "Failed to create Course!",
+                description:
+                  error.message || "Failed to create Course. Please try again.",
+                })
+              })
         }
         setIsModalVisible(false);
       })
@@ -220,9 +234,12 @@ const ManagerCourseInstructor: React.FC = () => {
           )
         );
       }
-    } catch (error) {
-      message.error('Please add your Session and Lesson!');
-      console.error('Error:', error);
+    }catch (error: any) {
+      notification.error({
+        message: "Failed to get Categories!",
+        description:
+          error.message || "Failed to get Categories. Please try again.",
+      });
     }
   };
 
@@ -240,8 +257,12 @@ const ManagerCourseInstructor: React.FC = () => {
       const response = await logStatus(course_id, "", 1, 100);
       setLogs(response.data.pageData);
       setError(null);
-    } catch (err) {
-      setError("Failed to fetch Logs Status");
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to log status!",
+        description:
+          error.message || "Failed to log status. Please try again.",
+      });
     } finally {
       setLoading(false);
     }

@@ -3,7 +3,6 @@ import { Button, Checkbox, Form, Input, Radio, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
 import { registerUser } from '../../services/registerApiService';
 
 const SignUp: React.FC = () => {
@@ -15,7 +14,6 @@ const SignUp: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Reset fields when role changes
     if (value === 'student') {
       form.resetFields(['video', 'description', 'phone_number']);
     }
@@ -37,7 +35,7 @@ const SignUp: React.FC = () => {
       setFormData({ ...formData, ...values });
       setCurrent(current + 1);
     } catch (error) {
-      console.log('Validation Failed:', error);
+      console.error('Validation Failed:', error);
     }
   };
 
@@ -49,32 +47,19 @@ const SignUp: React.FC = () => {
       setCompletedSteps(updatedCompletedSteps);
       const finalFormData = { ...formData, ...values, role: value };
       setFormData(finalFormData);
-
-      // Save user data to localStorage
       localStorage.setItem("user", JSON.stringify(finalFormData));
-      console.log('Final Form Data:', finalFormData);
-
-      // Register the user
       const response = await registerUser(finalFormData);
-      console.log('Registration successful:', response);
+      setFormData(response);
       notification.success({
         message: 'Success',
         description: 'You have signed up successfully!',
       });
       navigate('/verify-email');
-
-      // Handle instructor profile review if applicable
-      if (value === 'instructor') {
-        const userId = finalFormData._id;
-        const status: "approve" | "reject" = "approve";
-
-        await reviewProfileInstructor(userId, status, "Profile review submitted for instructor.");
-      }
-    } catch (error) {
-      console.error('Registration error:', error);
+    } catch (error: any) {
       notification.error({
-        message: 'Registration Error',
-        description: 'There was an error during the registration process. Please try again.',
+        message: "Register Failed",
+        description:
+          error.message || "Invalid email or password. Please try again.",
       });
     }
   };

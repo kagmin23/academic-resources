@@ -71,9 +71,12 @@ export default function InstructorDetail() {
             description: 'Guest',
           });
         }
-      } catch (error) {
-        message.error("Get Failed Instructor detail!")
-        console.error("Get Failed Instructor detail!", error);
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to fetch Instructor details!",
+          description:
+            error.message || "Failed to fetch Instructor details. Please try again.",
+        });
       }
     };
 
@@ -89,9 +92,12 @@ export default function InstructorDetail() {
         setIsSubscribed(isSubscribed);
         fetchSubscriptionStatus();
         message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
-    } catch (error) {
-        console.error('Failed to subscribe:', error);
-        message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to Subscribe!",
+        description:
+          error.message || "Failed to Subscribe. Please try again.",
+      });
     } finally {
         setLoading(false);
     }
@@ -112,9 +118,12 @@ const fetchSubscriptionStatus = async () => {
             console.error('Subscription status not found in response');
             setIsSubscribed(false);
         }
-    } catch (error) {
-        console.error('Failed to fetch subscription status:', error);
-        setIsSubscribed(false);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to fetch Subscription Status!",
+        description:
+          error.message || "Failed to fetch Subscription Status. Please try again.",
+      });
     }
 };
 

@@ -16,9 +16,10 @@ export const createPayout = async (instructor_id: string, transactions: { purcha
         });
         message.success("Payout created successfully");
         return response.data;
-    }catch(error){
-        message.error("Failed to API create payout!");
-        console.error('Failed to API create payout:', error);
+    }catch(error: any){
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+          }
     }
   };
 
@@ -45,9 +46,10 @@ export const createPayout = async (instructor_id: string, transactions: { purcha
         });
         return response.data.data.pageData || [];
 
-    } catch (error) {
-        message.error("Get Payout API failed!");
-        return [];
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+          }
     }
 }
 
@@ -66,7 +68,9 @@ export const updateStatusPayout = async (payoutId: string, status: string, comme
         });
         return response.data;
 
-    } catch (error) {
-        message.error("Update Status Payout failed!");
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+        }
     }
 }

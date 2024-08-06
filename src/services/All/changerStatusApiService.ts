@@ -18,8 +18,9 @@ export const changeCourseStatus = async (courseId: string, newStatus: string, co
     console.log("Response api change status", response.data);
 
     return response.data;
-  } catch (error) {
-    console.error('Error Changing Course Status:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };

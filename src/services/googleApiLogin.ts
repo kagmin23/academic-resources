@@ -53,6 +53,9 @@ export const loginViaGoogle = async (
       throw new Error("Invalid Google login response!");
     }
   } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
     throw new Error(error.message);
   }
 };
@@ -73,6 +76,9 @@ export const getCurrentLogin = async (token: string): Promise<User> => {
       throw new Error("Cannot get user data!");
     }
   } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
     throw new Error(error.message);
   }
 };

@@ -1,7 +1,7 @@
 
 import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, FilterOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
-import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Space, Spin, Table, Typography, message } from "antd";
+import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Space, Spin, Table, Typography, message, notification } from "antd";
 import { Category, Course, LogStatus } from "models/types";
 import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
@@ -62,8 +62,12 @@ const ManagerCourseInstructor: React.FC = () => {
     try {
       const response = await getCategories("", 1, 10);
       setCategories(response.data.pageData);
-    } catch (error) {
-      console.error("Failed to fetch categories", error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Categories!",
+        description:
+          error.message || "Failed to get Categories. Please try again.",
+      });
       setCategories([]);
     }
   };
@@ -73,11 +77,12 @@ const ManagerCourseInstructor: React.FC = () => {
       const response = await getCourses('', 1, 10);
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
-    } catch (error) {
-      console.error('Failed to fetch courses', error);
-      setDataSource([]);
-      setFilteredDataSource([]);
-      message.error('Failed to fetch courses');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Courses!",
+        description:
+          error.message || "Failed to get Courses. Please try again.",
+      });
     }
   };
 
@@ -121,10 +126,13 @@ const ManagerCourseInstructor: React.FC = () => {
       .then(() => {
         message.success('Course deleted successfully');
       })
-      .catch((error) => {
-        console.error("Failed to delete course", error);
-        message.error('Failed to delete course');
-      });
+      .catch((error: any) => {
+        notification.error({
+          message: "Failed to deleted lesson!",
+          description:
+            error.message || "Failed to deleted lesson. Please try again.",
+          })
+        })
   };
 
   const handleSave = () => {
@@ -146,11 +154,16 @@ const ManagerCourseInstructor: React.FC = () => {
               setDataSource(newDataSource);
               setFilteredDataSource(newDataSource);
               message.success('Course updated successfully');
+              setIsModalVisible(false);
             })
-            .catch((error) => {
-              console.error("Failed to update course", error);
-              message.error('Failed to update course');
-            });
+            .catch((error: any) => {
+              notification.error({
+                message: "Failed to update Course!",
+                description:
+                  error.message || "Failed to update Course. Please try again.",
+                })
+              })
+              setIsModalVisible(true);
         } else {
           createCourse(values)
             .then((response) => {
@@ -162,13 +175,17 @@ const ManagerCourseInstructor: React.FC = () => {
               setDataSource([newRecord, ...dataSource]);
               setFilteredDataSource([newRecord, ...dataSource]);
               message.success('Course created successfully');
+              setIsModalVisible(false);
             })
-            .catch((error) => {
-              console.error("Failed to create course", error);
-              message.error('Failed to create course');
-            });
+            .catch((error: any) => {
+              notification.error({
+                message: "Failed to create Course!",
+                description:
+                  error.message || "Failed to create Course. Please try again.",
+                })
+              })
+              setIsModalVisible(true);
         }
-        setIsModalVisible(false);
       })
       .catch((info) => {
         message.error('Validation failed');

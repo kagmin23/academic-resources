@@ -20,9 +20,10 @@ export const getReviews = async(course_id: string, pageNum: number, pageSize: nu
     );
     return response.data.pageData;
 
-    } catch (error){
-        console.error("Error to Log Api getReviews!",error);
-        throw error;
+    } catch (error: any){
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+          }
     }
 };
 
@@ -41,12 +42,12 @@ export const createReview = async (course_id: string, comment: string, rating: n
             }
         });
         
-        console.log("createReview: ", response);
         return response.data;
 
-    } catch (error) {
-        console.error("Error to Log Api createReview!", error);
-        throw error;
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+          }
     }
 };
 
@@ -67,8 +68,9 @@ export const updateReview = async (reviewId: string, comment: string, rating: nu
         console.log("updateReview: ", response);
         return response.data;
 
-    } catch (error) {
-        console.error("Error in updateReview API call!", error);
-        throw error;
+    } catch (error: any) {
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+          }
     }
 };

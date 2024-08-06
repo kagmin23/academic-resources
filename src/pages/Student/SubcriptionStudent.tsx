@@ -1,5 +1,5 @@
 import { BellOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Table, message } from 'antd';
+import { Button, Input, Layout, Table, message, notification } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { createOrUpdate, getItemBySubscriberStudent } from 'services/All/subcriptionApiService';
@@ -30,8 +30,12 @@ const SubcriptionStudent: React.FC = () => {
       const response = await getItemBySubscriberStudent(1, 10);
       setSubcriptionStudent(response);
       setFilteredData(response);
-    } catch (error) {
-      message.error('Error fetching subscription data');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to fetch Subscription!",
+        description:
+          error.message || "Failed to fetch Subscription. Please try again.",
+      })
     } finally {
       setLoading(false);
     }
@@ -59,9 +63,12 @@ const SubcriptionStudent: React.FC = () => {
         await createOrUpdate(instructor_id);
         fetchSubscriptionStatus();
         message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
-    } catch (error) {
-        console.error('Failed to subscribe:', error);
-        message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to Subcribe!",
+        description:
+          error.message || "Failed to Subscribe. Please try again.",
+      })
     } finally {
         setLoading(false);
     }

@@ -1,5 +1,5 @@
 import { CredentialResponse, GoogleLogin } from '@react-oauth/google';
-import { Form, Input, Radio, message } from 'antd';
+import { Form, Input, Radio, message, notification } from 'antd';
 import { RadioChangeEvent } from 'antd/lib';
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ const SignUp: React.FC = () => {
   const onChangeRole = (e: RadioChangeEvent) => {
     setValue(e.target.value);
     form.resetFields();
-    setIsFormComplete(false); // Reset form completion status when role changes
+    setIsFormComplete(false);
   };
 
   const handleFormChange = () => {
@@ -43,9 +43,13 @@ const SignUp: React.FC = () => {
       const dataUser = await registerViaGoogle(credential, value);
       message.success("Register Successfully!");
       navigate("/verify-email");
-    } catch (error) {
-      message.error("Registration failed.");
-    }
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to register Google!",
+        description:
+          error.message || "Failed to register Google. Please try again.",
+      })
+    };
   };
 
   const onError = () => {

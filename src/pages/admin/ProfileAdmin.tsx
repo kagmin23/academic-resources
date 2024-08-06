@@ -21,10 +21,11 @@ const ProfileAdmin: React.FC = () => {
             description: 'Failed to fetch current user information',
           });
         }
-      } catch (error) {
+      } catch (error: any) {
         notification.error({
-          message: 'Error',
-          description: 'Failed to fetch current user information',
+          message: "Failed to get User information!",
+          description:
+            error.message || "Failed to get User information. Please try again.",
         });
       }
     };

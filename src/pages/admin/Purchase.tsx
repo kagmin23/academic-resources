@@ -1,5 +1,5 @@
 import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Tag, Typography } from "antd";
+import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Tag, Typography, notification } from "antd";
 import { Purchase } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
@@ -22,8 +22,12 @@ function PurchasesAdmin() {
     try {
       const payouts = await getPurchasesAll(1, 10);
       setData(payouts);
-    } catch (error) {
-      console.error('Error fetching purchases:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Purchases!",
+        description:
+          error.message || "Failed to get Purchases. Please try again.",
+      });
     } finally {
       setLoading(false);
     }

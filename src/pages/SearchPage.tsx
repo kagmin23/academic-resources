@@ -1,5 +1,5 @@
 import { SearchOutlined, StarOutlined } from '@ant-design/icons';
-import { Button, Card, Checkbox, Input, Select, Slider, Spin, Typography, message } from 'antd';
+import { Button, Card, Checkbox, Input, Select, Slider, Spin, Typography, message, notification } from 'antd';
 import { Category, ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -53,9 +53,12 @@ const SearchPage: React.FC = () => {
         } else {
           message.error('Failed to fetch courses');
         }
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-        message.error('An error occurred. Please try again later.');
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to fetch Courses!",
+          description:
+            error.message || "Failed to fetch Courses. Please try again.",
+        });
       } finally {
         setLoadingCourses(false);
       }
@@ -69,9 +72,12 @@ const SearchPage: React.FC = () => {
         } else {
           message.error('Failed to fetch categories');
         }
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        message.error('An error occurred. Please try again later.');
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to fetch Categories!",
+          description:
+            error.message || "Failed to fetch Categories. Please try again.",
+        });
       } finally {
         setLoadingCategories(false);
       }

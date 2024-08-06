@@ -1,5 +1,5 @@
 import { DeleteOutlined, SearchOutlined, StarOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Spin, Table, Tabs } from 'antd';
+import { Button, Input, Layout, Modal, Spin, Table, Tabs, notification } from 'antd';
 import { Review } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -23,8 +23,12 @@ const AdminReview: React.FC = () => {
       const response = await getReviews('', 1, 10);
       setOriginalData(response);
       setFilteredData(response);
-    } catch (error) {
-      console.error('Error fetching reviews:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Reviews!",
+        description:
+          error.message || "Failed to get Reviews. Please try again.",
+      });
       setOriginalData([]);
       setFilteredData([]);
     } finally {
@@ -46,8 +50,12 @@ const AdminReview: React.FC = () => {
       setFilteredData(updatedData);
       setDeleteItemId(undefined);
       setDeleteConfirmVisible(false);
-    } catch (error) {
-      console.error('Error deleting review:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get delete Review!",
+        description:
+          error.message || "Failed to get delete Review. Please try again.",
+      });
     } finally {
       setLoading(false);
     }

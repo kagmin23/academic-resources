@@ -1,5 +1,5 @@
 import { SearchOutlined, StarOutlined } from '@ant-design/icons';
-import { Input, Layout, Spin, Table, Tabs } from 'antd';
+import { Input, Layout, Spin, Table, Tabs, notification } from 'antd';
 import { Review } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -22,8 +22,12 @@ const ReviewManager: React.FC = () => {
         const response = await getReviews('', 1, 10);
         setReviews(response);
         setFilteredReviews(response);
-      } catch (error) {
-        console.error('Failed to fetch reviews:', error);
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to get Reviews!",
+          description:
+            error.message || "Failed to get Reviews. Please try again.",
+        });
       } finally {
         setLoading(false);
       }

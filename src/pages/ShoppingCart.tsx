@@ -1,4 +1,4 @@
-import { Button, Card, Checkbox, Modal, Tag } from 'antd';
+import { Button, Card, Checkbox, Modal, Tag, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteCart, getCarts, updateCartStatus } from 'services/All/cartApiService';
@@ -42,8 +42,12 @@ const ShoppingCart: React.FC = () => {
         } else {
           console.error('Response data is not an array:', response.data);
         }
-      } catch (error) {
-        console.error('Failed to fetch cart items:', error);
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to fetch Carts!",
+          description:
+            error.message || "Failed to fetch Carts. Please try again.",
+        });
       } finally {
         setLoading(false);
       }
@@ -69,8 +73,12 @@ const ShoppingCart: React.FC = () => {
         );
         setIsModalVisible(false);
         setCartToDelete(null);
-      } catch (error) {
-        console.error('Failed to delete cart item:', error);
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to delete Cart!",
+          description:
+            error.message || "Failed to delete Cart. Please try again.",
+        });
       }
     }
   };
@@ -96,8 +104,12 @@ const ShoppingCart: React.FC = () => {
     try {
       const status = checked ? 'waiting_paid' : 'new';
       await updateCartStatus(status, [{ _id: courseId, cart_no }]);
-    } catch (error) {
-      console.error('Failed to update cart status:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to update Cart Status!",
+        description:
+          error.message || "Failed to update Cart Status. Please try again.",
+      });
     }
   };
 
@@ -113,8 +125,6 @@ const ShoppingCart: React.FC = () => {
         console.error('No carts are selected or have incorrect status.');
         return;
       }
-
-      // Proceed to checkout and pass selected carts data
       navigate('/student/check-out', { state: { cartsToCheckout } });
 
     } catch (error) {

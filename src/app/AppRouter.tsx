@@ -49,6 +49,7 @@ const AppRouter: React.FC = () => (
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/verify-email" element={<VerityToken />} />
+          <Route path="/verify-email/:token" element={<VerityToken />} />
           <Route path="/resend-email" element={<ResendVerifyToken />} />
           <Route path="/sign-up-google" element={<SignUpGoogleInstructor />} />
         </Route>

@@ -1,5 +1,5 @@
 import { BellOutlined, SearchOutlined, UserOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Table, Tabs, message } from 'antd';
+import { Button, Input, Layout, Table, Tabs, message, notification } from 'antd';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { createOrUpdate, getItemByInstructorSubcription, getItemBySubscriber } from 'services/All/subcriptionApiService';
@@ -37,8 +37,12 @@ const SubcriptionStudent: React.FC = () => {
       } else {
         console.error('Expected an array of subscriptions', response);
       }
-    } catch (error) {
-      message.error('Error fetching subscribers data!');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Instructor Subcription!",
+        description:
+          error.message || "Failed to get Instructor Subcription. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -55,8 +59,12 @@ const SubcriptionStudent: React.FC = () => {
       } else {
         console.error('Expected an array of subscriptions', response);
       }
-    } catch (error) {
-      message.error('Error fetching subscribers data!');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to Subcription!",
+        description:
+          error.message || "Failed to Subcription. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -72,8 +80,12 @@ const SubcriptionStudent: React.FC = () => {
       } else {
         console.error('Expected an array of subscriptions', response);
       }
-    } catch (error) {
-      message.error('Error fetching subscription data!');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to Subcription!",
+        description:
+          error.message || "Failed to Subcription. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -108,8 +120,12 @@ const SubcriptionStudent: React.FC = () => {
       await createOrUpdate(instructor_id);
       fetchSubscriptionStatus();
       message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
-    } catch (error) {
-      message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to Subcription!",
+        description:
+          error.message || "Failed to Subcription. Please try again.",
+      });
     } finally {
       setLoading(false);
     }

@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Layout, Modal, Select, Spin, Table, message } from 'antd';
+import { Button, Form, Input, Layout, Modal, Select, Spin, Table, message, notification } from 'antd';
 import { Course, Lesson, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -51,9 +51,12 @@ const ManagerLessonInstructor: React.FC = () => {
       } else {
         message.error('No lessons found');
       }
-    } catch (error) {
-      message.error('Failed to fetch lessons');
-      console.error('Error fetching lessons:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Lesson!",
+        description:
+          error.message || "Failed to get Lesson. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -64,9 +67,12 @@ const ManagerLessonInstructor: React.FC = () => {
     try {
       const response = await getSessions('', value, 1, 10);
       setSessions(response.data.pageData);
-    } catch (error) {
-      message.error('Failed to fetch sessions for the selected course');
-      console.error('Error fetching sessions:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Session!",
+        description:
+          error.message || "Failed to get Session. Please try again.",
+      });
     }
   }
 
@@ -76,11 +82,14 @@ const ManagerLessonInstructor: React.FC = () => {
       const response = await getCourses("", 1, 10);
       setCourses(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
-    } catch (error) {
-      console.error("Failed to fetch courses", error);
-      setCourses([]);
-      setFilteredDataSource([]);
-      message.error("Failed to fetch courses");
+    } catch (error: any) {
+        setCourses([]);
+        setFilteredDataSource([]);
+        notification.error({
+          message: "Failed to get Courses!",
+          description:
+            error.message || "Failed to get Courses. Please try again.",
+        });
     } finally {
       setLoading(false);
     }
@@ -130,14 +139,11 @@ const ManagerLessonInstructor: React.FC = () => {
           if (!selectedCourse || !selectedSession) {
             throw new Error('Invalid course or session');
           }
-
           const lessonData = {
             ...values,
             course_id: courseId,
             session_id: sessionId,
           };
-          console.log("lessonData", lessonData)
-
           if (isEditing && currentRecord) {
             const response = await updateLesson(currentRecord._id, lessonData);
             const updatedLesson = response.data;
@@ -156,9 +162,14 @@ const ManagerLessonInstructor: React.FC = () => {
             message.success('Lesson created successfully');
           }
           setModalVisible(false);
-        } catch (error) {
-          console.error("Error in saving lesson", error);
+        } catch (error: any) {
+          notification.error({
+            message: "Failed to save lesson!",
+            description:
+              error.message || "Failed to save lesson. Please try again.",
+          });
           message.error(isEditing ? 'Failed to update lesson' : 'Failed to create lesson');
+          setModalVisible(true);
         } finally {
           setLoading(false);
         }
@@ -182,10 +193,13 @@ const ManagerLessonInstructor: React.FC = () => {
             setFilteredDataSource(newDataSource);
             message.success("Lesson deleted successfully");
           })
-          .catch((error) => {
-            console.error("Failed to Delete Lesson", error);
-            message.error("Failed to Delete Lesson");
-          });
+          .catch((error: any) => {
+            notification.error({
+              message: "Failed to deleted lesson!",
+              description:
+                error.message || "Failed to deleted lesson. Please try again.",
+              })
+            })
       },
     });
   };

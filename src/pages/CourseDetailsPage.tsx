@@ -97,13 +97,16 @@ const CourseDetail: React.FC = () => {
                     const response = await getCourseDetail(courseId);
                     setCourseDetail(response);
                     setIsPurchased(response.is_purchased);
-                } catch (error) {
-                    console.error('Failed to fetch course detail:', error);
-                } finally {
+                } catch (error: any) {
+                    notification.error({
+                      message: "Failed to fetch Courses details!",
+                      description:
+                        error.message || "Failed to fetch Courses details. Please try again.",
+                    });
+                  } finally {
                     setLoading(false);
                 }
             };
-
             fetchCourseDetail();
         }
     }, [courseId]);
@@ -115,9 +118,13 @@ const CourseDetail: React.FC = () => {
                 try {
                     const response = await getReviews(courseId, 1, 10);
                     setReviews(response);
-                } catch (error) {
-                    console.error('Failed to fetch reviews:', error);
-                } finally {
+                } catch (error: any) {
+                    notification.error({
+                      message: "Failed to fetch Reviews!",
+                      description:
+                        error.message || "Failed to fetch Reviews. Please try again.",
+                    });
+                  } finally {
                     setLoading(false);
                 }
             };
@@ -141,12 +148,13 @@ const CourseDetail: React.FC = () => {
             });
             setReviews([...reviews, response]);
             form.resetFields();
-        } catch (error) {
+        } catch (error: any) {
             notification.error({
-                message: 'Error Submitting Review',
-                description: 'There was an error submitting your review. Please try again.',
+              message: "Failed to create Review!",
+              description:
+                error.message || "Failed to create Review. Please try again.",
             });
-        } finally {
+          } finally {
             setLoadingReview(false);
         }
     };
@@ -159,8 +167,12 @@ const CourseDetail: React.FC = () => {
             // Update the isSubscribed state immediately
             setIsSubscribed(!isSubscribed);
             message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
-        } catch (error) {
-            console.error('Failed to subscribe:', error);
+        } catch (error: any) {
+            notification.error({
+              message: "Failed to Subscribe!",
+              description:
+                error.message || "Failed to Subscribe. Please try again.",
+            });
             message.error(isSubscribed ? 'Failed to unsubscribe' : 'Failed to subscribe');
         } finally {
             setLoading(false);
@@ -182,8 +194,12 @@ const CourseDetail: React.FC = () => {
                 console.error('Subscription status not found in response');
                 setIsSubscribed(false);
             }
-        } catch (error) {
-            console.error('Failed to fetch subscription status:', error);
+        } catch (error: any) {
+            notification.error({
+              message: "Failed to fetch Subscription Status!",
+              description:
+                error.message || "Failed to fetch Subscription Status. Please try again.",
+            });
             setIsSubscribed(false);
         }
     };
@@ -211,12 +227,13 @@ const CourseDetail: React.FC = () => {
             ));
             setEditingReviewId(null);
             form.resetFields();
-        } catch (error) {
+        } catch (error: any) {
             notification.error({
-                message: 'Error Updating Review',
-                description: 'There was an error updating your review. Please try again.',
+              message: "Failed to update Review!",
+              description:
+                error.message || "Failed to update Review. Please try again.",
             });
-        } finally {
+          } finally {
             setLoadingUpdateReview(false);
         }
     };
@@ -229,10 +246,13 @@ const CourseDetail: React.FC = () => {
         try {
             const response = await createCart({ course_id: courseId });
             message.success('Course added to cart successfully!');
-        } catch (error) {
-            console.error('Failed to add course to cart:', error);
-            message.error('Failed to add course to cart');
-        }
+        } catch (error: any) {
+            notification.error({
+              message: "Failed to Add to Cart!",
+              description:
+                error.message || "Failed to Add to Cart. Please try again.",
+            });
+          }
     };
 
     const handleSetButton = () => {

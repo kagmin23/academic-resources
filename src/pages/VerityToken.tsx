@@ -1,8 +1,7 @@
-import { Button, Form, Input, Typography, notification } from 'antd';
-import axios from 'axios';
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { HOST_MAIN } from 'services/apiService';
+import { Form, Typography, notification } from 'antd';
+import React, { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { verifyEmailAPI } from 'services/verifyEmailApiService';
 import '../assets/mainLogoAcademic.png';
 
 const { Title } = Typography;
@@ -16,17 +15,38 @@ const VerifyToken: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [form] = Form.useForm();
   const navigate = useNavigate();
+  const { token } = useParams<{ token: string }>();
 
-  const onFinish = async (values: any) => {
+  useEffect(() => {
+    if (token) {
+      const verifyToken = async () => {
+        try {
+          const res = await verifyEmailAPI(token);
+          if (res) {
+            notification.success({
+              message: "Email Verified Successfully",
+              description: "You can now log in to the system.",
+            });
+            navigate("/log-in");
+          }
+        } catch (error) {
+          notification.error({
+            message: "Verification Failed",
+            description: "Your token is expired or incorrect!",
+          });
+        }
+      };
+      verifyToken();
+    }
+  }, [token, navigate]);
+
+  const onFinish = async (token: string) => {
     setLoading(true);
     try {
-      const response = await axios.post(`${HOST_MAIN}/api/auth/verify-token`, {
-        token: values.token,
-      });
-
+      const response = verifyEmailAPI(token);
       notification.success({
         message: 'Verification Successfully',
-        description: response.data.message || 'Your email has been verified successfully!',
+        description: 'Your email has been verified successfully!',
       });
       navigate('/log-in');
     } catch (error: unknown) {
@@ -53,7 +73,7 @@ const VerifyToken: React.FC = () => {
         </Title>
 
         <Form form={form} onFinish={onFinish} className="space-y-4">
-          <Form.Item
+          {/* <Form.Item
             name="token"
             rules={[{ required: true, message: 'Please input the verification code!' }]}
           >
@@ -62,15 +82,12 @@ const VerifyToken: React.FC = () => {
               size="large"
               onChange={(e) => setVerificationCode(e.target.value)}
             />
-          </Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            className="w-full h-12 text-white bg-green-600 hover:bg-green-700"
-            loading={loading}
+          </Form.Item> */}
+          <p
+            className="items-center justify-center w-full h-12 text-white align-middle bg-green-600 hover:bg-green-700"
           >
-            Verify
-          </Button>
+            Your account verified! Please Check Your Email in 24h.
+          </p>
         </Form>
 
         <div className="flex flex-row mt-4 text-center text-gray-600">

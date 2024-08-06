@@ -1,5 +1,5 @@
 import { DoubleRightOutlined, FilterOutlined, ReadOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
+import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, notification } from "antd";
 import { Purchase } from "models/types";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
@@ -35,8 +35,12 @@ function ListCoursesStudent() {
     try {
       const payouts = await getItemsbyStudentPurchases(1, 10);
       setData(payouts);
-    } catch (error) {
-      console.error('Error fetching purchases:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to fetch Purchases!",
+        description:
+          error.message || "Failed to fetch Purchases. Please try again.",
+      })
     } finally {
       setLoading(false);
     }

@@ -25,8 +25,9 @@ export const logStatus = async(course_id: string, keyword: string, pageNum: numb
           });
     return response.data;
 
-    } catch (error){
-        console.error("Error to Log Api Status!",error);
-        throw error;
+    } catch (error: any){
+        if (error.response && error.response.data && error.response.data.message) {
+            throw new Error(error.response.data.message);
+          }
     }
 };

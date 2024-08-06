@@ -13,8 +13,9 @@ export const getReview = async (reviewId: string) => {
     
     console.log("getReview: ", response);
     return response.data;
-  } catch (error) {
-    console.error("Error in getReview API call!", error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };

@@ -25,9 +25,10 @@ export const getCourses = async ( keyword: string, category_id: string, pageNum:
       { headers }
     );
     return response.data;
-  } catch (error) {
-    console.error('Error fetching courses:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };
 
@@ -35,9 +36,10 @@ export const getCourseDetail = async (courseId: string) => {
   try {
     const response = await axiosInstance.get(`/api/client/course/${courseId}`);
     return response.data;
-  } catch (error) {
-    console.error('Error fetching getCourseDetail API!', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };
 
@@ -67,8 +69,9 @@ export const getUserDetail = async (userId: string) => {
     const response = await axiosInstance.get(`/api/users/${userId}`, {
     });
     return response.data;
-  } catch (error) {
-    console.error('Error fetching user details:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };

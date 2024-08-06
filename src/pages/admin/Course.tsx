@@ -1,7 +1,7 @@
 import {
   SearchOutlined
 } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Spin, Table, Typography, message } from 'antd';
+import { Button, Input, Layout, Modal, Select, Spin, Table, Typography, message, notification } from 'antd';
 import { Course, LogStatus } from 'models/types';
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
@@ -39,9 +39,12 @@ const CourseAdmin: React.FC = () => {
     try {
       const response = await getCourses('', 1, 10);
       setDataSource(response.data.pageData);
-    } catch (error) {
-      message.error('Failed to fetch Courses');
-      console.error('Error fetching Courses:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Courses!",
+        description:
+          error.message || "Failed to get Courses. Please try again.",
+      });
     }
     finally {
       setLoading(false);
@@ -55,12 +58,6 @@ const CourseAdmin: React.FC = () => {
 
   const hideLogModal = () => {
     setLogModalVisible(false);
-  };
-
-  const handleViewMore = (key: string) => {
-    setExpandedKeys(prevKeys =>
-      prevKeys.includes(key) ? prevKeys.filter(k => k !== key) : [...prevKeys, key]
-    );
   };
 
   const handleSearch = (value: string) => {
@@ -85,9 +82,12 @@ const CourseAdmin: React.FC = () => {
         );
       }
       
-    } catch (error) {
-      message.error('Please enter the reason of this course!');
-      console.error('Error:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to change Course status!",
+        description:
+          error.message || "Failed to change Course status. Please try again.",
+      });
     }
     finally {
       setLoading(false);
@@ -107,8 +107,12 @@ const CourseAdmin: React.FC = () => {
       const response = await logStatus(course_id, "", 1, 100);
       setLogs(response.data.pageData);
       setError(null);
-    } catch (err) {
-      setError("Failed to fetch Logs Status");
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to log Status!",
+        description:
+          error.message || "Failed to log Status. Please try again.",
+      });
     } finally {
       setLoading(false);
     }

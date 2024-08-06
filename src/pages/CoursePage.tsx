@@ -1,4 +1,4 @@
-import { Card, Col, Input, Row, Spin, Typography, message } from 'antd';
+import { Card, Col, Input, Row, Spin, Typography, message, notification } from 'antd';
 import { ClientCourses } from 'models/types';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -38,9 +38,12 @@ const CoursePage: React.FC = () => {
         } else {
           message.error('Failed to fetch courses');
         }
-      } catch (error) {
-        console.error('Error fetching courses:', error);
-        message.error('An error occurred. Please try again later.');
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to fetch Courses!",
+          description:
+            error.message || "Failed to fetch Courses. Please try again.",
+        });
       } finally {
         setLoading(false);
       }

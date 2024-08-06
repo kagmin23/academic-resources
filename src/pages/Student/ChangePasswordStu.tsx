@@ -39,15 +39,14 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
     if (!isDropdownVisible && !userId) {
       try {
         const response = await getCurrentUser();
-        console.log('Current user response:', response); // Debug log
-        setUserId(response.data._id); // Correctly set userId from response
-      } catch (error) {
-        console.error('Failed to fetch current user:', error);
+        setUserId(response.data._id);
+      } catch (error: any) {
         notification.error({
-          message: 'Error',
-          description: 'Failed to fetch current user details.',
-        });
-      }
+          message: "Failed to fetch User information!",
+          description:
+            error.message || "Failed to fetch User information. Please try again.",
+        })
+      };
     }
   };
 
@@ -72,20 +71,19 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
     }
 
     try {
-      console.log('Changing password with:', { userId, currentPassword, newPassword }); // Debug log
       await changeUserPassword(userId, currentPassword, newPassword);
       notification.success({
         message: 'Success',
         description: 'Password has been updated successfully!',
       });
       form.resetFields();
-    } catch (error) {
-      console.error('Failed to change password:', error);
+    } catch (error: any) {
       notification.error({
-        message: 'Error',
-        description: 'Failed to change password. Please try again later.',
-      });
-    }
+        message: "Failed to Change Password!",
+        description:
+          error.message || "Failed to Change Password. Please try again.",
+      })
+    };
   };
 
   return (

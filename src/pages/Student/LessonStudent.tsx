@@ -5,7 +5,7 @@ import {
     ReadOutlined,
     VideoCameraOutlined
 } from '@ant-design/icons';
-import { Breadcrumb, Button, Layout, Menu, Spin, message } from "antd";
+import { Breadcrumb, Button, Layout, Menu, Spin, message, notification } from "antd";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { getLesson } from 'services/Instructor/lessonApiService';
@@ -61,14 +61,16 @@ const LearnCourseDetail: React.FC = () => {
                 } else if (data.session_list.length > 0 && data.session_list[0].lesson_list.length > 0) {
                     const firstLessonId = data.session_list[0].lesson_list[0]._id;
                     fetchLessonDetail(firstLessonId);
-                    setFirstLessonLoaded(true); // Mark first lesson as loaded
+                    setFirstLessonLoaded(true);
                 }
-            } catch (error) {
-                message.error("Error fetching course details!");
-                console.error("Error fetching course details:", error);
-            }
+            } catch (error: any) {
+                notification.error({
+                  message: "Failed to fetch Course details!",
+                  description:
+                    error.message || "Failed to fetch Course details. Please try again.",
+                })
+              };
         };
-
         fetchCourseDetailUser();
     }, [courseId, lessonId]);
 
@@ -76,10 +78,13 @@ const LearnCourseDetail: React.FC = () => {
         try {
             const lesson = await getLesson(lessonId);
             setSelectedLesson(lesson.data);
-        } catch (error) {
-            message.error("Error fetching lesson details");
-            console.error("Error fetching lesson details:", error);
-        }
+        } catch (error: any) {
+            notification.error({
+              message: "Failed to fetch Lesson details!",
+              description:
+                error.message || "Failed to fetch Lesson details. Please try again.",
+            })
+          };
     };
 
     const handleLessonClick = async (lesson: Lesson) => {

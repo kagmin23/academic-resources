@@ -16,9 +16,10 @@ export const createOrUpdate = async (instructor_id: string) => {
       }
     );
     return response;
-  } catch (error) {
-    console.error('Error in Subcriber!', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };
 
@@ -48,9 +49,10 @@ export const getItemBySubscriberStudent = async (pageNum: number, pageSize: numb
     if (response) {
       return response.data.data.pageData;
     }
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };
 
@@ -73,9 +75,10 @@ export const getItemBySubscriber = async (pageNum: number, pageSize: number) => 
     if (response) {
       return response.data.data.pageData;
     }
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };
 
@@ -98,9 +101,10 @@ export const getItemBySubscriberInstructor = async (pageNum: number, pageSize: n
     if (response) {
       return response.data;
     }
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };
 
@@ -128,8 +132,9 @@ export const getItemByInstructorSubcription = async (keyword: string, pageNum: n
     );
     
     return response.data;
-  } catch (error) {
-    console.error('Error fetching items by instructor:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };

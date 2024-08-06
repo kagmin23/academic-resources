@@ -1,4 +1,3 @@
-import { message } from 'antd';
 import axios from 'axios';
 import { HOST_MAIN } from 'services/apiService';
 
@@ -33,7 +32,8 @@ export const getItemsbyInstructorPurchases = async (
     
     return response.data.data.pageData;
   } catch (error: any) {
-    message.error("Error fetching API purchases");
-    throw new Error(`Error searching purchases: ${error.message}`);
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };

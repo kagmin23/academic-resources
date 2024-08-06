@@ -1,5 +1,5 @@
 import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography } from "antd";
+import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, notification } from "antd";
 import { Purchase } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
@@ -14,7 +14,6 @@ function PurchasesInstructor() {
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
   const [filterDate, setFilterDate] = useState<[string, string] | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
   const fetchPurchases = async () => {
@@ -22,8 +21,12 @@ function PurchasesInstructor() {
     try {
       const payouts = await getItemsbyStudentPurchases(1, 10);
       setData(payouts);
-    } catch (error) {
-      console.error('Error fetching purchases:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to fetch Purchases!",
+        description:
+          error.message || "Failed to fetch Purchases. Please try again.",
+      })
     } finally {
       setLoading(false);
     }

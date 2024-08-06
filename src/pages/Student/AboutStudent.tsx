@@ -33,14 +33,14 @@ const AboutStudent: React.FC = () => {
               description: 'Failed to fetch current user information',
             });
           }
-        } catch (error) {
+        } catch (error: any) {
           notification.error({
-            message: 'Error',
-            description: 'Failed to fetch current user information',
-          });
-        }
+            message: "Failed to fetch User information!",
+            description:
+              error.message || "Failed to fetch User information. Please try again.",
+          })
+        };
       };
-  
       fetchCurrentUser();
     }, []);
     

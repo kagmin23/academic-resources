@@ -22,9 +22,10 @@ export const createSession = async (sessionData: {
       }
     );
     return response.data;
-  } catch (error) {
-    console.error('Error creating session:', error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };
 

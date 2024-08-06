@@ -7,7 +7,6 @@ import { Route, Routes } from 'react-router-dom';
 import ManagerInstructor from '../Instructor/ManagerInstructor';
 import SidebarInstructor from '../Instructor/SidebarInstructor';
 import ManagerLessonInstructor from './LessonInstructor';
-import ManagerCertificate from './ManagerCertificate';
 import ManagerReview from './ManagerReview';
 import PayoutInstructor from './PayoutInstructor';
 import ManagerInstructorPurchase from './PurchasesInstructor';
@@ -27,7 +26,6 @@ const InstructorPage: React.FC = () => {
           {/* <Route path={`manager-instructor-course/view-session`} element={<ViewSession />} /> */}
           <Route path={`manager-instructor-lesson`} element={<ManagerLessonInstructor />} />
           <Route path={`manager-instructor-session`} element={<SessionInstructor />} />
-          <Route path={`manager-instructor-certificate`} element={<ManagerCertificate   />} />
           <Route path={`manager-instructor-purchase`} element={<ManagerInstructorPurchase />} />
 
           <Route path={`instructor-setting`} element={<Setting />} />

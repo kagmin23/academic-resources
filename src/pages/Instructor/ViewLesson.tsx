@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Col, Form, Input, Layout, Modal, Row, Select, Table, Typography, message } from "antd";
+import { Button, Col, Form, Input, Layout, Modal, Row, Select, Table, Typography, message, notification } from "antd";
 import { Lesson, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -44,9 +44,12 @@ const ViewLesson: React.FC = () => {
       try {
         const response = await getCourse(courseId);
         setSession(response.data);
-      } catch (error) {
-        console.error("Failed to fetch session", error);
-        message.error('Failed to fetch session');
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to get Courses!",
+          description:
+            error.message || "Failed to get Courses. Please try again.",
+        });
       } finally {
         setLoading(false);
       }
@@ -66,9 +69,12 @@ const ViewLesson: React.FC = () => {
       try {
         const response = await getSession(sessionId);
         setSession(response.data);
-      } catch (error) {
-        console.error("Failed to fetch session", error);
-        message.error('Failed to fetch session');
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to get Session!",
+          description:
+            error.message || "Failed to get Session. Please try again.",
+        });
       } finally {
         setLoading(false);
       }
@@ -84,8 +90,12 @@ const ViewLesson: React.FC = () => {
           const response = await getLessons("", courseId, sessionId, 1, 10);
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
-        } catch (error) {
-          message.error('Failed to Fetch Lesson');
+        } catch (error: any) {
+          notification.error({
+            message: "Failed to get Lesson!",
+            description:
+              error.message || "Failed to get Lesson. Please try again.",
+          });
         } finally {
           setLoading(false);
         }
@@ -137,10 +147,13 @@ const ViewLesson: React.FC = () => {
             setFilteredDataSource(newDataSource);
             message.success('Lesson deleted successfully');
           })
-          .catch((error) => {
-            console.error("Failed to Delete Lesson", error);
-            message.error('Failed to Delete Lesson');
-          });
+          .catch((error: any) => {
+            notification.error({
+              message: "Failed to deleted lesson!",
+              description:
+                error.message || "Failed to deleted lesson. Please try again.",
+              })
+            })
       },
     });
   };
@@ -165,11 +178,16 @@ const ViewLesson: React.FC = () => {
               setDataSource(newDataSource);
               setFilteredDataSource(newDataSource);
               message.success('Lesson updated successfully');
+              setModalVisible(false);
             })
-            .catch((error) => {
-              console.error("Failed to Update Lesson", error);
-              message.error('Failed to Update Lesson');
-            });
+            .catch((error: any) => {
+              notification.error({
+                message: "Failed to update Lesson!",
+                description:
+                  error.message || "Failed to update Lesson. Please try again.",
+                })
+              })
+              setModalVisible(true);
         } else {
           createLesson(newValues)
             .then((response) => {
@@ -181,13 +199,17 @@ const ViewLesson: React.FC = () => {
               setDataSource([...dataSource, newRecord]);
               setFilteredDataSource([...dataSource, newRecord]);
               message.success('Lesson created successfully');
+              setModalVisible(false);
             })
-            .catch((error) => {
-              console.error("Failed to Create lesson", error);
-              message.error('Failed to Create lesson');
-            });
+            .catch((error: any) => {
+              notification.error({
+                message: "Failed to create Lesson!",
+                description:
+                  error.message || "Failed to create Lesson. Please try again.",
+                })
+              })
+              setModalVisible(true);
         }
-        setModalVisible(false);
       })
       .catch((info) => {
         console.log("Validate Failed:", info);

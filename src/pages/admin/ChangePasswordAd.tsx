@@ -39,12 +39,12 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
     if (!isDropdownVisible && !userId) {
       try {
         const response = await getCurrentUser();
-        setUserId(response.data._id); // Correctly set userId from response
-      } catch (error) {
-        console.error('Failed to fetch current user:', error);
+        setUserId(response.data._id);
+      } catch (error: any) {
         notification.error({
-          message: 'Error',
-          description: 'Failed to fetch current user details.',
+          message: "Failed to get User information!",
+          description:
+            error.message || "Failed to get User information. Please try again.",
         });
       }
     }
@@ -76,18 +76,18 @@ const InfoItem: React.FC<InfoItemProps> = ({ label }) => {
         description: 'Password has been updated successfully!',
       });
       form.resetFields();
-    } catch (error) {
-      console.error('Failed to change password:', error);
+    } catch (error: any) {
       notification.error({
-        message: 'Error',
-        description: 'Failed to change password. Please try again later.',
+        message: "Failed to changer Password!",
+        description:
+          error.message || "Failed to changer Password. Please try again.",
       });
     }
   };
 
   return (
     <div className="p-4 border rounded-lg">
-      <div className="flex justify-between items-center cursor-pointer" onClick={toggleDropdown}>
+      <div className="flex items-center justify-between cursor-pointer" onClick={toggleDropdown}>
         <div>
           <h4 className="text-lg font-medium">{label}</h4>
           <span className="text-gray-800">Haven't changed password yet</span>

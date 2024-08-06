@@ -1,5 +1,5 @@
 import { FilterOutlined, HistoryOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Tag, Typography, message } from "antd";
+import { Button, Checkbox, DatePicker, Input, Layout, Select, Space, Spin, Table, Tag, Typography, message, notification } from "antd";
 import { CheckboxChangeEvent } from "antd/es/checkbox";
 import { Purchase } from "models/types";
 import moment from "moment";
@@ -25,8 +25,12 @@ function PurchasesInstructor() {
     try {
       const payouts = await getItemsbyInstructorPurchases(1, 10);
       setData(payouts);
-    } catch (error) {
-      console.error('Error fetching purchases:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Purchases!",
+        description:
+          error.message || "Failed to get Purchases. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -98,9 +102,12 @@ function PurchasesInstructor() {
       const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
       const response = await createPayout('',transactions);
       setSelectedRowKeys([]);
-    } catch (error) {
-      message.error("Failed to create payout");
-      console.error('Failed to create payout:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to create Payout!",
+        description:
+          error.message || "Failed to create Payout. Please try again.",
+      });
     }finally {
       setLoading(false);
     }

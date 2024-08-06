@@ -36,9 +36,10 @@ export const getCarts = async (status: string, pageNum: number, pageSize: number
         pageSize,
       },
     },
-  })} catch (error){
-    console.error("Error!")
-  }
+  })} catch (error: any){
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }  }
 };
 
 export const deleteCart = async (courseId: string) => {
@@ -69,8 +70,9 @@ export const updateCartStatus = async (status: string, items: { _id: string, car
       }
     );
     return response.data;
-  } catch (error) {
-    console.error("ERROR: ", error);
-    throw error;
+  } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
   }
 };

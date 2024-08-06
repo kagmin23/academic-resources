@@ -1,3 +1,4 @@
+import { Input } from 'antd';
 import React, { useState } from 'react';
 
 interface FileUploaderProps {
@@ -19,7 +20,7 @@ const FileUploader: React.FC<FileUploaderProps> = ({ type, onUploadSuccess }) =>
 
   return (
     <div>
-      <input
+      <Input
         type="file"
         accept={type === 'image' ? 'image/*' : 'video/*'}
         onChange={handleFileChange}

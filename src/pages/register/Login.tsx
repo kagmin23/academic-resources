@@ -50,10 +50,13 @@ const Login: React.FC = () => {
             navigate('/');
         }
       }
-    } catch (error) {
-      console.error('Login error:', error);
-      message.error('Invalid email or password');
-    } finally {
+    } catch (error: any) {
+      notification.error({
+        message: "Login Failed",
+        description:
+          error.message || "Invalid email or password. Please try again.",
+      });
+      } finally {
       setLoading(false);
     }
   };

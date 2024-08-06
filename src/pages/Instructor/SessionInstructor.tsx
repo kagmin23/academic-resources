@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Layout, Modal, Select, Spin, Table, message } from "antd";
+import { Button, Form, Input, Layout, Modal, Select, Spin, Table, message, notification } from "antd";
 import { Course, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -31,9 +31,12 @@ const ManagerCourseInstructor: React.FC = () => {
       const response = await getSessions('', '', 1, 10);
       setSessions(response.data.pageData);
       setDataSource(response.data.pageData);
-    } catch (error) {
-      message.error('Failed to fetch sessions');
-      console.error('Error fetching sessions:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Sessions!",
+        description:
+          error.message || "Failed to get Sessions. Please try again.",
+      });
     } finally {
       setLoading(false);
     }
@@ -44,11 +47,14 @@ const ManagerCourseInstructor: React.FC = () => {
       const response = await getCourses('', 1, 10);
       setCourses(response.data.pageData);
       setDataSource(response.data.pageData);
-    } catch (error) {
-      console.error('Failed to fetch courses', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Courses!",
+        description:
+          error.message || "Failed to get Courses. Please try again.",
+      });
       setCourses([]);
       setDataSource([]);
-      message.error('Failed to fetch courses');
     }
   };
 
@@ -62,10 +68,9 @@ const ManagerCourseInstructor: React.FC = () => {
   const handleSaveSession = () => {
     form.validateFields()
       .then(async (values) => {
-        setLoading(true); // Show loading spinner during request
+        setLoading(true);
         try {
           if (isEditing && currentSession) {
-            // Update session logic
             const response = await updateSession(currentSession._id, values);
             const updatedSession = response.data;
             setDataSource(dataSource.map(item =>
@@ -76,19 +81,22 @@ const ManagerCourseInstructor: React.FC = () => {
             ));
             message.success('Session updated successfully');
           } else {
-            // Create new session logic
             const response = await createSession(values);
             const newSession = { ...response.data, key: response.data._id };
             setDataSource([...dataSource, newSession]);
             setSessions([...sessions, newSession]);
             message.success('Session created successfully');
           }
-          setModalVisible(false); // Close the modal
-        } catch (error) {
-          console.error("Error in saving session", error);
-          message.error(isEditing ? 'Failed to update session' : 'Failed to create session');
+          setModalVisible(false);
+        } catch (error: any) {
+          notification.error({
+            message: "Failed to save Session!",
+            description:
+              error.message || "Failed to save Session. Please try again.",
+          });
+          setModalVisible(true);
         } finally {
-          setLoading(false); // Hide loading spinner
+          setLoading(false);
         }
       })
       .catch((info) => {
@@ -111,10 +119,13 @@ const ManagerCourseInstructor: React.FC = () => {
             setDataSource(newDataSource);
             message.success('Session deleted successfully');
           })
-          .catch((error) => {
-            console.error("Failed to delete Session", error);
-            message.error('Failed to delete Session');
-          });
+          .catch((error: any) => {
+            notification.error({
+              message: "Failed to deleted Session!",
+              description:
+                error.message || "Failed to deleted Session. Please try again.",
+              })
+            })
       },
     });
   };

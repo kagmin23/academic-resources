@@ -10,11 +10,11 @@ export const deleteReview = async(reviewId: string) => {
               Authorization: `Bearer ${token}`
             }
           });
-          console.log("deleteReivew: ", response)
     return response.data;
 
-    } catch (error){
-        console.error("Error to Log Api deleteReivew!",error);
-        throw error;
+    } catch (error: any){
+      if (error.response && error.response.data && error.response.data.message) {
+        throw new Error(error.response.data.message);
+      }
     }
 };

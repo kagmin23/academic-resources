@@ -31,11 +31,11 @@ const CategoryAdmin: React.FC = () => {
       const response = await getCategories('', 1, 10);
       setDataSource(response.data.pageData);
       setFilteredDataSource(response.data.pageData);
-    } catch (error) {
-      console.error('Error fetching categories:', error);
+    } catch (error: any) {
       notification.error({
-        message: 'Error',
-        description: 'Failed to fetch categories.',
+        message: "Failed to get Categories!",
+        description:
+          error.message || "Failed to get Categories. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -96,12 +96,12 @@ const CategoryAdmin: React.FC = () => {
         setIsDeleteConfirmVisible(false);
         setDeleteId(null);
       }
-    } catch (error) {
-      console.error('Error deleting category:', error);
+    } catch (error: any) {
       notification.error({
-        message: 'Error',
-        description: 'Failed to delete category.',
-      });
+        message: "Failed to delete Categories!",
+        description:
+          error.message || "Failed to delete Categories. Please try again.",
+      })
     } finally {
       setLoading(false);
     }

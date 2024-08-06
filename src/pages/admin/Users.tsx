@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message } from "antd";
+import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message, notification } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import moment, { Moment } from "moment";
@@ -50,8 +50,12 @@ const UsersAdmin: React.FC = () => {
         } else {
           message.error("Failed to fetch users");
         }
-      } catch (error) {
-        message.error("Error fetching users");
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to get Users!",
+          description:
+            error.message || "Failed to get Users. Please try again.",
+        });
       }
     };
 
@@ -88,8 +92,12 @@ const UsersAdmin: React.FC = () => {
           } else {
             message.error("Failed to update user");
           }
-        } catch (error) {
-          message.error("Error updating user");
+        } catch (error: any) {
+          notification.error({
+            message: "Failed to update User!",
+            description:
+              error.message || "Failed to update User. Please try again.",
+          });
         }
       } else {
         if (editingItem.password) {
@@ -108,8 +116,12 @@ const UsersAdmin: React.FC = () => {
             } else {
               message.error("Failed to add user");
             }
-          } catch (error) {
-            message.error("Error adding user");
+          } catch (error: any) {
+            notification.error({
+              message: "Failed to create User!",
+              description:
+                error.message || "Failed to create User. Please try again.",
+            });
           }
         } else {
           message.error("Please fill in the password field");
@@ -134,8 +146,12 @@ const UsersAdmin: React.FC = () => {
       } else {
         message.error("Failed to fetch user details");
       }
-    } catch (error) {
-      message.error("Error fetching user details");
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to fetch user details!",
+        description:
+          error.message || "Failed to fetch user details. Please try again.",
+      });
     }
   };
 
@@ -146,8 +162,12 @@ const UsersAdmin: React.FC = () => {
         const updatedData = data.filter((item) => item._id !== deleteItemId);
         setData(updatedData);
         message.success("User deleted successfully");
-      } catch (error) {
-        message.error("Error deleting user");
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to delete User!",
+          description:
+            error.message || "Failed to delete User. Please try again.",
+        });
       } finally {
         setDeleteItemId(undefined);
         setDeleteConfirmVisible(false);
@@ -187,10 +207,10 @@ const UsersAdmin: React.FC = () => {
 
   const handleRoleChange = (userId: string, newRole: string) => {
     confirm({
-      title: 'Bạn có chắc chắn muốn thay đổi vai trò của người dùng này?',
-      content: `Vai trò mới của người dùng sẽ là: ${newRole}`,
-      okText: 'Có',
-      cancelText: 'Không',
+      title: 'Are you sure want to change Role for this user?',
+      content: `New Role: ${newRole}`,
+      okText: 'Change',
+      cancelText: 'Cancel',
       onOk: async () => {
         try {
           await changeUserRole(userId, newRole);
@@ -198,9 +218,13 @@ const UsersAdmin: React.FC = () => {
             item._id === userId ? { ...item, role: newRole } : item
           );
           setData(updatedData);
-          message.success('Vai trò người dùng đã được cập nhật thành công');
-        } catch (error) {
-          message.error('Lỗi khi cập nhật vai trò người dùng');
+          message.success('Changed Role Successfully');
+        } catch (error: any) {
+          notification.error({
+            message: "Failed to change Role!",
+            description:
+              error.message || "Failed to change Role. Please try again.",
+          });
         }
       },
       onCancel: () => {}

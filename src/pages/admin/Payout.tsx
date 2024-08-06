@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined, FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, Layout, Modal, Select, Space, Spin, Table, Tag, Typography, message } from "antd";
+import { Button, DatePicker, Input, Layout, Modal, Select, Space, Spin, Table, Tag, Typography, message, notification } from "antd";
 import { Payout } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
@@ -26,8 +26,12 @@ function PayoutsAdmin() {
       const response = await getPayouts(1, 10);
       // setData(Array.isArray(response) ? response : []);
       setData(response);
-    } catch (error) {
-      console.error('Error fetching payouts:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Payouts!",
+        description:
+          error.message || "Failed to get Payouts. Please try again.",
+      });
       setData([]);
     } finally {
       setLoading(false);
@@ -49,9 +53,12 @@ function PayoutsAdmin() {
           )
         );
       }
-    } catch (error) {
-      message.error('Failed to update payout status!');
-      console.error('Error:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to update Status Payout!",
+        description:
+          error.message || "Failed to update Status Payout. Please try again.",
+      });
     }
   };
 

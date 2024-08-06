@@ -20,6 +20,9 @@ export const registerViaGoogle = async (credential: string, role: string, descri
     );
     return data;
   } catch (error: any) {
+    if (error.response && error.response.data && error.response.data.message) {
+      throw new Error(error.response.data.message);
+    }
     throw new Error(error.message || "Registration failed.");
   }
 };

@@ -1,5 +1,5 @@
 import { BarsOutlined, DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
-import { Button, Form, Input, Layout, Modal, Table, message } from "antd";
+import { Button, Form, Input, Layout, Modal, Table, message, notification } from "antd";
 import { Course, Session } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
@@ -41,12 +41,14 @@ const ViewSession: React.FC = () => {
       try {
         const response = await getCourse(courseId);
         setCourse(response.data);
-      } catch (error) {
-        console.error("Failed to Fetch Course", error);
-        message.error('Failed to Fetch Course');
+      } catch (error: any) {
+        notification.error({
+          message: "Failed to get Courses!",
+          description:
+            error.message || "Failed to get Courses. Please try again.",
+        });
       }
     };
-
     fetchCourse();
   }, [courseId]);
 
@@ -57,8 +59,12 @@ const ViewSession: React.FC = () => {
           const response = await getSessions('',courseId, 1, 10);
           setDataSource(response.data.pageData);
           setFilteredDataSource(response.data.pageData);
-        } catch (error) {
-          message.error('Failed to Fetch Sessions');
+        } catch (error: any) {
+          notification.error({
+            message: "Failed to get Session!",
+            description:
+              error.message || "Failed to get Session. Please try again.",
+          });
         } finally {
           setLoading(false);
         }
@@ -94,10 +100,13 @@ const ViewSession: React.FC = () => {
             setFilteredDataSource(newDataSource);
             message.success('Session deleted successfully');
           })
-          .catch((error) => {
-            console.error("Failed to delete Session", error);
-            message.error('Failed to delete Session');
-          });
+          .catch((error: any) => {
+            notification.error({
+              message: "Failed to deleted Session!",
+              description:
+                error.message || "Failed to deleted Session. Please try again.",
+              })
+            })
       },
     });
   };
@@ -115,11 +124,16 @@ const ViewSession: React.FC = () => {
               setDataSource(newDataSource);
               setFilteredDataSource(newDataSource);
               message.success('Session updated successfully');
+              setModalVisible(false);
             })
-            .catch((error) => {
-              console.error("Failed to Update Session", error);
-              message.error('Failed to Update Session');
-            });
+            .catch((error: any) => {
+              notification.error({
+                message: "Failed to update Session!",
+                description:
+                  error.message || "Failed to update Session. Please try again.",
+                })
+              })
+              setModalVisible(true);
         } else {
           createSession({ ...values, course_id: courseId! })
             .then((response) => {
@@ -130,13 +144,17 @@ const ViewSession: React.FC = () => {
               setDataSource([...dataSource, newSession]);
               setFilteredDataSource([...dataSource, newSession]);
               message.success('Session created successfully');
+              setModalVisible(false);
             })
-            .catch((error) => {
-              console.error("Failed to Create Session", error);
-              message.error('Failed to Create Session');
-            });
+            .catch((error: any) => {
+              notification.error({
+                message: "Failed to create Session!",
+                description:
+                  error.message || "Failed to create Session. Please try again.",
+                })
+              })
+              setModalVisible(true);
         }
-        setModalVisible(false);
       })
       .catch((info) => {
         console.log("Validate Failed:", info);
