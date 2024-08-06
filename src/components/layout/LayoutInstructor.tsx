@@ -2,6 +2,7 @@ import {
   BookOutlined,
   LogoutOutlined,
   MenuOutlined,
+  ReadOutlined,
   SettingOutlined,
   ShoppingCartOutlined,
   UserOutlined
@@ -99,22 +100,26 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
       <Menu.Item key="1" icon={<UserOutlined />}>
         <Link to="/instructor/profile-instructor">Profile</Link>
       </Menu.Item>
-      <SubMenu key="2" title="Settings" icon={<SettingOutlined />}>
+      <Menu.Item key="2" icon={<ReadOutlined />}>
+        <Link to="/instructor/your-courses">Your Courses</Link>
+      </Menu.Item>
+      <Menu.Item key="3" icon={<ShoppingCartOutlined />}>
+        <Link to="/instructor/manager-your-purchases">Your Orders</Link>
+      </Menu.Item>
+      <SubMenu key="4" title="Settings" icon={<SettingOutlined />}>
         <Menu.Item key="setting:1">
         <Link to={`/instructor/profile-instructor/instructor-setting/${currentUser ? currentUser._id : ''}`}>Personal Info</Link>
-
         </Menu.Item>
         <Menu.Item key="setting:2">
           <Link to="/instructor/profile-instructor/instructor-changepassword">Change Password</Link>
         </Menu.Item>
       </SubMenu>
-      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
+      <Menu.Item key="5" icon={<LogoutOutlined />} onClick={handleLogout}>
         Logout
       </Menu.Item>
     </Menu>
   );
 
-  const notificationCountBell = 7;
   const notificationCountCart = 0;
 
   return (
@@ -167,16 +172,10 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
             <Menu.Item key="2" className="mx-2">
               <Link to={`course`}>Courses</Link>
             </Menu.Item>
-            {/* <Menu.Item key="3" className="mx-2">
-              <Link to={`blog`}>Blog</Link>
-            </Menu.Item> */}
-            {/* <Menu.Item key="5" className="mx-2">
-              <Link to={`top-instructor`}>Rankings</Link>
-            </Menu.Item> */}
-            <Menu.Item key="6" className="mx-2">
+            <Menu.Item key="3" className="mx-2">
               <Link to={`about`}>About</Link>
             </Menu.Item>
-            <Menu.Item key="7" className="mx-2">
+            <Menu.Item key="4" className="mx-2">
               <Link to={`contact`}>Contact</Link>
             </Menu.Item>
           </Menu>
@@ -204,16 +203,10 @@ const LayoutInstructor: React.FC<MainLayoutProps> = () => {
           <Menu.Item key="2" className="my-2">
             <Link to={`course`}>Courses</Link>
           </Menu.Item>
-          {/* <Menu.Item key="3" className="my-2">
-            <Link to={`blog`}>Blog</Link>
-          </Menu.Item> */}
-          <Menu.Item key="4" className="my-2">
-            <Link to={`category`}>Category</Link>
-          </Menu.Item>
-          <Menu.Item key="5" className="my-2">
+          <Menu.Item key="3" className="my-2">
             <Link to={`about`}>About</Link>
           </Menu.Item>
-          <Menu.Item key="6" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
+          <Menu.Item key="4" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
             <Link to={`shopping-cart`}></Link>
           </Menu.Item>
         </Menu>

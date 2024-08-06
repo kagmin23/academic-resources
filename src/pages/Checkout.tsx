@@ -90,9 +90,9 @@ const Checkout: React.FC = () => {
 
         // Navigate based on actionType
         if (actionType === 'cancel') {
-          navigate('/student/shopping-cart');
+          navigate(`shopping-cart`);
         } else {
-          navigate('/student/payment-successfully');
+          navigate(`payment-successfully`);
         }
       } catch (error: any) {
         notification.error({

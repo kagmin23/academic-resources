@@ -9,7 +9,7 @@ import { getItemsbyStudentPurchases } from "services/Student/getpurchaseApiServi
 const { Title, Text } = Typography;
 const { RangePicker } = DatePicker;
 
-function PurchasesInstructor() {
+function OrdersInstructor() {
   const [data, setData] = useState<Purchase[]>([]);
   const [filterText, setFilterText] = useState<string>('');
   const [filterStatus, setFilterStatus] = useState<string>('');
@@ -175,4 +175,4 @@ function PurchasesInstructor() {
   );
 }
 
-export default PurchasesInstructor;
+export default OrdersInstructor;

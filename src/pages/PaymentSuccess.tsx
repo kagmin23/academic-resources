@@ -13,7 +13,7 @@ export default function PaymentSuccess() {
         <div className='mt-4 text-xl italic font-bold text-center md:text-3xl'>Payment Successfull!</div>
                 <div className="flex flex-col items-center justify-center text-center">
                 <img className="mt-5 w-96 h-w-96" src="https://static.vecteezy.com/system/resources/previews/021/730/260/non_2x/thank-you-for-your-purchase-printable-illustration-business-thank-you-customer-card-creative-graphic-design-template-soft-watercolor-background-calligraphy-script-text-business-card-free-vector.jpg" alt="image success payment" />
-                <Link to={`/student/manager-student-purchase`}><Button type="primary" className='w-auto mt-8 text-base font-bold bg-green-700 md:p-5 md:text-lg'>Come to your Orders</Button></Link>
+                <Link to={`manager-your-purchases`}><Button type="primary" className='w-auto mt-8 text-base font-bold bg-green-700 md:p-5 md:text-lg'>Come to your Orders</Button></Link>
                 </div>
         </div>
   );

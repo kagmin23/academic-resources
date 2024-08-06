@@ -9,15 +9,17 @@ import {
   Setting,
   ShoppingCart,
 } from 'pages';
+import MyCourseInstructor from 'pages/Instructor/MyCourseInstructor';
 import InstructorDetail from 'pages/InstructorDetail';
 import PaymentSuccess from 'pages/PaymentSuccess';
-import MyCourseStudent from 'pages/Student/MyCourseStudent';
 import { Route, Routes } from 'react-router-dom';
 import LayoutInstructor from '../../components/layout/LayoutInstructor';
 import ProtectedRouter from '../../components/roles/ProtectedRouter';
+import InstructorLearning from './InstructorLearning';
 import InstructorPage from './InstructorPage';
 
 import Checkout from 'pages/Checkout';
+import OrdersInstructor from './OrdersInstructor';
 export default function InstructorRouter() {
 
   return (
@@ -37,17 +39,17 @@ export default function InstructorRouter() {
          <Route path={`setting`} element={<ProtectedRouter allowedRoles={["instructor"]}><Setting /></ProtectedRouter>} />
          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} />
          {/* <Route path={`lesson-student/:id`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} /> */}
-         <Route path={`student-learning`} element={<ProtectedRouter allowedRoles={["instructor"]}><MyCourseStudent /></ProtectedRouter>} />
-         <Route path={`payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
+         {/* <Route path={`student-learning`} element={<ProtectedRouter allowedRoles={["instructor"]}><MyCourseStudent /></ProtectedRouter>} /> */}
+         <Route path={`shopping-cart/check-out/payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}
-         <Route path={`check-out`} element={<ProtectedRouter allowedRoles={["instructor"]}><Checkout /></ProtectedRouter>} />
+         <Route path={`shopping-cart/check-out`} element={<ProtectedRouter allowedRoles={["instructor"]}><Checkout /></ProtectedRouter>} />
          <Route path={`course-details/:courseId/instructor-detail/:userId`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorDetail /></ProtectedRouter>} />
-
+         <Route path={`your-courses`} element={<ProtectedRouter allowedRoles={["instructor"]}><MyCourseInstructor /></ProtectedRouter>} />
+         <Route path={`manager-your-purchases`} element={<ProtectedRouter allowedRoles={["instructor"]}><OrdersInstructor /></ProtectedRouter>} />
+         <Route path={`/shopping-cart/check-out/payment-successfully/manager-your-purchases`} element={<ProtectedRouter allowedRoles={["instructor"]}><OrdersInstructor /></ProtectedRouter>} />
+         <Route path={`/instructor-learning/:courseId/lesson`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorLearning /></ProtectedRouter>} />
          </Route>
     </Routes>
-   
-
-
 </div>
   )
 }

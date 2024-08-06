@@ -140,16 +140,10 @@ const LayoutStudent: React.FC = () => {
             <Menu.Item key="2" className="mx-2">
               <Link to={`course`}>Courses</Link>
             </Menu.Item>
-            {/* <Menu.Item key="3" className="mx-2">
-              <Link to={`blog`}>Blog</Link>
-            </Menu.Item> */}
-            {/* <Menu.Item key="5" className="mx-2">
-              <Link to={`top-instructor`}>Rankings</Link>
-            </Menu.Item> */}
-            <Menu.Item key="6" className="mx-2">
+            <Menu.Item key="3" className="mx-2">
               <Link to={`about`}>About</Link>
             </Menu.Item>
-            <Menu.Item key="7" className="mx-2">
+            <Menu.Item key="4" className="mx-2">
               <Link to={`contact`}>Contact</Link>
             </Menu.Item>
           </Menu>
@@ -177,16 +171,10 @@ const LayoutStudent: React.FC = () => {
           <Menu.Item key="2" className="my-2">
             <Link to={`course`}>Courses</Link>
           </Menu.Item>
-          {/* <Menu.Item key="3" className="my-2">
-            <Link to={`blog`}>Blog</Link>
-          </Menu.Item> */}
-          <Menu.Item key="4" className="my-2">
-            <Link to={`category`}>Category</Link>
-          </Menu.Item>
-          <Menu.Item key="5" className="my-2">
+          <Menu.Item key="3" className="my-2">
             <Link to={`about`}>About</Link>
           </Menu.Item>
-          <Menu.Item key="6" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
+          <Menu.Item key="4" className="my-2" icon={<ShoppingCartOutlined className="text-2xl" />}>
             <Link to={`shopping-cart`}></Link>
           </Menu.Item>
         </Menu>

@@ -48,7 +48,7 @@ const SidebarStudent: React.FC = () => {
     {
       icon: ShoppingCartOutlined,
       heading: 'Orders',
-      href: "/student/profile-student/manager-student-purchase",
+      href: "/student/profile-student/manager-your-purchases",
     },
 
     {

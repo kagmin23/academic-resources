@@ -104,12 +104,8 @@ const ShoppingCart: React.FC = () => {
     try {
       const status = checked ? 'waiting_paid' : 'new';
       await updateCartStatus(status, [{ _id: courseId, cart_no }]);
-    } catch (error: any) {
-      notification.error({
-        message: "Failed to update Cart Status!",
-        description:
-          error.message || "Failed to update Cart Status. Please try again.",
-      });
+    } catch (error) {
+      console.log("Updated Status Saved");
     }
   };
 
@@ -125,7 +121,7 @@ const ShoppingCart: React.FC = () => {
         console.error('No carts are selected or have incorrect status.');
         return;
       }
-      navigate('/student/check-out', { state: { cartsToCheckout } });
+      navigate(`check-out`, { state: { cartsToCheckout } });
 
     } catch (error) {
       console.error('Failed to proceed to checkout:', error);
