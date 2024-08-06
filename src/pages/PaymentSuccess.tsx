@@ -1,21 +1,34 @@
-import { Button } from "antd";
-import Lottie from "lottie-react";
+import { Button } from 'antd';
+import Lottie from 'lottie-react';
 import { Link } from 'react-router-dom';
 import image from '../assets/payment2.json';
-export default function PaymentSuccess() {
-  return (
-    <div className='w-full my-8' >
-        <div className='flex justify-center'>
-        {/* <CheckCircleFilled className="text-green-700 text-8xl" /> */}
-        <Lottie animationData={image} className='w-36 h-36'  loop={false} />;
-        </div>
-        
-        <div className='mt-4 text-xl italic font-bold text-center md:text-3xl'>Payment Successfull!</div>
-                <div className="flex flex-col items-center justify-center text-center">
-                <img className="mt-5 w-96 h-w-96" src="https://static.vecteezy.com/system/resources/previews/021/730/260/non_2x/thank-you-for-your-purchase-printable-illustration-business-thank-you-customer-card-creative-graphic-design-template-soft-watercolor-background-calligraphy-script-text-business-card-free-vector.jpg" alt="image success payment" />
-                <Link to={`manager-your-purchases`}><Button type="primary" className='w-auto mt-8 text-base font-bold bg-green-700 md:p-5 md:text-lg'>Come to your Orders</Button></Link>
-                </div>
-        </div>
-  );
-}
 
+const PaymentSuccess: React.FC = () => {
+  return (
+    <div className='flex flex-col items-center justify-center w-full h-screen bg-center bg-cover'
+      style={{ backgroundImage: 'url(https://static.vecteezy.com/system/resources/previews/021/730/260/non_2x/thank-you-for-your-purchase-printable-illustration-business-thank-you-customer-card-creative-graphic-design-template-soft-watercolor-background-calligraphy-script-text-business-card-free-vector.jpg)' }}>
+      
+      <div className="flex flex-col items-center gap-10 mb-32">
+      <div className='flex justify-center mb-4'>
+        <Lottie animationData={image} className='w-48 h-48' loop={false} />
+      </div>
+      
+      <div className="flex flex-col items-center gap-1">
+      <div className='mt-64 text-sm italic font-bold text-black md:text-xl'>Payment Successful!</div>
+        <p className="italic">"Thank you for your purchase. Your transaction has been completed."</p>
+          <Link key="orders" to={`manager-your-purchases`}>
+            <Button
+              type="primary"
+              className='mt-5 text-sm font-bold bg-green-700 hover:bg-green-800'
+              size="large"
+            >
+              View Your Orders
+            </Button>
+          </Link>
+          </div>
+        </div>
+    </div>
+  );
+};
+
+export default PaymentSuccess;

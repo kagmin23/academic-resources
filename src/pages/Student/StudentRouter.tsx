@@ -38,9 +38,9 @@ export default function StudentRouter() {
                     <Route path={`shopping-cart/check-out/payment-successfully`} element={<ProtectedRouter allowedRoles={["student"]}><PaymentSuccess /></ProtectedRouter>} />
                     <Route path={`check-out`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
                     <Route path={`manager-your-purchases`} element={<ProtectedRouter allowedRoles={["student"]}><ManagerStudentPurchase /></ProtectedRouter>} />
+                    <Route path={`shopping-cart/check-out/payment-successfully/manager-your-purchases`} element={<ProtectedRouter allowedRoles={["student"]}><ManagerStudentPurchase /></ProtectedRouter>} />
                     <Route path={`shopping-cart/check-out`} element={<ProtectedRouter allowedRoles={["student"]}><Checkout /></ProtectedRouter>} />
                     <Route path={`course-details/:courseId/instructor-detail/:userId`} element={<ProtectedRouter allowedRoles={["student"]}><InstructorDetail /></ProtectedRouter>} />
-
                     </Route>
                </Routes>
 
