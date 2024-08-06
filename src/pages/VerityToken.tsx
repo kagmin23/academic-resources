@@ -73,18 +73,8 @@ const VerifyToken: React.FC = () => {
         </Title>
 
         <Form form={form} onFinish={onFinish} className="space-y-4">
-          {/* <Form.Item
-            name="token"
-            rules={[{ required: true, message: 'Please input the verification code!' }]}
-          >
-            <Input
-              placeholder="Verification Code"
-              size="large"
-              onChange={(e) => setVerificationCode(e.target.value)}
-            />
-          </Form.Item> */}
           <p
-            className="items-center justify-center w-full h-12 text-white align-middle bg-green-600 hover:bg-green-700"
+            className="flex items-center justify-center w-full h-12 text-white align-middle bg-green-600 hover:bg-green-700"
           >
             Your account verified! Please Check Your Email in 24h.
           </p>
