@@ -1,5 +1,5 @@
-import { DoubleRightOutlined, FilterOutlined, ReadOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, notification } from "antd";
+import { DoubleRightOutlined, ReadOutlined, SearchOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Input, Layout, Select, Spin, Table, Typography, notification } from "antd";
 import { Purchase } from "models/types";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
@@ -134,35 +134,13 @@ function ListCoursesStudent() {
           </h1>
         </div>
         <div className="my-5">
-          <div className="flex flex-row items-center justify-between">
+          <div className="flex flex-row items-end justify-end">
             <Input
               placeholder="Search..."
               prefix={<SearchOutlined />}
               onChange={(e) => handleSearch(e.target.value)}
               style={{ width: 300 }}
             />
-            <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={12}>
-              <FilterOutlined /> Filter:
-              <RangePicker
-                size="small"
-                className="m-4"
-                onChange={(dates, dateStrings) => setFilterDate(dateStrings as [string, string])}
-              />
-              <div className="flex items-center justify-center gap-2">
-                <Select
-                  className="w-36"
-                  size="small"
-                  placeholder="Status"
-                  options={[
-                    { value: 'process', label: 'Process' },
-                    { value: 'success', label: 'Success' },
-                  ]}
-                  onChange={(value) => setFilterStatus(value)}
-                />
-                <Button className="text-xs text-white bg-blue-600" onClick={handleFilter}>Apply</Button>
-                <Button className="text-white bg-blue-600" onClick={refreshData}><RedoOutlined /></Button>
-              </div>
-            </Space>
           </div>
           <div>
             <span className='px-3 text-xs font-semibold'>Total Courses: {getTotalListCourseStudent()}</span>

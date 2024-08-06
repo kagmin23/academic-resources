@@ -103,7 +103,7 @@ const CoursePage: React.FC = () => {
           hoverable
           cover={
             <img
-              className="object-cover w-full h-full aspect-w-1 aspect-h-1"
+              className="object-cover w-full h-60 aspect-w-1 aspect-h-1"
               alt={course.name}
               src={course.image_url}
             />

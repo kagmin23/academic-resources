@@ -1,7 +1,8 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { Button, Input, Layout, Modal, Select, Table, message, notification } from 'antd';
+import { Button, Input, Layout, Modal, Select, Spin, Table, message, notification } from 'antd';
 import { ColumnsType } from 'antd/es/table';
 import moment, { Moment } from 'moment';
+import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
 import { getUsers } from 'services/AdminsApi/getUserApiService';
 import { reviewProfileInstructor } from 'services/AdminsApi/rvProfileInstructorApiService';
@@ -35,9 +36,11 @@ const ApproveInstructor: React.FC = () => {
   const [confirmAction, setConfirmAction] = useState<string>("");
   const [rejectComment, setRejectComment] = useState<string>("");
   const [filterStatus, setFilterStatus] = useState<string>("all");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await getUsers({
           searchCondition: { keyword: "", role: "instructor", status: true, is_delete: false, is_verified: false },
@@ -61,6 +64,8 @@ const ApproveInstructor: React.FC = () => {
           description:
             error.message || "Failed to fetch Users. Please try again.",
         })
+      } finally {
+        setLoading(false);
       }
     };
     fetchData();
@@ -142,7 +147,14 @@ const ApproveInstructor: React.FC = () => {
   });
 
   const columns: ColumnsType<ApproveIns> = [
-    { title: 'ID', dataIndex: '_id', key: '_id' },
+    {
+      title: 'No.',
+      dataIndex: 'no',
+      key: 'no',
+      width: 50,
+      align: 'center' as AlignType,
+      render: (text: any, record: ApproveIns, index: number) => index + 1,
+    },
     { title: 'Username', dataIndex: 'name', key: 'name' },
     {
       title: 'Date Of Birth',
@@ -152,11 +164,26 @@ const ApproveInstructor: React.FC = () => {
     },
     { title: 'Phone', dataIndex: 'phone_number', key: 'phone_number' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
-    { title: 'Video', dataIndex: 'video', key: 'video', width: 30 },
+    { title: 'Video',
+      dataIndex: 'video',
+      key: 'video',
+      width: 200,
+      render: () => (
+        <iframe
+          width="100%"
+          height="200px"
+          src="video_url"
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          ></iframe>
+      )
+    },
     { title: 'Description', dataIndex: 'description', key: 'description', width: 200 },
     {
       title: 'Action',
       key: 'action',
+      align: 'center' as AlignType,
       render: (_, item: ApproveIns) => (
         <div className="flex flex-row gap-1">
           {!item.isRejected && !item.isApproved && (
@@ -198,17 +225,12 @@ const ApproveInstructor: React.FC = () => {
             className="w-full sm:w-1/3"
             onSearch={(value) => setSearchTerm(value)}
           />
-          <Select
-            value={filterStatus}
-            onChange={handleFilterChange}
-            className="w-full sm:w-1/3"
-          >
-            <Option value="all">All</Option>
-            <Option value="approved">Approved</Option>
-            <Option value="rejected">Rejected</Option>
-          </Select>
         </div>
-
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+          <Spin size="large"></Spin>
+          </div>
+        ) : (
         <Table<ApproveIns>
           columns={columns}
           scroll={{x: 'max-content'}}
@@ -216,6 +238,7 @@ const ApproveInstructor: React.FC = () => {
           rowKey={(record) => record._id}
           pagination={false}
         />
+        )}
 
         <Modal
           title={confirmAction === "approve" ? "Approve Instructor" : "Reject Instructor"}

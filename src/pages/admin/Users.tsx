@@ -1,5 +1,5 @@
 import { DeleteOutlined, EditOutlined, PlusCircleOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Form, Input, Layout, Modal, Select, Switch, Table, message, notification } from "antd";
+import { Button, DatePicker, Form, Input, Layout, Modal, Select, Spin, Switch, Table, message, notification } from "antd";
 import { Content } from "antd/es/layout/layout";
 import { ColumnsType } from "antd/es/table";
 import moment, { Moment } from "moment";
@@ -37,9 +37,11 @@ const UsersAdmin: React.FC = () => {
   const [filteredRole, setFilteredRole] = useState<string>("all");
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState<boolean>(false);
   const [deleteItemId, setDeleteItemId] = useState<string | undefined>();
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
+      setLoading(true);
       try {
         const response = await getUsers({
           searchCondition: { keyword: "", role: "all", status: true, is_delete: false, is_verified: true },
@@ -56,6 +58,8 @@ const UsersAdmin: React.FC = () => {
           description:
             error.message || "Failed to get Users. Please try again.",
         });
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -89,6 +93,7 @@ const UsersAdmin: React.FC = () => {
             );
             setData(updatedData);
             message.success("User updated successfully");
+            setModalOpen(false);
           } else {
             message.error("Failed to update user");
           }
@@ -98,6 +103,7 @@ const UsersAdmin: React.FC = () => {
             description:
               error.message || "Failed to update User. Please try again.",
           });
+        setModalOpen(true);
         }
       } else {
         if (editingItem.password) {
@@ -113,6 +119,7 @@ const UsersAdmin: React.FC = () => {
               const newData = [...data, { _id: data.length + 1, status: true, ...editingItem } as Item];
               setData(newData);
               message.success("User added successfully");
+              setModalOpen(true);
             } else {
               message.error("Failed to add user");
             }
@@ -122,13 +129,13 @@ const UsersAdmin: React.FC = () => {
               description:
                 error.message || "Failed to create User. Please try again.",
             });
+            setModalOpen(false);
           }
         } else {
           message.error("Please fill in the password field");
         }
       }
       setEditingItem({});
-      setModalOpen(false);
     } else {
       message.error("Please fill in all fields");
     }
@@ -238,16 +245,23 @@ const UsersAdmin: React.FC = () => {
   });
 
   const columns: ColumnsType<Item> = [
-    { title: 'ID', dataIndex: '_id', key: '_id' },
-    { title: 'Username', dataIndex: 'name', key: 'name' },
-    { 
-      title: 'Date Of Birth', 
-      dataIndex: 'dob', 
-      key: 'dob', 
-      render: (dob: string) => moment(dob).format("YYYY-MM-DD"),
+    {
+      title: 'No.',
+      dataIndex: 'no',
+      key: 'no',
+      width: 50,
+      align: 'center' as AlignType,
+      render: (text: any, record: Item, index: number) => index + 1,
     },
+    { title: 'Username', dataIndex: 'name', key: 'name' },
     { title: 'Phone', dataIndex: 'phone_number', key: 'phone_number' },
     { title: 'Email', dataIndex: 'email', key: 'email' },
+    { 
+      title: 'Created At', 
+      dataIndex: 'created_at', 
+      key: 'created_at', 
+      render: (dob: string) => moment(dob).format("YYYY-MM-DD"),
+    },
     { 
       title: 'Role', 
       dataIndex: 'role', 
@@ -323,14 +337,18 @@ const UsersAdmin: React.FC = () => {
             Add New User
           </Button>
         </div>
-
+        {loading ? (
+          <div className="flex items-center justify-center h-64">
+          <Spin size="large"></Spin>
+          </div>
+        ) : (
         <Table<Item>
           columns={columns}
           dataSource={filteredData}
           rowKey={(record) => record._id}
           pagination={false}
         />
-
+        )}
         <Modal
           title={`${editingItem._id ? 'Edit' : 'Add'} User`}
           visible={isModalOpen}

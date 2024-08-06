@@ -2,6 +2,7 @@ import axios from "axios";
 import { HOST_MAIN } from "services/apiService";
 
 export const getReview = async (reviewId: string) => {
+
   try {
     const token = localStorage.getItem('token');
     
@@ -9,9 +10,9 @@ export const getReview = async (reviewId: string) => {
       headers: {
         Authorization: `Bearer ${token}`
       }
-    });
-    
-    console.log("getReview: ", response);
+    }
+  );
+  console.log("getReview API", response)
     return response.data;
   } catch (error: any) {
     if (error.response && error.response.data && error.response.data.message) {

@@ -1,5 +1,5 @@
 import { FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
-import { Button, DatePicker, Input, Layout, Select, Space, Spin, Table, Typography, notification } from "antd";
+import { Button, DatePicker, Input, Layout, Space, Spin, Table, Typography, notification } from "antd";
 import { Purchase } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
@@ -138,17 +138,6 @@ function OrdersStudent() {
                 onChange={(dates, dateStrings) => setFilterDate(dateStrings as [string, string])}
               />
               <div className="flex items-center justify-center gap-2">
-                <Select
-                  className="w-36"
-                  size="small"
-                  placeholder="Status"
-                  options={[
-                    { value: 'new', label: 'New' },
-                    { value: 'request_paid', label: 'Request Paid' },
-                    { value: 'completed', label: 'Completed' },
-                  ]}
-                  onChange={(value) => setFilterStatus(value)}
-                />
                 <Button className="text-xs text-white bg-blue-600" onClick={handleFilter}>Apply</Button>
                 <Button className="text-white bg-blue-600" onClick={refreshData}><RedoOutlined /></Button>
               </div>

@@ -4,7 +4,8 @@ import { Review } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { getReviews } from 'services/All/reviewApiService';
+import { getCurrentUser } from 'services/AdminsApi/UserService';
+import { getReview } from 'services/Instructor/reviewApiService';
 
 const { Header, Content } = Layout;
 const { TabPane } = Tabs;
@@ -13,27 +14,54 @@ const ReviewManager: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
   const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      setLoading(true);
+    const fetchCurrentUser = async () => {
       try {
-        const response = await getReviews('', 1, 10);
-        setReviews(response);
-        setFilteredReviews(response);
+        const response = await getCurrentUser();
+        if (response.success) {
+          setCurrentUser(response.data);
+        } else {
+          notification.error({
+            message: 'Error',
+            description: 'Failed to fetch current user information',
+          });
+        }
       } catch (error: any) {
         notification.error({
-          message: "Failed to get Reviews!",
+          message: "Failed to fetch User information!",
           description:
-            error.message || "Failed to get Reviews. Please try again.",
-        });
-      } finally {
-        setLoading(false);
+            error.message || "Failed to fetch User information. Please try again.",
+        })
+      }
+    };
+    fetchCurrentUser();
+  }, []);
+
+  useEffect(() => {
+    const fetchReviews = async () => {
+      if (currentUser && currentUser._id) {
+        setLoading(true);
+        try {
+          const response = await getReview(currentUser._id);
+          console.log("getReview comp", response);
+          setReviews(response);
+          setFilteredReviews(response);
+        } catch (error: any) {
+          notification.error({
+            message: "Failed to fetch Review!",
+            description:
+              error.message || "Failed to fetch Review. Please try again.",
+          })
+        } finally {
+          setLoading(false);
+        }
       }
     };
     fetchReviews();
-  }, []);
+  }, [currentUser]);
 
   const handleSearch = (value: string) => {
     setSearch(value);
@@ -49,7 +77,7 @@ const ReviewManager: React.FC = () => {
   }
 
   const getTotalReviews = (): number => {
-    return filteredReviews.length;
+    return filteredReviews?.length;
   };
 
   const columns1 = [
@@ -77,7 +105,7 @@ const ReviewManager: React.FC = () => {
       width: 90,
       key: 'created_at',
       align: 'center' as AlignType,
-      render: (created_at: string) => moment(created_at).format('YYYY-MM-DD')
+      render: (created_at: string) => moment(created_at).format('YYYY-MM-DD'),
     },
     {
       title: 'Updated At',

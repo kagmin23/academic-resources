@@ -247,21 +247,18 @@ const CourseAdmin: React.FC = () => {
               style={{ width: 300 }}
             />
             </div>
-            <div className="flex flex-row w-full gap-5">
+            {/* <div className="flex flex-row w-full gap-5">
 
             <Select
                 placeholder="Filter by Course Name"
-
                 value={filteredRole}
                 onChange={handleRoleFilterChange}
                 className="w-1/6"
               >
                 <Option value="">Category</Option>
               </Select>
-
             <Select
                 placeholder="Filter by Status"
-
                 value={filteredRole}
                 onChange={handleRoleFilterChange}
                 className="w-1/6"
@@ -272,7 +269,7 @@ const CourseAdmin: React.FC = () => {
                 <Option value="approve">Approve</Option>
                 <Option value="reject">Reject</Option>
               </Select>
-              </div>
+              </div> */}
           </div>
         </Header>
         <Content className="m-4">
@@ -284,31 +281,6 @@ const CourseAdmin: React.FC = () => {
             <Table
               dataSource={filteredDataSource}
               columns={columns}
-              // expandable={{
-              //   expandedRowKeys: expandedKeys,
-              //   onExpand: (expanded, record) => handleViewMore(record._id),
-              //   expandedRowRender: (record: Course) => (
-              //     <div style={{ padding: '10px 20px', backgroundColor: '#f9f9f9', borderRadius: '4px', marginLeft: '25px' }}>
-              //       <Row gutter={16}>
-              //         <Col span={24}>
-              //           <Title level={5} className='text-2xl'>Course Details</Title>
-              //         </Col>
-              //       </Row>
-              //       <Row gutter={16} align="middle" style={{ display: 'flex', justifyContent: 'space-between' }}>
-              //         <Col span={8}>
-              //           <Text strong>Description:</Text>
-              //           <p>{record.description}</p>
-              //         </Col>
-              //         <Col span={7} style={{ textAlign: 'center' }}>
-              //           <Text strong>Price:</Text>
-              //           <p>${record.price}</p>
-              //         </Col>
-              //         <Button className='mt-5' onClick={showLogModal}>View Log</Button>
-              //       </Row>
-              //     </div>
-              //   ),
-              //   expandIcon: () => null,
-              // }}
               rowKey="key"
               />
             )}
@@ -329,14 +301,14 @@ const CourseAdmin: React.FC = () => {
                       <p className="mb-5 text-xs italic">* Prioritize in order of newest</p>
                       <div className="flex mb-5 space-x-5">
                         <Button className="text-white bg-teal-600">All log</Button>
-                        <Select defaultValue="All" className="w-40">
+                        {/* <Select defaultValue="All" className="w-40">
                           <Select.Option value="new">New</Select.Option>
                           <Select.Option value="waiting_approve">Waiting approve</Select.Option>
                           <Select.Option value="approve">Approve</Select.Option>
                           <Select.Option value="reject">Reject</Select.Option>
                           <Select.Option value="active">Active</Select.Option>
                           <Select.Option value="inactive">Inactive</Select.Option>
-                        </Select>
+                        </Select> */}
                       </div>
                       {error && <p className="text-red-500">{error}</p>}
                       {logs.length === 0 ? (
