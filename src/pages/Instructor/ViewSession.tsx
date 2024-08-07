@@ -269,9 +269,17 @@ const ViewSession: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="position_order"
             label="Position Order"
-            rules={[{ required: true, message: 'Please enter the Session position order!' }]}
+            name="position_order"
+            rules={[
+              { required: true, message: "Please input a position_order!" },
+              {
+                validator: (_, value) =>
+                  value <= 100 && value >= 0
+                    ? Promise.resolve()
+                    : Promise.reject(" Position Order must be greater than or equal to 0 and less than or equal to 100 !"),
+              },
+            ]}
           >
             <Input type="number" />
           </Form.Item>

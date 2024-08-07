@@ -1,13 +1,24 @@
-import { Button, Form, Input, Typography, notification } from 'antd';
+import { Button, Form, Input, Modal, notification } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { getCurrentUser } from 'services/AdminsApi/UserService';
+import { updateUser } from 'services/All/updateUserApiService';
 import 'tailwindcss/tailwind.css';
 
-const { Text } = Typography;
-const { TextArea } = Input;
+interface FormValues {
+  name: string;
+  avatar: string;
+  email: string;
+  phone_number: string;
+  dob: string;
+  description: string;
+  video: string;
+}
 
 const ProfileAdmin: React.FC = () => {
   const [currentUser, setCurrentUser] = useState<any>(null);
+  const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCurrentUser = async () => {
@@ -15,6 +26,7 @@ const ProfileAdmin: React.FC = () => {
         const response = await getCurrentUser();
         if (response.success) {
           setCurrentUser(response.data);
+          form.setFieldsValue(response.data);
         } else {
           notification.error({
             message: 'Error',
@@ -24,20 +36,46 @@ const ProfileAdmin: React.FC = () => {
       } catch (error: any) {
         notification.error({
           message: "Failed to get User information!",
-          description:
-            error.message || "Failed to get User information. Please try again.",
+          description: error.message || "Failed to get User information. Please try again.",
         });
       }
     };
 
     fetchCurrentUser();
-  }, []);
+  }, [form]);
 
-  const handleSave = async (values: any) => {
-    notification.success({
-      message: 'Success',
-      description: 'Profile updated successfully',
-    });
+  const handleSave = () => {
+    setIsModalOpen(true);
+  };
+
+  const prepareUserData = (values: FormValues) => {
+    return {
+      ...values,
+      role: '', 
+      status: false, 
+    };
+  };
+
+  const handleOk = async () => {
+    setIsModalOpen(false);
+    try {
+      const values = form.getFieldsValue();
+      const userData = prepareUserData(values);
+      await updateUser(currentUser._id, userData);
+      notification.success({
+        message: 'Success',
+        description: 'Updated user data successfully',
+      });
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'Failed to update user data',
+      });
+    }
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
   };
 
   if (!currentUser) {
@@ -46,136 +84,75 @@ const ProfileAdmin: React.FC = () => {
 
   return (
     <div className="flex h-screen">
-      <main className="flex-1 p-6 overflow-auto">
-        <h1 className="text-2xl font-bold">Profile Information</h1>
-        <p className="text-gray-600">Manage your personal information.</p>
+      <main className="flex-1 p-6 mx-12 overflow-auto hide-scrollbar">
+        <h1 className="text-2xl font-bold">Edit My Profile</h1>
         <div className="mt-4">
-          <section>
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold">Basic Information</h2>
-              <p className="text-gray-600">Manage your profile details.</p>
-            </div>
-            <div className="space-y-4">
-              <ProfileItem
-                label="Name"
-                value={currentUser.name}
-                onSave={handleSave}
-              />
-              <ProfileItem
-                label="Email"
-                value={currentUser.email}
-                onSave={handleSave}
-              />
-              <ProfileItem
-                label="Role"
-                value={currentUser.role}
-                onSave={handleSave}
-              />
-              <ProfileItem
-                label="Date of Birth"
-                value={currentUser.dob}
-                onSave={handleSave}
-              />
-            </div>
-          </section>
-          <section>
-            <div className="mb-4">
-              <h2 className="text-xl font-semibold">Additional Information</h2>
-              <p className="text-gray-600">Manage additional profile details.</p>
-            </div>
-            <div className="space-y-4">
-              <ProfileItem
+          <Form
+            form={form}
+            onFinish={handleSave}
+            layout="vertical"
+            className="space-y-4"
+          >
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: 'Please input your name!' }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="phone_number"
+              label="Phone Number"
+              rules={[{ required: false }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+              name="dob"
+              label="Date of Birth"
+              rules={[{ required: false }]}
+            >
+              <Input type="date" />
+            </Form.Item>
+            <Form.Item
+                name="description"
                 label="Bio"
-                value={currentUser.description || 'Not provided'}
-                onSave={handleSave}
-                isTextArea
-              />
-              <ProfileItem
-                label="Phone Number"
-                value={currentUser.phone_number || 'Not provided'}
-                onSave={handleSave}
-              />
-              <ProfileItem
-                label="Avatar"
-                value={<img className="w-16 h-16 rounded-full" src={currentUser.avatar} alt="avatar" />}
-                onSave={handleSave}
-                isFileUpload
-              />
-            </div>
-          </section>
+                rules={[{ required: false }]}
+              >
+                <Input.TextArea minLength={6} rows={6} />
+              </Form.Item>
+            <Form.Item
+              name="avatar"
+              label="Avatar URL"
+              rules={[{ required: false }]}
+            >
+              <Input />
+            </Form.Item>
+            <Form.Item
+                name="video"
+                label="Video URL"
+                rules={[{ required: false }]}
+              >
+                <Input />
+              </Form.Item>
+
+            <Form.Item className='flex justify-center w-full pb-10 pt-7'>
+              <Button type="primary" htmlType="submit">Save Changes</Button>
+              <Link to="/instructor/profile-instructor/">
+                <Button className='ml-10 text-white bg-red-600'>Cancel Changes</Button>
+              </Link>
+            </Form.Item>
+          </Form>
+          <Modal
+            title="Confirm Change"
+            open={isModalOpen}
+            onOk={handleOk}
+            onCancel={handleCancel}
+          >
+            <p>Do you want to save the changes?</p>
+          </Modal>
         </div>
       </main>
-    </div>
-  );
-};
-
-type ProfileItemProps = {
-  label: string;
-  value: string | React.ReactNode;
-  onSave: (values: any) => void;
-  isFileUpload?: boolean;
-  isTextArea?: boolean;
-};
-
-const ProfileItem: React.FC<ProfileItemProps> = ({
-  label,
-  value,
-  onSave,
-  isFileUpload = false,
-  isTextArea = false,
-}) => {
-  const [form] = Form.useForm();
-
-  const handleSave = (values: any) => {
-    onSave(values);
-  };
-
-  const onFinish = (values: any) => {
-    handleSave(values);
-  };
-
-  return (
-    <div className="p-4 border rounded-lg">
-      <h4 className="text-lg font-medium">{label}</h4>
-      {isFileUpload ? (
-        <Form form={form} name={`update${label}`} onFinish={onFinish} layout="vertical">
-          <Form.Item
-            name={`new${label.replace(' ', '')}`}
-            label={`Update ${label}`}
-            rules={[{ required: true, message: `Please select an update for ${label.toLowerCase()}!` }]}
-          >
-            <Input type="file" accept="image/*" />
-          </Form.Item>
-          <Form.Item>
-            <div className="flex justify-end">
-              <Button type="primary" htmlType="submit">
-                Save
-              </Button>
-            </div>
-          </Form.Item>
-        </Form>
-      ) : isTextArea ? (
-        <Form form={form} name={`update${label}`} onFinish={onFinish} layout="vertical">
-          <Form.Item
-            name={`new${label.replace(' ', '')}`}
-            label={`Update ${label}`}
-            rules={[{ required: true, message: `Please input an update for ${label.toLowerCase()}!` }]}
-          >
-            <TextArea rows={4} defaultValue={value as string} />
-          </Form.Item>
-          <Form.Item>
-            <div className="flex justify-end">
-              <Button type="primary" htmlType="submit">
-                Save
-              </Button>
-            </div>
-          </Form.Item>
-        </Form>
-      ) : (
-        <div className="flex items-center justify-between">
-          <Text className="text-gray-800">{value}</Text>
-        </div>
-      )}
     </div>
   );
 };

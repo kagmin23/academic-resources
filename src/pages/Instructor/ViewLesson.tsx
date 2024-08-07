@@ -166,7 +166,8 @@ const ViewLesson: React.FC = () => {
           ...values,
           course_id: courseId,
           session_id: sessionId,
-          full_time: Number(values.full_time)
+          full_time: Number(values.full_time),
+          position_order: Number(values.position_order)
         };
         
         if (isEditMode && currentLesson) {
@@ -426,13 +427,19 @@ const ViewLesson: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item
-            name="position_order"
             label="Position Order"
-            rules={[{ required: true, message: 'Please enter the position order!' },
-                    { type: 'number', message: 'Please enter a valid number!' }
+            name="position_order"
+            rules={[
+              { required: true, message: "Please input a position_order!" },
+              {
+                validator: (_, value) =>
+                  value <= 100 && value >= 0
+                    ? Promise.resolve()
+                    : Promise.reject(" Position Order must be greater than or equal to 0 and less than or equal to 100 !"),
+              },
             ]}
           >
-            <Input />
+            <Input type="number" />
           </Form.Item>
         </Form>
       </Modal>

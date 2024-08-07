@@ -334,10 +334,16 @@ const ManagerLessonInstructor: React.FC = () => {
             label="Position Order"
             name="position_order"
             rules={[
-              { required: true, message: "Please input position order!" },
+              { required: true, message: "Please input a position_order!" },
+              {
+                validator: (_, value) =>
+                  value <= 100 && value >= 0
+                    ? Promise.resolve()
+                    : Promise.reject(" Position Order must be greater than or equal to 0 and less than or equal to 100 !"),
+              },
             ]}
           >
-            <Input />
+            <Input type="number" />
           </Form.Item>
         </Form>
       </Modal>
