@@ -111,6 +111,9 @@ const SearchPage: React.FC = () => {
     navigate(0);
   };
   
+  const handleCourseClick = (courseId: string) => {
+    navigate(`course-details/${courseId}`);
+  };
 
   const applyFilters = async (term: string) => {
     try {
@@ -155,7 +158,9 @@ const SearchPage: React.FC = () => {
 
     if (hasData) {
       return searchCourses.map((result) => (
-        <div key={result._id} className="flex p-4 mb-4 border rounded-lg">
+        <div key={result._id} className="flex p-4 mb-4 border rounded-lg"
+          onClick={() => handleCourseClick(result._id)}
+        >
           <div className="flex-shrink-0 w-32 h-32 mr-4">
             <img
               className="object-cover w-full h-full"
@@ -182,8 +187,8 @@ const SearchPage: React.FC = () => {
           alt="No data illustration"
           className="w-52 h-52"
         />
-        <Text className="text-xl font-semibold">No Results Found</Text>
-        <Text className="mt-2 text-gray-600">Try adjusting your search criteria or filters.</Text>
+        <Text className="mt-2 text-xl font-semibold">No Results Found</Text>
+        <Text className="text-gray-600 ">Try adjusting your search criteria or filters.</Text>
       </div>
     );
   };
@@ -255,6 +260,7 @@ const SearchPage: React.FC = () => {
             >
               Clear Filters
             </Button>
+            {/* <Button type="primary" onClick={handleApplyFilters}>Apply Filters</Button> */}
         </Card>
       </div>
     </div>

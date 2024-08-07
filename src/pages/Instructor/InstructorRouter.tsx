@@ -30,6 +30,7 @@ export default function InstructorRouter() {
          <Route path={`/`} element={<HomePage />} />
          <Route path={`about`} element={<About />} />
          <Route path={`search`} element={<SearchPage />} />
+         <Route path={`search/course-details/:courseId/`}element={<ProtectedRouter allowedRoles={["instructor"]}><CourseDetailsPage /></ProtectedRouter>} />
          <Route path={`course/*`}element={<ProtectedRouter allowedRoles={["instructor"]}><CoursePage /></ProtectedRouter>} />
          <Route path={`course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["instructor"]}><CourseDetailsPage /></ProtectedRouter>} />
          <Route path={`course/course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["instructor"]}><CourseDetailsPage /></ProtectedRouter>} />

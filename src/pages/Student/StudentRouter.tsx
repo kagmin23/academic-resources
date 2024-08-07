@@ -27,6 +27,7 @@ export default function StudentRouter() {
                     <Route path={`/`} element={<HomePage />} />
                     <Route path={`about`} element={<About />} />
                     <Route path={`search`} element={<SearchPage />} />
+                    <Route path={`search/course-details/:courseId/`}element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`course`}element={<ProtectedRouter allowedRoles={["student"]}><CoursePage /></ProtectedRouter>} />
                     <Route path={`course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />
                     <Route path={`course/course-details/:courseId/`} element={<ProtectedRouter allowedRoles={["student"]}><CourseDetailsPage /></ProtectedRouter>} />

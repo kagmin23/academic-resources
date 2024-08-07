@@ -42,6 +42,7 @@ const AppRouter: React.FC = () => (
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path={`search`} element={<SearchPage />} />
           <Route path="/course-details/:courseId/" element={<CourseDetailsPage />} />
+          <Route path="/search/course-details/:courseId/" element={<CourseDetailsPage />} />
           <Route path="/course/course-details/:courseId/" element={<CourseDetailsPage />} />
           <Route path="/course" element={<CoursePage />} />
           <Route path="/about" element={<About />} />
