@@ -39,8 +39,6 @@ export default function InstructorRouter() {
          <Route path={`contact`} element={<ProtectedRouter allowedRoles={["instructor"]}><Contact /></ProtectedRouter>} />
          <Route path={`setting`} element={<ProtectedRouter allowedRoles={["instructor"]}><Setting /></ProtectedRouter>} />
          <Route path={`lesson-student`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} />
-         {/* <Route path={`lesson-student/:id`} element={<ProtectedRouter allowedRoles={["instructor"]}><LessonStudent /></ProtectedRouter>} /> */}
-         {/* <Route path={`student-learning`} element={<ProtectedRouter allowedRoles={["instructor"]}><MyCourseStudent /></ProtectedRouter>} /> */}
          <Route path={`shopping-cart/check-out/payment-successfully`} element={<ProtectedRouter allowedRoles={["instructor"]}><PaymentSuccess /></ProtectedRouter>} />
          {/* <Route path={`view-session`} element={<ProtectedRouter allowedRoles={["instructor"]}><ViewSession /></ProtectedRouter>} /> */}
          <Route path={`shopping-cart/check-out`} element={<ProtectedRouter allowedRoles={["instructor"]}><Checkout /></ProtectedRouter>} />
@@ -48,7 +46,8 @@ export default function InstructorRouter() {
          <Route path={`your-courses`} element={<ProtectedRouter allowedRoles={["instructor"]}><MyCourseInstructor /></ProtectedRouter>} />
          <Route path={`manager-your-purchases`} element={<ProtectedRouter allowedRoles={["instructor"]}><OrdersInstructor /></ProtectedRouter>} />
          <Route path={`/shopping-cart/check-out/payment-successfully/manager-your-purchases`} element={<ProtectedRouter allowedRoles={["instructor"]}><OrdersInstructor /></ProtectedRouter>} />
-         <Route path={`/instructor-learning/:courseId/lesson`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorLearning /></ProtectedRouter>} />
+         <Route path={`/student-learning/:courseId/lesson`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorLearning /></ProtectedRouter>} />
+         <Route path={`/instructor/student-learning/:courseId/lesson`} element={<ProtectedRouter allowedRoles={["instructor"]}><InstructorLearning /></ProtectedRouter>} />
          </Route>
     </Routes>
 </div>

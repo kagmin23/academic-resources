@@ -228,8 +228,8 @@ const HomePage: React.FC = () => {
                 <div className='flex justify-between ml-3'>
                   <div className="flex flex-row md:text-lg sm:text-sm">
                     <span className="mr-1 text-sm line-through">{course.price.toLocaleString('vi-VN')} đ</span>
-                    <span>({course.discount * 100}%)</span>
-                    <div className='ml-3 text-orange-600'>{(course.price * (1 - course.discount)).toLocaleString('vi-VN')} đ</div>
+                    <span>({course.discount}%)</span>
+                    <div className='ml-3 text-orange-600'>{(course.price_paid).toLocaleString('vi-VN')} đ</div>
                   </div>
                 </div>
               </div>

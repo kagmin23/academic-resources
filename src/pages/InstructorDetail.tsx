@@ -7,12 +7,11 @@ import {
   SignatureOutlined,
   VideoCameraOutlined
 } from '@ant-design/icons';
-import { Avatar, Button, Card, Divider, Typography, message, notification } from 'antd';
+import { Avatar, Button, Card, Divider, Typography, notification } from 'antd';
 import { Subcription } from 'models/types';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getInstructorDetail } from 'services/All/getUserDetailApiService';
-import { createOrUpdate, getItemBySubscriberInstructor } from 'services/All/subcriptionApiService';
 
 export interface InstructorDetail {
   _id:		string,
@@ -51,7 +50,7 @@ export default function InstructorDetail() {
   const [isSubscribed, setIsSubscribed] = useState<boolean>(false);
   const [currentInstructor, setCurrentInstructor] = useState<InstructorDetail | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
-  const [subcriptionInstructor, setSubcriptionInstructor] = useState<Subcription[]>([]);
+  // const [subcriptionInstructor, setSubcriptionInstructor] = useState<Subcription[]>([]);
   const [filteredData, setFilteredData] = useState<Subcription[]>([]);
 
   useEffect(() => {
@@ -63,7 +62,7 @@ export default function InstructorDetail() {
       try {
         const response = await getInstructorDetail(userId);
         if (response) {
-          setSubcriptionInstructor(response);
+          // setSubcriptionInstructor(response);
           // await fetchSubscriptionStatus();
         } else {
           notification.error({
@@ -83,49 +82,49 @@ export default function InstructorDetail() {
     fetchInstructorData();
   }, [userId]);
 
-  const handleSubscribe = async () => {
-    if (!currentInstructor) return;
-    setLoading(true);
+  // const handleSubscribe = async () => {
+  //   if (!currentInstructor) return;
+  //   setLoading(true);
 
-    try {
-        await createOrUpdate(currentInstructor._id);
-        setIsSubscribed(isSubscribed);
-        fetchSubscriptionStatus();
-        message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
-    } catch (error: any) {
-      notification.error({
-        message: "Failed to Subscribe!",
-        description:
-          error.message || "Failed to Subscribe. Please try again.",
-      });
-    } finally {
-        setLoading(false);
-    }
-  };
+  //   try {
+  //       await createOrUpdate(currentInstructor._id);
+  //       setIsSubscribed(isSubscribed);
+  //       fetchSubscriptionStatus();
+  //       message.success(isSubscribed ? 'Unsubscribed Successfully!' : 'Subscribed Successfully!');
+  //   } catch (error: any) {
+  //     notification.error({
+  //       message: "Failed to Subscribe!",
+  //       description:
+  //         error.message || "Failed to Subscribe. Please try again.",
+  //     });
+  //   } finally {
+  //       setLoading(false);
+  //   }
+  // };
   
-  useEffect(() => {
-    fetchSubscriptionStatus();
-}, []);
+//   useEffect(() => {
+//     fetchSubscriptionStatus();
+// }, []);
 
-const fetchSubscriptionStatus = async () => {
-    try {
-        const response = await getItemBySubscriberInstructor(1, 10);
-        console.log('Subscription Response:', response);
+// const fetchSubscriptionStatus = async () => {
+//     try {
+//         const response = await getItemBySubscriberInstructor(1, 10);
+//         console.log('Subscription Response:', response);
 
-        if (response && response.length > 0 && response[0] && 'is_subscribed' in response[0]) {
-            setIsSubscribed(response[0].is_subscribed);
-        } else {
-            console.error('Subscription status not found in response');
-            setIsSubscribed(false);
-        }
-    } catch (error: any) {
-      notification.error({
-        message: "Failed to fetch Subscription Status!",
-        description:
-          error.message || "Failed to fetch Subscription Status. Please try again.",
-      });
-    }
-};
+//         if (response && response.length > 0 && response[0] && 'is_subscribed' in response[0]) {
+//             setIsSubscribed(response[0].is_subscribed);
+//         } else {
+//             console.error('Subscription status not found in response');
+//             setIsSubscribed(false);
+//         }
+//     } catch (error: any) {
+//       notification.error({
+//         message: "Failed to fetch Subscription Status!",
+//         description:
+//           error.message || "Failed to fetch Subscription Status. Please try again.",
+//       });
+//     }
+// };
 
   if (!currentInstructor) {
     return (
@@ -140,6 +139,7 @@ const fetchSubscriptionStatus = async () => {
 
   return (
     <div className='min-h-screen'>
+      hello
       <div className='flex w-full px-5 pt-6 pb-4 min-h-56 bg-gradient-to-br from-gray-800 to-blue-900 h-fit'>
         <div className="flex justify-center w-1/5 ">
           <Avatar
@@ -181,7 +181,7 @@ const fetchSubscriptionStatus = async () => {
         </div>
         <div className="flex justify-center w-1/6 my-auto">
         <Button
-                                    onClick={handleSubscribe}
+                                    // onClick={handleSubscribe}
                                     type="primary"
                                     loading={loading}
                                     className={`mr-2 mt-2 p-1 text-sm font-semibold w-full bg-red-500`}

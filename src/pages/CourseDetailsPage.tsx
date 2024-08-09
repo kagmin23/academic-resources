@@ -1,5 +1,5 @@
 
-import { BellOutlined, EditOutlined, PlayCircleOutlined, StarOutlined } from '@ant-design/icons';
+import { BellOutlined, EditOutlined, PlayCircleOutlined } from '@ant-design/icons';
 import { Avatar, Button, Card, Form, Input, Modal, Rate, Spin, Tabs, message, notification } from 'antd';
 import { Review, User } from 'models/types';
 import moment from 'moment';
@@ -27,6 +27,7 @@ interface Session {
     _id: string;
     name: string;
     position_order: number;
+    full_time: number;
     lesson_list: Lesson[];
 }
 
@@ -132,7 +133,7 @@ const CourseDetail: React.FC = () => {
     }, [courseId]);
 
     const handleInstructorProfile = (userId: string) => {
-        navigate(`instructor-detail/${userId}`)
+        navigate(`/student/course-details/${courseId}/instructor-detail/${userId}`)
     };
 
     useEffect(() => {
@@ -303,6 +304,10 @@ const CourseDetail: React.FC = () => {
         }
     }
 
+    const handleLessonClick = () => {
+        navigate(`/student/student-learning/${courseId}/lesson`)
+    }
+
     const toggleSession = (sessionId: string) => {
         setExpandedSessionId(expandedSessionId === sessionId ? null : sessionId);
     };
@@ -354,23 +359,35 @@ const CourseDetail: React.FC = () => {
                                     <p className="mt-3 text-lg">{courseDetail.description}</p>
                                     <div className="flex items-center mt-4 text-lg">
                                         <div className="p-1">
-                                            <StarOutlined className="font-semibold text-white" />
-                                            <StarOutlined className="font-semibold text-white" />
-                                            <StarOutlined className="font-semibold text-white" />
-                                            <StarOutlined className="font-semibold text-white" />
-                                            <StarOutlined className="font-semibold text-white" />
+                                            <Rate className="text-2xl" disabled value={courseDetail.average_rating || 0} />
                                         </div>
                                         <span className="ml-2">({courseDetail.review_count} Ratings)</span>
                                     </div>
-                                    <p className="mt-3 text-lg">{courseDetail.review_count} students enrolled</p>
+                                    <div className='flex justify-between ml-3'>
+                                        <div className="flex flex-row md:text-lg sm:text-sm">
+                                            <span className="mr-1 text-sm line-through">{courseDetail.price.toLocaleString('vi-VN')} đ</span>
+                                            <span>({courseDetail.discount}%)</span>
+                                            <div className='ml-3 text-orange-600'>{(courseDetail.price_paid).toLocaleString('vi-VN')} đ</div>
+                                        </div>
+                                    </div>
                                     <div className="flex items-center mt-4 mb-3 text-lg">
                                         {courseDetail.category_name}
                                     </div>
-                                    <p className="mt-2 text-lg">Last updated: {new Date(courseDetail.updated_at).toLocaleDateString()}</p>
+                                    <p className="mt-2 text-lg">
+                                        Last updated: {new Date(courseDetail.updated_at).toLocaleDateString('vi-VN')}
+                                    </p>
                                     <div className="flex mt-4 space-x-4">
-                                        <Button type="primary" className="p-5 text-lg font-semibold bg-red-600" onClick={handleSetButton}>{button}</Button>
+                                        <Button
+                                            type="primary"
+                                            className="p-5 text-lg font-semibold bg-red-600"
+                                            onClick={handleSetButton}
+                                        >
+                                            {button}
+                                        </Button>
                                     </div>
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
@@ -411,14 +428,16 @@ const CourseDetail: React.FC = () => {
                                                 <h3 className="text-xl font-semibold cursor-pointer" onClick={() => toggleSession(session._id)}>
                                                     {session.name}
                                                 </h3>
+                                                <p className="text-xs text-gray-500">{session.full_time}mins</p>
                                                 {expandedSessionId === session._id && (
                                                     <ul>
                                                         {session.lesson_list && session.lesson_list.length > 0 ? (
                                                             session.lesson_list.map((lesson) => (
-                                                                <li key={lesson._id} className="flex items-center py-2">
+                                                                <li key={lesson._id} className="flex items-center py-2"
+                                                                    >
                                                                     <div className="flex-shrink-0 w-8 h-8 bg-gray-200 rounded-full"></div>
                                                                     <div className="ml-4">
-                                                                        <div className="text-lg font-medium">{lesson.name}</div>
+                                                                        <div className="text-lg font-medium cursor-pointer" onClick={handleLessonClick}>{lesson.name}</div>
                                                                         <div className="text-gray-600">{lesson.lession_type} {lesson.full_time} mins</div>
                                                                     </div>
                                                                 </li>
@@ -460,7 +479,7 @@ const CourseDetail: React.FC = () => {
                                                                 )}
                                                             </div>
                                                         }
-                                                        
+
                                                         description={<p className="text-sm text-black">{review.comment}</p>}
                                                     />
                                                 </Card>

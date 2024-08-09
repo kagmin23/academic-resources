@@ -1,10 +1,10 @@
 import { SearchOutlined, StarOutlined } from '@ant-design/icons';
 import { Input, Layout, Spin, Table, Tabs, notification } from 'antd';
-import { Review } from 'models/types';
+import { Course, Review } from 'models/types';
 import moment from 'moment';
 import { AlignType } from 'rc-table/lib/interface';
 import React, { useEffect, useState } from 'react';
-import { getCurrentUser } from 'services/AdminsApi/UserService';
+import { getCourses } from 'services/All/getCoursesApiService';
 import { getReview } from 'services/Instructor/reviewApiService';
 
 const { Header, Content } = Layout;
@@ -12,41 +12,40 @@ const { TabPane } = Tabs;
 
 const ReviewManager: React.FC = () => {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [dataSource, setDataSource] = useState<Course[]>([]);
   const [filteredReviews, setFilteredReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
-  const [currentUser, setCurrentUser] = useState<any>(null);
+  const [courseId, setCourseId] = useState<string>('');
   const [search, setSearch] = useState<string>('');
 
   useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const response = await getCurrentUser();
-        if (response.success) {
-          setCurrentUser(response.data);
-        } else {
-          notification.error({
-            message: 'Error',
-            description: 'Failed to fetch current user information',
-          });
-        }
-      } catch (error: any) {
-        notification.error({
-          message: "Failed to fetch User information!",
-          description:
-            error.message || "Failed to fetch User information. Please try again.",
-        })
-      }
-    };
-    fetchCurrentUser();
+    fetchCourses();
   }, []);
+
+  const fetchCourses = async () => {
+    setLoading(true);
+    try {
+      const response = await getCourses('', 1, 10);
+      console.log("getCourses", response)
+      setDataSource(response.data.pageData);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Courses!",
+        description:
+          error.message || "Failed to get Courses. Please try again.",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     const fetchReviews = async () => {
-      if (currentUser && currentUser._id) {
+      if (courseId) {
+        console.log("fetchReviews", courseId)
         setLoading(true);
         try {
-          const response = await getReview(currentUser._id);
-          console.log("getReview comp", response);
+          const response = await getReview(courseId);
           setReviews(response);
           setFilteredReviews(response);
         } catch (error: any) {
@@ -54,14 +53,16 @@ const ReviewManager: React.FC = () => {
             message: "Failed to fetch Review!",
             description:
               error.message || "Failed to fetch Review. Please try again.",
-          })
+          });
         } finally {
           setLoading(false);
         }
       }
     };
     fetchReviews();
-  }, [currentUser]);
+  }, [courseId]);
+
+  
 
   const handleSearch = (value: string) => {
     setSearch(value);

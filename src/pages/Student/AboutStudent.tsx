@@ -20,7 +20,6 @@ const AboutStudent: React.FC = () => {
   const navigate = useNavigate();
   const [currentUser, setCurrentUser] = useState<any>(null);
 
-
   useEffect(() => {
       const fetchCurrentUser = async () => {
         try {
@@ -98,13 +97,11 @@ const AboutStudent: React.FC = () => {
                               <Text className="text-lg text-gray-700 ">Joining Date: {formattedCreatedAt}</Text>
                         </div>
                   </div>
-                  
                   </div>
               
               <div className=''>
                   <SignatureOutlined style={{ marginRight: 8,fontSize: '20px' }} className="text-blue-500 "/>
                   <Text className="text-lg text-gray-700 ">Bio: {currentUser.description || "update"} </Text>
-
               </div>
           </div>
           <Divider orientation="left"></Divider>
