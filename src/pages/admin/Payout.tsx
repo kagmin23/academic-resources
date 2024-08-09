@@ -44,7 +44,7 @@ function PayoutsAdmin() {
 
   const onUpdateStatusPayout = async (payoutId: string, newStatus: string, comment: string) => {
     try {
-      const response = await updateStatusPayout(payoutId, newStatus, '');
+      const response = await updateStatusPayout(payoutId, newStatus, comment);
       if (response) {
         message.success('Changed Status Successfully!');
         setData(prevData =>
