@@ -159,7 +159,7 @@ function PayoutsAdmin() {
       title: "Status",
       dataIndex: "status",
       key: "status",
-      width: 200,
+      width: 100,
       align: 'center' as AlignType,
       render: (status: string, record: Payout) => {
         let color: string;
@@ -188,14 +188,14 @@ function PayoutsAdmin() {
         }
   
         return (
-          <div className="flex flex-row items-center justify-center">
+          <div className="flex flex-col items-center justify-center">
             <Tag color={color}>{statusText}</Tag>
             {status === 'request_payout' ? (
-              <div className="flex flex-row gap-1">
+              <div className="flex flex-row gap-1 my-2 text-xs">
                 <Button
                   type="primary"
                   size="small"
-                  className="bg-blue-500"
+                  className="text-xs bg-blue-500"
                   icon={<CheckOutlined />}
                   onClick={() => {
                     Modal.confirm({
