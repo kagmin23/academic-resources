@@ -222,16 +222,21 @@ const HomePage: React.FC = () => {
                 >
                   <img className="object-fill w-full h-40 rounded-xl lg:h-48" src={course.image_url} alt={course.name} />
                 </button>
+                
                 <div>
                   <h1 className="flex justify-start p-3 text-lg font-bold truncate lg:text-xl">{course.name}</h1>
                 </div>
-                <div className='flex justify-between ml-3'>
-                  <div className="flex flex-row md:text-lg sm:text-sm">
-                    <span className="mr-1 text-sm line-through">{course.price.toLocaleString('vi-VN')} đ</span>
-                    <span>({course.discount}%)</span>
-                    <div className='ml-3 text-orange-600'>{(course.price_paid).toLocaleString('vi-VN')} đ</div>
-                  </div>
-                </div>
+                {course.is_purchased === true ? (
+                    <span className="purchased-label">Purchased</span>
+                  ) : (
+                    <div className='flex justify-between ml-3'>
+                      <div className="flex flex-row md:text-lg sm:text-sm">
+                        <span className="mr-1 text-sm line-through">{course.price.toLocaleString('vi-VN')} đ</span>
+                        <span>({course.discount}%)</span>
+                        <div className='ml-3 text-orange-600'>{(course.price_paid).toLocaleString('vi-VN')} đ</div>
+                      </div>
+                    </div>
+                  )}
               </div>
             ))}
 
@@ -262,7 +267,7 @@ const HomePage: React.FC = () => {
           </div>
         </div>
 
-        <Link to="/course">
+        <Link to={`course`}>
           <div className="box body-button sm:mb-2">
             <button className="text-2xl text-white">Join with us now <ArrowRightOutlined /></button>
           </div>
