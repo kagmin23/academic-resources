@@ -24,6 +24,7 @@ function PurchasesInstructor() {
     setLoading(true);
     try {
       const payouts = await getItemsbyInstructorPurchases(1, 10);
+      const sortedPayouts = payouts.sort((a: Purchase, b: Purchase) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       setData(payouts);
     } catch (error: any) {
       notification.error({
@@ -43,7 +44,7 @@ function PurchasesInstructor() {
   const handleSelectAll = (e: CheckboxChangeEvent) => {
     const { checked } = e.target;
     if (checked) {
-      setSelectedRowKeys(data.map(item => item._id));
+      setSelectedRowKeys(data.filter(item => item.status !== 'request_paid' && item.status !== 'completed').map(item => item._id));
     } else {
       setSelectedRowKeys([]);
     }
@@ -100,20 +101,27 @@ function PurchasesInstructor() {
     setLoading(true);
     try {
       const transactions = selectedRowKeys.map((id) => ({ purchase_id: id as string }));
-      const response = await createPayout('',transactions);
+      await createPayout('', transactions);
+      
+      // Cập nhật dữ liệu mới sau khi tạo payout thành công
+      await fetchPurchases(); 
+  
+      // Xóa các lựa chọn và reset trạng thái select all
       setSelectedRowKeys([]);
+      setSelectAll(false);
+      
+      message.success("Payout created successfully!");
     } catch (error: any) {
       notification.error({
         message: "Failed to create Payout!",
         description:
           error.message || "Failed to create Payout. Please try again.",
       });
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
-
-
+  
   const columns = [
     {
       title: <Checkbox
@@ -124,18 +132,14 @@ function PurchasesInstructor() {
       width: 60,
       align: 'center' as AlignType,
       render: (_: any, record: any) => (
-        <Checkbox
-          checked={selectedRowKeys.includes(record._id)}
-          onChange={(e: CheckboxChangeEvent) => handleCheckboxChange(e, record._id)}
-        />
+        record.status !== 'request_paid' && record.status !== 'completed' ? (
+          <Checkbox
+            checked={selectedRowKeys.includes(record._id)}
+            onChange={(e: CheckboxChangeEvent) => handleCheckboxChange(e, record._id)}
+          />
+        ) : null
       ),
     },
-    // {
-    //   title: "ID",
-    //   dataIndex: "_id",
-    //   key: "_id",
-    //   width: 100,
-    // },
     {
       title: "Purchase No",
       dataIndex: "purchase_no",
@@ -212,7 +216,7 @@ function PurchasesInstructor() {
 
         <div className="my-5">
           <div className="flex flex-row items-center justify-between">
-          <Input
+            <Input
               placeholder="Search..."
               prefix={<SearchOutlined />}
               onChange={(e) => handleSearch(e.target.value)}

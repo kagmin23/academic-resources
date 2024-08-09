@@ -28,13 +28,13 @@ const { RangePicker } = DatePicker;
 
 const Dashboard: React.FC = () => {
   const initialData = [
-    { name: '2023-01-01', users: 400, courses: 240, categories: 240, reports: 50, revenue: 1000 },
-    { name: '2023-02-01', users: 300, courses: 138, categories: 221, reports: 80, revenue: 1200 },
-    { name: '2023-03-01', users: 200, courses: 980, categories: 229, reports: 100, revenue: 1400 },
-    { name: '2023-04-01', users: 278, courses: 390, categories: 200, reports: 150, revenue: 1600 },
-    { name: '2023-05-01', users: 189, courses: 480, categories: 218, reports: 200, revenue: 1800 },
-    { name: '2023-06-01', users: 239, courses: 380, categories: 250, reports: 250, revenue: 2000 },
-    { name: '2023-07-01', users: 349, courses: 430, categories: 210, reports: 300, revenue: 2200 },
+    { name: "...", users: "...", courses: "...", categories: "...", reports: "...", revenue: "..." },
+    { name: "...", users: "...", courses: "...", categories: "...", reports: "...", revenue: "..." },
+    { name: "...", users: "...", courses: "...", categories: "...", reports: "...", revenue: "..." },
+    { name: "...", users: "...", courses: "...", categories: "...", reports: "...", revenue: "..." },
+    { name: "...", users: "...", courses: "...", categories: "...", reports: "...", revenue: "..." },
+    { name: "...", users: "...", courses: "...", categories: "...", reports: "...", revenue: "..." },
+    { name: "...", users: "...", courses: "...", categories: "...", reports: "...", revenue: "..." },
   ];
 
   const [selectedDates, setSelectedDates] = useState<any[]>([]);
@@ -77,7 +77,7 @@ const Dashboard: React.FC = () => {
               <BookOutlined className="text-4xl text-blue-500" />
               <div className="text-right">
                 <p className="text-gray-500">Total Courses</p>
-                <p className="text-2xl font-bold">150</p>
+                <p className="text-2xl font-bold">...</p>
               </div>
             </div>
           </Card>
@@ -88,7 +88,7 @@ const Dashboard: React.FC = () => {
               <UserOutlined className="text-4xl text-green-500" />
               <div className="text-right">
                 <p className="text-gray-500">Total Users</p>
-                <p className="text-2xl font-bold">4500</p>
+                <p className="text-2xl font-bold">...</p>
               </div>
             </div>
           </Card>
@@ -99,7 +99,7 @@ const Dashboard: React.FC = () => {
               <AppstoreOutlined className="text-4xl text-red-500" />
               <div className="text-right">
                 <p className="text-gray-500">Total Categories</p>
-                <p className="text-2xl font-bold">35</p>
+                <p className="text-2xl font-bold">...</p>
               </div>
             </div>
           </Card>
@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
               <FlagOutlined className="text-4xl text-yellow-500" />
               <div className="text-right">
                 <p className="text-gray-500">Total Reports</p>
-                <p className="text-2xl font-bold">120</p>
+                <p className="text-2xl font-bold">...</p>
               </div>
             </div>
           </Card>
@@ -143,7 +143,7 @@ const Dashboard: React.FC = () => {
               <Card className="p-4 transition-shadow duration-300 bg-white rounded-lg shadow-lg hover:shadow-xl">
                 <Title level={3} className="mb-4 text-center">Ratings</Title>
                 <div className="flex items-center justify-center">
-                  <Progress type="circle" percent={90} format={() => '4.5/5'} />
+                  <Progress type="circle" percent={90} format={() => '...'} />
                 </div>
               </Card>
             </Col>

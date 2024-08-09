@@ -1,6 +1,6 @@
 import { CheckOutlined, CloseOutlined, FilterOutlined, HistoryOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Input, Layout, Modal, Select, Space, Spin, Table, Tag, Typography, message, notification } from "antd";
-import { Payout } from "models/types";
+import { Payout, Transaction } from "models/types";
 import moment from "moment";
 import { AlignType } from 'rc-table/lib/interface';
 import { useEffect, useState } from "react";
@@ -18,8 +18,12 @@ function PayoutsAdmin() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [comment, setComment] = useState('');
-  // const [payout, setPayout] = useState<Payout[]>([]);
-
+  const [payout_id, setPayoutId] = useState<string>("");
+  const [logPayouts, setLogPayouts] = useState<Payout[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [logModalVisible, setLogModalVisible] = useState(false);
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [selectedPayoutNo, setSelectedPayoutNo] = useState<string>('');
   const fetchPayouts = async () => {
     setLoading(true);
     try {
@@ -92,6 +96,27 @@ function PayoutsAdmin() {
     );
     setData(filteredData);
   };
+
+  const showLogPayouts = async (payoutId: string) => {
+    setPayoutId(payoutId);
+    setLoading(true);
+    try {
+      const payout = data.find(p => p._id === payoutId);
+      if (payout) {
+        setTransactions(payout.transactions);
+        setSelectedPayoutNo(payout.payout_no);
+      }
+    } catch (error) {
+      setError('Failed to fetch transactions');
+    } finally {
+      setLoading(false);
+      setLogModalVisible(true);
+    }
+  };
+
+  const hideLogModal = () => {
+    setLogModalVisible(false);
+  };
   
   const columns = [
     {
@@ -99,6 +124,9 @@ function PayoutsAdmin() {
       dataIndex: "payout_no",
       key: "payout_no",
       width: 150,
+      render: (name: string, record: Payout) => (
+        <a onClick={() => showLogPayouts(record._id)}>{name}</a>
+      ),
     },
     {
       title: "Instructor Name",
@@ -294,6 +322,71 @@ function PayoutsAdmin() {
           </div>
         </div>
       </div>
+
+      <Modal
+          visible={logModalVisible}
+          onCancel={hideLogModal}
+          footer={null}
+          width={1000}
+        >
+          {loading ? (
+            <div className="flex items-center justify-center h-64">
+              <Spin size="large" />
+            </div>
+          ) : (
+            <>
+              <h1 className="mb-2 text-base font-bold">Transactions</h1>
+              <p className="mb-5 text-xs italic">* Transactions for the purchases Payout</p>
+              <p className="mb-4 text-sm">Payout No: <span className="font-semibold">{selectedPayoutNo}</span></p>
+              {error && <p className="text-red-500">{error}</p>}
+              {transactions.length === 0 ? (
+                <p>No transactions available.</p>
+              ) : (
+                <Table
+                  dataSource={transactions}
+                  columns={[
+                    {
+                      title: 'Transaction ID',
+                      dataIndex: '_id',
+                      key: '_id',
+                    },
+                    {
+                      title: 'Price Paid',
+                      dataIndex: 'price_paid',
+                      key: 'price_paid',
+                      align: 'end' as AlignType
+                    },
+                    {
+                      title: 'Price',
+                      dataIndex: 'price',
+                      key: 'price',
+                      align: 'end' as AlignType
+                    },
+                    {
+                      title: 'Discount',
+                      dataIndex: 'discount',
+                      key: 'discount',
+                      align: 'end' as AlignType
+                    },
+                    {
+                      title: 'Purchase ID',
+                      dataIndex: 'purchase_id',
+                      key: 'purchase_id',
+                    },
+                    {
+                      title: 'Created At',
+                      dataIndex: 'created_at',
+                      key: 'created_at',
+                      render: (date: Date) => moment(date).format('YYYY-MM-DD HH:mm:ss'),
+                    },
+                  ]}
+                  pagination={false}
+                  scroll={{ x: 'max-content' }}
+                />
+              )}
+            </>
+          )}
+        </Modal>
     </Layout>
   );
 }

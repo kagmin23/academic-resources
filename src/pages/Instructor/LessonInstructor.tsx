@@ -1,4 +1,4 @@
-import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, EyeOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, ExclamationCircleOutlined, PlusCircleOutlined, SearchOutlined } from '@ant-design/icons';
 import { Button, Form, Input, Layout, Modal, Select, Spin, Table, message, notification } from 'antd';
 import { Course, Lesson, Session } from 'models/types';
 import moment from 'moment';
@@ -355,8 +355,8 @@ const ManagerLessonInstructor: React.FC = () => {
       ) : (
         <Content className="m-4 overflow-y-scroll">
           <Table
-            pagination={{ pageSize: 10 }}
             dataSource={lessons}
+            scroll={{x: 'max-content'}}
             columns={[
               {
                 title: 'Lesson Name',
@@ -387,6 +387,26 @@ const ManagerLessonInstructor: React.FC = () => {
                 width: 100
               },
               {
+                title: 'Video',
+                dataIndex: 'video_url',
+                key: 'video_url',
+                width: 50,
+                align: 'center' as AlignType,
+                render: (video_url: string) => (
+                    <div><iframe src={video_url}></iframe></div>
+                  )
+              },
+              {
+                title: 'Image',
+                dataIndex: 'image_url',
+                key: 'image_url',
+                width: 50,
+                align: 'center' as AlignType,
+                render: (image_url: string) => (
+                    <div><iframe src={image_url}></iframe></div>
+                  )
+              },
+              {
                 title: 'Created At',
                 dataIndex: 'created_at',
                 key: 'created_at',
@@ -408,7 +428,7 @@ const ManagerLessonInstructor: React.FC = () => {
                   <div className="flex flex-row justify-center gap-1">
                     <Button size="small" icon={<EditOutlined />} className="text-blue-500" onClick={() => handleEdit(lesson)}></Button>
                     <Button size="small" icon={<DeleteOutlined />} className="text-red-500" onClick={() => handleOnDeleteLesson(lesson._id)}></Button>
-                    <Button size="small" icon={<EyeOutlined />} className="text-blue-900" onClick={() => handleViewMore(lesson._id)}></Button>
+                    {/* <Button size="small" icon={<EyeOutlined />} className="text-blue-900" onClick={() => handleViewMore(lesson._id)}></Button> */}
                   </div>
                 ),
               },

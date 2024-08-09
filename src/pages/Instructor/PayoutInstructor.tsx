@@ -17,7 +17,7 @@ function PayoutsInstructor() {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
   const [comment, setComment] = useState('');
-  const [course_id, setPayoutId] = useState<string>("");
+  const [payout_id, setPayoutId] = useState<string>("");
   const [logPayouts, setLogPayouts] = useState<Payout[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [logModalVisible, setLogModalVisible] = useState(false);
@@ -28,6 +28,7 @@ function PayoutsInstructor() {
     setLoading(true);
     try {
       const response = await getPayouts(1, 10);
+      const sortedPayouts = response.sort((a: Payout, b: Payout) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
       setData(response);
     } catch (error: any) {
       notification.error({
@@ -50,11 +51,16 @@ function PayoutsInstructor() {
       const response = await updateStatusPayout(payoutId, newStatus, '');
       if (response) {
         message.success('Send Request Payout Successfully!');
-        setData(prevData =>
-          prevData.map(payout =>
-            payout._id === payoutId ? { ...payout, status: newStatus } : payout
-          )
-        );
+        // Move the updated payout to the top
+        setData(prevData => {
+          const updatedPayout = prevData.find(payout => payout._id === payoutId);
+          if (updatedPayout) {
+            const newData = prevData.filter(payout => payout._id !== payoutId);
+            newData.unshift({ ...updatedPayout, status: newStatus });
+            return newData;
+          }
+          return prevData;
+        });
       }
     } catch (error: any) {
       notification.error({
@@ -64,7 +70,7 @@ function PayoutsInstructor() {
       })
     }
   };
-
+  
   const refreshData = () => {
     setFilterText('');
     setFilterStatus('');

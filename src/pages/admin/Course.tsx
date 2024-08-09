@@ -75,21 +75,19 @@ const CourseAdmin: React.FC = () => {
       const response = await changeCourseStatus(courseId, newStatus, comment);
       if (response) {
         message.success('Changed Status Successfully!');
-        setCourses(prevCourses =>
-          prevCourses.map(course =>
+        setDataSource(prevDataSource =>
+          prevDataSource.map(course =>
             course._id === courseId ? { ...course, status: newStatus } : course
           )
         );
       }
-      
     } catch (error: any) {
       notification.error({
         message: "Failed to change Course status!",
         description:
           error.message || "Failed to change Course status. Please try again.",
       });
-    }
-    finally {
+    } finally {
       setLoading(false);
     }
   };

@@ -48,15 +48,15 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
 
   const settingsMenu = (
     <Menu style={{ width: 200 }}>
-      <Menu.SubMenu key="setting" title="Setting" icon={<SettingOutlined />}>
-        <Menu.Item key="1" icon={<UserOutlined />}>
+      <Menu.SubMenu key="setting" title="Setting" icon={<SettingOutlined />} className="hover:cursor-pointer">
+        <Menu.Item key="1" icon={<UserOutlined />} className="hover:cursor-pointer">
           <Link to="/admin/info-admin">Personal Infomation</Link>
         </Menu.Item>
-        <Menu.Item key="2" icon={<SafetyOutlined />}>
+        <Menu.Item key="2" icon={<SafetyOutlined />} className="hover:cursor-pointer">
           <Link to="/admin/admin-changepassword">Change Password</Link>
         </Menu.Item>
       </Menu.SubMenu>
-      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout}>
+      <Menu.Item key="3" icon={<LogoutOutlined />} onClick={handleLogout} className="hover:cursor-pointer">
         Logout
       </Menu.Item>
     </Menu>
@@ -65,7 +65,7 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
   return (
     <Layout>
       <Header className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between p-4 bg-gray-800">
-        <Link to={``} className="flex items-center mr-20">
+        <Link to={``} className="flex items-center mr-20 hover:cursor-pointer">
           <BookOutlined className="text-xl text-white" />
           <h1 className="hidden ml-3 text-xl text-white md:block">
             Academic - Resources
@@ -73,20 +73,18 @@ const LayoutStudent: React.FC<MainLayoutProps> = () => {
         </Link>
         <div className="flex items-center gap-8">
           {currentUser && (
-            <Dropdown overlay={settingsMenu} className="cursor-pointer" trigger={['hover']}>
+            <Dropdown overlay={settingsMenu} trigger={['hover']}>
               <Avatar
                 src={currentUser.avatar}
-                className="text-4xl text-white"
+                className="text-4xl text-white hover:cursor-pointer"
                 style={{ width: 35, height: 35 }}
               />
             </Dropdown>
           )}
         </div>
       </Header>
-      <Content style={{ marginTop: 64  }}>
-        {/* <div className="p-4 bg-white rounded shadow"> */}
-          <Outlet />
-        {/* </div> */}
+      <Content style={{ marginTop: 64 }}>
+        <Outlet />
       </Content>
     </Layout>
   );

@@ -1,7 +1,7 @@
 
-import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, FilterOutlined, PlusCircleOutlined, RedoOutlined, SearchOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, ExclamationCircleFilled, EyeOutlined, PlusCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import { Editor } from '@tinymce/tinymce-react';
-import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Space, Spin, Table, Typography, message, notification } from "antd";
+import { Button, Col, Form, Image, Input, Layout, Modal, Row, Select, Spin, Table, Typography, message, notification } from "antd";
 import { Category, Course, LogStatus } from "models/types";
 import moment from "moment";
 import { AlignType } from "rc-table/lib/interface";
@@ -73,6 +73,7 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
   const fetchCourses = async () => {
+    setLoading(true);
     try {
       const response = await getCourses('', 1, 10);
       setDataSource(response.data.pageData);
@@ -83,6 +84,8 @@ const ManagerCourseInstructor: React.FC = () => {
         description:
           error.message || "Failed to get Courses. Please try again.",
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -217,27 +220,42 @@ const ManagerCourseInstructor: React.FC = () => {
   };
 
   const onChangeStatus = async (courseId: string, newStatus: string, comment: string) => {
+    setLoading(true);
     try {
-      const course = courses.find(course => course._id === courseId);
-
+      const course = filteredDataSource.find(course => course._id === courseId);
+  
       if (course?.status === 'reject' && (newStatus === 'active' || newStatus === 'inactive')) {
         message.error('This course has been rejected and cannot be changed to Active or Inactive.');
         return;
       }
-
+  
       const response = await changeCourseStatus(courseId, newStatus, comment);
-
+  
       if (response) {
         message.success('Changed Status Successfully!');
-        setCourses(prevCourses =>
-          prevCourses.map(course =>
+        
+        // Update filteredDataSource
+        setFilteredDataSource(prevDataSource =>
+          prevDataSource.map(course =>
+            course._id === courseId ? { ...course, status: newStatus } : course
+          )
+        );
+  
+        // Update dataSource
+        setDataSource(prevDataSource =>
+          prevDataSource.map(course =>
             course._id === courseId ? { ...course, status: newStatus } : course
           )
         );
       }
-    } catch (error) {
-      message.error('Please add your Session and Lesson!');
-      console.error('Error:', error);
+    } catch (error: any) {
+      notification.error({
+        message: "Failed to get Courses!",
+        description:
+          error.message || "Failed to get Courses. Please try again.",
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -408,23 +426,16 @@ const ManagerCourseInstructor: React.FC = () => {
             Add New Course
           </Button>
         </div>
-          <div className="flex flex-row items-center justify-end mx-10">
-            <Space className="space-x-1 sm:space-x-5" direction="horizontal" size={1}>
-              <FilterOutlined /> Reload:
-                {/* <Button className="text-xs text-white bg-blue-600" onClick={handleFilter}>Apply</Button> */}
-                <Button className="text-white bg-blue-600" onClick={refreshData}><RedoOutlined /></Button>
-            </Space>
-            </div>
+
       </Header>
       {loading ? (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex items-center justify-center h-full p-10">
             <Spin size="large" />
           </div>
         ) : (
-      <Content className="mx-4 my-16 overflow-y-auto xl:mx-6">
+      <Content className="my-5 overflow-y-auto xl:mx-6">
         <Table
           style={{ overflowY: 'auto', maxHeight: 'calc(100vh - 180px)' }}
-          pagination={{ pageSize: 10 }}
           dataSource={filteredDataSource}
           columns={columns}
           expandable={{
